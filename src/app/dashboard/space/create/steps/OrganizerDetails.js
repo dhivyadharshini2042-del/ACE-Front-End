@@ -27,7 +27,6 @@ export default function OrganizerDetails({
     async function loadCategories() {
       try {
         const res = await getOrgCategoriesApi();
-        console.log("============mmmm", res);
         if (res?.success) {
           setOrgCategories(res.data);
         }
@@ -57,6 +56,11 @@ export default function OrganizerDetails({
   const updateOrg = (index, key, value) => {
     const updated = [...organizations];
     updated[index][key] = value;
+
+    if (key === "hostBy" && !showDepartment(value)) {
+      updated[index].department = "";
+    }
+
     setData({ ...data, organizations: updated });
   };
 
@@ -83,6 +87,20 @@ export default function OrganizerDetails({
       organizations: organizations.filter((_, i) => i !== index),
     });
   };
+
+  const showDepartment = (hostBy) => {
+    const selectedCategory = orgCategories.find((c) => c.identity === hostBy);
+
+    if (!selectedCategory) return false;
+
+    const name = selectedCategory.categoryName;
+
+    return (
+      name === "College / University" ||
+      name === "Training & Coaching Institute"
+    );
+  };
+
   console.log("777777777", orgCategories);
   return (
     <>
@@ -145,7 +163,7 @@ export default function OrganizerDetails({
                   className={styles.input}
                   value={org.location}
                   onChange={(e) => updateOrg(index, "location", e.target.value)}
-                   placeholder="Enter a location "
+                  placeholder="Enter a location "
                 />
               </div>
 
@@ -156,7 +174,7 @@ export default function OrganizerDetails({
                 <input
                   className={styles.input}
                   value={org.organizerName}
-                   placeholder="Enter organizer name"
+                  placeholder="Enter organizer name"
                   onChange={(e) =>
                     updateOrg(index, "organizerName", e.target.value)
                   }
@@ -175,7 +193,7 @@ export default function OrganizerDetails({
                   className={styles.input}
                   value={org.organizerNumber}
                   onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, ""); 
+                    const value = e.target.value.replace(/\D/g, "");
 
                     if (value.length <= 10) {
                       updateOrg(index, "organizerNumber", value);
@@ -186,22 +204,27 @@ export default function OrganizerDetails({
               </div>
             </div>
 
-            <div className={styles.field}>
-              <label>
-                Department <span>*</span>
-              </label>
-              <select
-                className={styles.input}
-                value={org.department}
-                onChange={(e) => updateOrg(index, "department", e.target.value)}
-              >
-                <option value="">Select Department</option>
-                <option>CSE</option>
-                <option>ECE</option>
-                <option>IT</option>
-                <option>Management</option>
-              </select>
-            </div>
+            {showDepartment(org.hostBy) && (
+              <div className={styles.field}>
+                <label>
+                  Department <span>*</span>
+                </label>
+
+                <select
+                  className={styles.input}
+                  value={org.department}
+                  onChange={(e) =>
+                    updateOrg(index, "department", e.target.value)
+                  }
+                >
+                  <option value="">Select Department</option>
+                  <option value="CSE">CSE</option>
+                  <option value="ECE">ECE</option>
+                  <option value="IT">IT</option>
+                  <option value="Management">Management</option>
+                </select>
+              </div>
+            )}
           </div>
         ))}
 

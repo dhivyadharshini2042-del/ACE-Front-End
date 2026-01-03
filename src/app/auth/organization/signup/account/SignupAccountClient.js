@@ -30,7 +30,6 @@ import {
 } from "../../../../../const-value/config-icons/page";
 
 import { signupApi } from "../../../../../lib/api/auth.api";
-import { useLoading } from "../../../../../context/LoadingContext";
 
 export default function SignupAccountClient() {
   const router = useRouter();
@@ -49,23 +48,17 @@ export default function SignupAccountClient() {
   const [showPass1, setShowPass1] = useState(false);
   const [showPass2, setShowPass2] = useState(false);
 
-  const { loading, setLoading } = useLoading();
-
   async function onSubmit(e) {
     e.preventDefault();
 
     if (!email || !password || !confirm)
       return toast.error(MSG_ERR_FILL_ALL_FIELDS);
 
-    if (password !== confirm)
-      return toast.error(MSG_ERR_PASSWORD_MISMATCH);
+    if (password !== confirm) return toast.error(MSG_ERR_PASSWORD_MISMATCH);
 
-    if (!category)
-      return toast.error(MSG_ERR_CATEGORY_MISSING);
+    if (!category) return toast.error(MSG_ERR_CATEGORY_MISSING);
 
     try {
-      setLoading(true);
-
       await signupApi({
         org_cat: category,
         country,
@@ -79,13 +72,14 @@ export default function SignupAccountClient() {
       });
 
       router.push("/auth/organization/login");
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      toast.error("Something went wrong");
     }
   }
 
   return (
     <div className="org-shell">
+      {/* LEFT */}
       <aside
         className="org-left"
         style={{ backgroundImage: "url('/images/organizer-bg-circles.png')" }}
@@ -97,12 +91,14 @@ export default function SignupAccountClient() {
         />
       </aside>
 
+      {/* RIGHT */}
       <main className="org-right">
         <div className="org-card">
           <h2 className="org-title">{TITLE_ORG_ACCOUNT_CREATION}</h2>
           <p className="org-sub">{SUBTITLE_ORG_ACCOUNT_CREATION}</p>
 
           <form className="org-form" onSubmit={onSubmit}>
+            {/* EMAIL */}
             <div className="form-group">
               <label className="form-label">{LABEL_ORG_EMAIL}</label>
               <input
@@ -114,6 +110,7 @@ export default function SignupAccountClient() {
               />
             </div>
 
+            {/* PASSWORD */}
             <div className="form-group">
               <label className="form-label">{LABEL_PASSWORD}</label>
               <div className="pass-wrap">
@@ -133,6 +130,7 @@ export default function SignupAccountClient() {
               </div>
             </div>
 
+            {/* CONFIRM PASSWORD */}
             <div className="form-group">
               <label className="form-label">{LABEL_CONFIRM_PASSWORD}</label>
               <div className="pass-wrap">
@@ -155,13 +153,10 @@ export default function SignupAccountClient() {
               </div>
             </div>
 
+            {/* ACTION */}
             <div className="org-actions">
-              <button
-                type="submit"
-                className="btn-primary-ghost"
-                disabled={loading}
-              >
-                {loading ? BTN_VERIFY_DOMAIN_LOADING : BTN_VERIFY_DOMAIN}
+              <button type="submit" className="btn-primary-ghost">
+                {BTN_VERIFY_DOMAIN}
               </button>
             </div>
           </form>
