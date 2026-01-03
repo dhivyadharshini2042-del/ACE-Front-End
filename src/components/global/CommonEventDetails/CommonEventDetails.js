@@ -163,6 +163,7 @@ export default function CommonEventDetails({ event = {}, onBack }) {
               {/* BACKEND: event.views */}
             </div>
             <div>
+              {/* like , share , save */}
               <span>Like</span>
               <span>SAHRE</span>
               <span>SAVE</span>
