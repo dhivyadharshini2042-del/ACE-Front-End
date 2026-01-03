@@ -8,6 +8,13 @@ import {
   getEventTypesApi,
 } from "../../../../../lib/api/event.api";
 
+import {
+  getCountries,
+  getStates,
+  getCities,
+} from "../../../../../lib/location.api";
+import { useLoading } from "../../../../../context/LoadingContext";
+
 export default function EventDetails({
   data,
   setData,
@@ -20,6 +27,13 @@ export default function EventDetails({
   const [tagInput, setTagInput] = useState("");
   const [categories, setCategories] = useState([]);
   const [eventTypes, setEventTypes] = useState([]);
+
+  /* ===== LOCATION STATE ===== */
+  const { setLoading } = useLoading();
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+
   /* ================= RESET ON SUCCESS ================= */
   useEffect(() => {
     setMode("online");
@@ -81,14 +95,75 @@ export default function EventDetails({
     loadEventTypes();
   }, [data.category]);
 
+  /* ================= LOAD COUNTRIES ================= */
+  useEffect(() => {
+    async function loadCountries() {
+      setLoading(true);
+      const res = await getCountries();
+      setCountries(res || []);
+      setLoading(false);
+    }
+    loadCountries();
+  }, [setLoading]);
+
+  /* ================= LOAD STATES ================= */
+  useEffect(() => {
+    if (!data.country) {
+      setStates([]);
+      return;
+    }
+
+    async function loadStates() {
+      setLoading(true);
+      const res = await getStates(data.country);
+      setStates(res || []);
+      setLoading(false);
+    }
+    loadStates();
+  }, [data.country, setLoading]);
+
+  /* ================= LOAD CITIES ================= */
+  useEffect(() => {
+    if (!data.state || !data.country) {
+      setCities([]);
+      return;
+    }
+
+    async function loadCities() {
+      setLoading(true);
+      const res = await getCities(data.country, data.state);
+      setCities(res || []);
+      setLoading(false);
+    }
+    loadCities();
+  }, [data.state, data.country, setLoading]);
+
   const addTag = () => {
-    if (!tagInput.trim()) return;
-    setData({ ...data, tags: [...(data.tags || []), tagInput] });
+    let value = tagInput.trim();
+    if (!value) return;
+
+    if (!value.startsWith("#")) {
+      value = `#${value}`;
+    }
+
+    if (data.tags?.includes(value)) {
+      setTagInput("");
+      return;
+    }
+
+    setData({
+      ...data,
+      tags: [...(data.tags || []), value],
+    });
+
     setTagInput("");
   };
 
-  const removeTag = (t) => {
-    setData({ ...data, tags: data.tags.filter((x) => x !== t) });
+  const removeTag = (tag) => {
+    setData({
+      ...data,
+      tags: (data.tags || []).filter((t) => t !== tag),
+    });
   };
 
   return (
@@ -127,7 +202,7 @@ export default function EventDetails({
             >
               <option value="">Select Category</option>
               {categories.map((c) => (
-                <option key={c.id} value={c.id}>
+                <option key={c.identity} value={c.identity}>
                   {c.categoryName}
                 </option>
               ))}
@@ -166,8 +241,18 @@ export default function EventDetails({
                 placeholder="#tags"
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addTag();
+                  }
+                }}
               />
-              <button className={styles.btnSmall} onClick={addTag}>
+              <button
+                type="button"
+                className={styles.btnSmall}
+                onClick={addTag}
+              >
                 Add
               </button>
             </div>
@@ -176,7 +261,9 @@ export default function EventDetails({
               {(data.tags || []).map((t, index) => (
                 <span key={`${t}-${index}`} className={styles.tag}>
                   {t}
-                  <button onClick={() => removeTag(t)}>×</button>
+                  <button type="button" onClick={() => removeTag(t)}>
+                    ×
+                  </button>
                 </span>
               ))}
             </div>
@@ -266,29 +353,59 @@ export default function EventDetails({
           <>
             <div className={styles.grid3}>
               <div className={styles.field}>
-                <label>
-                  Country <span>*</span>
-                </label>
-                <select className={styles.input}>
-                  <option>Select Country</option>
+                <label>Country *</label>
+                <select
+                  className={styles.input}
+                  value={data.country || ""}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      country: e.target.value,
+                      state: "",
+                      city: "",
+                    })
+                  }
+                >
+                  <option value="">Select Country</option>
+                  {countries.map((c) => (
+                    <option key={c.name} value={c.name}>
+                      {c.name}
+                    </option>
+                  ))}
                 </select>
               </div>
 
               <div className={styles.field}>
-                <label>
-                  State <span>*</span>
-                </label>
-                <select className={styles.input}>
-                  <option>Select State</option>
+                <label>State *</label>
+                <select
+                  className={styles.input}
+                  value={data.state || ""}
+                  onChange={(e) =>
+                    setData({ ...data, state: e.target.value, city: "" })
+                  }
+                >
+                  <option value="">Select State</option>
+                  {states.map((s) => (
+                    <option key={s.name} value={s.name}>
+                      {s.name}
+                    </option>
+                  ))}
                 </select>
               </div>
 
               <div className={styles.field}>
-                <label>
-                  District <span>*</span>
-                </label>
-                <select className={styles.input}>
-                  <option>Select District</option>
+                <label>City *</label>
+                <select
+                  className={styles.input}
+                  value={data.city || ""}
+                  onChange={(e) => setData({ ...data, city: e.target.value })}
+                >
+                  <option value="">Select City</option>
+                  {cities.map((ct) => (
+                    <option key={ct.name} value={ct.name}>
+                      {ct.name}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>

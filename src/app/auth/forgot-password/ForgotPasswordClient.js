@@ -75,7 +75,6 @@ export default function ForgotPasswordClient() {
     try {
       await forgotApi({
         email,
-        type: ui.type,
       });
 
       saveEmail(email);

@@ -39,9 +39,8 @@ export default function Navbar() {
 
   const handleLogout = () => {
     setMenuOpen(false);
-    logoutOrganizer(); 
-    router.replace("/"); 
-    router.refresh();
+    logoutOrganizer();
+    window.location.href = "/";
   };
 
   const handleProfileClick = () => {

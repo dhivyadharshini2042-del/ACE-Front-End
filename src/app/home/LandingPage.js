@@ -8,7 +8,7 @@ import {
   LOCATION_ICON,
   WHATICON,
 } from "../../const-value/config-icons/page.js";
-
+import { useRouter } from "next/navigation";
 // API
 import { getAllEventsApi } from "../../lib/api/event.api.js";
 import toast from "react-hot-toast";
@@ -31,6 +31,7 @@ export default function LandingPage() {
   const [openLB, setOpenLB] = useState(false);
   const [events, setEvents] = useState([]);
   const [organization, setOrganization] = useState([]);
+  const router = useRouter();
 
   const { setLoading: setGlobalLoading } = useLoading();
 
@@ -82,7 +83,7 @@ export default function LandingPage() {
 
     try {
       const res = await getAllEventsApi();
-      console.log("check res",res)
+      console.log("check res", res);
       if (res?.status) {
         setEvents(res.data);
       } else {
@@ -100,7 +101,7 @@ export default function LandingPage() {
 
     try {
       const res = await getAllOrganizationsApi();
-      
+
       if (res?.status) {
         setOrganization(res.data);
       } else {
@@ -118,15 +119,17 @@ export default function LandingPage() {
     loadOrganization();
   }, []);
 
-  console.log("evvvvvvvv",events)
-  console.log("orggggggggggggg",organization)
-
   return (
     <div className="dashboard-root">
       <main className="dash-hero">
         <HeroBanner text={apiText} />
 
-        <button className="btn-explore">Explore Events</button>
+        <button
+          className="btn-explore"
+          onClick={() => router.push("/explore-events")}
+        >
+          Explore Events
+        </button>
 
         <div className="hero-carousel-area">
           <HeroBannerCarousel images={posters} />

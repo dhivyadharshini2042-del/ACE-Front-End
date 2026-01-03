@@ -1,0 +1,105 @@
+/* SECTION */
+.ace-hero {
+  padding: 80px 15px 40px;
+}
+
+/* LEFT */
+.ace-date {
+  font-size: 13px;
+  color: #777;
+}
+
+.ace-title {
+  color: #111;
+  margin-top: 14px;
+  font-size: 100px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.ace-year {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 700;
+  background: #e9f2ff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin-left: 8px;
+  line-height: 1.1;
+  vertical-align: top;
+}
+
+.ace-desc {
+  color: #666;
+  max-width: 360px;
+  margin-top: 20px;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* BUTTONS */
+.ace-primary {
+  color: #fff;
+  background: #7f2bff;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 60px;
+  font-size: 17px;
+}
+
+.ace-primary:hover {
+  background: #6921e6;
+}
+
+.ace-secondary {
+  font-size: 14px;
+  color: #555;
+  padding: 10px 0;
+  background: transparent;
+}
+
+/* IMAGE GRID */
+.ace-image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 110px;
+  gap: 12px;
+}
+
+.ace-image-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+/* SCREENSHOT PATTERN (6 images) */
+.ace-image-grid img:nth-child(1) {
+  grid-row: span 2;
+}
+
+.ace-image-grid img:nth-child(4) {
+  grid-row: span 2;
+}
+/* ONLY these two are tall */
+.ace-image-grid img:nth-child(3),
+.ace-image-grid img:nth-child(3) {
+  grid-row: span 2;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .ace-title {
+    font-size: 48px;
+  }
+}
+
+@media (max-width: 576px) {
+  .ace-image-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ace-image-grid img {
+    grid-row: auto !important;
+  }
+}

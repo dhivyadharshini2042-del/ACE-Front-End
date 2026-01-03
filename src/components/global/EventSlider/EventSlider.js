@@ -46,6 +46,10 @@ export default function EventSlider({ title, data = [], des }) {
     });
   };
 
+  const handleCardClick = () => {
+    router.push(`/events`);
+  };
+
   return (
     <section className="container-fluid mt-4 px-5">
       {/* HEADER */}
@@ -54,7 +58,10 @@ export default function EventSlider({ title, data = [], des }) {
           <h5 className="fw-bold mb-0">{title}</h5>
           <p className="mt-4">{des}</p>
         </div>
-        <button className="btn btn-outline-primary rounded-pill px-4">
+        <button
+          className="btn btn-outline-primary rounded-pill px-4"
+          onClick={handleCardClick}
+        >
           See all
         </button>
       </div>
@@ -100,8 +107,7 @@ export default function EventSlider({ title, data = [], des }) {
                 {/* IMAGE */}
                 <img
                   src={
-                    event.bannerImages?.[0] ||
-                    "https://cloudinary-marketing-res.cloudinary.com/images/w_1000,c_scale/v1679921049/Image_URL_header/Image_URL_header-png?_i=AA"
+                    event.bannerImages?.[0]
                   }
                   className="event-img"
                   alt="Event"
@@ -152,7 +158,8 @@ export default function EventSlider({ title, data = [], des }) {
                             {calendar?.startTime || "N/A"}
                           </span>
                           <span>
-                            <strong style={{marginLeft:"38px"}}>End:</strong> {calendar?.endTime || "N/A"}
+                            <strong style={{ marginLeft: "38px" }}>End:</strong>{" "}
+                            {calendar?.endTime || "N/A"}
                           </span>
                         </div>
                       </div>

@@ -265,11 +265,10 @@
 
 .countdown span {
   text-align: center;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  /* min-width: 70px; */
-  padding: 28px 12px;
+  border-radius: 26%;
+  width: 81px;
+  height: 81px;
+  padding: 20px 12px;
   font-size: 18px;
   font-weight: 700;
   line-height: 1.2;

@@ -133,6 +133,7 @@ export default function OrganizerDetails({
                   className={styles.input}
                   value={org.orgName}
                   onChange={(e) => updateOrg(index, "orgName", e.target.value)}
+                  placeholder="Enter organization name"
                 />
               </div>
 
@@ -144,6 +145,7 @@ export default function OrganizerDetails({
                   className={styles.input}
                   value={org.location}
                   onChange={(e) => updateOrg(index, "location", e.target.value)}
+                   placeholder="Enter a location "
                 />
               </div>
 
@@ -154,6 +156,7 @@ export default function OrganizerDetails({
                 <input
                   className={styles.input}
                   value={org.organizerName}
+                   placeholder="Enter organizer name"
                   onChange={(e) =>
                     updateOrg(index, "organizerName", e.target.value)
                   }
@@ -165,11 +168,20 @@ export default function OrganizerDetails({
                   Organizer Number <span>*</span>
                 </label>
                 <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={10}
                   className={styles.input}
                   value={org.organizerNumber}
-                  onChange={(e) =>
-                    updateOrg(index, "organizerNumber", e.target.value)
-                  }
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, ""); 
+
+                    if (value.length <= 10) {
+                      updateOrg(index, "organizerNumber", value);
+                    }
+                  }}
+                  placeholder="(000-000-0000)"
                 />
               </div>
             </div>

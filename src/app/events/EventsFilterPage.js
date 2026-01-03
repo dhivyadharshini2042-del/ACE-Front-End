@@ -98,6 +98,11 @@ export default function EventsFilterPage() {
 
   console.log("====eeeee",events)
 
+  useEffect(() => {
+  setPage(1);
+}, [filters, sort]);
+
+
   return (
     <div className="events-page container-fluid">
       <div className="row">
@@ -123,7 +128,7 @@ export default function EventsFilterPage() {
             onSearch={(v) => setFilters((f) => ({ ...f, search: v }))}
           />
 
-          <EventsList events={events} />
+          <EventsList events={paginatedEvents} />
 
           <PaginationBar
             page={page}
