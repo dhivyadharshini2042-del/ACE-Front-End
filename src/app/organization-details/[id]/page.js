@@ -8,8 +8,8 @@ import { useEffect, useState } from "react";
 import { decodeId } from "../../../lib/utils/secureId";
 
 import {
+  getApprovedOrganizerEventsApi,
   getOrganizationProfileApi,
-  getOrganizerEventsApi,
 } from "../../../lib/api/organizer.api";
 
 import EventSlider from "../../../components/global/EventSlider/EventSlider";
@@ -51,7 +51,7 @@ export default function OrganizationDetailsPage() {
       try {
         const [orgRes, eventRes] = await Promise.all([
           getOrganizationProfileApi(realOrgId),
-          getOrganizerEventsApi(realOrgId),
+          getApprovedOrganizerEventsApi(realOrgId),
         ]);
 
         if (orgRes?.status) setOrg(orgRes.data);
@@ -135,7 +135,7 @@ export default function OrganizationDetailsPage() {
                 {START_ICON} {org?.rating || "0.0"} / {org?.reviewCount || 0}{" "}
                 reviews
               </span>
-              <span>🏆 {org?.rank ? `${org.rank} Rank` : "—"}</span>
+              <span> {org?.rank ? `${org.rank} Rank` : "—"}</span>
             </div>
           </div>
         </div>

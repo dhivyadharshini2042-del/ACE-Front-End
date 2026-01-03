@@ -9,6 +9,7 @@ import { LABEL_LOGOUT } from "../../../const-value/config-message/page";
 
 import "./Navbar.css";
 import { LOCATION_ICON } from "../../../const-value/config-icons/page";
+import ConfirmModal from "../../ui/Modal/ConfirmModal";
 
 export default function Navbar() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function Navbar() {
   const [initial, setInitial] = useState("U");
   const [menuOpen, setMenuOpen] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -37,10 +39,22 @@ export default function Navbar() {
     router.push("/auth/user/login");
   };
 
-  const handleLogout = () => {
+  // Logout button click → OPEN MODAL
+  const handleLogoutClick = () => {
     setMenuOpen(false);
+    setShowLogoutConfirm(true);
+  };
+
+  // Confirm logout
+  const confirmLogout = () => {
+    setShowLogoutConfirm(false);
     logoutOrganizer();
     window.location.href = "/";
+  };
+
+  //Cancel logout
+  const cancelLogout = () => {
+    setShowLogoutConfirm(false);
   };
 
   const handleProfileClick = () => {
@@ -86,7 +100,7 @@ export default function Navbar() {
         {/* RIGHT */}
         {isLoggedIn && (
           <div className={`nav-right ${menuOpen ? "open" : ""}`}>
-            <button onClick={handleLogout} className="logout-btn">
+            <button onClick={handleLogoutClick} className="logout-btn">
               {LABEL_LOGOUT}
             </button>
 
@@ -106,6 +120,16 @@ export default function Navbar() {
           <span className="bar"></span>
         </button>
       </nav>
+
+      {/*LOGOUT CONFIRM MODAL */}
+      <ConfirmModal
+        open={showLogoutConfirm}
+        title="Confirm Logout"
+        description="Are you sure you want to logout?"
+        image="/images/logo.png" 
+        onCancel={cancelLogout}
+        onConfirm={confirmLogout}
+      />
     </>
   );
 }

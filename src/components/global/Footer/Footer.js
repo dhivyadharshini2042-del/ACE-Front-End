@@ -8,22 +8,11 @@ import {
   FOOTER_LINKEDIN,
   FOOTER_WHATSAPP,
   FOOTER_X,
+  WHATSAPP,
 } from "../../../const-value/config-icons/page";
 
 import styles from "./Footer.module.css";
-// import { useLoading } from "../../../context/LoadingContext";
 export default function Footer() {
-  // const { setLoading } = useLoading(); //ONLY ADD
-
-  /* GLOBAL LOADING ON MOUNT */
-  // useEffect(() => {
-  //   // setLoading(true);
-
-  //   return () => {
-  //     setLoading(false);
-  //   };
-  // }, [setLoading]);
-
   return (
     <footer className={styles.root}>
       {/* Skyline */}
@@ -59,9 +48,7 @@ export default function Footer() {
 
               <button className={styles.subscribeBtn}>Subscribe</button>
 
-              <div className={styles.whatsapp}>
-                {FOOTER_WHATSAPP}
-              </div>
+              <div className={styles.whatsapp}>{WHATSAPP}</div>
             </div>
           </div>
         </div>
@@ -78,7 +65,9 @@ export default function Footer() {
 
             <div className={styles.query}>
               <h4>Send Your Query</h4>
-              <p><span>@</span> info@ace.com</p>
+              <p>
+                <span>@</span> info@ace.com
+              </p>
             </div>
           </div>
 

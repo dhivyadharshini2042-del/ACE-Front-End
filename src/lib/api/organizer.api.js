@@ -1,6 +1,7 @@
 import apiPrivate from "../axiosPrivate";
 import { API_ENDPOINTS } from "./endpoints";
 import { handleApi } from "./apiHelper";
+import apiPublic from "../axiosPublic";
 
 /* ================= ORGANIZATION ================= */
 
@@ -20,6 +21,9 @@ export const deleteOrganizationApi = (orgId) =>
 
 export const getOrganizerEventsApi = (orgId) =>
   handleApi(apiPrivate.get(API_ENDPOINTS.ORGANIZER.EVENTS(orgId)));
+
+export const getApprovedOrganizerEventsApi = (orgId) =>
+  handleApi(apiPublic.get(API_ENDPOINTS.ORGANIZER.APPROVEDEVENTS(orgId)));
 
 export const createOrganizerEventApi = (orgId, data) =>
   handleApi(apiPrivate.post(API_ENDPOINTS.ORGANIZER.EVENTS(orgId), data));

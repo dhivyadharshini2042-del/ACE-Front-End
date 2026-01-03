@@ -155,9 +155,11 @@ export default function CommonEventDetails({ event = {}, onBack }) {
           </div>
         </div>
 
-        <button className="btn-register">
+        <button
+          className="btn-register"
+          onClick={() => window.open(event.paymentLink, "_blank")}
+        >
           Register Now
-          {/* BACKEND: CTA */}
         </button>
       </div>
 
@@ -407,7 +409,8 @@ export default function CommonEventDetails({ event = {}, onBack }) {
           <div className="col-md-4">
             <strong>Accommodations</strong>
 
-            {event?.eventAccommodations && event.eventAccommodations.length > 0 ? (
+            {event?.eventAccommodations &&
+            event.eventAccommodations.length > 0 ? (
               <ul>
                 {event.eventAccommodations.map((item, index) => (
                   <li key={item.accommodation?.eventIdentity || index}>

@@ -10,7 +10,7 @@ export default function ChooseEventCategory({ categories = [] }) {
     if (category.class === "explore") {
       router.push("/explore-categories");
     } else {
-      router.push(`/events?category=${category.class}`);
+      router.push(`/events`);
     }
   };
 
