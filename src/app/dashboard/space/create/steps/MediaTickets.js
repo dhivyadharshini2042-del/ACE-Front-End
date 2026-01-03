@@ -36,6 +36,7 @@ export default function MediaTickets({
   const [accommodation, setAccommodation] = useState(
     data?.accommodation?.[0] || ""
   );
+
   const [paymentLink, setPaymentLink] = useState(data?.paymentLink || "");
 
   const [perksList, setPerksList] = useState([]);
@@ -75,8 +76,9 @@ export default function MediaTickets({
   useEffect(() => {
     // reset local UI states
     setTickets([]);
-    setPerks([]);
+    setPerks(""); 
     setCertification("");
+    setAccommodation("");
     setAccommodation([]);
     setPaymentLink("");
     setImages([]);
@@ -112,8 +114,8 @@ export default function MediaTickets({
     setData({
       ...data,
       perks: perks ? [perks] : [],
-      accommodation: accommodation ? accommodation : [],
       certification: certification ? [certification] : [],
+      accommodation: accommodation ? [accommodation] : [],
       paymentLink,
       tickets,
       bannerImages: images,

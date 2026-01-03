@@ -42,12 +42,22 @@ export default function EmailVerifyClient() {
 
       try {
         const res = await verifyEmailApi(token);
+
         if (res?.status) {
+          const isMobile = /Android|iPhone|iPad|iPod/i.test(
+            navigator.userAgent
+          );
+
+          if (isMobile) {
+            // Try to open the mobile app (deep link)
+            window.location.href = "myapp://email-verify?status=success";
+          }
+
           setStatus(MSG_EMAIL_VERIFY_SUCCESS);
         } else {
           setStatus(MSG_EMAIL_VERIFY_FAILED);
         }
-      } catch {
+      } catch (err) {
         setStatus(MSG_EMAIL_VERIFY_FAILED);
       } finally {
         setLoading(false);
@@ -83,9 +93,7 @@ export default function EmailVerifyClient() {
             <h4 className="fw-bold text-success">
               {TITLE_EMAIL_VERIFY_SUCCESS}
             </h4>
-            <p className="text-muted">
-              {SUB_TITLE_EMAIL_VERIFY_SUCCESS}
-            </p>
+            <p className="text-muted">{SUB_TITLE_EMAIL_VERIFY_SUCCESS}</p>
 
             <a
               href="/auth/organization/login"
@@ -99,12 +107,8 @@ export default function EmailVerifyClient() {
         {/* FAILED */}
         {status === MSG_EMAIL_VERIFY_FAILED && (
           <>
-            <h4 className="fw-bold text-danger">
-              {TITLE_EMAIL_VERIFY_FAILED}
-            </h4>
-            <p className="text-muted">
-              {SUB_TITLE_EMAIL_VERIFY_FAILED}
-            </p>
+            <h4 className="fw-bold text-danger">{TITLE_EMAIL_VERIFY_FAILED}</h4>
+            <p className="text-muted">{SUB_TITLE_EMAIL_VERIFY_FAILED}</p>
 
             <button
               className="btn btn-outline-secondary w-100 mt-3"

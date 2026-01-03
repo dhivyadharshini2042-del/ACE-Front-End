@@ -64,7 +64,7 @@ export default function CreateEvent() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
-  // 🔥 RESET SIGNAL
+  //RESET SIGNAL
   const [resetSignal, setResetSignal] = useState(0);
 
   /* ================= STEP 1 ================= */
@@ -220,7 +220,7 @@ export default function CreateEvent() {
       if (res?.success) {
         toast.success("Event created successfully");
 
-        // 🔥 FULL NORMAL RESET
+        //FULL NORMAL RESET
         setFormData(INITIAL_FORM_DATA);
         setStep(1);
         setResetSignal((s) => s + 1);
