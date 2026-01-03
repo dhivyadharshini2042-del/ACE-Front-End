@@ -38,21 +38,6 @@ export default function OrganizerDetails({
     loadCategories();
   }, []);
 
-  useEffect(() => {
-    setData({
-      organizations: [
-        {
-          hostBy: "",
-          orgName: "",
-          location: "",
-          organizerName: "",
-          organizerNumber: "",
-          department: "",
-        },
-      ],
-    });
-  }, [resetSignal]);
-
   const updateOrg = (index, key, value) => {
     const updated = [...organizations];
     updated[index][key] = value;
@@ -101,7 +86,24 @@ export default function OrganizerDetails({
     );
   };
 
-  console.log("777777777", orgCategories);
+  useEffect(() => {
+    if (!resetSignal) return;
+
+    setData({
+      organizations: [
+        {
+          hostBy: "",
+          orgName: "",
+          location: "",
+          organizerName: "",
+          organizerNumber: "",
+          department: "",
+        },
+      ],
+    });
+  }, [resetSignal]);
+
+
   return (
     <>
       <div className={styles.card}>
@@ -221,7 +223,10 @@ export default function OrganizerDetails({
                   <option value="CSE">CSE</option>
                   <option value="ECE">ECE</option>
                   <option value="IT">IT</option>
-                  <option value="Management">Management</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="School of Management">School of Management</option>
+                  <option value="Science">Science</option>
+                  <option value="Economics">Economics</option>
                 </select>
               </div>
             )}

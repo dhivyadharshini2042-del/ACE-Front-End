@@ -79,7 +79,6 @@ export default function MediaTickets({
     setPerks(""); 
     setCertification("");
     setAccommodation("");
-    setAccommodation([]);
     setPaymentLink("");
     setImages([]);
     setTicketType("FREE");

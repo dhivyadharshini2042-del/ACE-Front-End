@@ -22,7 +22,7 @@ export default function EventDetails({
   onNext,
   resetSignal,
 }) {
-  const [mode, setMode] = useState("online");
+  // const [mode, setMode] = useState("online");
   const [showCalendar, setShowCalendar] = useState(false);
   const [tagInput, setTagInput] = useState("");
   const [categories, setCategories] = useState([]);
@@ -33,30 +33,6 @@ export default function EventDetails({
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
-
-  /* ================= RESET ON SUCCESS ================= */
-  useEffect(() => {
-    setMode("online");
-    setTagInput("");
-    setEventTypes([]);
-    setShowCalendar(false);
-
-    setData({
-      title: "",
-      category: "",
-      eventType: "",
-      tags: [],
-      about: "",
-      mode: "online",
-      calendar: [],
-      country: "",
-      state: "",
-      city: "",
-      mapLink: "",
-      meetLink: "",
-      offers: "",
-    });
-  }, [resetSignal]);
 
   /* ================= LOAD CATEGORIES ================= */
   useEffect(() => {
@@ -165,6 +141,32 @@ export default function EventDetails({
       tags: (data.tags || []).filter((t) => t !== tag),
     });
   };
+
+  /* ================= RESET ON SUCCESS ================= */
+  useEffect(() => {
+    if (!resetSignal) return;
+
+    // setMode("online");
+    setTagInput("");
+    setEventTypes([]);
+    setShowCalendar(false);
+
+    setData({
+      title: "",
+      category: "",
+      eventType: "",
+      tags: [],
+      about: "",
+      mode: "online",
+      calendar: [],
+      country: "",
+      state: "",
+      city: "",
+      mapLink: "",
+      meetLink: "",
+      offers: "",
+    });
+  }, [resetSignal]);
 
   return (
     <>
@@ -327,15 +329,22 @@ export default function EventDetails({
           {["online", "offline", "hybrid"].map((m) => (
             <button
               key={m}
-              className={`${styles.modeBtn} ${mode === m ? styles.active : ""}`}
-              onClick={() => setMode(m)}
+              className={`${styles.modeBtn} ${
+                data.mode === m ? styles.active : ""
+              }`}
+              onClick={() =>
+                setData({
+                  ...data,
+                  mode: m,
+                })
+              }
             >
               {m.charAt(0).toUpperCase() + m.slice(1)}
             </button>
           ))}
         </div>
 
-        {(mode === "online" || mode === "hybrid") && (
+        {(data.mode === "online" || data.mode === "hybrid") && (
           <div className={styles.field}>
             <label>
               Online Meet Link <span>*</span>
@@ -349,7 +358,7 @@ export default function EventDetails({
           </div>
         )}
 
-        {(mode === "offline" || mode === "hybrid") && (
+        {(data.mode === "offline" || data.mode === "hybrid") && (
           <>
             <div className={styles.grid3}>
               <div className={styles.field}>
@@ -441,7 +450,7 @@ export default function EventDetails({
           onSave={(rows) => {
             setData({
               ...data,
-              calendar: rows, // STORE IN PARENT
+              calendar: rows,
             });
             setShowCalendar(false);
           }}
