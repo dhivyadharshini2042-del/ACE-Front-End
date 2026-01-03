@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import {
   DATEICON,
   INSTAGRAMICON,
@@ -14,8 +15,84 @@ import Footer from "../Footer/Footer";
 import "./CommonEventDetails.css";
 
 export default function CommonEventDetails({ event = {}, onBack }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [expanded, setExpanded] = useState(false);
+  const [countdown, setCountdown] = useState({
+    days: "00",
+    hours: "00",
+    mins: "00",
+    secs: "00",
+  });
+  const images =
+    event?.bannerImages?.length > 0
+      ? event.bannerImages
+      : [
+          "https://cloudinary-marketing-res.cloudinary.com/images/w_1000,c_scale/v1679921049/Image_URL_header/Image_URL_header-png?_i=AA",
+        ];
 
+  const MAX_LENGTH = 120;
+  const isLong = event.description.length > MAX_LENGTH;
+  const visibleText = expanded
+    ? event.description
+    : event.description.slice(0, MAX_LENGTH);
 
+  const calendar = event?.calendars?.[0];
+  const location = event?.location;
+
+  /* ================= COUNTDOWN ================= */
+  useEffect(() => {
+    if (!calendar?.startDate || !calendar?.startTime) return;
+
+    const targetDate = new Date(
+      `${calendar.startDate}T${calendar.startTime}:00`
+    );
+
+    const timer = setInterval(() => {
+      const now = new Date();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        clearInterval(timer);
+        setCountdown({
+          days: "00",
+          hours: "00",
+          mins: "00",
+          secs: "00",
+        });
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins = Math.floor((diff / (1000 * 60)) % 60);
+      const secs = Math.floor((diff / 1000) % 60);
+
+      setCountdown({
+        days: String(days).padStart(2, "0"),
+        hours: String(hours).padStart(2, "0"),
+        mins: String(mins).padStart(2, "0"),
+        secs: String(secs).padStart(2, "0"),
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [calendar]);
+
+  /* AUTO SLIDE */
+  useEffect(() => {
+    if (images.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    }, 3000); // 3 seconds
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  const goToSlide = (index) => {
+    setCurrentIndex(index);
+  };
+  console.log("singel event value", event);
   return (
     <div className="container event-wrapper my-4">
       <div className="event-details-wrapper">
@@ -27,26 +104,26 @@ export default function CommonEventDetails({ event = {}, onBack }) {
       </div>
       {/* ================= 1. HERO ================= */}
       <div className="hero-card">
-        <img
-          src={
-            event?.bannerImage ||
-            "https://cloudinary-marketing-res.cloudinary.com/images/w_1000,c_scale/v1679921049/Image_URL_header/Image_URL_header-png?_i=AA"
-          }
-          alt="event"
-          className="event-img"
-        />
+        {/* IMAGE */}
+        <img src={images[currentIndex]} alt="event" className="event-img" />
 
-        {/* BACKEND: event.bannerImage */}
+        {/* STATUS */}
+        <span className="badge-upcoming">
+          {event?.status || "Upcoming Event"}
+        </span>
 
-        <span className="badge-upcoming">Upcoming Event</span>
-        {/* BACKEND: event.status */}
-
-        <div className="slider-dots">
-          <span></span>
-          <span className="active"></span>
-          <span></span>
-          <span></span>
-        </div>
+        {/* DOTS */}
+        {images.length > 1 && (
+          <div className="slider-dots">
+            {images.map((_, index) => (
+              <span
+                key={index}
+                className={index === currentIndex ? "active" : ""}
+                onClick={() => goToSlide(index)}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ================= 2. TITLE + REGISTER ================= */}
@@ -59,7 +136,9 @@ export default function CommonEventDetails({ event = {}, onBack }) {
           {/* ================= 3. TAGS + VIEWS ================= */}
           <div className="meta-row">
             <div>
-              <span className="tag yellow">{event?.eventTypeIdentity || "==========="}</span>
+              <span className="tag yellow">
+                {event?.eventTypeIdentity || "==========="}
+              </span>
 
               <span className="tag purple">Paid</span>
               <span className="tag green">{event?.mode || "===="}</span>
@@ -84,9 +163,13 @@ export default function CommonEventDetails({ event = {}, onBack }) {
 
       {/* ================= 4. DESCRIPTION ================= */}
       <p className="description">
-        {event?.description || "No description"}
-        <span className="readmore"> Readmore</span>
-        {/* BACKEND: event.description */}
+        {visibleText}
+        {isLong && !expanded && "... "}
+        {isLong && (
+          <span className="readmore" onClick={() => setExpanded(!expanded)}>
+            {expanded ? " Read less" : " Read more"}
+          </span>
+        )}
       </p>
 
       {/* ================= 5. VENUE + TICKETS ================= */}
@@ -96,41 +179,54 @@ export default function CommonEventDetails({ event = {}, onBack }) {
           <div className="card-box h-100">
             <h3>Venue & Date</h3>
 
+            {/* LOCATION */}
             <p>
-              {LOCATION_ICON} 22nd, Bindhavan Convention Hall – Saravanampatti,
-              Coimbatore
+              {LOCATION_ICON}{" "}
+              {[location?.city, location?.state, location?.country]
+                .filter(Boolean)
+                .join(", ") || "Location not set"}
             </p>
-            {/* BACKEND: event.venue */}
 
-            <p>{DATEICON} 24th Dec 2025 – 31st Dec 2025</p>
-            {/* BACKEND: event.startDate, endDate */}
+            {/* DATE */}
+            <p>
+              {DATEICON}{" "}
+              {calendar
+                ? `${calendar.startDate} (${calendar.startTime}) – ${calendar.endDate} (${calendar.endTime})`
+                : "Date not set"}
+            </p>
 
-            <button className="map-btn">
-              {MAPLOCATIONVIEWICON} View Map Location
-            </button>
+            {/* MAP */}
+            {location?.mapLink && (
+              <button
+                className="map-btn"
+                onClick={() => window.open(location.mapLink, "_blank")}
+              >
+                {MAPLOCATIONVIEWICON} View Map Location
+              </button>
+            )}
 
+            {/* COUNTDOWN */}
             <div className="countdown">
-              <span>
-                07
+              <span className="cd-days">
+                {countdown.days}
                 <br />
                 Days
               </span>
-              <span>
-                17
+              <span className="cd-hours">
+                {countdown.hours}
                 <br />
                 Hours
               </span>
-              <span>
-                25
+              <span className="cd-mins">
+                {countdown.mins}
                 <br />
                 Mins
               </span>
-              <span>
-                08
+              <span className="cd-secs">
+                {countdown.secs}
                 <br />
                 Secs
               </span>
-              {/* BACKEND: countdown */}
             </div>
           </div>
         </div>
@@ -141,69 +237,52 @@ export default function CommonEventDetails({ event = {}, onBack }) {
             <h4 className="section-title mb-4">Ticket Availability</h4>
 
             <div className="row g-4">
-              {/* CARD 1 */}
-              <div className="col-md-6">
-                <div className="ticket-card">
-                  <div className="ticket-top">
-                    <span className="ticket-icon">★</span>
-                    <h6 className="ticket-title">Early bird registration </h6>
-                  </div>
-                  <div className="ticket-top">
-                    <span className="">Ticket ends at 12/09</span>
-                    <span className="ticket-price">₹500</span>
-                  </div>
+              {event.tickets && event.tickets.length > 0 ? (
+                event.tickets.map((ticket) => {
+                  const now = new Date();
+                  const endDate = new Date(ticket.sellingTo);
+                  const isLive = endDate >= now;
 
-                  <span className="ticket-status live">Ticket is on live</span>
-                </div>
-              </div>
+                  return (
+                    <div className="col-md-6" key={ticket.identity}>
+                      <div className="ticket-card">
+                        {/* TOP */}
+                        <div className="ticket-top">
+                          <span className="ticket-icon">★</span>
+                          <h6 className="ticket-title">{ticket.name}</h6>
+                        </div>
 
-              {/* CARD 2 */}
-              <div className="col-md-6">
-                <div className="ticket-card">
-                  <div className="ticket-top">
-                    <span className="ticket-icon">★</span>
-                    <h6 className="ticket-title">Early bird registration </h6>
-                  </div>
-                  <div className="ticket-top">
-                    <span className="">Ticket ends at 12/09</span>
-                    <span className="ticket-price">₹500</span>
-                  </div>
+                        {/* DATE + PRICE */}
+                        <div className="ticket-top">
+                          <span>
+                            Ticket ends at{" "}
+                            {endDate.toLocaleDateString("en-IN", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </span>
 
-                  <span className="ticket-status live">Ticket is on live</span>
-                </div>
-              </div>
+                          <span className="ticket-price">
+                            {ticket.isPaid ? `₹${ticket.price}` : "Free"}
+                          </span>
+                        </div>
 
-              {/* CARD 3 */}
-              <div className="col-md-6">
-                <div className="ticket-card">
-                  <div className="ticket-top">
-                    <span className="ticket-icon">★</span>
-                    <h6 className="ticket-title">Early bird registration </h6>
-                  </div>
-                  <div className="ticket-top">
-                    <span className="">Ticket ends at 12/09</span>
-                    <span className="ticket-price">₹500</span>
-                  </div>
-
-                  <span className="ticket-status live">Ticket is on live</span>
-                </div>
-              </div>
-
-              {/* CARD 4 */}
-              <div className="col-md-6">
-                <div className="ticket-card">
-                  <div className="ticket-top">
-                    <span className="ticket-icon">★</span>
-                    <h6 className="ticket-title">Early bird registration </h6>
-                  </div>
-                  <div className="ticket-top">
-                    <span className="">Ticket ends at 12/09</span>
-                    <span className="ticket-price">₹500</span>
-                  </div>
-
-                  <span className="ticket-status live">Ticket is on live</span>
-                </div>
-              </div>
+                        {/* STATUS */}
+                        <span
+                          className={`ticket-status ${
+                            isLive ? "live" : "expired"
+                          }`}
+                        >
+                          {isLive ? "Ticket is on live" : "Ticket expired"}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="text-muted">No tickets available</p>
+              )}
             </div>
           </div>
         </div>
@@ -214,40 +293,41 @@ export default function CommonEventDetails({ event = {}, onBack }) {
         <div className="col-lg-8">
           <div className="card-box mt-4">
             <h3>Event Host Details</h3>
+            <h4>{event.org?.domainEmail || "-"}</h4>
 
-            <h4>Organization Name </h4>
-            <p>Laxmi Narayana Arst and Science college in Dharmapuri</p>
+            {/* ================= CO - ORGANIZATION ================= */}
+            {event.collaborators && event.collaborators.length > 0 && (
+              <div className="host-section">
+                {/* MAP ONLY THE DETAILS */}
+                {event.collaborators.map((item, index) => (
+                  <div
+                    key={item.identity || `${item.member?.identity}-${index}`}
+                    className="mb-3 host-section"
+                  >
+                    <div className="host-grid mt-1">
+                      <div>
+                        <label>organization Name</label>
+                        <p>{item.member?.organizationName || "-"}</p>
+                      </div>
+                      <div>
+                        <label>Organizer Name</label>
+                        <p>{item.member?.organizerName || "-"}</p>
+                      </div>
 
-            <div className="host-grid">
-              <div>
-                <label>Organizer Name</label>
-                <p>Avinashilingam Institute of Home Science</p>
+                      <div>
+                        <label>Organizer Contact</label>
+                        <p>{item.member?.organizerNumber || "-"}</p>
+                      </div>
+
+                      <div>
+                        <label>Organizer Department</label>
+                        <p>{item.member?.orgDept || "-"}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div>
-                <label>Organizer Contact</label>
-                <p>(0000-0000-00)</p>
-              </div>
-              <div>
-                <label>Organizer Department</label>
-                <p>B.sc Computer sicence</p>
-              </div>
-            </div>
-            <h4>Co - Organization Name </h4>
-            <p>Laxmi Narayana Arst and Science college in Dharmapuri</p>
-            <div className="host-grid mt-3">
-              <div>
-                <label>Organizer Name</label>
-                <p>Ecleranix Edtech Private Limited</p>
-              </div>
-              <div>
-                <label>Organizer Contact</label>
-                <p>(0000-0000-00)</p>
-              </div>
-              <div>
-                <label>Organizer Department</label>
-                <p>B.sc Computer sicence</p>
-              </div>
-            </div>
+            )}
           </div>
         </div>
 
@@ -264,13 +344,17 @@ export default function CommonEventDetails({ event = {}, onBack }) {
               {/* BACKEND: offers */}
 
               <h3 className="mt-3">Tags</h3>
+
               <div className="tag-wrap">
-                <span>#conference2025</span>
-                <span>#international</span>
-                <span>#2025</span>
-                <span>#aiConference</span>
-                {/* BACKEND: tags */}
+                {event?.tags && event.tags.length > 0 ? (
+                  event.tags.map((tag, index) => (
+                    <span key={`${tag}-${index}`}>#{tag}</span>
+                  ))
+                ) : (
+                  <span>No tags</span>
+                )}
               </div>
+
               <hr />
               <h3 className="mt-3">Follow us on</h3>
               <div className="tag-wrap">
@@ -289,26 +373,51 @@ export default function CommonEventDetails({ event = {}, onBack }) {
         <h3>Other Details</h3>
 
         <div className="row">
+          {/* ================= PERKS ================= */}
           <div className="col-md-4">
             <strong>Perks</strong>
-            <ul>
-              <li>Awards</li>
-              <li>Cash</li>
-            </ul>
+
+            {event?.eventPerks && event.eventPerks.length > 0 ? (
+              <ul>
+                {event.eventPerks.map((item, index) => (
+                  <li key={item.perk?.identity || index}>
+                    {item.perk.perkName || "-"}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>-</p>
+            )}
           </div>
+
+          {/* ================= CERTIFICATIONS ================= */}
           <div className="col-md-4">
             <strong>Certifications</strong>
-            <ul>
-              <li>For all Participants</li>
-            </ul>
+
+            {event?.cert ? (
+              <ul>
+                <li>{event.cert.certName}</li>
+              </ul>
+            ) : (
+              <p>-</p>
+            )}
           </div>
+
+          {/* ================= ACCOMMODATIONS ================= */}
           <div className="col-md-4">
             <strong>Accommodations</strong>
-            <ul>
-              <li>Stay</li>
-              <li>Food</li>
-              <li>Washrooms</li>
-            </ul>
+
+            {event?.eventAccommodations && event.eventAccommodations.length > 0 ? (
+              <ul>
+                {event.eventAccommodations.map((item, index) => (
+                  <li key={item.accommodation?.eventIdentity || index}>
+                    {item?.accommodation?.accommodationName || "-"}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>-</p>
+            )}
           </div>
         </div>
       </div>

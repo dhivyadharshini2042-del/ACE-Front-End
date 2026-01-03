@@ -2,41 +2,55 @@
   font-family: Inter, sans-serif;
 }
 
-/* HERO */
 .hero-card {
   position: relative;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
 }
-.hero-card img {
+
+.event-img {
   width: 100%;
   height: 420px;
   object-fit: cover;
-  border-radius: 18px;
+  transition: opacity 0.4s ease-in-out;
 }
+
+/* STATUS BADGE */
 .badge-upcoming {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  background: #7a12ff;
+  top: 16px;
+  left: 16px;
+  background: #0d6efd;
   color: #fff;
-  padding: 6px 14px;
+  padding: 6px 12px;
   border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
 }
+
+/* DOTS */
 .slider-dots {
   position: absolute;
-  bottom: 15px;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
 }
+
 .slider-dots span {
   width: 8px;
   height: 8px;
-  background: #ccc;
-  display: inline-block;
   border-radius: 50%;
-  margin: 0 4px;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
 }
-.slider-dots .active {
-  background: #7a12ff;
+
+.slider-dots span.active {
+  background: #fff;
+  width: 10px;
+  height: 10px;
 }
 
 /* TITLE */
@@ -63,10 +77,21 @@
   gap: 20px;
 }
 .description {
-  padding-top: 25px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #444;
+  margin-top: 20px;
 }
+
 .readmore {
-  color: #7a12ff;
+  color: #7b2cff; /* pink */
+  cursor: pointer;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.readmore:hover {
+  text-decoration: underline;
 }
 
 /* TAGS */
@@ -209,13 +234,12 @@
   color: #f5a623;
 }
 
-/* HOST */
 .host-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   border-radius: 15px;
-  padding: 10px;
+  padding: 15px;
   box-shadow: inset 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 .host-grid label {
@@ -230,24 +254,59 @@
   border-radius: 12px;
   margin: 4px;
   display: inline-block;
+  border-radius: 50px;
+  background: var(--Color, #f3f3f3);
 }
 .countdown {
-  padding-top: 20px;
+  display: flex;
+  gap: 14px;
+  margin-top: 16px;
 }
 
-/* OTHER */
 .countdown span {
   text-align: center;
-  color: #0d0d0e;
-  background: #f2eaff;
-  border-radius: 50%;
   width: 100px;
   height: 100px;
-  margin-right: 23px;
-  border: 3px solid #7713ec;
-  padding: 25px;
+  border-radius: 50%;
+  /* min-width: 70px; */
+  padding: 28px 12px;
+  font-size: 18px;
   font-weight: 700;
-  display: inline-block;
+  line-height: 1.2;
+}
+
+/* DAYS – BLUE */
+.cd-days {
+  border-radius: 62.185px;
+  border: 2.291px solid #dca0ff;
+  background: rgba(238, 210, 255, 0.84);
+}
+
+/* HOURS – GREEN */
+.cd-hours {
+  border-radius: 62.185px;
+  border: 2.291px solid #0b822a;
+  background: #d1f8db;
+}
+
+/* MINS – ORANGE */
+.cd-mins {
+  border-radius: 62.185px;
+  border: 2.291px solid #f5dba2;
+  background: #fff7d8;
+}
+
+/* SECS – RED */
+.cd-secs {
+  border-radius: 62.185px;
+  border: 2.291px solid #0052a2;
+  background: #6cb4f9;
+}
+
+/* Label text */
+.countdown span br + * {
+  font-size: 12px;
+  font-weight: 500;
 }
 
 /* ACTION */

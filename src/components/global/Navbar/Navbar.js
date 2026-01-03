@@ -39,8 +39,9 @@ export default function Navbar() {
 
   const handleLogout = () => {
     setMenuOpen(false);
-    logoutOrganizer(); // clear token, userData
-    router.replace("/"); // redirect to home
+    logoutOrganizer(); 
+    router.replace("/"); 
+    router.refresh();
   };
 
   const handleProfileClick = () => {
