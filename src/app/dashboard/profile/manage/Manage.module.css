@@ -12,7 +12,8 @@
   font-weight: 700;
   color: #222222;
 }
-.header{
+
+.header {
   display: flex;
   justify-content: space-between;
 }

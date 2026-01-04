@@ -11,20 +11,16 @@ import {
   LABEL_ORG_STEP_ACCOUNT,
   SUBTITLE_ORG_DETAILS,
   BTN_CONTINUE,
-
   LABEL_ORG_COUNTRY,
   LABEL_ORG_STATE,
   LABEL_ORG_CITY,
   LABEL_ORG_NAME,
-
   LABEL_ORG_SELECT_COUNTRY,
   LABEL_ORG_SELECT_STATE,
   LABEL_ORG_SELECT_CITY,
-
   LABEL_LOADING,
   LABEL_LOADING_STATES,
   LABEL_LOADING_CITIES,
-
   MSG_ERR_FILL_ALL_FIELDS,
   MSG_ORG_SELECT_COUNTRY,
   MSG_ORG_SELECT_STATE,
@@ -35,14 +31,11 @@ import {
   getStates,
   getCities,
 } from "../../../../../lib/location.api";
-import { useLoading } from "../../../../../context/LoadingContext";
 
 export default function Page() {
   const router = useRouter();
   const params = useSearchParams();
   const category = params.get("cat");
-
-  const { setLoading } = useLoading(); 
 
   const [country, setCountry] = useState("");
   const [stateName, setStateName] = useState("");
@@ -60,17 +53,15 @@ export default function Page() {
   /* LOAD COUNTRIES */
   useEffect(() => {
     async function load() {
-      setLoading(true);            
       setLoadingCountry(true);
 
       const data = await getCountries();
       setCountries(data || []);
 
       setLoadingCountry(false);
-      setLoading(false);         
     }
     load();
-  }, [setLoading]);
+  }, []);
 
   /* LOAD STATES */
   useEffect(() => {
@@ -81,17 +72,15 @@ export default function Page() {
     }
 
     async function load() {
-      setLoading(true);           
       setLoadingState(true);
 
       const data = await getStates(country);
       setStates(data || []);
 
       setLoadingState(false);
-      setLoading(false);          
     }
     load();
-  }, [country, setLoading]);
+  }, [country]);
 
   /* LOAD CITIES */
   useEffect(() => {
@@ -102,17 +91,15 @@ export default function Page() {
     }
 
     async function load() {
-      setLoading(true);           
       setLoadingCity(true);
 
       const data = await getCities(country, stateName);
       setCities(data || []);
 
       setLoadingCity(false);
-      setLoading(false);         
     }
     load();
-  }, [stateName, country, setLoading]);
+  }, [stateName, country]);
 
   function onContinue(e) {
     e.preventDefault();
@@ -121,7 +108,6 @@ export default function Page() {
       return toast.error(MSG_ERR_FILL_ALL_FIELDS);
     }
 
-    setLoading(true);
     router.push(
       `/auth/organization/signup/account?cat=${category}&country=${country}&state=${stateName}&city=${city}&orgName=${orgName}`
     );

@@ -2,7 +2,6 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useLoading } from "../../../context/LoadingContext";
 
 import {
   BTN_EMAIL_VERIFY_FAILED,
@@ -25,9 +24,6 @@ export default function EmailVerifyClient() {
   const searchParams = useSearchParams();
   const token = searchParams.get(STORAGE_TOKEN);
 
-  // GLOBAL LOADING
-  const { setLoading } = useLoading();
-
   const [status, setStatus] = useState(MSG_EMAIL_VERIFY_LOADING);
   // loading | success | failed
 
@@ -38,8 +34,6 @@ export default function EmailVerifyClient() {
     }
 
     async function verify() {
-      setLoading(true);
-
       try {
         const res = await verifyEmailApi(token);
 
@@ -59,13 +53,11 @@ export default function EmailVerifyClient() {
         }
       } catch (err) {
         setStatus(MSG_EMAIL_VERIFY_FAILED);
-      } finally {
-        setLoading(false);
-      }
+      } 
     }
 
     verify();
-  }, [token, setLoading]);
+  }, [token]);
 
   return (
     <div className="container min-vh-100 d-flex justify-content-center align-items-center">

@@ -10,11 +10,22 @@ import {
   XICON,
   YOUTUBEICON,
 } from "../../../../const-value/config-icons/page";
-import { MSG_EMAIL_VERIFY_SUCCESS ,TITLE_MANAGE_PAGE} from "../../../../const-value/config-message/page";
+import {
+  MSG_EMAIL_VERIFY_SUCCESS,
+  TITLE_MANAGE_PAGE,
+} from "../../../../const-value/config-message/page";
+
+/*existing confirm modal */
+
+/* example API (unga real API replace pannunga) */
+// import { updateSocialLinksApi } from "../../../../lib/api/organizer.api";
+import toast from "react-hot-toast";
+import ConfirmModal from "../../../../components/ui/Modal/ConfirmModal";
 
 export default function ManagePage() {
   const [mode, setMode] = useState("view");
   const [coverImage, setCoverImage] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const [socialLinks, setSocialLinks] = useState({
     linkedin: "https://www.linkedin.com",
@@ -24,6 +35,8 @@ export default function ManagePage() {
     youtube: "https://www.youtube.com",
     telegram: "https://t.me",
   });
+
+  /* ================= HANDLERS ================= */
 
   const handleImageUpload = (e) => {
     const file = e.target.files?.[0];
@@ -37,6 +50,24 @@ export default function ManagePage() {
     }));
   };
 
+  /* ================= SAVE API ================= */
+
+  // const handleSaveConfirm = async () => {
+  //   try {
+  //     await updateSocialLinksApi({
+  //       coverImage,
+  //       socialLinks,
+  //     });
+
+  //     toast.success("Successfully Updated");
+  //     setShowConfirm(false);
+  //     setMode(MSG_EMAIL_VERIFY_SUCCESS);
+  //   } catch (err) {
+  //     toast.error("Update failed");
+  //     setShowConfirm(false);
+  //   }
+  // };
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
@@ -49,7 +80,7 @@ export default function ManagePage() {
         />
       </div>
 
-      {/* VIEW MODE */}
+      {/* ================= VIEW MODE ================= */}
       {mode === "view" && (
         <div className={styles.viewBox}>
           {[
@@ -71,7 +102,7 @@ export default function ManagePage() {
         </div>
       )}
 
-      {/* EDIT MODE */}
+      {/* ================= EDIT MODE ================= */}
       {mode === "edit" && (
         <div className={styles.editBox}>
           <div
@@ -111,9 +142,10 @@ export default function ManagePage() {
               Cancel
             </button>
 
+            {/* 🔥 ONLY CHANGE HERE */}
             <button
               className={styles.saveBtn}
-              onClick={() => setMode(MSG_EMAIL_VERIFY_SUCCESS)}
+              onClick={() => setShowConfirm(true)}
             >
               Save Changes
             </button>
@@ -121,10 +153,20 @@ export default function ManagePage() {
         </div>
       )}
 
-      {/* SUCCESS */}
+      {/* ================= SUCCESS ================= */}
       {mode === MSG_EMAIL_VERIFY_SUCCESS && (
         <div className={styles.successBox}>Successfully Updated!!</div>
       )}
+
+      {/* ================= CONFIRM MODAL ================= */}
+      <ConfirmModal
+        open={showConfirm}
+        title="Confirm Changes"
+        description="Are you sure you want to save these changes?"
+        image="/images/logo.png"
+        onCancel={() => setShowConfirm(false)}
+        // onConfirm={handleSaveConfirm}
+      />
     </div>
   );
 }

@@ -62,6 +62,8 @@ export default function ProfileHeader() {
 
   const firstLetter = displayName.charAt(0).toUpperCase();
 
+  console.log("profile",profile)
+
   return (
     <div className={styles.wrapper}>
       {/* COVER */}
@@ -89,7 +91,7 @@ export default function ProfileHeader() {
           <h2 className={styles.name}>
             {displayName}
             <span className={styles.role}>
-              ({profile.role || "User"})
+              ({profile.domainEmail ? "Organization" : "User"})
             </span>
           </h2>
 

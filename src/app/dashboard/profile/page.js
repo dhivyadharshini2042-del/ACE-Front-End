@@ -4,37 +4,25 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./Profile.module.css";
 import toast from "react-hot-toast";
 
-/* ORGANIZER APIS */
+/* APIs */
 import {
   getOrganizationProfileApi,
   updateOrganizationProfileApi,
 } from "../../../lib/api/organizer.api";
-
-/* USER APIS */
 import {
   getUserProfileApi,
   updateUserProfileApi,
 } from "../../../lib/api/user.api";
+import { forgotApi } from "../../../lib/api/auth.api";
 
-/* AUTH APIS */
-import {
-  forgotApi,
-  verifyOtpApi,
-  resetPasswordApi,
-} from "../../../lib/api/auth.api";
-
+/* Utils */
 import { getUserData } from "../../../lib/auth";
-import {
-  PASSWORDHIDEICON,
-  PASSWORDVIEWICON,
-} from "../../../const-value/config-icons/page";
 import { useLoading } from "../../../context/LoadingContext";
+import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
 
-/* =====================================================
-   ROLE / TYPE BASED API PICKER
-===================================================== */
+
+/* ================= ROLE BASED API ================= */
 const getProfileApis = (user) => {
-  // ORGANIZER
   if (user?.type === "org") {
     return {
       getProfile: getOrganizationProfileApi,
@@ -44,7 +32,6 @@ const getProfileApis = (user) => {
     };
   }
 
-  // NORMAL USER
   return {
     getProfile: getUserProfileApi,
     updateProfile: updateUserProfileApi,
@@ -54,11 +41,12 @@ const getProfileApis = (user) => {
 };
 
 export default function ProfilePage() {
-  const [mode, setMode] = useState("view");
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
-
   const { setLoading: setGlobalLoading } = useLoading();
+  const fileRef = useRef(null);
+
+  const [profile, setProfile] = useState(null);
+  const [mode, setMode] = useState("view");
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -66,19 +54,10 @@ export default function ProfilePage() {
     image: null,
   });
 
-  const [otp, setOtp] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [show1, setShow1] = useState(false);
-  const [show2, setShow2] = useState(false);
-
-  const fileRef = useRef(null);
-
-  /* ================= FETCH PROFILE ================= */
+  /* ================= LOAD PROFILE ================= */
   useEffect(() => {
-    async function loadProfile() {
-      setGlobalLoading(true); // START GLOBAL LOADING
-
+    const loadProfile = async () => {
+      setGlobalLoading(true);
       try {
         const user = getUserData();
         if (!user?.identity) return;
@@ -94,21 +73,19 @@ export default function ProfilePage() {
             image: null,
           });
         }
-      } catch (err) {
+      } catch {
         toast.error("Failed to load profile");
       } finally {
-        setLoading(false);
         setGlobalLoading(false);
       }
-    }
+    };
 
     loadProfile();
   }, [setGlobalLoading]);
 
   /* ================= SAVE PROFILE ================= */
   const saveProfile = async () => {
-    setGlobalLoading(true); // START GLOBAL LOADING
-
+    setGlobalLoading(true);
     try {
       const user = getUserData();
       const api = getProfileApis(user);
@@ -119,9 +96,7 @@ export default function ProfilePage() {
       if (form.image) payload.append("image", form.image);
 
       const res = await api.updateProfile(user.identity, payload);
-
       if (res?.status) {
-        setProfile(res.data);
         toast.success("Profile updated");
         setMode("view");
       } else {
@@ -134,44 +109,25 @@ export default function ProfilePage() {
     }
   };
 
-  /* ================= PASSWORD FLOW ================= */
-  const sendOtp = async () => {
-    setGlobalLoading(true); // START GLOBAL LOADING
-    await forgotApi({ email: form.email });
-    toast.success("OTP sent");
-    setMode("otp");
-    setGlobalLoading(false); //STOP GLOBAL LOADING
-  };
-
-  const verifyOtp = async () => {
-    setGlobalLoading(true); // START GLOBAL LOADING
-    await verifyOtpApi({ email: form.email, otp });
-    toast.success("OTP verified");
-    setMode("password");
-    setGlobalLoading(false); //STOP GLOBAL LOADING
-  };
-
-  const resetPass = async () => {
-    if (password !== confirm) {
-      return toast.error("Passwords not matching");
+  /* ================= SEND RESET MAIL ================= */
+  const handleSendResetMail = async () => {
+    setGlobalLoading(true);
+    try {
+      await forgotApi({ email: form.email });
+      toast.success("Password reset email sent");
+      setShowConfirmModal(false);
+    } catch {
+      toast.error("Failed to send reset email");
+    } finally {
+      setGlobalLoading(false);
     }
-
-    await resetPasswordApi({
-      email: form.email,
-      password,
-    });
-
-    toast.success("Password updated");
-    setMode("success");
-    setGlobalLoading(false);
   };
 
-  if (loading) return <p style={{ padding: 20 }}>Loading...</p>;
-  if (!profile) return <p style={{ padding: 20 }}>No profile found</p>;
+  if (!profile) return null;
 
   return (
-    <div className={styles.wrapper}>
-      {/* ================= VIEW ================= */}
+    <div className={styles.profileWrapper}>
+      {/* ================= VIEW MODE ================= */}
       {mode === "view" && (
         <div className={styles.viewBox}>
           <div>
@@ -180,7 +136,7 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <label>Email</label>
+            <label>Domain Email Id</label>
             <p>{form.email}</p>
           </div>
 
@@ -188,27 +144,30 @@ export default function ProfilePage() {
             src="/images/Pen.png"
             className={styles.editIcon}
             onClick={() => setMode("edit")}
+            alt="edit"
           />
         </div>
       )}
 
-      {/* ================= EDIT ================= */}
+      {/* ================= EDIT MODE ================= */}
       {mode === "edit" && (
         <div className={styles.editBox}>
           <div className={styles.left}>
             <label>Full Name</label>
             <input
               value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, name: e.target.value })
+              }
             />
 
-            <label>Email</label>
-            <input
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-            />
+            <label>Domain Email Id</label>
+            <input value={form.email} disabled />
 
-            <span className={styles.changePass} onClick={sendOtp}>
+            <span
+              className={styles.changePassword}
+              onClick={() => setShowConfirmModal(true)}
+            >
               Change Password
             </span>
           </div>
@@ -218,7 +177,7 @@ export default function ProfilePage() {
               className={styles.uploadBox}
               onClick={() => fileRef.current.click()}
             >
-              <p>{form.image ? form.image.name : "Upload profile picture"}</p>
+              Upload Profile picture (1:1) in PNG or JPEG Format
             </div>
 
             <input
@@ -226,70 +185,38 @@ export default function ProfilePage() {
               type="file"
               hidden
               accept="image/*"
-              onChange={(e) => setForm({ ...form, image: e.target.files[0] })}
+              onChange={(e) =>
+                setForm({ ...form, image: e.target.files[0] })
+              }
             />
 
             <div className={styles.btnRow}>
-              <button onClick={() => setMode("view")}>Cancel</button>
-              <button onClick={saveProfile}>Save</button>
+              <button
+                className={styles.cancelBtn}
+                onClick={() => setMode("view")}
+              >
+                Cancel
+              </button>
+              <button
+                className={styles.saveBtn}
+                onClick={saveProfile}
+              >
+                Save Changes
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ================= OTP ================= */}
-      {mode === "otp" && (
-        <div className={styles.centerBox}>
-          <h3>Enter OTP</h3>
-          <input
-            maxLength={4}
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-          />
-
-          <div className={styles.btnRow}>
-            <button onClick={() => setMode("edit")}>Cancel</button>
-            <button onClick={verifyOtp}>Continue</button>
-          </div>
-        </div>
-      )}
-
-      {/* ================= PASSWORD ================= */}
-      {mode === "password" && (
-        <div className={styles.centerBox}>
-          <div className={styles.passWrap}>
-            <input
-              type={show1 ? "text" : "password"}
-              placeholder="New password"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <span onClick={() => setShow1(!show1)}>
-              {show1 ? PASSWORDVIEWICON : PASSWORDHIDEICON}
-            </span>
-          </div>
-
-          <div className={styles.passWrap}>
-            <input
-              type={show2 ? "text" : "password"}
-              placeholder="Confirm password"
-              onChange={(e) => setConfirm(e.target.value)}
-            />
-            <span onClick={() => setShow2(!show2)}>
-              {show2 ? PASSWORDVIEWICON : PASSWORDHIDEICON}
-            </span>
-          </div>
-
-          <div className={styles.btnRow}>
-            <button onClick={() => setMode("edit")}>Cancel</button>
-            <button onClick={resetPass}>Save</button>
-          </div>
-        </div>
-      )}
-
-      {/* ================= SUCCESS ================= */}
-      {mode === "success" && (
-        <div className={styles.success}>Password Successfully Changed!!</div>
-      )}
+      {/* ================= CONFIRM MODAL ================= */}
+      <ConfirmModal
+        open={showConfirmModal}
+        title="Reset Password"
+        description="A password reset link will be sent to your registered email address."
+        image="/images/logo.png"
+        onCancel={() => setShowConfirmModal(false)}
+        onConfirm={handleSendResetMail}
+      />
     </div>
   );
 }

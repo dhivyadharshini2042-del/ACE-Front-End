@@ -7,7 +7,15 @@
 .event-img-wrapper img {
   object-fit: cover;
 }
-
+.create-btn {
+  background: #7a12ff;
+  border: none;
+  color: #ffffff;
+  padding: 10px 25px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+}
 /* STATUS */
 .event-status {
   position: absolute;
@@ -152,6 +160,6 @@
   color: #344054;
   border: 1px solid #d0d5dd;
 }
-.event-card{
+.event-card {
   cursor: pointer;
 }

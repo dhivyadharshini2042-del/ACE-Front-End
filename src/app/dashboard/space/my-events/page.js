@@ -70,7 +70,7 @@ export default function MyEventPage() {
         <h2 className="fw-bold mb-0">My Events</h2>
 
         <button
-          className="btn btn-primary rounded-pill px-4"
+          className="px-4 create-btn"
           onClick={() => router.push("/dashboard/space/create")}
         >
           + Create Event

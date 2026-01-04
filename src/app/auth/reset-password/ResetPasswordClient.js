@@ -26,11 +26,12 @@ import {
 } from "../../../const-value/config-message/page";
 import { useLoading } from "../../../context/LoadingContext";
 
-export default function ResetPasswordClient() {
+export default function ResetPasswordPage() {
   const params = useSearchParams();
   const role = params.get("role") || ROLE_USER;
 
-  const { setLoading } = useLoading();
+  const { setLoading } = useLoading(); 
+
   const email = getEmail();
 
   const [password, setPassword] = useState("");
@@ -38,6 +39,7 @@ export default function ResetPasswordClient() {
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
 
+  // ROLE BASED CONFIG
   const config = {
     user: {
       image: "/images/auth-forgot.png",
@@ -56,6 +58,7 @@ export default function ResetPasswordClient() {
   async function onSubmit(e) {
     e.preventDefault();
 
+    // YUP VALIDATION
     try {
       await userResetSchema.validate(
         { password, confirmPassword: confirm },
@@ -64,33 +67,92 @@ export default function ResetPasswordClient() {
     } catch (err) {
       return toast.error(err.errors[0]);
     }
+    finally {
+      setLoading(false); 
+    }
 
+
+
+    // API CALL
     try {
-      setLoading(true);
-      await resetPasswordApi({ email, password });
+      await resetPasswordApi({
+        email,
+        password,
+      });
+
       toast.success(MSG_PASSWORD_UPDATED_SUCCESS);
       clearEmail();
       window.location.href = ui.redirect;
     } catch (err) {
       toast.error(err?.response?.data?.message || MSG_PASSWORD_UPDATED_FAILED);
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   }
 
   return (
     <div className="org-shell">
+      {/* LEFT IMAGE */}
       <aside className="org-left">
         <img src={ui.image} className="org-left-img" alt="reset" />
       </aside>
 
+      {/* RIGHT FORM */}
       <main className="org-right">
         <div className="org-card">
           <h2 className="org-title">{TITLE_SET_NEW_PASSWORD}</h2>
           <p className="org-sub">{SUB_TITLE_SET_NEW_PASSWORD}</p>
 
           <form onSubmit={onSubmit}>
-            {/* inputs unchanged */}
+            {/* NEW PASSWORD */}
+            <div className="form-group">
+              <label className="form-label">{LABEL_SET_NEW_PASSWORD}</label>
+              <div className="pass-wrap">
+                <input
+                  className="form-control"
+                  type={show1 ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter new password"
+                />
+                <span className="pass-toggle" onClick={() => setShow1(!show1)}>
+                  {show1 ? PASSWORDHIDEICON : PASSWORDHIDEICON}
+                </span>
+              </div>
+            </div>
+
+            {/* CONFIRM PASSWORD */}
+            <div className="form-group">
+              <label className="form-label">{LABEL_CONFIRM_PASSWORD}</label>
+              <div className="pass-wrap">
+                <input
+                  className="form-control"
+                  type={show2 ? "text" : "password"}
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  onPaste={(e) => e.preventDefault()}
+                  onDrop={(e) => e.preventDefault()}
+                  autoComplete="off"
+                  placeholder="Re-enter password"
+                />
+                <span className="pass-toggle" onClick={() => setShow2(!show2)}>
+                  {show2 ? PASSWORDVIEWICON : PASSWORDHIDEICON}
+                </span>
+              </div>
+            </div>
+
+            {/* SUBMIT */}
+            <div className="form-actions">
+              <button className="btn-primary-ghost" type="submit">
+                {BTN_CONTINUE}
+              </button>
+            </div>
+
+            {/* FOOTER */}
+            <div className="org-foot">
+              {TITLE_ALREADY_HAVE_ACCOUNT}{" "}
+              <a href={ui.login}>{TEXT_SIGNIN}</a>
+            </div>
           </form>
         </div>
       </main>
