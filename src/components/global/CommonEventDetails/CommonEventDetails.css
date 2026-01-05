@@ -118,6 +118,7 @@
   padding: 10px 26px;
   border-radius: 24px;
   border: none;
+  width: 357px;
 }
 .btn-outline {
   border: 1px solid #7a12ff;
@@ -218,20 +219,27 @@
 
 /* STATUS */
 .ticket-status {
-  font-size: 12px;
+  display: inline-block;
+  margin-top: 8px;
   padding: 4px 10px;
   border-radius: 12px;
-  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.ticket-status.not-started {
+  background: #fff7e6;
+  color: #d48806;
 }
 
 .ticket-status.live {
-  background: #f2eaff;
-  color: #7a12ff;
+  background: #e6fffa;
+  color: #08979c;
 }
 
-.ticket-status.upcoming {
-  background: #fff3cd;
-  color: #f5a623;
+.ticket-status.expired {
+  background: #fff1f0;
+  color: #cf1322;
 }
 
 .host-grid {

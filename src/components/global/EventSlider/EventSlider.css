@@ -95,3 +95,19 @@
   column-gap: 50px;
   white-space: nowrap;
 }
+.see-all-btn {
+  color: #7b2cff;
+  cursor: pointer;
+  background: none;
+  border: 1px solid #7b2cff;
+  border-radius: 30px;
+  padding: 6px 25px;
+  text-transform: capitalize;
+}
+.see-all-btn:hover {
+  background: #7b2cff;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+}

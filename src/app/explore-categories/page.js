@@ -238,13 +238,12 @@ export default function ExploreCategoriesPage() {
   };
 
   const handleCardClick = () => {
-      router.push("/events");
-   
+    router.push("/events");
   };
 
   return (
     <div className="explore-page">
-      <div className="text-start m-4" style={{cursor:"pointer"}}>
+      <div className="text-start m-4" style={{ cursor: "pointer" }}>
         <p onClick={handelNavigation}> 🔙 Back</p>
       </div>
       {/* HEADER */}
@@ -258,8 +257,8 @@ export default function ExploreCategoriesPage() {
           <div
             key={item.id}
             className="explore-card"
-            style={{ backgroundColor: item.color }}
-             onClick={handleCardClick}
+            style={{ "--card-color": item.color }}
+            onClick={handleCardClick}
           >
             <div className="icon-box">
               <img src={item.image} alt={item.text} />

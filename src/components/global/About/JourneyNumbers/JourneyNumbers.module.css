@@ -1,40 +1,67 @@
-.stats {
+/* ===== SECTION ===== */
+
+.wrapper {
   padding: 5rem 1rem;
-  display: flex;
-  justify-content: center;
+  text-align: center;
 }
 
-.stats > div {
-  width: 100%;
+.heading {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+}
+
+.heading span {
+  color: #7c3aed;
+}
+
+/* ===== CARD ===== */
+
+.statsCard {
   max-width: 900px;
+  margin: auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background: radial-gradient(
-      circle at top,
-      rgba(255,255,255,0.15),
-      transparent 60%
-    ),
+  gap: 2rem;
+
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,0.15), transparent 60%),
     linear-gradient(135deg, #2b1055, #3c1361);
-  border-radius: 24px;
-  padding: 3rem 2rem;
+
+  padding: 3.5rem 2rem;
+  border-radius: 28px;
   color: #fff;
-  text-align: center;
-  box-shadow: 0 30px 80px rgba(60,19,97,0.5);
+  box-shadow: 0 30px 80px rgba(60, 19, 97, 0.5);
 }
 
-.stats h3 {
+/* ===== ITEM ===== */
+
+.item {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+
+.item.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.item h3 {
   font-size: 2.8rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
-.stats p {
+.item p {
   opacity: 0.85;
+  font-size: 0.95rem;
 }
 
-/* responsive */
+/* ===== RESPONSIVE ===== */
+
 @media (max-width: 640px) {
-  .stats > div {
+  .statsCard {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 2.5rem;
   }
 }

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   DATEICON,
   INSTAGRAMICON,
+  LINKEDINICON,
   LOCATION_ICON,
   MAPLOCATIONVIEWICON,
   SAVEDICON,
@@ -101,13 +102,22 @@ export default function CommonEventDetails({ event = {}, onBack }) {
 
   const handleConfirm = () => {
     setOpenConfirm(false);
-    window.open(event.paymentLink , "_blank", "noopener,noreferrer");
+    window.open(event.paymentLink, "_blank", "noopener,noreferrer");
   };
 
   const handleCancel = () => {
     setOpenConfirm(false);
   };
   console.log("singel event value", event);
+
+  const SOCIAL_ICON_MAP = {
+    whatsapp: WHATSAPPICON,
+    instagram: INSTAGRAMICON,
+    linkedin: LINKEDINICON,
+    youtube: YOUTUBEICON,
+    x: XICON,
+  };
+
   return (
     <div className="container event-wrapper my-4">
       <div className="event-details-wrapper">
@@ -252,11 +262,25 @@ export default function CommonEventDetails({ event = {}, onBack }) {
             <h4 className="section-title mb-4">Ticket Availability</h4>
 
             <div className="row g-4">
-              {event.tickets && event.tickets.length > 0 ? (
+              {event?.tickets && event.tickets.length > 0 ? (
                 event.tickets.map((ticket) => {
                   const now = new Date();
+                  const startDate = new Date(ticket.sellingFrom);
                   const endDate = new Date(ticket.sellingTo);
-                  const isLive = endDate >= now;
+
+                  let statusText = "";
+                  let statusClass = "";
+
+                  if (now < startDate) {
+                    statusText = "Ticket is not yet started";
+                    statusClass = "not-started";
+                  } else if (now >= startDate && now <= endDate) {
+                    statusText = "Ticket is on live";
+                    statusClass = "live";
+                  } else {
+                    statusText = "Ticket closed";
+                    statusClass = "expired";
+                  }
 
                   return (
                     <div className="col-md-6" key={ticket.identity}>
@@ -270,12 +294,23 @@ export default function CommonEventDetails({ event = {}, onBack }) {
                         {/* DATE + PRICE */}
                         <div className="ticket-top">
                           <span>
-                            Ticket ends at{" "}
-                            {endDate.toLocaleDateString("en-IN", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            })}
+                            {now < startDate
+                              ? `Ticket starts on ${startDate.toLocaleDateString(
+                                  "en-IN",
+                                  {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                  }
+                                )}`
+                              : `Ticket ends on ${endDate.toLocaleDateString(
+                                  "en-IN",
+                                  {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                  }
+                                )}`}
                           </span>
 
                           <span className="ticket-price">
@@ -284,12 +319,8 @@ export default function CommonEventDetails({ event = {}, onBack }) {
                         </div>
 
                         {/* STATUS */}
-                        <span
-                          className={`ticket-status ${
-                            isLive ? "live" : "expired"
-                          }`}
-                        >
-                          {isLive ? "Ticket is on live" : "Ticket expired"}
+                        <span className={`ticket-status ${statusClass}`}>
+                          {statusText}
                         </span>
                       </div>
                     </div>
@@ -350,12 +381,17 @@ export default function CommonEventDetails({ event = {}, onBack }) {
         <div className="col-lg-4">
           <div className="card-box mt-4">
             <div className="">
-              <h3>Discounts & Offers</h3>
-              <div className="discount-section">
-                <img src="/images/discount.png" />
-                <span>Get 50% off on Elite tickets</span>
-              </div>
-              <hr />
+              {event?.offers && (
+                <>
+                  <h3>Discounts & Offers</h3>
+                  <div className="discount-section">
+                    <img src="/images/discount.png" alt="Discount" />
+                    <span>Get 50% off on Elite tickets</span>
+                  </div>
+                  <hr />
+                </>
+              )}
+
               {/* BACKEND: offers */}
 
               <h3 className="mt-3">Tags</h3>
@@ -370,15 +406,36 @@ export default function CommonEventDetails({ event = {}, onBack }) {
                 )}
               </div>
 
-              <hr />
-              <h3 className="mt-3">Follow us on</h3>
-              <div className="tag-wrap">
-                <span>{WHATSAPPICON}</span>
-                <span>{INSTAGRAMICON}</span>
-                <span>{YOUTUBEICON}</span>
-                <span>{XICON}</span>
-                {/* BACKEND: tags */}
-              </div>
+              {event?.socialLinks && (
+                <>
+                  <hr />
+                  <h3 className="mt-3">Follow us on</h3>
+
+                  <div className="tag-wrap">
+                    {Object.entries(event.socialLinks).map(([key, link]) => {
+                      if (!link || !SOCIAL_ICON_MAP[key]) return null;
+
+                      // whatsapp special handling
+                      const finalLink =
+                        key === "whatsapp" && !link.startsWith("http")
+                          ? `https://wa.me/${link}`
+                          : link;
+
+                      return (
+                        <a
+                          key={key}
+                          href={finalLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="social-icon"
+                        >
+                          {SOCIAL_ICON_MAP[key]}
+                        </a>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -401,7 +458,7 @@ export default function CommonEventDetails({ event = {}, onBack }) {
                 ))}
               </ul>
             ) : (
-              <p>-</p>
+              <p>No perks available for this event</p>
             )}
           </div>
 
@@ -414,7 +471,7 @@ export default function CommonEventDetails({ event = {}, onBack }) {
                 <li>{event.cert.certName}</li>
               </ul>
             ) : (
-              <p>-</p>
+              <p>No Certifications available for this event</p>
             )}
           </div>
 
@@ -432,7 +489,7 @@ export default function CommonEventDetails({ event = {}, onBack }) {
                 ))}
               </ul>
             ) : (
-              <p>-</p>
+              <p>No accommodations available for this event</p>
             )}
           </div>
         </div>

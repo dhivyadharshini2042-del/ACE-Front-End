@@ -12,7 +12,10 @@ import {
 } from "../../../const-value/config-icons/page";
 
 import styles from "./Footer.module.css";
+import { useRouter } from "next/navigation";
+
 export default function Footer() {
+  const router = useRouter();
   return (
     <footer className={styles.root}>
       {/* Skyline */}
@@ -71,28 +74,39 @@ export default function Footer() {
             </div>
           </div>
 
+          {/* COMPANY */}
           <div className={styles.col}>
             <h4>Company</h4>
-            <a>About us</a>
-            <a>FAQ’s</a>
-            <a>Feedback</a>
-            <a>Contact us</a>
+            <a onClick={() => router.push("/about")}>About us</a>
+            <a onClick={() => router.push("/faq")}>FAQ’s</a>
+            <a onClick={() => router.push("/feedback")}>Feedback</a>
+            <a onClick={() => router.push("/contact")}>Contact us</a>
           </div>
 
+          {/* EVENTS */}
           <div className={styles.col}>
             <h4>Events</h4>
-            <a>Trending Events</a>
-            <a>Upcoming Events</a>
-            <a>Featured Events</a>
-            <a>Virtual Events</a>
+            <a onClick={() => router.push("/events?type=trending")}>
+              Trending Events
+            </a>
+            <a onClick={() => router.push("/events?type=upcoming")}>
+              Upcoming Events
+            </a>
+            <a onClick={() => router.push("/events?type=featured")}>
+              Featured Events
+            </a>
+            <a onClick={() => router.push("/events?type=virtual")}>
+              Virtual Events
+            </a>
           </div>
 
+          {/* POLICIES */}
           <div className={styles.col}>
             <h4>Our Policies</h4>
-            <a>Privacy Policy</a>
-            <a>Top Organizers</a>
-            <a>Cookies</a>
-            <a>Disclaimer</a>
+            <a onClick={() => router.push("/privacy-policy")}>Privacy Policy</a>
+            <a onClick={() => router.push("/organizers")}>Top Organizers</a>
+            <a onClick={() => router.push("/cookies")}>Cookies</a>
+            <a onClick={() => router.push("/disclaimer")}>Disclaimer</a>
           </div>
         </div>
       </div>

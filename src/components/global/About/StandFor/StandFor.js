@@ -4,22 +4,39 @@ import styles from "./StandFor.module.css";
 export default function StandFor() {
   return (
     <section className={styles.wrapper}>
-      <h2>What We <span>Stand For</span></h2>
+      <h2 className={styles.heading}>
+        What We <span>Stand For</span>
+      </h2>
 
       <div className={styles.cards}>
-        <div>
+        {/* Mission */}
+        <div className={`${styles.card} ${styles.mission}`}>
+          <div className={styles.icon}>🎯</div>
           <h3>Mission</h3>
-          <p>Connecting students & organizers through a unified event platform.</p>
+          <p>
+            To connect college students and event organizers through a unified
+            platform that promotes collaboration and creativity.
+          </p>
         </div>
 
-        <div>
+        {/* Vision */}
+        <div className={`${styles.card} ${styles.vision}`}>
+          <div className={styles.icon}>👁️</div>
           <h3>Vision</h3>
-          <p>To build India’s most trusted student event ecosystem.</p>
+          <p>
+            To become the most trusted ecosystem for student events across
+            academic, cultural, and technical institutions.
+          </p>
         </div>
 
-        <div>
-          <h3>Values</h3>
-          <p>Transparency, creativity, collaboration & inclusivity.</p>
+        {/* Value */}
+        <div className={`${styles.card} ${styles.value}`}>
+          <div className={styles.icon}>💎</div>
+          <h3>Value</h3>
+          <p>
+            Transparency, inclusivity, and innovation in every experience we
+            deliver.
+          </p>
         </div>
       </div>
     </section>

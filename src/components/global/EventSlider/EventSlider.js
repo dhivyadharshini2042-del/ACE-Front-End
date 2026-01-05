@@ -59,7 +59,7 @@ export default function EventSlider({ title, data = [], des }) {
           <p className="mt-4">{des}</p>
         </div>
         <button
-          className="btn btn-outline-primary rounded-pill px-4"
+          className="see-all-btn"
           onClick={handleCardClick}
         >
           See all

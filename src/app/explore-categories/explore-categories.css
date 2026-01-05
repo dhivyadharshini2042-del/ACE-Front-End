@@ -12,17 +12,7 @@
   text-align: center;
 }
 
-.close-btn {
-  border: none;
-  background: #fff;
-  font-size: 20px;
-  cursor: pointer;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-}
-
-/* GRID – DESKTOP 4 */
+/* GRID */
 .explore-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -30,37 +20,100 @@
   padding: 5%;
 }
 
-/* CARD */
+/* =========================
+   CARD BASE
+========================= */
 .explore-card {
+  height: 160px;
   border-radius: 14px;
-  padding: 14px 10px;
-  text-align: center;
   display: flex;
   align-items: center;
   gap: 30px;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
+/* lift */
 .explore-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.14);
+}
+
+/* =========================
+   FULL CARD COLOR SWEEP (HOVER)
+========================= */
+.explore-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--card-color);
+  transform: translateX(-100%);
+  transition: transform 0.45s ease;
+  z-index: 0;
+}
+
+.explore-card:hover::before {
+  transform: translateX(0);
+}
+
+/* =========================
+   BOTTOM ADI
+========================= */
+.explore-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  width: 0%;
+  background: rgba(0, 0, 0, 0.25);
+  transition: width 0.35s ease;
+}
+
+/* =========================
+   LEFT IMAGE AREA (DEFAULT COLOR)
+========================= */
+.icon-box {
+  width: 45%;
+  height: 100%;
+  background: var(--card-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px 0 0 14px;
+  position: relative;
+  z-index: 2;
 }
 
 .icon-box img {
-  width: 159px;
-  height: 150px;
+  width: 150px;
+  height: 140px;
   object-fit: contain;
+  transition: transform 0.25s ease;
 }
 
-/* TEXT */
+.explore-card:hover .icon-box img {
+  transform: scale(1.08);
+}
+
+/* =========================
+   TEXT
+========================= */
 .explore-card p {
   font-size: 15px;
   margin: 0;
   font-weight: 700;
+  position: relative;
+  z-index: 2;
 }
 
-/* RESPONSIVE */
+/* =========================
+   RESPONSIVE
+========================= */
 @media (max-width: 992px) {
   .explore-grid {
     grid-template-columns: repeat(3, 1fr);
