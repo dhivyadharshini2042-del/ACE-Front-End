@@ -30,6 +30,7 @@ import {
 } from "../../../../../const-value/config-icons/page";
 
 import { signupApi } from "../../../../../lib/api/auth.api";
+import { useLoading } from "../../../../../context/LoadingContext";
 
 export default function SignupAccountClient() {
   const router = useRouter();
@@ -47,6 +48,7 @@ export default function SignupAccountClient() {
 
   const [showPass1, setShowPass1] = useState(false);
   const [showPass2, setShowPass2] = useState(false);
+  const { setLoading } = useLoading();
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -58,6 +60,7 @@ export default function SignupAccountClient() {
 
     if (!category) return toast.error(MSG_ERR_CATEGORY_MISSING);
 
+    setLoading(true);
     try {
       await signupApi({
         org_cat: category,
@@ -74,6 +77,8 @@ export default function SignupAccountClient() {
       router.push("/auth/organization/login");
     } catch (err) {
       toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
     }
   }
 

@@ -54,11 +54,15 @@ export default function Page() {
   useEffect(() => {
     async function load() {
       setLoadingCountry(true);
-
-      const data = await getCountries();
-      setCountries(data || []);
-
-      setLoadingCountry(false);
+      try {
+        const data = await getCountries();
+        setCountries(data || []);
+      } catch (error) {
+        console.error("Error loading countries:", error);
+        setCountries([]);
+      } finally {
+        setLoadingCountry(false);
+      }
     }
     load();
   }, []);
@@ -73,11 +77,15 @@ export default function Page() {
 
     async function load() {
       setLoadingState(true);
-
-      const data = await getStates(country);
-      setStates(data || []);
-
-      setLoadingState(false);
+      try {
+        const data = await getStates(country);
+        setStates(data || []);
+      } catch (error) {
+        console.error("Error loading states:", error);
+        setStates([]);
+      } finally {
+        setLoadingState(false);
+      }
     }
     load();
   }, [country]);
@@ -92,11 +100,15 @@ export default function Page() {
 
     async function load() {
       setLoadingCity(true);
-
-      const data = await getCities(country, stateName);
-      setCities(data || []);
-
-      setLoadingCity(false);
+      try {
+        const data = await getCities(country, stateName);
+        setCities(data || []);
+      } catch (error) {
+        console.error("Error loading cities:", error);
+        setCities([]);
+      } finally {
+        setLoadingCity(false);
+      }
     }
     load();
   }, [stateName, country]);

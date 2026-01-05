@@ -29,7 +29,6 @@ import {
   TEXT_NO_ACCOUNT,
   TEXT_SIGNIN,
 } from "../../../../../const-value/config-message/page";
-import { useLoading } from "../../../../../context/LoadingContext";
 
 const CATEGORIES = [
   { id: "college", title: "College / University", icon: UNIVERSITYICONS },
@@ -47,12 +46,9 @@ export default function Page() {
   const router = useRouter();
   const [selected, setSelected] = useState("");
 
-  const { setLoading } = useLoading(); // ONLY ADD
-
   function onContinue() {
     if (!selected) return toast.error(MSG_ERR_CATEGORY_MISSING);
 
-    setLoading(true); //START LOADING
     router.push(`/auth/organization/signup/details?cat=${selected}`);
   }
 
