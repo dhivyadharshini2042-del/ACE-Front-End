@@ -4,6 +4,7 @@ import JourneyNumbers from "../../components/global/About/JourneyNumbers/Journey
 import StandFor from "../../components/global/About/StandFor/StandFor";
 import StoryBehindFest from "../../components/global/About/StoryBehindFest/StoryBehindFest";
 import VoiceOfTrust from "../../components/global/About/VoiceOfTrust/VoiceOfTrust";
+import Footer from "../../components/global/Footer/Footer";
 import WhyChoose from "../../components/global/WhyChoose/WhyChoose";
 
 
@@ -16,6 +17,7 @@ export default function AboutPage() {
       <JourneyNumbers />
       <VoiceOfTrust />
       <WhyChoose />
+      <Footer/>
     </>
   );
 }

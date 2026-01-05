@@ -38,13 +38,13 @@ export default function LandingPage() {
   const apiText = "What Event would you like to go to?";
 
   const posters = [
-    "/images/australia.png",
-    "/images/auth-forgot.png",
-    "/images/or_passwordsuccess.png",
-    "/images/or_forgotpasswordnextimage.png",
-    "/images/or_forgotpassword.png",
-    "/images/or_login.png",
-    "/images/auth-signup.png",
+    "/images/bannerImageThree.png",
+    "/images/bannerImageFour.png",
+    "/images/bannerImageTwo.png",
+    "/images/bannerImageOne.png",
+    "/images/bannerImageFive.png",
+    "/images/bannerImageSix.png",
+    "/images/bannerImageSev.png",
   ];
 
   const CATEGORIES = [

@@ -114,7 +114,7 @@ export default function MediaTickets({
       ...data,
       perks: perks ? [perks] : [],
       certification: certification ? [certification] : [],
-      accommodation: accommodation ? accommodation : [],
+      accommodation: accommodation ? [accommodation] : [],
       paymentLink,
       tickets,
       bannerImages: images,
