@@ -45,12 +45,11 @@ import { useLoading } from "../../../../context/LoadingContext";
 export default function OrganizerLoginPage() {
   const router = useRouter();
 
-  // GLOBAL LOADING
-  const { loading, setLoading } = useLoading();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
+  // GLOBAL LOADING
+  const { setLoading } = useLoading();
 
   // -----------------------------
   // SUBMIT
@@ -66,8 +65,9 @@ export default function OrganizerLoginPage() {
         { abortEarly: false }
       );
     } catch (err) {
+      toast.error(err.errors[0]);
       setLoading(false);
-      return toast.error(err.errors[0]);
+      return;
     }
 
     try {
@@ -78,8 +78,9 @@ export default function OrganizerLoginPage() {
       });
 
       if (!res?.status || !res?.token) {
+        toast.error(res?.message || MSG_INVALID_CREDENTIALS);
         setLoading(false);
-        return toast.error(res?.message || MSG_INVALID_CREDENTIALS);
+        return;
       }
 
       saveToken(res.token);
@@ -97,6 +98,7 @@ export default function OrganizerLoginPage() {
       setLoading(false);
     }
   }
+
   const handleUserLogin = () => {
     router.push("/auth/user/login");
   };
@@ -110,14 +112,13 @@ export default function OrganizerLoginPage() {
 
       {/* RIGHT FORM */}
       <div className="org-login-right">
-       
         <div className="org-login-card">
-           <div className="organization-sections mt-5">
-          <div className="Switch-to-Organizer" onClick={handleUserLogin}>
-            Switch to User Sign In
+          <div className="organization-sections mt-5">
+            <div className="Switch-to-Organizer" onClick={handleUserLogin}>
+              Switch to User Sign In
+            </div>
+            <div>{PAGEMOVEICON}</div>
           </div>
-          <div>{PAGEMOVEICON}</div>
-        </div>
           <h1 className="org-title mt-5">{TITLE_ORG_LOGIN_MAIN}</h1>
           <p className="org-sub">{SUBTITLE_ORG_LOGIN}</p>
 
@@ -151,12 +152,8 @@ export default function OrganizerLoginPage() {
             </div>
 
             {/* SUBMIT */}
-            <button
-              type="submit"
-              className="btn btn-primary w-100"
-              disabled={loading}
-            >
-              {loading ? "Signing in..." : TEXT_SIGNIN}
+            <button type="submit" className="btn btn-primary w-100">
+              {TEXT_SIGNIN}
             </button>
 
             <p className="org-foot">
