@@ -54,7 +54,7 @@ export default function TicketModal({
           </div>
 
           <div className={styles.field}>
-            <label>Description <span>*</span></label>
+            <label>Description </label>
             <input
               className={styles.input}
               value={ticketForm.description}
@@ -112,7 +112,7 @@ export default function TicketModal({
           )}
 
           <div className={styles.field}>
-            <label>Total Tickets <span>*</span></label>
+            <label>Total Tickets </label>
             <select
               className={styles.input}
               value={ticketForm.total}

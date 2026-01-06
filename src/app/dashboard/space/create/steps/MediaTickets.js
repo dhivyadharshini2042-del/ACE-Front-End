@@ -19,6 +19,7 @@ import {
 } from "../../../../../lib/api/event.api";
 import TicketModal from "../../../../../components/ui/Modal/TicketModal";
 import ConfirmModal from "../../../../../components/ui/Modal/ConfirmModal";
+import { processImage } from "../../../../../lib/utils/imageProcessor";
 
 export default function MediaTickets({
   data,
@@ -44,7 +45,6 @@ export default function MediaTickets({
   const [accommodationList, setAccommodationList] = useState([]);
   const [openTicketModal, setOpenTicketModal] = useState(false);
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
-
   const [ticketType, setTicketType] = useState("FREE");
   const [editingIndex, setEditingIndex] = useState(null);
   const [ticketForm, setTicketForm] = useState({
@@ -60,12 +60,30 @@ export default function MediaTickets({
   const fileInputRef = useRef(null);
   const [images, setImages] = useState([]);
 
-  const handleFileSelect = (e) => {
-    const selected = Array.from(e.target.files || []).filter((f) =>
-      f.type.startsWith("image/")
-    );
+  const handleFileSelect = async (e) => {
+    const files = Array.from(e.target.files || []);
+    let updatedImages = [...images];
 
-    setImages((prev) => [...prev, ...selected].slice(0, 4));
+    for (let file of files) {
+      // image type check
+      if (!file.type.startsWith("image/")) {
+        toast.error("Only image files allowed");
+        continue;
+      }
+
+      //  compress if needed (mobile logic)
+      const processedImage = await processImage(file);
+
+      //max 4 images limit
+      if (updatedImages.length >= 4) {
+        toast.error("Maximum 4 images allowed");
+        break;
+      }
+
+      updatedImages.push(processedImage);
+    }
+
+    setImages(updatedImages);
     e.target.value = "";
   };
 
@@ -76,7 +94,7 @@ export default function MediaTickets({
   useEffect(() => {
     // reset local UI states
     setTickets([]);
-    setPerks(""); 
+    setPerks("");
     setCertification("");
     setAccommodation("");
     setPaymentLink("");
@@ -117,7 +135,7 @@ export default function MediaTickets({
       accommodation: accommodation ? [accommodation] : [],
       paymentLink,
       tickets,
-      bannerImages: images,
+      bannerImages: images, 
     });
   }, [perks, certification, accommodation, paymentLink, tickets, images]);
 
@@ -251,9 +269,7 @@ export default function MediaTickets({
 
           {/* ================= SOCIAL LINKS ================= */}
           <div className={styles.field}>
-            <label>
-              Social Media Links <span>*</span>
-            </label>
+            <label>Social Media Links</label>
 
             <div className={styles.iconInput}>
               <span className={styles.icon}>{WHATSAPP}</span>
@@ -288,9 +304,7 @@ export default function MediaTickets({
         <div className={styles.grid3}>
           {/* ================= PERKS ================= */}
           <div className={styles.field}>
-            <label>
-              Perks <span>*</span>
-            </label>
+            <label>Perks</label>
 
             <select
               className={styles.input}
@@ -332,9 +346,7 @@ export default function MediaTickets({
 
           {/* ================= ACCOMMODATION ================= */}
           <div className={styles.field}>
-            <label>
-              Accommodation <span>*</span>
-            </label>
+            <label>Accommodation</label>
 
             <select
               className={styles.input}

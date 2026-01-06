@@ -36,7 +36,7 @@ const INITIAL_FORM_DATA = {
   event: {
     title: "",
     category: "",
-    eventType: "003dee95-0d44-4f67-aa04-2d0e6b00b015",
+    eventType: "",
     tags: [],
     about: "",
     mode: "online",

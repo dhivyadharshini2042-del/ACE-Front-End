@@ -1,33 +1,42 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import styles from "./Saved.module.css";
+import EventSlider from "../../../../components/global/EventSlider/EventSlider";
+import { useLoading } from "../../../../context/LoadingContext";
+import toast from "react-hot-toast";
 
 export default function SavedEventsPage() {
+  const [events, setEvents] = useState([]);
+  const { setLoading: setGlobalLoading } = useLoading();
 
+  const loadEvents = async () => {
+    setGlobalLoading(true);
 
-  const events = Array(4).fill({
-    title: "International Conference",
-    location: "Coimbatore",
-    date: "Dec 29, 2025",
-    image: "/images/event.png",
-  });
+    try {
+      const res = await getAllEventsApi();
+      console.log("check res", res);
+      if (res?.status) {
+        setEvents(res.data);
+        setGlobalLoading(false);
+      } else {
+        toast.error(res?.message || "Failed to load events");
+      }
+    } catch {
+      toast.error("Something went wrong");
+    } finally {
+      setGlobalLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadEvents();
+  }, []);
 
   return (
     <div className={styles.wrapper}>
-      <h2 className={styles.heading}>Saved Events</h2>
-
-      <div className={styles.grid}>
-        {events.map((e, i) => (
-          <div key={i} className={styles.card}>
-            <img src={e.image} className={styles.image} />
-            <h4>{e.title}</h4>
-            <p>{e.location}</p>
-            <span>{e.date}</span>
-          </div>
-        ))}
-      </div>
+      <EventSlider title="Saved Events" data={events} />
     </div>
   );
 }

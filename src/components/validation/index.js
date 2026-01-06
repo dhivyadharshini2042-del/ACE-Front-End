@@ -125,11 +125,11 @@ export const createEventStep1Schema = Yup.object({
     .min(1, "At least one organization is required")
     .of(
       Yup.object({
-        // hostBy: required("Event Host By"),
-        // orgName: required("Organization Name"),
-        // location: required("Location"),
-        // organizerName: required("Organizer Name"),
-        // organizerNumber: required("Organizer Number"),
+        hostBy: required("Event Host By"),
+        orgName: required("Organization Name"),
+        location: required("Location"),
+        organizerName: required("Organizer Name"),
+        organizerNumber: required("Organizer Number"),
         // department: required("Department"),
       })
     ),
@@ -137,20 +137,51 @@ export const createEventStep1Schema = Yup.object({
 
 // STEP 2 – Event Details
 export const createEventStep2Schema = Yup.object({
-  // title: required("Event Title"),
-  // category: required("Category"),
-  // // eventType: required("Event Type"),
-  // about: required("About Event"),
-  // tags: Yup.array().min(1, "At least one tag is required"),
-  // calendar: Yup.array().min(1, "Please add calendar schedule"),
+  title: required("Event Title"),
+  category: required("Category"),
+  eventType: required("Event Type"),
+  about: required("About Event"),
+  tags: Yup.array().min(1, "At least one tag is required"),
+  calendar: Yup.array().min(1, "Please add calendar schedule"),
 });
 
 // STEP 3 – Media & Tickets
 // STEP 3
+export const ticketSchema = Yup.object({
+  ticketType: Yup.string()
+    .oneOf(["FREE", "PAID"])
+    .required("Ticket type is required"),
+
+  ticketName: Yup.string().required("Ticket name is required"),
+
+  quantity: Yup.number()
+    .typeError("Quantity must be a number")
+    .min(1, "Minimum 1 ticket required")
+    .required("Quantity is required"),
+
+  price: Yup.number().when("ticketType", {
+    is: "PAID",
+    then: (schema) =>
+      schema
+        .typeError("Price must be a number")
+        .min(1, "Price must be greater than 0")
+        .required("Price is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+
+  description: Yup.string().required("Ticket description is required"),
+});
+
 export const createEventStep3Schema = Yup.object({
   // perks: Yup.string().required("Perks is required"),
-  // certification: Yup.string().required("Certification is required"),
+  certification: Yup.string().required("Certification is required"),
   // accommodation: Yup.string().required("Accommodation is required"),
   paymentLink: Yup.string().required("Payment link is required"),
-  tickets: Yup.array().min(1, "At least one ticket required"),
+  tickets: Yup.array()
+    .of(ticketSchema) // inga than ticket validation connect aagudhu
+    .min(1, "At least one ticket required"),
 });
+
+/* ===========================
+   TICKET MODEL (COMMON)
+=========================== */
