@@ -37,9 +37,10 @@ export default function ExploreEventsPage() {
 
       <ExploreHero />
 
-      <EventSlider title="Trending Events" data={events} />
+      <EventSlider title="Ongoing Events" data={events} />
       <EventSlider title="Upcoming Events" data={events} />
-      <EventSlider title="Live Events" data={events} />
+      <EventSlider title="Featured Events" data={events} />
+      <EventSlider title="Trending Events" data={events} />
       <EventSlider title="Virtual Events" data={events} />
 
       <WhyChoose />

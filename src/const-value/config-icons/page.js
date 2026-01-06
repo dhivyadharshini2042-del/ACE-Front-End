@@ -63,6 +63,46 @@ export const SAVEICON = (
     />
   </svg>
 );
+export const RIGHTSIDEARROW_ICON = (
+<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 42 42" fill="none">
+  <circle cx="21" cy="21" r="19" fill="#1C1C1C"/>
+  <g filter="url(#filter0_d_15521_43427)">
+    <path d="M2 21C2 24.7578 3.11433 28.4313 5.20208 31.5558C7.28982 34.6804 10.2572 37.1156 13.729 38.5537C17.2008 39.9918 21.0211 40.368 24.7067 39.6349C28.3924 38.9018 31.7778 37.0922 34.435 34.435C37.0922 31.7778 38.9018 28.3924 39.6349 24.7067C40.368 21.0211 39.9918 17.2008 38.5537 13.729C37.1156 10.2572 34.6804 7.28982 31.5558 5.20208C28.4313 3.11433 24.7578 2 21 2C15.9626 2.00545 11.133 4.00898 7.57099 7.57099C4.00898 11.133 2.00545 15.9626 2 21ZM26.4055 18.7612C26.9992 19.355 27.3327 20.1603 27.3327 21C27.3327 21.8397 26.9992 22.645 26.4055 23.2388L19.0066 30.6377L16.7677 28.3989L24.1667 21L16.7076 13.5393L18.9417 11.3005L26.4055 18.7612Z" fill="#F3F3F3"/>
+  </g>
+  <defs>
+    <filter id="filter0_d_15521_43427" x="0" y="0" width="42" height="42" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset/>
+      <feGaussianBlur stdDeviation="1"/>
+      <feComposite in2="hardAlpha" operator="out"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_15521_43427"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_15521_43427" result="shape"/>
+    </filter>
+  </defs>
+</svg>
+);
+export const LEFTSIDEARROW_ICON = (
+<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 42 42" fill="none">
+  <circle cx="19" cy="19" r="19" transform="matrix(-1 0 0 1 40 2)" fill="#1C1C1C"/>
+  <g filter="url(#filter0_d_15521_43417)">
+    <path d="M40 21C40 24.7578 38.8857 28.4313 36.7979 31.5558C34.7102 34.6804 31.7428 37.1156 28.271 38.5537C24.7992 39.9918 20.9789 40.368 17.2933 39.6349C13.6076 38.9018 10.2222 37.0922 7.56498 34.435C4.90778 31.7778 3.09821 28.3924 2.36509 24.7067C1.63197 21.0211 2.00823 17.2008 3.44629 13.729C4.88436 10.2572 7.31963 7.28982 10.4442 5.20208C13.5687 3.11433 17.2422 2 21 2C26.0374 2.00545 30.867 4.00898 34.429 7.57099C37.991 11.133 39.9946 15.9626 40 21ZM15.5945 18.7612C15.0008 19.355 14.6673 20.1603 14.6673 21C14.6673 21.8397 15.0008 22.645 15.5945 23.2388L22.9934 30.6377L25.2323 28.3989L17.8333 21L25.2924 13.5393L23.0583 11.3005L15.5945 18.7612Z" fill="#F3F3F3"/>
+  </g>
+  <defs>
+    <filter id="filter0_d_15521_43417" x="0" y="0" width="42" height="42" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset/>
+      <feGaussianBlur stdDeviation="1"/>
+      <feComposite in2="hardAlpha" operator="out"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_15521_43417"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_15521_43417" result="shape"/>
+    </filter>
+  </defs>
+</svg>
+);
 export const LIKE_ICON = (
   <svg
     xmlns="http://www.w3.org/2000/svg"

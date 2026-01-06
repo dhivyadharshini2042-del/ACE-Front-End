@@ -173,12 +173,10 @@ export const ticketSchema = Yup.object({
 });
 
 export const createEventStep3Schema = Yup.object({
-  // perks: Yup.string().required("Perks is required"),
   certification: Yup.string().required("Certification is required"),
-  // accommodation: Yup.string().required("Accommodation is required"),
   paymentLink: Yup.string().required("Payment link is required"),
   tickets: Yup.array()
-    .of(ticketSchema) // inga than ticket validation connect aagudhu
+    .of(ticketSchema) 
     .min(1, "At least one ticket required"),
 });
 

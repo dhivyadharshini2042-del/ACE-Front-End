@@ -8,16 +8,14 @@
 }
 
 .card {
+  background: #fffffff2;
   width: 82%;
   max-width: 980px;
-  /* backdrop-filter: blur(12px); */
-  border-radius: 18px;
   padding: 20px;
-  background: rgba(255,255,255,0.95);
-  box-shadow:
-    0 3px 5px rgba(0,0,0,0.04),
-    0 12px 22px rgba(127,43,255,0.10);
-  border: 2px solid rgba(150,78,255,0.12);
+  border-radius: 16px;
+  border: 1px solid var(--Primary, #7f00ff);
+  background: rgba(248, 250, 255, 0.5);
+  /* backdrop-filter: blur(15.649999618530273px); */
 }
 
 .row {

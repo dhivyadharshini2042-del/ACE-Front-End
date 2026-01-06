@@ -30,27 +30,47 @@
 }
 
 /* DOTS */
-.slider-dots {
+.slider-arrow {
   position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  z-index: 2;
+}
+
+.slider-dots {
   display: flex;
   gap: 8px;
 }
 
 .slider-dots span {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
+  background: #d9d9d9;
   cursor: pointer;
 }
 
 .slider-dots span.active {
-  background: #fff;
-  width: 10px;
-  height: 10px;
+  background: #7F00FF; /* image la iruka purple */
+}
+
+.slider-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 14px;
+}
+.arrow-side{
+  cursor: pointer;
 }
 
 /* TITLE */

@@ -24,14 +24,11 @@
 
 /* Gradient animated words */
 .title span {
-  background: linear-gradient(
-    90deg,
-    #7f2bff,
-    #ff7a00
-  );
+  background: linear-gradient(90deg, #6a00ff, #9b2cff, #ff3d9a);
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: loopGradient 12s ease-in-out infinite;
+  animation: gradientMove 6s ease-in-out infinite;
 }
 
 /* =========================
@@ -49,18 +46,15 @@
 /* =========================
    ANIMATION
 ========================= */
-@keyframes loopGradient {
+@keyframes gradientMove {
   0% {
-    -webkit-text-fill-color: #1c1c1c;
+    background-position: 0% 50%;
   }
-  30% {
-    -webkit-text-fill-color: transparent;
-  }
-  60% {
-    -webkit-text-fill-color: transparent;
+  50% {
+    background-position: 100% 50%;
   }
   100% {
-    -webkit-text-fill-color: #1c1c1c;
+    background-position: 0% 50%;
   }
 }
 
