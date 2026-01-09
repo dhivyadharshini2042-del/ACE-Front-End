@@ -91,7 +91,6 @@ export default function CommonEventDetails({ event = {}, onBack }) {
   const [orgData, setOrgData] = useState(event.collaborators || []);
   const [offerData, setOfferData] = useState(event.offers || "");
   const [socialData, setSocialData] = useState(event.socialLinks || {});
-  
 
   // imge move left and right
 
@@ -430,7 +429,10 @@ export default function CommonEventDetails({ event = {}, onBack }) {
             src={bannerImages[currentIndex]}
           />
 
-          <EditOverlay onEdit={() => setOpenBannerModal(true)} eventOrgIdentity={event?.org?.identity}/>
+          <EditOverlay
+            onEdit={() => setOpenBannerModal(true)}
+            eventOrgIdentity={event?.org?.identity}
+          />
           <span className="badge-upcoming">
             {event?.status || "Upcoming Event"}
           </span>
@@ -479,18 +481,19 @@ export default function CommonEventDetails({ event = {}, onBack }) {
                 <span className="views">👁 5678</span>
                 {/* BACKEND: event.views */}
               </div>
-              <div className="soc-mediya">
-                {/* like , share , save */}
-                <span>{LIKE_ICON} 123</span>
-                <span>{SINGELEVENTSHARE_ICON}</span>
-                <span>{SAVEICON}</span>
-              </div>
             </div>
           </div>
-
-          <button className="btn-register" onClick={handleRegisterClick}>
-            Register Now
-          </button>
+          <div >
+            <button className="btn-register" onClick={handleRegisterClick}>
+              Register Now
+            </button>
+            <div className="soc-mediya">
+              {/* like , share , save */}
+              <span>{LIKE_ICON} 123</span>
+              <span>{SINGELEVENTSHARE_ICON}</span>
+              <span>{SAVEICON}</span>
+            </div>
+          </div>
         </div>
 
         {/* ================= 4. DESCRIPTION ================= */}
@@ -567,7 +570,10 @@ export default function CommonEventDetails({ event = {}, onBack }) {
           <div className="col-lg-6">
             <div className="card-box edit-wrapper">
               <h4 className="section-title mb-4">Ticket Availability</h4>
-              <EditOverlay onEdit={() => setOpenTicketListModal(true)} eventOrgIdentity={event?.org?.identity}/>
+              <EditOverlay
+                onEdit={() => setOpenTicketListModal(true)}
+                eventOrgIdentity={event?.org?.identity}
+              />
               <div className="row g-4">
                 {event?.tickets && event.tickets.length > 0 ? (
                   event.tickets.map((ticket) => {
@@ -646,9 +652,14 @@ export default function CommonEventDetails({ event = {}, onBack }) {
           <div className="col-lg-8">
             <div className="card-box mt-4 edit-wrapper">
               <h3>Event Host Details</h3>
-              <EditOverlay onEdit={() => setOpenHostModal(true)} eventOrgIdentity={event?.org?.identity}/>
+              <EditOverlay
+                onEdit={() => setOpenHostModal(true)}
+                eventOrgIdentity={event?.org?.identity}
+              />
 
-              <h4>{event.org?.organizationName || "-"}({event.org?.domainEmail})</h4>
+              <h4>
+                {event.org?.organizationName || "-"}({event.org?.domainEmail})
+              </h4>
 
               {/* ================= CO - ORGANIZATION ================= */}
               {event.collaborators && event.collaborators.length > 0 && (
@@ -731,7 +742,10 @@ export default function CommonEventDetails({ event = {}, onBack }) {
         <div className="card-box mt-4 edit-wrapper">
           <h3>Other Details</h3>
           {/* EDIT ICON HERE */}
-          <EditOverlay onEdit={() => setOpenOtherModal(true)} eventOrgIdentity={event?.org?.identity}/>
+          <EditOverlay
+            onEdit={() => setOpenOtherModal(true)}
+            eventOrgIdentity={event?.org?.identity}
+          />
 
           <div className="row">
             {/* ================= PERKS ================= */}

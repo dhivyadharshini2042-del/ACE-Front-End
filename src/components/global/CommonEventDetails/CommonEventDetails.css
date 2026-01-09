@@ -60,7 +60,14 @@
 .edit-wrapper {
   position: relative;
 }
-
+.soc-mediya{
+  padding-top: 20px;
+  padding-top: 20px;
+    text-align: center;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
 .edit-overlay {
   position: absolute;
   inset: 0;
@@ -391,7 +398,7 @@
 
 /* TAG WRAP */
 .tag-wrap span {
-  padding: 4px 10px;
+  padding:11px 19px;
   border-radius: 12px;
   margin: 4px;
   display: inline-block;

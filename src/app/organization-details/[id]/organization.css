@@ -5,7 +5,7 @@
 }
 
 .bg-purple {
-  background: #7f2bff;
+  background: #7f00ff;
 }
 
 .org-hero-dots {
@@ -25,7 +25,7 @@
 }
 
 .org-hero-dots .dot.active {
-  background: #7f2bff;
+  background: #7f00ff;
 }
 
 .org-logo {
@@ -42,7 +42,7 @@
 }
 
 .btn-purple {
-  background: #7f2bff;
+  background: #7f00ff;
   color: #fff;
 }
 
@@ -67,7 +67,7 @@
 .past-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,.6), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
   color: #fff;
   padding: 16px;
   display: flex;

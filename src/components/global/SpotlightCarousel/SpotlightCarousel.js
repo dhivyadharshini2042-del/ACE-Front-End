@@ -9,6 +9,8 @@ import {
   SPOTLIGHT_DATE_ICON,
   SPOTLIGHT_LOCATION_ICON,
 } from "../../../const-value/config-icons/page";
+import { encodeId } from "../../../lib/utils/secureId";
+import { useRouter } from "next/navigation";
 
 /* -------- DATE FORMAT -------- */
 function formatDate(date, time) {
@@ -37,6 +39,11 @@ export default function SpotlightCarousel({ data = [] }) {
   const [current, setCurrent] = useState(0);
   const [, forceUpdate] = useState(0);
   const total = data.length;
+  const router = useRouter();
+
+  const handleClick = (eventId) => {
+    router.push(`/events/${encodeId(eventId)}`);
+  };
 
   /* Auto slide */
   useEffect(() => {
@@ -79,7 +86,10 @@ export default function SpotlightCarousel({ data = [] }) {
             return (
               <article className={styles.slide} key={event.identity}>
                 {/* LEFT */}
-                <div className={styles.left}>
+                <div
+                  className={styles.left}
+                  onClick={() => handleClick(event.identity)}
+                >
                   <img
                     src={banner}
                     alt={event.title}

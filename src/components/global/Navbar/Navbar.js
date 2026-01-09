@@ -8,7 +8,7 @@ import { logoutOrganizer } from "../../../lib/logout";
 import { LABEL_LOGOUT } from "../../../const-value/config-message/page";
 
 import "./Navbar.css";
-import { LOCATION_ICON } from "../../../const-value/config-icons/page";
+import { EXPLORE_ICON, LOCATION_ICON } from "../../../const-value/config-icons/page";
 import ConfirmModal from "../../ui/Modal/ConfirmModal";
 
 export default function Navbar() {
@@ -55,7 +55,7 @@ export default function Navbar() {
             className="nav-logo"
             onClick={() => router.push("/")}
           />
-          <button className="nav-explore">Explore ▼</button>
+          <button className="nav-explore">Explore {EXPLORE_ICON}</button>
         </div>
 
         {/* CENTER */}

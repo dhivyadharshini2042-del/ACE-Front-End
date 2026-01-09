@@ -257,6 +257,22 @@ export const SINGELEVENTSHARE_ICON = (
     />
   </svg>
 );
+export const EXPLORE_ICON = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="15"
+    height="9"
+    viewBox="0 0 15 9"
+    fill="none"
+  >
+    <path
+      d="M1 1L6.79289 6.79289C7.18342 7.18342 7.81658 7.18342 8.20711 6.79289L14 1"
+      stroke="#1C1C1C"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+  </svg>
+);
 export const MAPLOCATIONVIEWICON = (
   <svg
     xmlns="http://www.w3.org/2000/svg"

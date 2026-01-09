@@ -104,7 +104,7 @@ export default function Sidebar() {
           <Link href="/dashboard/profile/delete">Delete</Link>
         </div>
       )}
-      
+
       {/* ================= ACTIVITIES ================= */}
       <div className={styles.menu} onClick={() => toggleMenu("activities")}>
         <img src="/images/myactivityes.png" alt="activities" />
@@ -183,8 +183,8 @@ export default function Sidebar() {
           <>
             <div onClick={handleLogoutClick}>
               <div className={styles.profileText}>{displayName}</div>
-              <div className={styles.profileTextEmail}>
-                {displayEmail}
+              <div style={{display:"flex" , justifyContent:"space-between"}}>
+                <div className={styles.profileTextEmail}>{displayEmail}</div>
                 <img
                   src="/images/exit.png"
                   alt="logout"

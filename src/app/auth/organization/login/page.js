@@ -152,7 +152,7 @@ export default function OrganizerLoginPage() {
             </div>
 
             {/* SUBMIT */}
-            <button type="submit" className="btn btn-primary w-100">
+            <button type="submit" className="auth-btn">
               {TEXT_SIGNIN}
             </button>
 
