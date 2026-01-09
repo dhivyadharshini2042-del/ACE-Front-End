@@ -1,3 +1,0 @@
-module.exports=[45535,a=>{"use strict";var b=a.i(87924),c=a.i(72131),d=a.i(97548),e=a.i(34907);function f(){let{setLoading:a}=(0,e.useLoading)();return(0,c.useEffect)(()=>(a(!0),()=>{a(!1)}),[a]),(0,b.jsx)("div",{className:"verify-overlay",children:(0,b.jsxs)("div",{className:"verify-modal",children:[(0,b.jsx)("img",{src:"/images/ace-logo.png",className:"verify-logo"}),(0,b.jsx)("h2",{children:d.TITLE_VERIFY_ACCOUNT}),(0,b.jsx)("p",{children:d.MSG_VERIFY_EMAIL_SENT})]})})}a.s(["default",()=>f])}];
-
-//# sourceMappingURL=src_app_auth_organization_signup_verify_page_0a319332.js.map
