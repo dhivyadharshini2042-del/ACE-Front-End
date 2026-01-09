@@ -39,24 +39,6 @@ export default function Navbar() {
     router.push("/auth/user/login");
   };
 
-  // Logout button click → OPEN MODAL
-  const handleLogoutClick = () => {
-    setMenuOpen(false);
-    setShowLogoutConfirm(true);
-  };
-
-  // Confirm logout
-  const confirmLogout = () => {
-    setShowLogoutConfirm(false);
-    logoutOrganizer();
-    window.location.href = "/";
-  };
-
-  //Cancel logout
-  const cancelLogout = () => {
-    setShowLogoutConfirm(false);
-  };
-
   const handleProfileClick = () => {
     setMenuOpen(false);
     router.push("/dashboard");
@@ -100,9 +82,9 @@ export default function Navbar() {
         {/* RIGHT */}
         {isLoggedIn && (
           <div className={`nav-right ${menuOpen ? "open" : ""}`}>
-            <button onClick={handleLogoutClick} className="logout-btn">
+            {/* <button onClick={handleLogoutClick} className="logout-btn">
               {LABEL_LOGOUT}
-            </button>
+            </button> */}
 
             <button className="nav-avatar-btn" onClick={handleProfileClick}>
               <div className="nav-letter-avatar">{initial}</div>
@@ -120,16 +102,6 @@ export default function Navbar() {
           <span className="bar"></span>
         </button>
       </nav>
-
-      {/*LOGOUT CONFIRM MODAL */}
-      <ConfirmModal
-        open={showLogoutConfirm}
-        title="Confirm Logout"
-        description="Are you sure you want to logout?"
-        image="/images/logo.png" 
-        onCancel={cancelLogout}
-        onConfirm={confirmLogout}
-      />
     </>
   );
 }
