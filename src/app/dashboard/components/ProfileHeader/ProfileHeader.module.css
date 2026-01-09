@@ -59,6 +59,7 @@
   margin: 0;
   color: #222;
   text-transform: uppercase;
+  font-family: "BL Melody", sans-serif;
 }
 .name span {
   font-size: 18px;
@@ -67,6 +68,7 @@
   color: #7f00ff;
   text-transform: capitalize;
   padding-left: 15px;
+  font-family: "BL Melody", sans-serif;
 }
 
 .role {
@@ -79,6 +81,7 @@
   display: flex;
   gap: 20px;
   margin-top: 6px;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 .followInfo span {
@@ -86,11 +89,13 @@
   font-weight: 600;
   cursor: pointer;
   color: #7f00ff;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 .rank {
   margin-top: 6px;
   font-size: 14px;
   font-weight: 700;
-  color: #444;
+  color: #222;
+  font-family: var(--font-poppins), sans-serif;
 }

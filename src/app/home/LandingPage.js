@@ -145,7 +145,7 @@ export default function LandingPage() {
 
       <>
         <EventSlider title="Trending Events" data={events} />
-        <EventSlider title="Browse Events" data={events} />
+        <EventSlider title="Virtual Events" data={events} />
       </>
 
       <SpotlightCarousel data={events} />

@@ -5,7 +5,7 @@
   position: relative;
   width: 100%;
   height: 420px;
-  border-radius: 39px; 
+  border-radius: 39px;
   overflow: hidden;
 }
 
@@ -37,13 +37,13 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 39px;  
+  border-radius: 39px;
 }
 .banner-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 99999;   
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -60,13 +60,13 @@
 .edit-wrapper {
   position: relative;
 }
-.soc-mediya{
+.soc-mediya {
   padding-top: 20px;
   padding-top: 20px;
-    text-align: center;
-    display: flex;
-    gap: 20px;
-    justify-content: center;
+  text-align: center;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
 }
 .edit-overlay {
   position: absolute;
@@ -89,9 +89,8 @@
   opacity: 1;
 }
 
-
 /* edit icon */
-.edit-section{
+.edit-section {
   background: #7a12ff;
   padding: 10px 27px;
   display: flex;
@@ -101,6 +100,7 @@
   color: white;
   border-radius: 20px;
   cursor: pointer;
+  font-family: "BL Melody", sans-serif;
 }
 /* CHILD MODALS – MUST BE ABOVE HOST MODAL */
 .modal-overlay {
@@ -122,7 +122,7 @@
 .child-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 2000; /* ABOVE HOST */
   display: flex;
   align-items: center;
@@ -147,6 +147,7 @@
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
+  font-family: "BL Melody", sans-serif;
 }
 
 /* DOTS */
@@ -204,6 +205,7 @@
 .title-row h1 {
   font-weight: 700;
   text-transform: uppercase;
+  font-family: "BL Melody", sans-serif;
 }
 .meta-row {
   display: flex;
@@ -211,6 +213,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   padding-top: 20px;
+  font-family: var(--font-poppins), sans-serif;
 }
 .meta-row div {
   display: flex;
@@ -221,6 +224,7 @@
   line-height: 1.6;
   color: #444;
   margin-top: 20px;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 .readmore {
@@ -228,6 +232,7 @@
   cursor: pointer;
   font-weight: 600;
   margin-left: 4px;
+  font-family: "BL Melody", sans-serif;
 }
 
 .readmore:hover {
@@ -259,6 +264,7 @@
   border-radius: 24px;
   border: none;
   width: 357px;
+  font-family: "BL Melody", sans-serif;
 }
 .btn-outline {
   border: 1px solid #7a12ff;
@@ -266,6 +272,7 @@
   padding: 10px 26px;
   border-radius: 24px;
   background: #fff;
+  font-family: "BL Melody", sans-serif;
 }
 
 /* CARDS */
@@ -279,12 +286,14 @@
   font-size: 21px;
   font-weight: 800;
   padding-bottom: 20px;
+  font-family: "BL Melody", sans-serif;
 }
 .card-box h4 {
   color: #7713ec;
   text-transform: uppercase;
   font-size: 20px;
   font-weight: 700;
+  font-family: "BL Melody", sans-serif;
 }
 .discount-section {
   display: flex;
@@ -296,6 +305,7 @@
 }
 .card-box p {
   padding-bottom: 20px;
+  font-family: var(--font-poppins), sans-serif;
 }
 .map-btn {
   border-radius: 50px;
@@ -303,11 +313,13 @@
   border: 1px solid rgb(219, 216, 216);
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.25);
   padding: 15px;
+  font-family: var(--font-poppins), sans-serif;
 }
 /* ================= Ticket Availability ================= */
 
 .section-title {
   font-weight: 600;
+  font-family: "BL Melody", sans-serif;
 }
 
 /* CARD */
@@ -323,6 +335,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: "BL Melody", sans-serif;
 }
 
 /* TOP ROW */
@@ -343,12 +356,17 @@
 
 .ticket-price {
   font-weight: 600;
+  font-family: "BL Melody", sans-serif;
 }
 
 /* TEXT */
 .ticket-title {
   margin-bottom: 4px;
   font-weight: 600;
+  font-family: "BL Melody", sans-serif;
+}
+.ticket-top span {
+  font-family: var(--font-poppins), sans-serif;
 }
 
 .ticket-date {
@@ -370,16 +388,19 @@
 .ticket-status.not-started {
   background: #fff7e6;
   color: #d48806;
+  font-family: "BL Melody", sans-serif;
 }
 
 .ticket-status.live {
   background: #e6fffa;
   color: #08979c;
+  font-family: "BL Melody", sans-serif;
 }
 
 .ticket-status.expired {
   background: #fff1f0;
   color: #cf1322;
+  font-family: "BL Melody", sans-serif;
 }
 
 .host-grid {
@@ -394,16 +415,21 @@
   color: #1e1d1d;
   font-size: 15px;
   font-weight: 700;
+  font-family: "BL Melody", sans-serif;
 }
 
 /* TAG WRAP */
 .tag-wrap span {
-  padding:11px 19px;
+  padding: 11px 19px;
   border-radius: 12px;
   margin: 4px;
   display: inline-block;
   border-radius: 50px;
   background: var(--Color, #f3f3f3);
+  font-family: var(--font-poppins), sans-serif;
+}
+.other-strong-titel strong {
+  font-family: "BL Melody", sans-serif;
 }
 .countdown {
   display: flex;
@@ -417,9 +443,10 @@
   width: 81px;
   height: 81px;
   padding: 20px 12px;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 600;
   line-height: 1.2;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* DAYS – BLUE */
@@ -439,8 +466,8 @@
 /* MINS – ORANGE */
 .cd-mins {
   border-radius: 62.185px;
-  border: 2.291px solid #f5dba2;
-  background: #fff7d8;
+  border: 2.291px solid #f2b634;
+  background: #f5dba2;
 }
 
 /* SECS – RED */

@@ -749,7 +749,7 @@ export default function CommonEventDetails({ event = {}, onBack }) {
 
           <div className="row">
             {/* ================= PERKS ================= */}
-            <div className="col-md-4">
+            <div className="col-md-4 other-strong-titel">
               <strong>Perks</strong>
 
               {event?.eventPerks && event.eventPerks.length > 0 ? (

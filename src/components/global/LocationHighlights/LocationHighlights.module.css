@@ -23,6 +23,7 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  font-family: "BL Melody", sans-serif;
   transition: all 0.25s ease;
 }
 
@@ -38,9 +39,10 @@
 ========================= */
 .sub {
   font-size: 14px;
-  color: #666666;
+  color: #1c1c1c;
   margin-top: 8px;
   text-align: center;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* =========================
@@ -69,8 +71,6 @@
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-
-
 /* =========================
    IMAGE
 ========================= */
@@ -92,12 +92,14 @@
   font-size: 16px;
   font-weight: 600;
   color: #1c1c1c;
+  font-family: "BL Melody", sans-serif;
 }
 
 .events {
   margin-top: 4px;
   font-size: 12px;
-  color: #777777;
+  color: #1c1c1c;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* =========================

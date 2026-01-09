@@ -38,6 +38,7 @@
   top: 0;
   cursor: pointer;
   font-size: 18px;
+  font-family: "BL Melody", sans-serif;
 }
 
 /* Switch */
@@ -77,7 +78,8 @@
 .field label {
   font-size: 13px;
   font-weight: 500;
-  color: #444;
+  color: #000;
+  font-family: "BL Melody", sans-serif;
 }
 
 .input {
@@ -109,6 +111,7 @@
   border-radius: 8px;
   border: none;
   cursor: pointer;
+  font-family: "BL Melody", sans-serif;
 }
 
 .outlineBtn {
@@ -118,4 +121,5 @@
   padding: 10px 22px;
   border-radius: 8px;
   cursor: pointer;
+  font-family: "BL Melody", sans-serif;
 }

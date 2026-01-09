@@ -11,6 +11,7 @@
   margin-bottom: 24px;
   font-weight: 700;
   color: #222222;
+  font-family: "BL Melody", sans-serif;
 }
 
 .header {
@@ -52,11 +53,13 @@
   font-size: 16px;
   font-weight: 700;
   color: #222222;
+  font-family: "BL Melody", sans-serif;
 }
 
 .item p {
   font-size: 14px;
-  color: #777777;
+  color: #000000;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* edit button */
@@ -144,6 +147,7 @@
   border-radius: 25px;
   font-weight: 600;
   cursor: pointer;
+  font-family: "BL Melody", sans-serif;
 }
 
 .saveBtn {
@@ -154,6 +158,7 @@
   border-radius: 25px;
   font-weight: 600;
   cursor: pointer;
+  font-family: "BL Melody", sans-serif;
 }
 
 .saveBtn:hover {

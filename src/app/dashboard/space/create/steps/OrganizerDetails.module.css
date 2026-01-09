@@ -10,6 +10,7 @@
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 18px;
+  font-family: "BL Melody", sans-serif;
 }
 
 .orgBlock {
@@ -23,6 +24,7 @@
   justify-content: space-between;
   margin-bottom: 14px;
   font-weight: 600;
+   font-family: var(--font-poppins), sans-serif;
 }
 
 .deleteBtn {
@@ -43,6 +45,8 @@
 .field label {
   font-size: 15px;
   font-weight: 500;
+  font-family: "BL Melody", sans-serif;
+  color: #000;
 }
 
 .field span {
@@ -74,6 +78,7 @@
   border: none;
   padding: 10px 26px;
   border-radius: 22px;
+  font-family: "BL Melody", sans-serif;
 }
 
 .actionEnd {
@@ -87,4 +92,5 @@
   border: none;
   padding: 12px 44px;
   border-radius: 24px;
+  font-family: "BL Melody", sans-serif;
 }

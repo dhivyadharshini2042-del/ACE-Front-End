@@ -15,6 +15,7 @@
   font-size: 100px;
   font-weight: 900;
   line-height: 1;
+  font-family: "BL Melody", sans-serif;
 }
 
 .ace-year {
@@ -30,11 +31,12 @@
 }
 
 .ace-desc {
-  color: #666;
+  color: #111;
   max-width: 360px;
   margin-top: 20px;
   font-size: 15px;
   line-height: 1.7;
+   font-family: var(--font-poppins), sans-serif;
 }
 
 /* BUTTONS */
@@ -45,6 +47,7 @@
   border-radius: 30px;
   padding: 10px 60px;
   font-size: 17px;
+  font-family: "BL Melody", sans-serif;
 }
 
 .ace-primary:hover {

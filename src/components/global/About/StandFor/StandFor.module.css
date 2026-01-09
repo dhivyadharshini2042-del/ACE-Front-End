@@ -10,10 +10,12 @@
   font-size: 1.9rem;
   font-weight: 800;
   margin-bottom: 3.5rem;
+  font-family: "BL Melody", sans-serif;
 }
 
 .heading span {
   color: #7c3aed;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* ================= CARDS GRID ================= */

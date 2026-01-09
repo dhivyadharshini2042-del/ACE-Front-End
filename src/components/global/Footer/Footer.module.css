@@ -43,7 +43,8 @@
   margin: 18px 0;
   font-size: 16px;
   line-height: 1.6;
-  color: #d0d0d0;
+  color: #fff;
+  font-family: "BL Melody", sans-serif;
 }
 
 /* =========================
@@ -60,12 +61,14 @@
 .subscribe h3 {
   margin-bottom: 6px;
   color: #fff;
+  font-family: "BL Melody", sans-serif;
 }
 
 .subscribe p {
   font-size: 13px;
-  color: #bdbdbd;
+  color: #fff;
   margin-bottom: 18px;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 .subscribeRow {
@@ -109,6 +112,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s ease;
+  font-family: "BL Melody", sans-serif;
 }
 
 .subscribeBtn:hover {
@@ -152,16 +156,19 @@
 
 .query h4 {
   margin-bottom: 4px;
+  font-family: "BL Melody", sans-serif;
 }
 
 .query p {
   font-size: 14px;
   color: #cfcfcf;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* Columns */
 .col h4 {
   margin-bottom: 14px;
+  font-family: "BL Melody", sans-serif;
 }
 
 .col a {
@@ -170,6 +177,7 @@
   font-size: 14px;
   color: #cfcfcf;
   cursor: pointer;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 .col a:hover {

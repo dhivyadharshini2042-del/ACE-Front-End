@@ -31,6 +31,8 @@
 .field label {
   font-weight: 600;
   font-size: 14px;
+  font-family: "BL Melody", sans-serif;
+  color: #000;
 }
 
 .field input {

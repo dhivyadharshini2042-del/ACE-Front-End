@@ -94,6 +94,7 @@
   text-align: center;
   color: #777;
   font-size: 14px;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* CARD */

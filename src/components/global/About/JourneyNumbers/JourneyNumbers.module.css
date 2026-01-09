@@ -9,10 +9,12 @@
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 2.5rem;
+  font-family: "BL Melody", sans-serif;
 }
 
 .heading span {
   color: #7c3aed;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* ===== CARD ===== */

@@ -8,6 +8,7 @@
   font-size: 22px;
   font-weight: 700;
   margin-bottom: 20px;
+  font-family: "BL Melody", sans-serif;
 }
 
 .card {
@@ -32,12 +33,14 @@
   margin: 0;
   font-size: 16px;
   font-weight: 700;
+  font-family: "BL Melody", sans-serif;
 }
 
 .left p {
   margin-top: 5px;
   font-size: 14px;
   color: #777777;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 .icon {

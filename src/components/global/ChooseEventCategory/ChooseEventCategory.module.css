@@ -9,6 +9,7 @@
   font-size: 22px;
   font-weight: 700;
   margin-bottom: 30px;
+  font-family: "BL Melody", sans-serif;
 }
 
 /* =========================
@@ -109,6 +110,7 @@
   padding: 10px;
   position: relative;
   z-index: 2;
+  font-family: "BL Melody", sans-serif;
 }
 
 /* =========================

@@ -6,12 +6,14 @@
 .why-title {
   font-size: 30px;
   font-weight: 700;
+  font-family: "BL Melody", sans-serif;
 }
 
 .why-sub {
   font-size: 14px;
-  color: #777;
+  color: #0d0f1a;
   margin-top: 6px;
+  font-family: "BL Melody", sans-serif;
 }
 
 /* GRID – IMPORTANT */
@@ -28,19 +30,21 @@
   border-radius: 20px;
   padding: 32px;
   color: #fff;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
 }
 
 .why-card h5 {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 10px;
+  font-family: "BL Melody", sans-serif;
 }
 
 .why-card p {
   font-size: 14px;
   line-height: 1.6;
   color: #cfd3ff;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* LEFT HORIZONTAL CARDS */
@@ -65,7 +69,7 @@
 
 /* RIGHT BIG CARD */
 .vertical {
-  grid-row: span 2;   /* THIS IS THE KEY */
+  grid-row: span 2; /* THIS IS THE KEY */
   display: flex;
   flex-direction: column;
   justify-content: space-between;

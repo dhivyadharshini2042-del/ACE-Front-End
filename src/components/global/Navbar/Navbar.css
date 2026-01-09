@@ -96,7 +96,6 @@
   color: #fff;
   cursor: pointer;
   transition: 0.2s ease;
-
 }
 
 .nav-create:hover {
@@ -149,6 +148,7 @@
   font-weight: 700;
   font-size: 16px;
   text-transform: uppercase;
+  font-family: "BL Melody", sans-serif;
 }
 
 /* =========================

@@ -49,7 +49,7 @@ export default function EventSlider({ title, data = [], des }) {
       {/* HEADER */}
       <div className="d-flex justify-content-between align-items-center mb-2">
         <div>
-          <h5 className="fw-bold mb-0">{title}</h5>
+          <h5 className="fw-bold mb-0 land-title">{title}</h5>
           <p className="mt-4">{des}</p>
         </div>
         <button className="see-all-btn" onClick={handleCardClick}>
@@ -96,14 +96,14 @@ export default function EventSlider({ title, data = [], des }) {
                 <div className="card-body p-3">
                   {/* TITLE */}
                   <div className="d-flex justify-content-between align-items-center mt-2">
-                    <span className="fw-semibold ellipsis">
+                    <span className="fw-semibold card-titel">
                       {event.title || "Untitled Event"}
                     </span>
                     {SAVEICON}
                   </div>
 
                   {/* DETAILS */}
-                  <div className="text-sm text-muted mt-2">
+                  <div className="mt-2 event-details">
                     <div className="d-flex justify-content-between">
                       <span className="ellipsis">
                         {LOCATION_ICON} {event.location?.city || "N/A"}

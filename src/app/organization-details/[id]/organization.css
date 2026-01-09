@@ -39,6 +39,7 @@
   margin-right: 12px;
   font-size: 13px;
   color: #555;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 .btn-purple {
@@ -50,6 +51,7 @@
   background: #e9d4ff;
   border: 1px solid #7f00ff;
   color: #1c1c1c;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 .past-card {

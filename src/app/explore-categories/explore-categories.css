@@ -10,6 +10,12 @@
 /* HEADER */
 .explore-header {
   text-align: center;
+  font-family: "BL Melody", sans-serif;
+  font-weight: 700;
+}
+.explore-header h2 {
+  font-family: "BL Melody", sans-serif;
+  font-weight: 700;
 }
 
 /* GRID */
@@ -109,6 +115,7 @@
   font-weight: 700;
   position: relative;
   z-index: 2;
+  font-family: "BL Melody", sans-serif;
 }
 
 /* =========================

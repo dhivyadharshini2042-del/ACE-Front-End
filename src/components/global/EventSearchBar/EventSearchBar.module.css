@@ -39,12 +39,14 @@
 
 .title {
   font-weight: 700;
+  font-family: "BL Melody", sans-serif;
 }
 
 .sub {
   font-size: 13px;
   color: #777;
   margin-top: 3px;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* RESPONSIVE */

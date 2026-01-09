@@ -21,15 +21,31 @@
 .text-sm {
   font-size: 13px;
 }
-
+.land-title {
+  font-family: "BL Melody", sans-serif;
+}
 /* ELLIPSIS */
 .ellipsis {
   overflow: hidden;
   white-space: nowrap;
   width: 231px;
   text-overflow: ellipsis;
+  font-family: var(--font-poppins), sans-serif;
 }
-
+.card-titel {
+  font-family: "BL Melody", sans-serif;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 231px;
+  text-overflow: ellipsis;
+}
+.event-details {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  color: #121111;
+  font-family: var(--font-poppins), sans-serif;
+}
 /* PAID BADGE */
 .badge-paid {
   color: #1c1c1c;
@@ -39,6 +55,7 @@
   padding: 4px 29px;
   font-size: 12px;
   font-weight: 600;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* MODE */
@@ -104,6 +121,7 @@
   border-radius: 30px;
   padding: 6px 25px;
   text-transform: capitalize;
+  font-family: "BL Melody", sans-serif;
 }
 .see-all-btn:hover {
   background: #7b2cff;

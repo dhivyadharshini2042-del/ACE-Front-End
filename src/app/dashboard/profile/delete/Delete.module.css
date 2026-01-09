@@ -1,6 +1,6 @@
 .wrapper {
   padding: 20px;
-  background-color:  var(--white);
+  background-color: var(--white);
   border-radius: 0px 0px 20px 20px;
 }
 
@@ -20,11 +20,13 @@
   font-size: 22px;
   font-weight: 700;
   margin-bottom: 8px;
+  font-family: "BL Melody", sans-serif;
 }
 
 .confirmBox p {
-  color: #777;
+  color: #000;
   margin-bottom: 30px;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 .btnRow {
@@ -40,6 +42,7 @@
   border-radius: 25px;
   font-weight: 600;
   cursor: pointer;
+  font-family: "BL Melody", sans-serif;
 }
 
 .deleteBtn {
@@ -50,6 +53,8 @@
   border-radius: 25px;
   font-weight: 600;
   cursor: pointer;
+  font-family: "BL Melody", sans-serif;
+
 }
 
 .successBox {
@@ -63,7 +68,6 @@
 }
 
 @media (max-width: 600px) {
-
   .confirmBox {
     padding: 25px;
   }

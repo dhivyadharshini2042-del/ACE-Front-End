@@ -8,10 +8,11 @@
 .title {
   font-size: 26px;
   font-weight: 700;
-  margin-top: 20px;
+  margin-top: 25px;
   margin-bottom: 30px;
   text-align: center;
   color: #1c1c1c;
+  font-family: "BL Melody", sans-serif;
 }
 
 /* =========================
@@ -80,6 +81,7 @@
   font-size: 20px;
   font-weight: 700;
   color: #1c1c1c;
+  font-family: "BL Melody", sans-serif;
 }
 
 .share {
@@ -102,7 +104,8 @@
   gap: 8px;
   margin: 6px 0;
   font-size: 14px;
-  color: #555;
+  color: #1c1c1c;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* =========================
@@ -111,7 +114,8 @@
 .startsIn {
   margin-top: 20px;
   font-weight: 600;
-  color: #444;
+  color: #1c1c1c;
+  font-family: "BL Melody", sans-serif;
 }
 
 .countdown {

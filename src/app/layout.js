@@ -5,10 +5,18 @@ import ClientLayout from "../components/ClientLayout";
 import Providers from "../components/Providers";
 import { LoadingProvider } from "../context/LoadingContext";
 import GlobalLoader from "../components/global/GlobalLoader/GlobalLoader";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-poppins",
+});
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className={poppins.variable}>
         <GoogleOAuthProvider
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
         >

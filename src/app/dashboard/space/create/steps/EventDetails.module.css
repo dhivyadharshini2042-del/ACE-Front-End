@@ -9,6 +9,7 @@
 .cardTitle {
   font-weight: 700;
   margin-bottom: 18px;
+  font-family: "BL Melody", sans-serif;
 }
 
 .cardHeader {
@@ -39,6 +40,8 @@
   font-size: 14px;
   font-weight: 500;
   padding-top: 10px;
+  font-family: "BL Melody", sans-serif;
+  color: #000;
 }
 
 .field label span {
@@ -100,12 +103,14 @@
   border: 1px solid #ddd;
   background: #fff;
   cursor: pointer;
+  font-family: "BL Melody", sans-serif;
 }
 
 .active {
   border-color: #7b2cff;
   background: #f3ecff;
   color: #7b2cff;
+  font-family: "BL Melody", sans-serif;
 }
 
 .btnPrimary {
@@ -115,6 +120,7 @@
   padding: 10px 30px;
   border-radius: 30px;
   cursor: pointer;
+  font-family: "BL Melody", sans-serif;
 }
 
 .btnOutline {
@@ -123,6 +129,7 @@
   padding: 10px 30px;
   border-radius: 30px;
   cursor: pointer;
+  font-family: "BL Melody", sans-serif;
 }
 
 .btnSmall {
@@ -132,6 +139,7 @@
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
+  font-family: "BL Melody", sans-serif;
 }
 
 .actions {
@@ -141,6 +149,7 @@
 
 .muted {
   text-align: center;
-  color: #777;
+  color: #000;
   font-size: 14px;
+  font-family: var(--font-poppins), sans-serif;
 }

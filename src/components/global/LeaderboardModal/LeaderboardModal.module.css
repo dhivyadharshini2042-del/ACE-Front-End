@@ -67,6 +67,7 @@
   font-size: var(--fs-xl);
   font-weight: var(--fw-bold);
   color: var(--tx-title);
+  font-family: "BL Melody", sans-serif;
 }
 
 .lb-subtitle {

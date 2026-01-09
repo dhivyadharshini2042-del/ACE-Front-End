@@ -114,6 +114,7 @@
   font-weight: 700;
   margin-bottom: 8px;
   text-align: center;
+  font-family: "BL Melody", sans-serif;
 }
 
 .org-sub {
@@ -164,6 +165,7 @@
   font-size: 13px;
   font-weight: 600;
   color: #1c1c1c;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* Selected Category */
@@ -336,6 +338,7 @@
   font-size: 30px;
   font-weight: 700;
   color: #1c1c1c;
+  font-family: "BL Melody", sans-serif;
 }
 
 .form-actions {
@@ -378,17 +381,16 @@
   padding: 15px;
   border-radius: 10px;
 }
-.btn-container{
-   
+.btn-container {
 }
-.continue-btn{
- display: inline-block;
- padding: 10px 100px;
- background-color: #7f00ff;
- color: #ffffff;
- border-radius: 20px;
+.continue-btn {
+  display: inline-block;
+  padding: 10px 100px;
+  background-color: #7f00ff;
+  color: #ffffff;
+  border-radius: 20px;
 }
-.continue-btn:hover{
+.continue-btn:hover {
   border: 1px solid #7f00ff;
   color: #1c1c1c;
 }

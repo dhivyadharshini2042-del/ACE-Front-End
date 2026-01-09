@@ -20,6 +20,7 @@
 .title {
   font-size: 18px;
   font-weight: 700;
+  font-family: "BL Melody", sans-serif;
 }
 
 .req {
@@ -30,6 +31,7 @@
   display: block;
   margin: 20px 0 8px;
   font-weight: 600;
+  font-family: "BL Melody", sans-serif;
 }
 
 .field {
@@ -81,6 +83,7 @@
   align-items: center;
   gap: 16px;
   margin-top: 20px;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 .switch {
