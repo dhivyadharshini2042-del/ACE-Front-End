@@ -27,6 +27,7 @@ export default function OrganizerDetails({
     async function loadCategories() {
       try {
         const res = await getOrgCategoriesApi();
+        console.log("check cat",res)
         if (res?.status) {
           setOrgCategories(res.data);
         }
