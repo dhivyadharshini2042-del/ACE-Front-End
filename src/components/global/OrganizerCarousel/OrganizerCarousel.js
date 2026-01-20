@@ -9,10 +9,12 @@ export default function OrganizersCarousel({ onOpenLeaderboard, data = [] }) {
 
   if (!Array.isArray(data) || data.length === 0) return null;
 
-  const handleOrgClick = (orgId) => {
-    const encryptedId = encodeId(orgId);
-    router.push(`/organization-details/${encryptedId}`);
+  const handleOrgClick = (slug) => {
+    // const encryptedId = encodeId(slug);
+    router.push(`/organization-details/${slug}`);
   };
+
+  console.log("kkkkkkkkkkkkk",data)
 
   return (
     <section className={styles.topOrganizersroot}>
@@ -38,7 +40,7 @@ export default function OrganizersCarousel({ onOpenLeaderboard, data = [] }) {
             <div
               key={org.identity || index}
               className={styles.card}
-              onClick={() => handleOrgClick(org.identity)}
+              onClick={() => handleOrgClick(org.slug)}
               style={{ cursor: "pointer" }}
             >
               <div className={styles.avatarWrap}>

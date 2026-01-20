@@ -18,7 +18,7 @@ import {
   YOUTUBEICON,
 } from "../../../const-value/config-icons/page";
 import Footer from "../Footer/Footer";
-import "./CommonEventDetails.css";
+import "./EventDetailsView.css";
 import ConfirmModal from "../../ui/Modal/ConfirmModal";
 import BannerImageModal from "./modals/BannerImageModal";
 import EditOverlay from "./overlays/EditOverlay";
@@ -32,7 +32,7 @@ import { updateEventApi } from "../../../lib/api/event.api";
 import { toast } from "react-hot-toast";
 import OtherDetailsModal from "./modals/OtherDetailsModal";
 
-export default function CommonEventDetails({ event = {}, onBack }) {
+export default function EventDetailsView({ event = {}, onBack }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -719,7 +719,7 @@ export default function CommonEventDetails({ event = {}, onBack }) {
                 <div className="tag-wrap">
                   {event?.tags && event.tags.length > 0 ? (
                     event.tags.map((tag, index) => (
-                      <span key={`${tag}-${index}`}>{tag}</span>
+                      <span key={`${tag}-${index}`}>#{tag}</span>
                     ))
                   ) : (
                     <span>No tags</span>

@@ -12,12 +12,8 @@ export const getAllEventsApi = () =>
   handleApi(apiPublic.get(API_ENDPOINTS.EVENTS.ALL));
 
 //KEEP ONLY IF ADMIN NEEDS IT
-export const getEventByIdApi = (eventId) =>
-  handleApi(apiPublic.get(API_ENDPOINTS.EVENTS.SINGLE(eventId)));
-
-// SINGLE EVENT BY SLUG (PUBLIC, USER SAFE)
 export const getEventBySlugApi = (slug) =>
-  handleApi(apiPublic.get(`/v1/events/${slug}`));
+  handleApi(apiPublic.get(API_ENDPOINTS.EVENTS.SINGLE(slug)));
 
 /* =======================
    EVENTS (ORGANIZER)

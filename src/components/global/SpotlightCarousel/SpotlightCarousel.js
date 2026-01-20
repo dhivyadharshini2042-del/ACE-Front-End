@@ -41,8 +41,8 @@ export default function SpotlightCarousel({ data = [] }) {
   const total = data.length;
   const router = useRouter();
 
-  const handleClick = (eventId) => {
-    router.push(`/events/${encodeId(eventId)}`);
+  const handleClick = (slug) => {
+    router.push(`/events/${slug}`);
   };
 
   /* Auto slide */
@@ -88,7 +88,7 @@ export default function SpotlightCarousel({ data = [] }) {
                 {/* LEFT */}
                 <div
                   className={styles.left}
-                  onClick={() => handleClick(event.identity)}
+                  onClick={() => handleClick(event.slug)}
                 >
                   <img
                     src={banner}

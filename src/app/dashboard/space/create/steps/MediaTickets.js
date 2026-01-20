@@ -141,10 +141,10 @@ export default function MediaTickets({
 
   /* ================= API LOADS ================= */
   useEffect(() => {
-    getPerksApi().then((res) => res?.success && setPerksList(res.data));
-    getCertificationsApi().then((res) => res?.success && setCertList(res.data));
+    getPerksApi().then((res) => res?.status && setPerksList(res.data));
+    getCertificationsApi().then((res) => res?.status && setCertList(res.data));
     getAccommodationsApi().then(
-      (res) => res?.success && setAccommodationList(res.data)
+      (res) => res?.status && setAccommodationList(res.data)
     );
   }, []);
 

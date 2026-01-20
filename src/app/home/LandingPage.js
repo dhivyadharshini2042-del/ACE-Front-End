@@ -23,7 +23,7 @@ import SpotlightCarousel from "../../components/global/SpotlightCarousel/Spotlig
 import LeaderboardModal from "../../components/global/LeaderboardModal/LeaderboardModal";
 import LocationHighlights from "../../components/global/LocationHighlights/LocationHighlights";
 import OrganizersCarousel from "../../components/global/OrganizerCarousel/OrganizerCarousel.js";
-import HowItWorks from "../../components/global/HowItWorks/HowItWorks.js";
+// import HowItWorks from "../../components/global/HowItWorks/HowItWorks.js";
 import { useLoading } from "../../context/LoadingContext.js";
 import { getAllOrganizationsApi } from "../../lib/api/organizer.api.js";
 
@@ -155,7 +155,7 @@ export default function LandingPage() {
         data={organization}
       />
       <EventSlider title="Upcoming Events" data={events} />
-      <HowItWorks />
+      {/* <HowItWorks /> */}
 
       <LeaderboardModal
         open={openLB}

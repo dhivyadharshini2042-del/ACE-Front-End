@@ -2,7 +2,7 @@ export const API_ENDPOINTS = {
   /* ================= EVENTS ================= */
   EVENTS: {
     ALL: "/v1/events",
-    SINGLE: (eventId) => `/v1/events/${eventId}`,
+    SINGLE: (slug) => `/v1/events/${slug}`,
   },
 
   /* ================= AUTH ================= */
@@ -34,7 +34,7 @@ export const API_ENDPOINTS = {
     DELETE: (orgId) => `/v1/organizations/${orgId}`,
     EVENTS: (orgId) => `/v1/organization/${orgId}/events`,
     APPROVEDEVENTS: (orgId) => `/v1/organizations/${orgId}/events`,
-    CREATEVENTS: (orgId) => `/v1/organizations/${orgId}/events`,
+    ORGEVENTS: (slug) => `/v1/organizations/${slug}/events`,
   },
 
   /* ================= MASTER DATA ================= */

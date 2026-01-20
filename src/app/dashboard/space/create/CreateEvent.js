@@ -219,7 +219,7 @@ export default function CreateEvent() {
 
       const res = await createEventApi(orgId, fd);
 
-      if (res?.success) {
+      if (res?.status) {
         toast.success("Event created successfully");
 
         //FULL NORMAL RESET

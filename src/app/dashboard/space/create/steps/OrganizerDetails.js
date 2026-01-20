@@ -113,6 +113,7 @@ export default function OrganizerDetails({
     });
   }, [resetSignal]);
 
+
   return (
     <>
       <div className={styles.card}>

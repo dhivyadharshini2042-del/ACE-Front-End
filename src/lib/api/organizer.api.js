@@ -25,6 +25,9 @@ export const getOrganizerEventsApi = (orgId) =>
 export const getApprovedOrganizerEventsApi = (orgId) =>
   handleApi(apiPublic.get(API_ENDPOINTS.ORGANIZER.APPROVEDEVENTS(orgId)));
 
+export const getOrganizationByEventsApi = (slug) =>
+  handleApi(apiPublic.get(API_ENDPOINTS.ORGANIZER.ORGEVENTS(slug)));
+
 export const createOrganizerEventApi = (orgId, data) =>
   handleApi(apiPrivate.post(API_ENDPOINTS.ORGANIZER.EVENTS(orgId), data));
 
