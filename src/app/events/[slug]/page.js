@@ -4,10 +4,10 @@ import { getEventBySlugApi } from "../../../lib/api/event.api";
 
 /* ================= SEO ================= */
 export async function generateMetadata({ params }) {
-  const { slug } =  params;
+  const { slug } = await params;
 
   const res = await getEventBySlugApi(slug);
-  console.log("siiiiiiiiiiii",res)
+  console.log("siiiiiiiiiiii", res);
   const event = res?.data;
 
   if (!event) {
@@ -48,10 +48,9 @@ export default async function Page({ params }) {
             image: event.bannerImages?.[0],
             location: {
               "@type": "Place",
-              name:
-                [event.location?.city, event.location?.state]
-                  .filter(Boolean)
-                  .join(", "),
+              name: [event.location?.city, event.location?.state]
+                .filter(Boolean)
+                .join(", "),
             },
             organizer: {
               "@type": "Organization",

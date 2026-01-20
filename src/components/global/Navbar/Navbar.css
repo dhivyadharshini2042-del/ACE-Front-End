@@ -136,20 +136,6 @@
   padding: 0;
 }
 
-.nav-letter-avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #7f00ff;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
-  text-transform: uppercase;
-  font-family: "BL Melody", sans-serif;
-}
 
 /* =========================
    HAMBURGER (MOBILE)
@@ -183,6 +169,28 @@
   transform: translateY(-6px) rotate(-45deg);
 }
 /* ================= LOGOUT MODAL ================= */
+.nav-profile-image {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.nav-letter-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #7f00ff;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: uppercase;
+  font-family: "BL Melody", sans-serif;
+}
+
 
 .logout-backdrop {
   position: fixed;
