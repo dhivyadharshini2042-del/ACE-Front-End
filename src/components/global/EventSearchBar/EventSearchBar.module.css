@@ -8,13 +8,13 @@
 }
 
 .card {
-  background: #fffffff2;
   width: 82%;
   max-width: 980px;
   padding: 20px;
+  border: 1px solid var(--Primary, #7f00ff);
   border-radius: 16px;
   border: 1px solid var(--Primary, #7f00ff);
-  background: rgba(248, 250, 255, 0.5);
+  background: rgba(238, 240, 244, 0.5);
   /* backdrop-filter: blur(15.649999618530273px); */
 }
 
@@ -35,6 +35,9 @@
 
 .icon {
   font-size: 22px;
+}
+.icon div{
+  text-align: start;
 }
 
 .title {

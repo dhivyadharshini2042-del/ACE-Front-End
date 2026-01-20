@@ -18,10 +18,13 @@ export default function HeroBannerCarousel({ images = [], interval = 4500 }) {
     return () => clearInterval(timerRef.current);
   }, [n, interval]);
 
-  const handleClick = (idx) => setCenterIdx(idx);
+  const handleClick = (idx) => {
+    setCenterIdx(idx);
+  };
 
   const getPosClass = (imgIdx) => {
     if (n === 1) return styles.posCenter;
+
     const diff = (imgIdx - centerIdx + n) % n;
 
     if (diff === 0) return styles.posCenter;

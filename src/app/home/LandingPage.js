@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./landing.css";
 // ICONS
 import {
   DATEICON,
-  LOCATION_ICON,
+  HOME_PAGE_DATE_ICON,
+  HOME_PAGE_LOCATION_ICON,
   WHATICON,
 } from "../../const-value/config-icons/page.js";
 import { useRouter } from "next/navigation";
@@ -26,11 +27,14 @@ import OrganizersCarousel from "../../components/global/OrganizerCarousel/Organi
 // import HowItWorks from "../../components/global/HowItWorks/HowItWorks.js";
 import { useLoading } from "../../context/LoadingContext.js";
 import { getAllOrganizationsApi } from "../../lib/api/organizer.api.js";
+import FloatingExploreButton from "../../components/global/FloatingExploreButton/FloatingExploreButton.js";
 
 export default function LandingPage() {
   const [openLB, setOpenLB] = useState(false);
   const [events, setEvents] = useState([]);
   const [organization, setOrganization] = useState([]);
+  const exploreRef = useRef(null);
+
   const router = useRouter();
 
   const { setLoading: setGlobalLoading } = useLoading();
@@ -120,15 +124,18 @@ export default function LandingPage() {
 
   return (
     <div className="dashboard-root">
-      <main className="dash-hero">
+      <main className="dash-hero" ref={exploreRef}>
         <HeroBanner text={apiText} />
 
-        <button
-          className="btn-explore"
-          onClick={() => router.push("/explore-events")}
-        >
-          Explore Events
-        </button>
+        <div className="exp-btn">
+          <img src="/images/sparkles.png" alt="no image"/>
+          <button
+            className="btn-explore"
+            onClick={() => router.push("/explore-events")}
+          >
+            Explore Events
+          </button>
+        </div>
 
         <div className="hero-carousel-area">
           <HeroBannerCarousel images={posters} />
@@ -136,8 +143,8 @@ export default function LandingPage() {
 
         <EventSearchBar
           whatIcon={WHATICON}
-          whereIcon={LOCATION_ICON}
-          whenIcon={DATEICON}
+          whereIcon={HOME_PAGE_LOCATION_ICON}
+          whenIcon={HOME_PAGE_DATE_ICON}
         />
       </main>
 
@@ -164,6 +171,7 @@ export default function LandingPage() {
       />
 
       <LocationHighlights />
+      <FloatingExploreButton targetRef={exploreRef} />
       <Footer />
     </div>
   );

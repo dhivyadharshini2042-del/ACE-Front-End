@@ -41,6 +41,9 @@ export const updateEventApi = (eventId, formData) => {
 export const getOrgCategoriesApi = () =>
   handleApi(apiPublic.get(API_ENDPOINTS.MASTER.ORG_CATEGORIES));
 
+export const getExploreEventTypes = () =>
+  handleApi(apiPublic.get(API_ENDPOINTS.MASTER.EXPLORE_EVENT_TYPE));
+
 export const getEventCategoriesApi = () =>
   handleApi(apiPublic.get(API_ENDPOINTS.MASTER.CATEGORIES));
 

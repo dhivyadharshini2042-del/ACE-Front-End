@@ -36,7 +36,7 @@
   font-family: "BL Melody", sans-serif;
   overflow: hidden;
   white-space: nowrap;
-  width: 231px;
+  width: 200px;
   text-overflow: ellipsis;
 }
 .event-details {
@@ -114,14 +114,20 @@
   white-space: nowrap;
 }
 .see-all-btn {
-  color: #7b2cff;
   cursor: pointer;
   background: none;
-  border: 1px solid #7b2cff;
-  border-radius: 30px;
-  padding: 6px 25px;
-  text-transform: capitalize;
+  width: 140px;
+  height: 44px;
+  padding: 2.993px 15.96px;
   font-family: "BL Melody", sans-serif;
+  color: #040404;
+  text-align: center;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  border-radius: 61px;
+  border: 1px solid #000;
 }
 .see-all-btn:hover {
   background: #7b2cff;
@@ -129,4 +135,21 @@
   border: none;
   border-radius: 30px;
   cursor: pointer;
+  width: 140px;
+  height: 44px;
+  padding: 2.993px 15.96px;
+}
+hr {
+  height: 3px !important;
+  background: black !important;
+  border-radius: 10px;
+  background: #e0e0e0;
+  margin: 20px 0;
+}
+.scroll-rounded-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #cce8ff;
+  border: none;
 }

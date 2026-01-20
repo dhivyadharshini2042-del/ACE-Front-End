@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
   DATEICON,
+  HEART_ICON,
   LOCATION_ICON,
   SAVEICON,
   TICKET_ICON,
@@ -13,9 +14,25 @@ import {
 
 import "./EventSlider.css";
 
-export default function EventSlider({ title, data = [], des, loading = false }) {
+export default function EventSlider({
+  title,
+  data = [],
+  des,
+  loading = false,
+}) {
   const router = useRouter();
   const sliderRef = useRef(null);
+
+  // like state per card (id based)
+  const [likedCards, setLikedCards] = useState({});
+
+  const toggleLike = (id) => {
+    if (!id) return;
+    setLikedCards((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
   const slideLeft = () => {
     sliderRef.current?.scrollBy({ left: -350, behavior: "smooth" });
@@ -43,7 +60,7 @@ export default function EventSlider({ title, data = [], des, loading = false }) 
     });
   };
 
-  /* ================= LOADING UI ================= */
+  /* ================= LOADING ================= */
   if (loading) {
     return (
       <section className="container-fluid mt-4 px-5">
@@ -53,7 +70,7 @@ export default function EventSlider({ title, data = [], des, loading = false }) 
     );
   }
 
-  /* ================= EMPTY DATA ================= */
+  /* ================= EMPTY ================= */
   if (!loading && data.length === 0) {
     return (
       <section className="container-fluid mt-4 px-5">
@@ -63,7 +80,7 @@ export default function EventSlider({ title, data = [], des, loading = false }) 
     );
   }
 
-  /* ================= NORMAL RENDER ================= */
+  /* ================= NORMAL ================= */
   return (
     <section className="container-fluid mt-4 px-5">
       {/* HEADER */}
@@ -80,15 +97,16 @@ export default function EventSlider({ title, data = [], des, loading = false }) 
       <hr />
 
       {/* NAV */}
-      <div className="d-flex justify-content-end gap-2 mb-2">
-        <button className="btn btn-light rounded-circle" onClick={slideLeft}>
+      <div className="d-flex justify-content-end gap-4 mb-3">
+        <button className="scroll-rounded-circle" onClick={slideLeft}>
           ❮
         </button>
-        <button className="btn btn-light rounded-circle" onClick={slideRight}>
+        <button className="scroll-rounded-circle" onClick={slideRight}>
           ❯
         </button>
       </div>
 
+      {/* SLIDER */}
       <div
         className="d-flex gap-3 overflow-hidden"
         ref={sliderRef}
@@ -96,17 +114,18 @@ export default function EventSlider({ title, data = [], des, loading = false }) 
       >
         {data.map((event, index) => {
           const calendar = event.calendars?.[0];
+          const isLiked = likedCards[event.identity];
 
           return (
             <div
               key={event.identity ?? index}
-              className="card event-card"
-              onClick={() => handleClick(event.slug)}
+              className={`card event-card ${isLiked ? "liked" : ""}`}
             >
               <img
                 src={event.bannerImages?.[0] || "/images/event.png"}
                 className="event-img"
                 alt={event.title}
+                onClick={() => handleClick(event.slug)}
               />
 
               <div className="card-body p-3">
@@ -114,6 +133,9 @@ export default function EventSlider({ title, data = [], des, loading = false }) 
                   <span className="fw-semibold card-titel">
                     {event.title || "Untitled Event"}
                   </span>
+                  <div onClick={() => toggleLike(event.identity)}>
+                    <HEART_ICON active={isLiked} />
+                  </div>
                   {SAVEICON}
                 </div>
 
@@ -126,7 +148,11 @@ export default function EventSlider({ title, data = [], des, loading = false }) 
                   </div>
 
                   <div className="mt-2">
-                    {DATEICON} {formatDate(calendar?.startDate)}
+                    <div>
+                      {DATEICON} {formatDate(calendar?.startDate)}
+                    </div>
+
+                    {/* LIKE */}
                   </div>
                 </div>
 

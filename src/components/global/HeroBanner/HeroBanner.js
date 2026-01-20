@@ -11,9 +11,10 @@ export default function HeroBanner({ text }) {
         {words.map((word, i) => (
           <span
             key={i}
-            style={{ animationDelay: `${0.3 * i}s` }}
+            className={styles.word}
+            style={{ animationDelay: `${i * 0.35}s` }}
           >
-            {word}
+            {word}&nbsp;
           </span>
         ))}
       </h1>

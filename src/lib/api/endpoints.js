@@ -40,6 +40,7 @@ export const API_ENDPOINTS = {
   /* ================= MASTER DATA ================= */
   MASTER: {
     ORG_CATEGORIES: "/v1/master/org-categories",
+    EXPLORE_EVENT_TYPE: "/v1/master/event-types",
     ACCOMMODATIONS: "/v1/master/accommodations",
     EVENT_TYPES: (categoryId) => `/v1/master/event-types/${categoryId}`,
     CATEGORIES: "/v1/master/categories",

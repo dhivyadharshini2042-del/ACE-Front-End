@@ -1,12 +1,4 @@
 /* =========================
-   CENTER
-========================= */
-.center {
-  text-align: center;
-  width: 100%;
-}
-
-/* =========================
    TITLE
 ========================= */
 .title {
@@ -19,67 +11,62 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
-  color: #1c1c1c;
-}
-
-/* Gradient animated words */
-.title span {
-  background: linear-gradient(90deg, #6a00ff, #9b2cff, #ff3d9a);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradientMove 6s ease-in-out infinite;
+  color: #000;
 }
 
 /* =========================
-   SUB TITLE
+   WORD – NO SHAKE LOOP
+========================= */
+.word {
+  display: inline-block;
+  color: #000;
+  animation: wordColorLoop 3.5s ease-in-out infinite;
+}
+
+/* =========================
+   KEYFRAMES (COLOR ONLY)
+========================= */
+@keyframes wordColorLoop {
+  /* start – black */
+  0% {
+    color: #000;
+  }
+
+  /* color appear */
+  20% {
+    background: linear-gradient(90deg, #6a00ff, #ff3d9a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* stay colored */
+  40% {
+    background: linear-gradient(90deg, #6a00ff, #ff3d9a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* back to black */
+  60% {
+    background: none;
+    -webkit-text-fill-color: #000;
+    color: #000;
+  }
+
+  /* stay black till loop ends */
+  100% {
+    color: #000;
+  }
+}
+
+/* =========================
+   SUBTITLE
 ========================= */
 .subtitle {
   margin-top: 20px;
   font-size: 16px;
   font-family: var(--font-poppins), sans-serif;
   font-weight: 600;
-  color: #666666;
+  color: #3D3D3D;
   text-align: center;
-}
-
-/* =========================
-   ANIMATION
-========================= */
-@keyframes gradientMove {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-/* Tablets */
-@media (max-width: 900px) {
-  .title {
-    font-size: 42px;
-    padding-top: 70px;
-  }
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-  .title {
-    font-size: 32px;
-    padding-top: 60px;
-    gap: 6px;
-  }
-
-  .subtitle {
-    font-size: 14px;
-    padding: 0 16px;
-  }
 }

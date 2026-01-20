@@ -1,23 +1,25 @@
 import { NextResponse } from "next/server";
 
-/* ================= CONFIG ================= */
+/* ===============================
+   ROUTE CONFIG
+================================ */
 
-const BLOCKED_USER_AGENTS = [
-  "curl",
-  "wget",
-  "python",
-  "scrapy",
-  "postman",
-  "httpclient",
+// Public routes (token / consent illa kooda ok)
+const PUBLIC_ROUTES = [
+  "/",
+  "/about",
+  "/contact",
+  "/faq",
+  "/terms-and-conditions",
+  "/events",
+  "/explore-events",
+  "/explore-categories",
+  "/organization-details",
+  "/auth",
+  "/unauthorized",
 ];
 
-const SENSITIVE_PATHS = [
-  "/.env",
-  "/.git",
-  "/.next",
-  "/config",
-];
-
+// Protected routes (token MUST)
 const PROTECTED_ROUTES = [
   "/dashboard",
   "/profile",
@@ -25,73 +27,91 @@ const PROTECTED_ROUTES = [
   "/space",
 ];
 
-/* ================= HELPERS ================= */
+// Consent required routes (GDPR / cookie consent)
+const CONSENT_REQUIRED_ROUTES = [
+  "/",
+  "/events",
+  "/explore-events",
+  "/explore-categories",
+  "/organization-details",
+];
 
-function getToken(req) {
-  // 🔥 MUST MATCH BACKEND COOKIE NAME
-  return req.cookies.get("authToken")?.value || null;
-}
+/* ===============================
+   MIDDLEWARE
+================================ */
 
-function isPathSafe(pathname) {
-  return (
-    !pathname.includes("..") &&
-    !pathname.includes("//") &&
-    !pathname.includes("%2e")
-  );
-}
+export function middleware(request) {
+  const { pathname } = request.nextUrl;
 
-/* ================= MIDDLEWARE ================= */
-
-export default function middleware(req) {
-  const { pathname } = req.nextUrl;
-
-  /* ✅ API ROUTES – ALWAYS ALLOW */
-  if (pathname.startsWith("/api")) {
+  /* --------------------------------
+     1. Ignore Next internals & assets
+  --------------------------------- */
+  if (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/images") ||
+    pathname.startsWith("/favicon") ||
+    pathname.endsWith(".png") ||
+    pathname.endsWith(".jpg") ||
+    pathname.endsWith(".jpeg") ||
+    pathname.endsWith(".svg") ||
+    pathname.endsWith(".css") ||
+    pathname.endsWith(".js") ||
+    pathname.endsWith(".ico")
+  ) {
     return NextResponse.next();
   }
 
-  const token = getToken(req);
-  const userAgent = req.headers.get("user-agent")?.toLowerCase() || "";
-  const fetchMode = req.headers.get("sec-fetch-mode");
+  /* --------------------------------
+     2. Read cookies
+  --------------------------------- */
+  const token = request.cookies.get("token")?.value;
+  const consent = request.cookies.get("user_consent")?.value;
 
-  console.log("Middleware:", pathname, "| mode:", fetchMode);
-
-  /* BLOCK SENSITIVE PATHS */
-  if (SENSITIVE_PATHS.some((p) => pathname.startsWith(p))) {
-    return NextResponse.rewrite(new URL("/not-found", req.url));
+  /* --------------------------------
+     3. PROTECTED ROUTES (Auth)
+  --------------------------------- */
+  if (PROTECTED_ROUTES.some((route) => pathname.startsWith(route))) {
+    if (!token) {
+      return NextResponse.redirect(
+        new URL("/unauthorized", request.url)
+      );
+    }
+    return NextResponse.next();
   }
 
-  /*  SANITIZE PATH */
-  if (!isPathSafe(pathname)) {
-    return NextResponse.rewrite(new URL("/not-found", req.url));
-  }
-
-  /*  BLOCK BOTS */
-  if (BLOCKED_USER_AGENTS.some((ua) => userAgent.includes(ua))) {
-    return NextResponse.rewrite(new URL("/not-found", req.url));
-  }
-
-  /* 🔐 PROTECTED ROUTES
-     - ONLY block manual URL typing
-     - Allow router.push / Link navigation
-  */
+  /* --------------------------------
+     4. CONSENT CHECK
+     (only if route needs consent)
+  --------------------------------- */
   if (
-    PROTECTED_ROUTES.some((route) => pathname.startsWith(route)) &&
-    fetchMode === "navigate" &&
-    !token
+    CONSENT_REQUIRED_ROUTES.some((route) => pathname.startsWith(route)) &&
+    !consent
   ) {
-    return NextResponse.redirect(
-      new URL("/auth/user/login", req.url)
-    );
+    // Consent illa → page load aagum
+    // consent modal client side handle pannum
+    return NextResponse.next();
   }
 
-  return NextResponse.next();
+  /* --------------------------------
+     5. PUBLIC ROUTES → allow
+  --------------------------------- */
+  if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
+    return NextResponse.next();
+  }
+
+  /* --------------------------------
+     6. EVERYTHING ELSE → 404
+  --------------------------------- */
+  return NextResponse.rewrite(
+    new URL("/not-found", request.url)
+  );
 }
 
-/* ================= MATCHER ================= check testing*/
+/* ===============================
+   APPLY TO ALL ROUTES
+================================ */
 
 export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|images|fonts).*)",
-  ],
+  matcher: ["/:path*"],
 };

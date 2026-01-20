@@ -52,8 +52,7 @@ export default function Navbar() {
       setGlobalLoading(true);
 
       try {
-        const role =
-          user.role || (user.type === "org" ? "organizer" : "user");
+        const role = user.role || (user.type === "org" ? "organizer" : "user");
 
         let res;
         if (role === "organizer") {
@@ -110,9 +109,7 @@ export default function Navbar() {
           className="nav-logo"
           onClick={() => router.push("/")}
         />
-        <button className="nav-explore">
-          Explore {EXPLORE_ICON}
-        </button>
+        <button className="nav-explore">Explore {EXPLORE_ICON}</button>
       </div>
 
       {/* CENTER */}
@@ -125,12 +122,18 @@ export default function Navbar() {
           />
         </div>
 
-        <button className="nav-location-btn">
-          {LOCATION_ICON}
-        </button>
+        <button className="nav-location-btn">{LOCATION_ICON}</button>
+        {!isLoggedIn && (
+          <button
+            className="nav-create"
+            onClick={() => router.push("/dashboard/space/create")}
+          >
+            + Create Event
+          </button>
+        )}
 
         {!isLoggedIn && (
-          <button className="nav-create" onClick={handleSignup}>
+          <button className="nav-sinup" onClick={handleSignup}>
             Sign In
           </button>
         )}
@@ -139,10 +142,7 @@ export default function Navbar() {
       {/* RIGHT */}
       {isLoggedIn && (
         <div className={`nav-right ${menuOpen ? "open" : ""}`}>
-          <button
-            className="nav-avatar-btn"
-            onClick={handleProfileClick}
-          >
+          <button className="nav-avatar-btn" onClick={handleProfileClick}>
             {profileImage ? (
               <img
                 src={profileImage}
@@ -151,9 +151,7 @@ export default function Navbar() {
                 onError={() => setProfileImage(null)}
               />
             ) : (
-              <div className="nav-letter-avatar">
-                {initial}
-              </div>
+              <div className="nav-letter-avatar">{initial}</div>
             )}
           </button>
         </div>

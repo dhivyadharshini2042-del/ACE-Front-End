@@ -159,7 +159,10 @@ export default function Sidebar() {
       {expanded && openMenu === "settings" && (
         <div className={styles.dropdown}>
           <Link href="/dashboard/settings/notification">Notification</Link>
-          <Link href="/dashboard/settings/email">Email</Link>
+
+          {role === "org" && (
+            <Link href="/dashboard/settings/email">Email</Link>
+          )}
         </div>
       )}
 
@@ -183,7 +186,7 @@ export default function Sidebar() {
           <>
             <div onClick={handleLogoutClick}>
               <div className={styles.profileText}>{displayName}</div>
-              <div style={{display:"flex" , justifyContent:"space-between"}}>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div className={styles.profileTextEmail}>{displayEmail}</div>
                 <img
                   src="/images/exit.png"

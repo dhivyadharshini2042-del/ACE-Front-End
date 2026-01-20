@@ -2,13 +2,16 @@ import axios from "axios";
 import { getToken } from "./auth";
 
 const apiPrivate = axios.create({
-  baseURL: "/api/proxy", // proxy
-  withCredentials: true, // 🔥 cookie send aagum
+  baseURL:
+    typeof window === "undefined"
+      ? process.env.NEXT_PUBLIC_API_URL
+      : "/api/proxy",
+  withCredentials: true,
 });
 
 /* ================= REQUEST INTERCEPTOR ================= */
 apiPrivate.interceptors.request.use((config) => {
-  const token = getToken(); // localStorage helper
+  const token = getToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -20,11 +23,9 @@ apiPrivate.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401) {
-      // 🔥 token invalid / expired / deleted
-      localStorage.removeItem("token");
-      localStorage.removeItem("userData");
-
       if (typeof window !== "undefined") {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userData");
         window.location.href = "/unauthorized";
       }
     }

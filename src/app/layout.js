@@ -7,6 +7,13 @@ import { LoadingProvider } from "../context/LoadingContext";
 import GlobalLoader from "../components/global/GlobalLoader/GlobalLoader";
 import { Poppins } from "next/font/google";
 
+/* ADD THIS */
+export const metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+  ),
+};
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
@@ -17,17 +24,18 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={poppins.variable}>
-        <GoogleOAuthProvider
-          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-        >
-          <LoadingProvider>
-            <GlobalLoader />
+        {/* OUTERMOST */}
+        <LoadingProvider>
+          <GlobalLoader />
 
+          <GoogleOAuthProvider
+            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+          >
             <Providers>
               <ClientLayout>{children}</ClientLayout>
             </Providers>
-          </LoadingProvider>
-        </GoogleOAuthProvider>
+          </GoogleOAuthProvider>
+        </LoadingProvider>
       </body>
     </html>
   );

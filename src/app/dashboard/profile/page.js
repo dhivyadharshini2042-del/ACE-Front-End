@@ -59,6 +59,7 @@ export default function ProfilePage() {
   const [imagePreview, setImagePreview] = useState(null);
 
   /* ================= LOAD PROFILE ================= */
+  
   useEffect(() => {
     const loadProfile = async () => {
       setGlobalLoading(true);

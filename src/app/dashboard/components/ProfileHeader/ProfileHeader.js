@@ -15,21 +15,18 @@ export default function ProfileHeader() {
 
   // profile default-aa empty object
   const [profile, setProfile] = useState({});
-  const [loading, setLoading] = useState(true);
-
-  const { setLoading: setGlobalLoading } = useLoading();
+  const { setLoading } = useLoading();
 
   /* ================= LOAD PROFILE ================= */
   useEffect(() => {
     async function loadProfile() {
-      setGlobalLoading(true);
+      setLoading(true);
 
       try {
         const user = getUserData();
         if (!user?.identity) return;
 
-        const role =
-          user.role || (user.type === "org" ? "organizer" : "user");
+        const role = user.role || (user.type === "org" ? "organizer" : "user");
 
         let res;
         if (role === "organizer") {
@@ -39,25 +36,21 @@ export default function ProfileHeader() {
         }
 
         if (res?.status && res.data) {
-          setProfile(res.data); // real data replace
+          setProfile(res.data); 
         }
       } catch (err) {
         console.error("ProfileHeader error:", err);
       } finally {
         setLoading(false);
-        setGlobalLoading(false);
       }
     }
 
     loadProfile();
-  }, [setGlobalLoading]);
+  }, [setLoading]);
 
   /* ================= SAFE FALLBACK VALUES ================= */
 
-  const displayName =
-    profile.organizationName ||
-    profile.name ||
-    "User";
+  const displayName = profile.organizationName || profile.name || "User";
 
   const firstLetter = displayName.charAt(0).toUpperCase();
 
@@ -82,9 +75,7 @@ export default function ProfileHeader() {
             className={styles.avatar}
           />
         ) : (
-          <div className={styles.avatarFallback}>
-            {firstLetter}
-          </div>
+          <div className={styles.avatarFallback}>{firstLetter}</div>
         )}
 
         {/* INFO */}
@@ -97,26 +88,16 @@ export default function ProfileHeader() {
           </h2>
 
           <div className={styles.followInfo}>
-            <span
-              onClick={() =>
-                router.push("/dashboard/profile/followers")
-              }
-            >
+            <span onClick={() => router.push("/dashboard/profile/followers")}>
               {followersCount} Followers
             </span>
 
-            <span
-              onClick={() =>
-                router.push("/dashboard/profile/following")
-              }
-            >
+            <span onClick={() => router.push("/dashboard/profile/following")}>
               {followingCount} Following
             </span>
           </div>
 
-          <div className={styles.rank}>
-            #{rank} Rank
-          </div>
+          <div className={styles.rank}>#{rank} Rank</div>
         </div>
       </div>
     </div>

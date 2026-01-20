@@ -169,8 +169,40 @@
 
 .explore {
   background: #e3d8ff;
+  flex-direction: column;
+  transition: flex-direction 0.4s ease, padding 0.4s ease, gap 0.4s ease;
+}
+.explore .left,
+.explore .right {
+  width: 100%;
+  transition: width 0.5s ease, transform 0.5s ease, padding 0.5s ease;
 }
 
+/* center align text in default */
+.explore .right {
+  text-align: center;
+  transition: text-align 0.35s ease, padding-left 0.5s ease;
+}
+/* HOVER – row layout */
+.explore:hover {
+  flex-direction: row; /*  main requirement */
+}
+
+/* left & right split on hover */
+.explore:hover .left {
+  width: 45%;
+}
+
+.explore:hover .right {
+  width: 55%;
+  text-align: left;
+  justify-content: flex-start;
+  padding-left: 16px;
+}
+
+.explore .left img {
+  transition: transform 0.45s ease;
+}
 /* =========================
    RESPONSIVE
 ========================= */
