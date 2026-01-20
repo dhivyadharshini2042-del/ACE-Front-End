@@ -27,8 +27,8 @@ export default function MyEventsGrid({ events = [] }) {
     setDeleteId(null);
   };
 
-  const handleClick = (slug) => {
-      router.push(`/events/${slug}`);
+  const handleClick = (eventId) => {
+      router.push(`/events/${encodeId(eventId)}`);
     };
 
   return (
@@ -41,7 +41,7 @@ export default function MyEventsGrid({ events = [] }) {
             <div key={e.identity} className="col-xl-3 col-lg-4 col-md-6">
               <div
                 className="card h-100 shadow-sm rounded-4 overflow-hidden event-card"
-                onClick={() => handleClick(e.slug)}
+                onClick={() => handleClick(e.identity)}
               >
                 {/* IMAGE */}
                 <div className="event-img-wrapper">

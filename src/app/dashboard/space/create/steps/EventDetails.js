@@ -39,7 +39,7 @@ export default function EventDetails({
     async function loadCategories() {
       try {
         const res = await getEventCategoriesApi();
-        if (res?.status) {
+        if (res?.success) {
           setCategories(res.data);
         }
       } catch (err) {
@@ -57,7 +57,7 @@ export default function EventDetails({
     async function loadEventTypes() {
       try {
         const res = await getEventTypesApi(data.category);
-        if (res?.status) {
+        if (res?.success) {
           setEventTypes(res.data);
         }
       } catch (err) {
@@ -115,6 +115,10 @@ export default function EventDetails({
     let value = tagInput.trim();
     if (!value) return;
 
+    if (!value.startsWith("#")) {
+      value = `#${value}`;
+    }
+
     if (data.tags?.includes(value)) {
       setTagInput("");
       return;
@@ -158,7 +162,7 @@ export default function EventDetails({
       mapLink: "",
       meetLink: "",
       offers: "",
-      venue: "",
+      venue:"",
     });
   }, [resetSignal]);
 
@@ -427,9 +431,7 @@ export default function EventDetails({
                 />
               </div>
               <div className={styles.field}>
-                <label>
-                  Venue <span>*</span>
-                </label>
+                <label>Venue <span>*</span></label>
                 <input
                   className={styles.input}
                   placeholder="Enter venue"

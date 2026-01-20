@@ -26,16 +26,10 @@ export const getUserData = () => {
   return data ? JSON.parse(data) : null;
 };
 
-export const clearToken = async () => {
+export const clearToken = () => {
   if (typeof window === "undefined") return;
-
   localStorage.removeItem("token");
   localStorage.removeItem("userData");
-
-  await fetch("/api/logout", {
-    method: "POST",
-    credentials: "include",
-  });
 };
 
 /* ================= EMAIL (FOR OTP FLOW) ================= */
