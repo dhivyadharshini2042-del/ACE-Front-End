@@ -31,7 +31,6 @@ export default function ResetPasswordPage() {
   const role = params.get("role") || ROLE_USER;
 
   const { setLoading } = useLoading(); 
-
   const email = getEmail();
 
   const [password, setPassword] = useState("");
@@ -44,12 +43,12 @@ export default function ResetPasswordPage() {
     user: {
       image: "/images/auth-forgot.png",
       redirect: "/auth/success?role=user",
-      login: "/user/login",
+      login: "/auth/user/login",
     },
     organizer: {
       image: "/images/or_forgotpasswordnextimage.png",
       redirect: "/auth/success?role=organizer",
-      login: "/organizer/login",
+      login: "/auth/organization/login",
     },
   };
 
@@ -58,7 +57,7 @@ export default function ResetPasswordPage() {
   async function onSubmit(e) {
     e.preventDefault();
 
-    // YUP VALIDATION
+    /* ===== VALIDATION ===== */
     try {
       await userResetSchema.validate(
         { password, confirmPassword: confirm },
@@ -67,14 +66,11 @@ export default function ResetPasswordPage() {
     } catch (err) {
       return toast.error(err.errors[0]);
     }
-    finally {
-      setLoading(false); 
-    }
 
-
-
-    // API CALL
+    /* ===== API CALL ===== */
     try {
+      setLoading(true); 
+
       await resetPasswordApi({
         email,
         password,
@@ -84,7 +80,9 @@ export default function ResetPasswordPage() {
       clearEmail();
       window.location.href = ui.redirect;
     } catch (err) {
-      toast.error(err?.response?.data?.message || MSG_PASSWORD_UPDATED_FAILED);
+      toast.error(
+        err?.response?.data?.message || MSG_PASSWORD_UPDATED_FAILED
+      );
     } finally {
       setLoading(false); 
     }
@@ -115,8 +113,11 @@ export default function ResetPasswordPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter new password"
                 />
-                <span className="pass-toggle" onClick={() => setShow1(!show1)}>
-                  {show1 ? PASSWORDHIDEICON : PASSWORDHIDEICON}
+                <span
+                  className="pass-toggle"
+                  onClick={() => setShow1(!show1)}
+                >
+                  {show1 ? PASSWORDVIEWICON : PASSWORDHIDEICON}
                 </span>
               </div>
             </div>
@@ -135,7 +136,10 @@ export default function ResetPasswordPage() {
                   autoComplete="off"
                   placeholder="Re-enter password"
                 />
-                <span className="pass-toggle" onClick={() => setShow2(!show2)}>
+                <span
+                  className="pass-toggle"
+                  onClick={() => setShow2(!show2)}
+                >
                   {show2 ? PASSWORDVIEWICON : PASSWORDHIDEICON}
                 </span>
               </div>

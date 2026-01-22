@@ -17,6 +17,7 @@ import {
 
 import { createEventApi } from "../../../../lib/api/event.api";
 import { getUserData } from "../../../../lib/auth";
+import { useLoading } from "../../../../context/LoadingContext";
 
 /* ================= INITIAL STATE ================= */
 
@@ -44,9 +45,9 @@ const INITIAL_FORM_DATA = {
     country: "",
     state: "",
     city: "",
-    offers:"",
+    offers: "",
     mapLink: "",
-    venue:"",
+    venue: "",
   },
   media: {
     bannerImages: [],
@@ -63,6 +64,7 @@ const INITIAL_FORM_DATA = {
 };
 
 export default function CreateEvent() {
+  const { setLoading } = useLoading();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
@@ -72,30 +74,37 @@ export default function CreateEvent() {
   /* ================= STEP 1 ================= */
   const handleStep1Next = async () => {
     try {
+      setLoading(true);
       await createEventStep1Schema.validate(formData.organizer, {
         abortEarly: false,
       });
       setStep(2);
     } catch (err) {
       toast.error(err?.errors?.[0] || "Fill organizer details");
+    } finally {
+      setLoading(false);
     }
   };
 
   /* ================= STEP 2 ================= */
   const handleStep2Next = async () => {
     try {
+      setLoading(true);
       await createEventStep2Schema.validate(formData.event, {
         abortEarly: false,
       });
       setStep(3);
     } catch (err) {
       toast.error(err?.errors?.[0] || "Fill event details");
+    } finally {
+      setLoading(false);
     }
   };
 
   /* ================= FINAL SUBMIT ================= */
   const handleFinalSubmit = async () => {
     try {
+      setLoading(true);
       await createEventStep3Schema.validate(formData.media, {
         abortEarly: false,
       });
@@ -116,7 +125,7 @@ export default function CreateEvent() {
           orgDept: org.department || "",
           organizerName: org.organizerName,
           location: org.location,
-        })
+        }),
       );
 
       const event = formData.event;
@@ -153,8 +162,8 @@ export default function CreateEvent() {
             endDate: c.endDate,
             startTime: c.startTime,
             endTime: c.endTime,
-          }))
-        )
+          })),
+        ),
       );
 
       fd.append(
@@ -168,8 +177,8 @@ export default function CreateEvent() {
             isPaid: t.type === "PAID",
             price: t.type === "PAID" ? Number(t.amount) : 0,
             totalQuantity: Number(t.total),
-          }))
-        )
+          })),
+        ),
       );
 
       fd.append("perkIdentities", JSON.stringify(media.perks || []));
@@ -177,7 +186,7 @@ export default function CreateEvent() {
       if (media.accommodation) {
         fd.append(
           "accommodationIdentities",
-          JSON.stringify(media.accommodation || [])
+          JSON.stringify(media.accommodation || []),
         );
       }
 
@@ -191,7 +200,7 @@ export default function CreateEvent() {
             mapLink: event.mapLink,
             offers: event.offers,
             venue: event.venue,
-          })
+          }),
         );
       }
 
@@ -204,7 +213,7 @@ export default function CreateEvent() {
           whatsapp: media.whatsapp,
           instagram: media.instagram,
           linkedin: media.linkedin,
-        })
+        }),
       );
 
       if (media.bannerImages?.length) {
@@ -231,6 +240,8 @@ export default function CreateEvent() {
       }
     } catch (err) {
       toast.error(err?.errors?.[0] || err?.message || "Invalid data");
+    } finally {
+      setLoading(false); 
     }
   };
 

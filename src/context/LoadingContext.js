@@ -1,23 +1,19 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
+import GlobalLoader from "../components/global/GlobalLoader/GlobalLoader";
 
-const LoadingContext = createContext(null);
+const LoadingContext = createContext();
 
-export const LoadingProvider = ({ children }) => {
+export function LoadingProvider({ children }) {
   const [loading, setLoading] = useState(false);
 
   return (
     <LoadingContext.Provider value={{ loading, setLoading }}>
       {children}
+      {loading && <GlobalLoader />}
     </LoadingContext.Provider>
   );
-};
+}
 
-export const useLoading = () => {
-  const context = useContext(LoadingContext);
-  if (!context) {
-    throw new Error("useLoading must be used inside LoadingProvider");
-  }
-  return context;
-};
+export const useLoading = () => useContext(LoadingContext);

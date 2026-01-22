@@ -15,7 +15,7 @@ export default function ActiveFilterChips({
   /* ================= HELPERS ================= */
 
   const getEventTypeName = (id) =>
-    eventTypes.find((e) => e.identity === id)?.eventTypeName || "Event Type";
+    eventTypes.find((e) => e.identity === id)?.name || "Event Type";
 
   const getDepartmentName = (id) =>
     departments.find((d) => d.identity === id)?.name || "Department";

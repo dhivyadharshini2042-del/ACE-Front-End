@@ -11,13 +11,11 @@ import {
   TEXT_SIGNIN,
   TITLE_ALREADY_HAVE_ACCOUNT,
 } from "../../../const-value/config-message/page";
-import { useLoading } from "../../../context/LoadingContext";
 
 export default function SuccessClient() {
   const params = useSearchParams();
   const role = params.get("role") || ROLE_USER;
 
-  const { setLoading } = useLoading();
 
   const config = {
     user: {

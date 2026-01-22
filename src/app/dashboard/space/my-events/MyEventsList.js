@@ -3,6 +3,7 @@
 import { useState } from "react";
 import DeleteConfirmModal from "../../../../components/ui/DeleteConfirmModal/DeleteConfirmModal";
 import EmptyState from "../../../../components/global/EmptyState/EmptyState";
+import { DATEICON, LOCATION_ICON, TIMEICON } from "../../../../const-value/config-icons/page";
 
 export default function MyEventsList({ events = [] }) {
   const [deleteId, setDeleteId] = useState(null);
@@ -25,43 +26,79 @@ export default function MyEventsList({ events = [] }) {
   return (
     <>
       <div className="list-group list-group-flush p-5">
-        {events.map((e) => (
-          <div
-            key={e.id}
-            className="shadow-sm p-3 mb-5 bg-body-tertiary rounded"
-          >
-            <div className="d-flex align-items-center d-flex justify-content-between">
-              <div className="d-flex align-items-start gap-5">
-                {/* IMAGE */}
-                <img
-                  src={
-                    e.bannerImages[0] ||
-                    "https://cloudinary-marketing-res.cloudinary.com/images/w_1000,c_scale/v1679921049/Image_URL_header/Image_URL_header-png?_i=AA"
-                  }
-                  alt={e.title}
-                  style={{ width: 248, height: 132, objectFit: "cover" }}
-                  className="rounded"
-                />
+        {events.map((e) => {
+          const createdDate = new Date(e.createdAt);
 
-                {/* TITLE */}
-                <div className="">
-                  <h6
-                    className="fw-semibold text-uppercase mb-0 flex-grow-1"
-                    title={e.title}
-                  >
-                    {e.title || "Untitled Event"}
-                  </h6>
-                  <div className="mt-3">Date : {e.createdAt}</div>
-                  <div
-                    className={`event-list-status ${e.status?.toLowerCase()} mt-2`}
-                  >
-                    {e.status}
+          const date = createdDate.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          });
+
+          const time = createdDate.toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          });
+
+          const location = [
+            e.location?.city,
+            e.location?.state,
+            e.location?.country,
+          ]
+            .filter(Boolean)
+            .join(", ");
+
+          return (
+            <div
+              key={e.id}
+              className="shadow-sm p-3 mb-5 bg-body-tertiary rounded"
+            >
+              <div className="d-flex justify-content-between align-items-start">
+                <div className="d-flex gap-4">
+                  {/* IMAGE */}
+                  <img
+                    src={
+                      e.bannerImages?.[0] ||
+                      "https://cloudinary-marketing-res.cloudinary.com/images/w_1000,c_scale/v1679921049/Image_URL_header/Image_URL_header-png?_i=AA"
+                    }
+                    alt={e.title}
+                    style={{ width: 248, height: 132, objectFit: "cover" }}
+                    className="rounded"
+                  />
+
+                  {/* DETAILS */}
+                  <div>
+                    <h6
+                      className="fw-semibold text-uppercase mb-1"
+                      title={e.title}
+                    >
+                      {e.title || "Untitled Event"}
+                    </h6>
+                    <div className="event-meta d-flex justify-content-between mt-3">
+                      <div className="text-muted">
+                        {DATEICON} {date}
+                      </div>
+
+                      <div className="text-muted">
+                        {TIMEICON} {time}
+                      </div>
+                    </div>
+
+                    <div
+                      className={`event-list-status ${e.status?.toLowerCase()} mt-2`}
+                    >
+                      {e.status}
+                    </div>
+                    <div>
+                      <div className="text-muted mt-1">
+                        {LOCATION_ICON} {location || "Location not set"}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              {/* ACTIONS */}
-              <div className="d-flex gap-3">
-                <button className="btn btn-outline-primary btn-sm">Edit</button>
+
+                {/* ACTION */}
                 <button
                   className="btn btn-outline-danger btn-sm"
                   onClick={() => setDeleteId(e.id)}
@@ -70,8 +107,8 @@ export default function MyEventsList({ events = [] }) {
                 </button>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <DeleteConfirmModal

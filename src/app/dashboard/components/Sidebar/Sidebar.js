@@ -139,7 +139,11 @@ export default function Sidebar() {
           {expanded && openMenu === "space" && (
             <div className={styles.dropdown}>
               <Link href="/dashboard/space/create">Create Event</Link>
-              <Link href="/dashboard/space/dashboard-chart">Dashboard</Link>
+              {role === "org" && (
+                <Link href="/dashboard/space/overview-dashboard">
+                  Event Analytics
+                </Link>
+              )}
               <Link href="/dashboard/space/my-events">My Events</Link>
             </div>
           )}

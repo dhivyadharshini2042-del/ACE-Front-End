@@ -5,12 +5,20 @@ import { useRouter } from "next/navigation";
 import DeleteConfirmModal from "../../../../components/ui/DeleteConfirmModal/DeleteConfirmModal";
 import EmptyState from "../../../../components/global/EmptyState/EmptyState";
 import "./MyEvents.css";
-import { encodeId } from "../../../../lib/utils/secureId";
+import {
+  DATEICON,
+  LOCATION_ICON,
+  TIMEICON,
+} from "../../../../const-value/config-icons/page";
 
 export default function MyEventsGrid({ events = [] }) {
   const [deleteId, setDeleteId] = useState(null);
   const [openMenuId, setOpenMenuId] = useState(null);
   const router = useRouter();
+
+  const handleClick = (event) => {
+    router.push(`/dashboard/space/dashboard-chart/${event.slug}`);
+  };
 
   if (!events.length) {
     return (
@@ -22,38 +30,26 @@ export default function MyEventsGrid({ events = [] }) {
     );
   }
 
-  const handleDelete = () => {
-    console.log("DELETE EVENT:", deleteId);
-    setDeleteId(null);
-  };
-
-  const handleClick = (slug) => {
-      router.push(`/events/${slug}`);
-    };
-
   return (
     <>
       <div className="row g-4">
         {events.map((e) => {
-          const calendar = e.calendars?.[0]; 
+          const calendar = e.calendars?.[0];
+          const location = e.location;
 
           return (
             <div key={e.identity} className="col-xl-3 col-lg-4 col-md-6">
               <div
                 className="card h-100 shadow-sm rounded-4 overflow-hidden event-card"
-                onClick={() => handleClick(e.slug)}
+                onClick={() => handleClick(e)}
               >
                 {/* IMAGE */}
                 <div className="event-img-wrapper">
                   <img
-                    src={
-                      e.bannerImages?.[0] ||
-                      "https://cloudinary-marketing-res.cloudinary.com/images/w_1000,c_scale/v1679921049/Image_URL_header/Image_URL_header-png?_i=AA"
-                    }
+                    src={e.bannerImages?.[0] || "/images/event.png"}
                     alt={e.title}
                     className="w-100 h-100"
                   />
-
                   <div className={`event-status ${e.status?.toLowerCase()}`}>
                     {e.status}
                   </div>
@@ -61,21 +57,25 @@ export default function MyEventsGrid({ events = [] }) {
 
                 {/* BODY */}
                 <div className="card-body">
-                  {/* TITLE + MENU */}
+                  {/* TITLE + 3 DOT MENU */}
                   <div
                     className="event-title-row"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(ev) => ev.stopPropagation()}
                   >
-                    <h6 className="fw-semibold text-truncate text-uppercase" title={e.title}>
-                      {e.title || "Untitled Event"}
+                    <h6
+                      className="fw-semibold text-uppercase text-truncate"
+                      title={e.title}
+                    >
+                      {e.title}
                     </h6>
 
+                    {/* 3 DOT MENU */}
                     <div className="event-menu-wrapper">
                       <div
                         className="event-menu"
                         onClick={() =>
                           setOpenMenuId(
-                            openMenuId === e.identity ? null : e.identity
+                            openMenuId === e.identity ? null : e.identity,
                           )
                         }
                       >
@@ -87,7 +87,9 @@ export default function MyEventsGrid({ events = [] }) {
                           <button
                             className="dropdown-item"
                             onClick={() => {
-                              console.log("EDIT EVENT:", e.identity);
+                              router.push(
+                                `/dashboard/space/edit/${e.identity}`,
+                              );
                               setOpenMenuId(null);
                             }}
                           >
@@ -108,31 +110,33 @@ export default function MyEventsGrid({ events = [] }) {
                     </div>
                   </div>
 
-                  {/* EVENT META */}
-                  <div className="event-meta">
-                    <div className="d-flex justify-content-between">
-                      <span>
-                        Start :{" "}
-                        {calendar?.startDate
-                          ? calendar.startDate
-                          : "Date not set"}
-                      </span>
-                      <span>
-                        End :{" "}
-                        {calendar?.endDate ? calendar.endDate : "Date not set"}
-                      </span>
-                    </div>
-
+                  <span>
+                    {LOCATION_ICON}{" "}
+                    {[location?.city, location?.state]
+                      .filter(Boolean)
+                      .join(", ") || "Location not set"}
+                  </span>
+                  {/* META */}
+                  <div className="event-meta d-flex justify-content-between mb-2 gap-1">
+                    {/* DATE */}
                     <span>
-                      {[
-                        e.location?.city,
-                        e.location?.state,
-                        e.location?.country,
-                      ]
-                        .filter(Boolean)
-                        .join(", ") || "Location not set"}
+                      {DATEICON}{" "}
+                      {new Date(e.createdAt).toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
                     </span>
-                    <span className="text-end">{e.mode || "Mode not set"}</span>
+
+                    {/* TIME */}
+                    <span>
+                      {TIMEICON}{" "}
+                      {calendar?.startTime && calendar?.endTime
+                        ? `${calendar.startTime} - ${calendar.endTime}`
+                        : "Time not set"}
+                    </span>
+
+                    {/* LOCATION */}
                   </div>
                 </div>
               </div>
@@ -144,7 +148,7 @@ export default function MyEventsGrid({ events = [] }) {
       <DeleteConfirmModal
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        onConfirm={handleDelete}
+        onConfirm={() => setDeleteId(null)}
       />
     </>
   );

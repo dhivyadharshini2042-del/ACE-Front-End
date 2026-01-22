@@ -31,9 +31,13 @@ export const resetPasswordApi = (data) =>
 export const updateAuthProfile = (data) =>
   handleApi(apiPrivate.post(API_ENDPOINTS.AUTH.UPDATEPROFILE, data));
 
+export const getSavedEventsApi = (userId) =>
+  handleApi(apiPrivate.get(API_ENDPOINTS.AUTH.SAVED_EVENTS(userId)));
+
+
 export const verifyEmailApi = (token) =>
   handleApi(
     apiPublic.get(
-      `${API_ENDPOINTS.AUTH.ORG_VERIFY}?token=${encodeURIComponent(token)}`
-    )
+      `${API_ENDPOINTS.AUTH.ORG_VERIFY}?token=${encodeURIComponent(token)}`,
+    ),
   );

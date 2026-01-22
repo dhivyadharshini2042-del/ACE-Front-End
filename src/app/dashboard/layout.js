@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import Sidebar from "./components/Sidebar/Sidebar";
-import Topbar from "./components/Topbar/Topbar";
 import styles from "./Dashboard.module.css";
 import ProfileHeader from "./components/ProfileHeader/ProfileHeader";
 
@@ -10,8 +9,7 @@ export default function DashboardLayout({ children }) {
   const pathname = usePathname();
 
   // space/create pages la ProfileHeader hide
-  const hideProfileHeader =
-    pathname.startsWith("/dashboard/space");
+  const hideProfileHeader = pathname.startsWith("/dashboard/space");
 
   return (
     <div className={styles.container}>
@@ -20,9 +18,6 @@ export default function DashboardLayout({ children }) {
 
       {/* MAIN CONTENT */}
       <div className={styles.main}>
-        {/* TOPBAR optional */}
-        {/* <Topbar /> */}
-
         {/* PROFILE HEADER – CONDITIONAL */}
         {!hideProfileHeader && <ProfileHeader />}
 

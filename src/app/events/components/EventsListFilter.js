@@ -8,12 +8,22 @@ import {
   LOCATION_ICON,
   SAVEICON,
 } from "../../../const-value/config-icons/page";
+import { useLoading } from "../../../context/LoadingContext";
 
 export default function EventsListFilter({ events = [] }) {
   const router = useRouter();
+  const { setLoading } = useLoading();
 
-  const handleClick = (id) => {
-    router.push(`/event/${encodeId(id)}`);
+  const handleClick = (slug) => {
+    if (!slug) return;
+
+    try {
+      setLoading(true);
+      router.push(`/events/${slug}`);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
   };
 
   /* ===== EVENT STATUS LOGIC ===== */
@@ -77,10 +87,7 @@ export default function EventsListFilter({ events = [] }) {
         return (
           <div key={e.identity} className="event-row-card floating-card">
             {/* FLOATING IMAGE */}
-            <div
-              className="floating-image"
-              onClick={() => handleClick(e.identity)}
-            >
+            <div className="floating-image" onClick={() => handleClick(e.slug)}>
               {eventImage ? (
                 <img src={eventImage} alt={e.title} />
               ) : (

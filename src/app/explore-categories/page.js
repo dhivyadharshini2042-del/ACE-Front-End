@@ -4,17 +4,20 @@ import "./explore-categories.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getExploreEventTypes } from "../../lib/api/event.api";
+import { useLoading } from "../../context/LoadingContext";
 
 export default function ExploreCategoriesPage() {
   const router = useRouter();
+  const { setLoading } = useLoading();
 
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   /* ================= FETCH FROM BACKEND ================= */
   useEffect(() => {
     const fetchCategories = async () => {
       try {
+        setLoading(true);
+
         const res = await getExploreEventTypes();
 
         if (res?.status && Array.isArray(res.data)) {
@@ -35,15 +38,26 @@ export default function ExploreCategoriesPage() {
 
   /* ================= NAVIGATION ================= */
   const handleBack = () => {
-    router.push("/");
+    try {
+      setLoading(true);
+      router.push("/");
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+    }
   };
 
   const handleCardClick = (category) => {
-    // optional: filter by category
-    router.push(`/events?category=${category.identity || category.name}`);
-  };
+    if (!category) return;
 
-  console.log("categories",categories)
+    try {
+      setLoading(true);
+      router.push(`/events?category=${category.identity || category.name}`);
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+    }
+  };
 
   /* ================= UI ================= */
   return (
@@ -57,31 +71,23 @@ export default function ExploreCategoriesPage() {
         <h2>Choose Your Event Type</h2>
       </div>
 
-      {/* LOADING */}
-      {loading && <p className="text-center mt-5">Loading categories...</p>}
-
       {/* EMPTY STATE */}
-      {!loading && categories.length === 0 && (
+      {categories.length === 0 && (
         <p className="text-center mt-5">No categories available</p>
       )}
 
       {/* GRID */}
-      {!loading && categories.length > 0 && (
+      {categories.length > 0 && (
         <div className="explore-grid">
           {categories.map((item) => (
             <div
               key={item.identity}
               className="explore-card"
-              style={{
-                "--card-color": item.color || "#F5F5F5",
-              }}
+              style={{ "--card-color": item.color || "#F5F5F5" }}
               onClick={() => handleCardClick(item)}
             >
               <div className="icon-box">
-                <img
-                  src={item.imageUrl || ""}
-                  alt={item.name}
-                />
+                <img src={item.imageUrl || ""} alt={item.name} />
               </div>
               <p>{item.name}</p>
             </div>

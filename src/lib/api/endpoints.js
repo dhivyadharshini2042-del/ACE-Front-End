@@ -5,6 +5,7 @@ export const API_ENDPOINTS = {
     SINGLE: (slug) => `/v1/events/${slug}`,
     VIEW: (slug) => `/v1/events/${slug}/view`,
     FILTER: "/v1/filter",
+    STATUSES: "/v1/event/statuses",
   },
 
   /* ================= AUTH ================= */
@@ -18,6 +19,7 @@ export const API_ENDPOINTS = {
     RESET_PASSWORD: "/v1/auth/reset-password",
     ORG_VERIFY: "/v1/auth/org/verify",
     UPDATEPROFILE: "/v1/auth/update-profile",
+    SAVED_EVENTS: (userId) => `/v1/user/saved/${userId}`,
   },
 
   /* ================= USERS ================= */
@@ -45,11 +47,10 @@ export const API_ENDPOINTS = {
     EXPLORE_EVENT_TYPE: "/v1/master/event-types",
     ACCOMMODATIONS: "/v1/master/accommodations",
     EVENT_TYPES: (categoryId) => `/v1/master/event-types/${categoryId}`,
-    ALL_EVENT_TYPES:  `/v1/master/event-types`,
+    ALL_EVENT_TYPES: `/v1/master/event-types`,
     CATEGORIES: "/v1/master/categories",
     CERTIFICATIONS: "/v1/master/certifications",
     PERKS: "/v1/master/perks",
     ELIGIBLE_DEPARTMENTS: "/v1/master/eligible-departments",
-
   },
 };

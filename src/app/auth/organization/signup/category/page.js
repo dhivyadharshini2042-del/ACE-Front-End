@@ -20,7 +20,6 @@ import {
 
 import {
   TITLE_ORG_ACCOUNT_CREATION,
-  SUBTITLE_ORG_ACCOUNT_CREATION,
   LABEL_ORG_STEP_CATEGORY,
   LABEL_ORG_STEP_DETAILS,
   LABEL_ORG_STEP_ACCOUNT,
@@ -29,6 +28,8 @@ import {
   TEXT_NO_ACCOUNT,
   TEXT_SIGNIN,
 } from "../../../../../const-value/config-message/page";
+
+import { useLoading } from "../../../../../context/LoadingContext"; 
 
 const CATEGORIES = [
   { id: "college", title: "College / University", icon: UNIVERSITYICONS },
@@ -44,17 +45,31 @@ const CATEGORIES = [
 
 export default function Page() {
   const router = useRouter();
+  const { setLoading } = useLoading(); 
   const [selected, setSelected] = useState("");
 
-  function onContinue() {
+  const onContinue = () => {
     if (!selected) return toast.error(MSG_ERR_CATEGORY_MISSING);
 
-    router.push(`/auth/organization/signup/details?cat=${selected}`);
-  }
+    try {
+      setLoading(true); 
+      router.push(`/auth/organization/signup/details?cat=${selected}`);
+    } catch (err) {
+      console.error("Navigation error", err);
+    } finally {
+      setLoading(false); 
+    }
+  };
 
   const handleUserLogin = () => {
-    router.push("/auth/user/signup");
+    try {
+      setLoading(true);
+      router.push("/auth/user/signup");
+    } finally {
+      setLoading(false);
+    }
   };
+
   return (
     <div className="container py-5">
       <div className="organization-sections mt-4">
@@ -63,6 +78,7 @@ export default function Page() {
         </div>
         <div>{PAGEMOVEICON}</div>
       </div>
+
       {/* STEPPER */}
       <div className="org-stepper">
         <div className="org-step active">
@@ -85,15 +101,17 @@ export default function Page() {
         </div>
       </div>
 
-      {/* Page Title */}
-      <h2 className="text-center fw-bold">{TITLE_ORG_ACCOUNT_CREATION}</h2>
+      {/* TITLE */}
+      <h2 className="text-center fw-bold">
+        {TITLE_ORG_ACCOUNT_CREATION}
+      </h2>
 
-      {/* Category Grid */}
+      {/* CATEGORY GRID */}
       <div className="row g-3">
         {CATEGORIES.map((c) => (
           <div key={c.id} className="col-md-4 col-sm-6 col-12">
             <div
-              className={`card p-3  text-center ${
+              className={`card p-3 text-center ${
                 selected === c.id ? "border-primary" : "border-light"
               }`}
               role="button"
@@ -108,14 +126,14 @@ export default function Page() {
         ))}
       </div>
 
-      {/* Continue Button */}
+      {/* CONTINUE */}
       <div className="mt-4 text-center btn-container">
         <button className="btn continue-btn" onClick={onContinue}>
           {BTN_CONTINUE}
         </button>
       </div>
 
-      {/* Footer */}
+      {/* FOOTER */}
       <div className="text-center mt-3">
         <small>
           {TEXT_NO_ACCOUNT}{" "}

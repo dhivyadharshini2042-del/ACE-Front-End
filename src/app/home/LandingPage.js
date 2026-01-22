@@ -25,19 +25,18 @@ import LeaderboardModal from "../../components/global/LeaderboardModal/Leaderboa
 import LocationHighlights from "../../components/global/LocationHighlights/LocationHighlights";
 import OrganizersCarousel from "../../components/global/OrganizerCarousel/OrganizerCarousel.js";
 // import HowItWorks from "../../components/global/HowItWorks/HowItWorks.js";
-import { useLoading } from "../../context/LoadingContext.js";
 import { getAllOrganizationsApi } from "../../lib/api/organizer.api.js";
 import FloatingExploreButton from "../../components/global/FloatingExploreButton/FloatingExploreButton.js";
+import { useLoading } from "../../context/LoadingContext.js";
 
 export default function LandingPage() {
+  const { setLoading } = useLoading();
   const [openLB, setOpenLB] = useState(false);
   const [events, setEvents] = useState([]);
   const [organization, setOrganization] = useState([]);
   const exploreRef = useRef(null);
 
   const router = useRouter();
-
-  const { setLoading: setGlobalLoading } = useLoading();
 
   const apiText = "What Event would you like to go to?";
 
@@ -82,44 +81,31 @@ export default function LandingPage() {
     },
   ];
 
-  const loadEvents = async () => {
-    setGlobalLoading(true);
-
+  const loadLandingData = async () => {
     try {
-      const res = await getAllEventsApi();
-      if (res?.status) {
-        setEvents(res.data);
-      } else {
-        toast.error(res?.message || "Failed to load events");
+      setLoading(true); // 🔥 FIRST SCREEN LOADING
+
+      const [eventsRes, orgRes] = await Promise.all([
+        getAllEventsApi(),
+        getAllOrganizationsApi(),
+      ]);
+
+      if (eventsRes?.status) {
+        setEvents(eventsRes.data);
+      }
+
+      if (orgRes?.status) {
+        setOrganization(orgRes.data);
       }
     } catch {
       toast.error("Something went wrong");
     } finally {
-      setGlobalLoading(false);
-    }
-  };
-
-  const loadOrganization = async () => {
-    setGlobalLoading(true);
-
-    try {
-      const res = await getAllOrganizationsApi();
-
-      if (res?.status) {
-        setOrganization(res.data);
-      } else {
-        toast.error(res?.message || "Failed to load organization");
-      }
-    } catch {
-      toast.error("Something went wrong");
-    } finally {
-      setGlobalLoading(false);
+      setLoading(false); // 🔥 LOADING END
     }
   };
 
   useEffect(() => {
-    loadEvents();
-    loadOrganization();
+    loadLandingData();
   }, []);
 
   return (
@@ -128,7 +114,7 @@ export default function LandingPage() {
         <HeroBanner text={apiText} />
 
         <div className="exp-btn">
-          <img src="/images/sparkles.png" alt="no image"/>
+          <img src="/images/sparkles.png" alt="no image" />
           <button
             className="btn-explore"
             onClick={() => router.push("/explore-events")}

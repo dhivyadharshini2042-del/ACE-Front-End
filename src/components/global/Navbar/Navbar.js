@@ -13,11 +13,9 @@ import {
   LOCATION_ICON,
 } from "../../../const-value/config-icons/page";
 
-import { useLoading } from "../../../context/LoadingContext";
 
 export default function Navbar() {
   const router = useRouter();
-  const { setLoading: setGlobalLoading } = useLoading();
 
   const [mounted, setMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -49,7 +47,6 @@ export default function Navbar() {
       const user = getUserData();
       if (!user?.identity) return;
 
-      setGlobalLoading(true);
 
       try {
         const role = user.role || (user.type === "org" ? "organizer" : "user");
@@ -76,14 +73,13 @@ export default function Navbar() {
       } catch (err) {
         console.error("Navbar profile load error:", err);
       } finally {
-        setGlobalLoading(false);
       }
     }
 
     if (isLoggedIn) {
       loadProfile();
     }
-  }, [isLoggedIn, setGlobalLoading]);
+  }, [isLoggedIn]);
 
   if (!mounted) return null;
 

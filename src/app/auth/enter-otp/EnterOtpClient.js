@@ -26,24 +26,23 @@ import {
   MSG_OTP_INVALID,
   MSG_OTP_VERIFIED,
   SUB_TITLE_OTP_NOT_RECEIVE,
-  CONDITION_OTP_VERIFY,
   CONDITION_OTP_SEND,
   ROLE_USER,
 } from "../../../const-value/config-message/page";
 
 /* GLOBAL LOADING */
-import { useLoading } from "../../../context/LoadingContext";
+import { useLoading } from "../../../context/LoadingContext"; 
 
 export default function EnterOtpClient() {
   const router = useRouter();
   const params = useSearchParams();
   const role = params.get("role") || ROLE_USER;
 
+  const { setLoading } = useLoading();
+
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [resendLoading, setResendLoading] = useState(false);
-
-  const { loading, setLoading } = useLoading();
 
   const inputs = [
     useRef(null),
@@ -82,6 +81,7 @@ export default function EnterOtpClient() {
     }
   }
 
+  /* VERIFY OTP */
   async function onSubmit(e) {
     e.preventDefault();
     const code = otp.join("");
@@ -93,9 +93,9 @@ export default function EnterOtpClient() {
     }
 
     try {
-      setLoading(true);
+      setLoading(true); 
+
       const res = await verifyOtpApi({ email, otp: code });
-      setLoading(false);
 
       if (res?.status) {
         toast.success(MSG_OTP_VERIFIED);
@@ -104,16 +104,18 @@ export default function EnterOtpClient() {
         toast.error(res?.message || MSG_OTP_INVALID);
       }
     } catch {
-      setLoading(false);
       toast.error(MSG_GENERIC_ERROR);
+    } finally {
+      setLoading(false); 
     }
   }
 
+  /* RESEND OTP */
   async function resendCode() {
     try {
       setResendLoading(true);
+
       const res = await resendOtpApi({ email });
-      setResendLoading(false);
 
       if (res?.status) {
         toast.success(MSG_NEW_OTP_SEND);
@@ -121,8 +123,9 @@ export default function EnterOtpClient() {
         toast.error(res?.message || MSG_NEW_OTP_FAILED_TO_SEND);
       }
     } catch {
-      setResendLoading(false);
       toast.error(MSG_GENERIC_ERROR);
+    } finally {
+      setResendLoading(false);
     }
   }
 
@@ -155,12 +158,8 @@ export default function EnterOtpClient() {
             </div>
 
             <div className="form-actions">
-              <button
-                className="btn-primary-ghost"
-                type="submit"
-                disabled={loading}
-              >
-                {loading ? CONDITION_OTP_VERIFY : BTN_CONTINUE}
+              <button className="btn-primary-ghost" type="submit">
+                {BTN_CONTINUE}
               </button>
             </div>
 

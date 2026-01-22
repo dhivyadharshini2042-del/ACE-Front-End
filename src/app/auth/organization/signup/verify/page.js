@@ -8,18 +8,8 @@ import {
 } from "../../../../../const-value/config-message/page";
 
 import "../../../organization/auth-common.css";
-import { useLoading } from "../../../../../context/LoadingContext";
 
 export default function Page() {
-  const { setLoading } = useLoading(); // ONLY ADD
-
-  useEffect(() => {
-    setLoading(true);     // GLOBAL LOADING ON
-
-    return () => {
-      setLoading(false);  // GLOBAL LOADING OFF
-    };
-  }, [setLoading]);
 
   return (
     <div className="verify-overlay">

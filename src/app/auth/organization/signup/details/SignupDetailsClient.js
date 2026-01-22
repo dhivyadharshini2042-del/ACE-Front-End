@@ -32,9 +32,13 @@ import {
   getCities,
 } from "../../../../../lib/location.api";
 
+import { useLoading } from "../../../../../context/LoadingContext"; 
+
 export default function Page() {
   const router = useRouter();
   const params = useSearchParams();
+  const { setLoading } = useLoading(); 
+
   const category = params.get("cat");
 
   const [country, setCountry] = useState("");
@@ -113,6 +117,7 @@ export default function Page() {
     load();
   }, [stateName, country]);
 
+  /* CONTINUE */
   function onContinue(e) {
     e.preventDefault();
 
@@ -120,14 +125,22 @@ export default function Page() {
       return toast.error(MSG_ERR_FILL_ALL_FIELDS);
     }
 
-    router.push(
-      `/auth/organization/signup/account?cat=${category}&country=${country}&state=${stateName}&city=${city}&orgName=${orgName}`
-    );
+    try {
+      setLoading(true); 
+
+      router.push(
+        `/auth/organization/signup/account?cat=${category}&country=${country}&state=${stateName}&city=${city}&orgName=${orgName}`
+      );
+    } catch (err) {
+      console.error("Navigation error", err);
+    } finally {
+      setLoading(false); 
+    }
   }
 
   return (
     <div className="org-shell">
-      {/* LEFT IMAGE – SAME AS OLD */}
+      {/* LEFT */}
       <aside
         className="org-left"
         style={{ backgroundImage: "url('/images/organizer-bg-circles.png')" }}
@@ -139,7 +152,7 @@ export default function Page() {
         />
       </aside>
 
-      {/* RIGHT FORM */}
+      {/* RIGHT */}
       <main className="org-right">
         <div className="org-card">
           {/* STEPPER */}

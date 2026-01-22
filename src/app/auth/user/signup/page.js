@@ -29,16 +29,15 @@ import {
   TEXT_NO_ACCOUNT,
   ROLE_USER,
   MSG_SIGNUP_SUCCESS,
-  MSG_LOGIN_FAILED,
   PH_USER_EMAIL,
   MSG_ERR_SIGNUP_FAILED,
 } from "../../../../const-value/config-message/page";
-import { useLoading } from "../../../../context/LoadingContext";
+
+import { useLoading } from "../../../../context/LoadingContext"; 
 
 export default function UserSignupPage() {
   const router = useRouter();
-
-  const { setLoading } = useLoading(); //ONLY ADD
+  const { setLoading } = useLoading(); 
 
   const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -54,7 +53,7 @@ export default function UserSignupPage() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    //YUP validation
+    /* ===== YUP VALIDATION ===== */
     try {
       await userSignupSchema.validate(
         {
@@ -69,7 +68,6 @@ export default function UserSignupPage() {
       return toast.error(err.errors[0]);
     }
 
-    //API call
     const payload = {
       name: form.name,
       email: form.email,
@@ -78,24 +76,33 @@ export default function UserSignupPage() {
       platform: "web",
     };
 
-    setLoading(true); // START LOADING
+    /* ===== API CALL ===== */
+    try {
+      setLoading(true); 
 
-    const res = await signupApi(payload);
+      const res = await signupApi(payload);
 
-    //DO NOT THROW
-    if (!res?.status) {
-      setLoading(false); //STOP LOADING
-      return toast.error(res?.message || MSG_ERR_SIGNUP_FAILED);
+      if (!res?.status) {
+        toast.error(res?.message || MSG_ERR_SIGNUP_FAILED);
+        return;
+      }
+
+      toast.success(res.message || MSG_SIGNUP_SUCCESS);
+      router.push("/auth/user/login");
+    } catch (err) {
+      toast.error(MSG_ERR_SIGNUP_FAILED);
+    } finally {
+      setLoading(false); 
     }
-
-    //SUCCESS ONLY ONCE
-    toast.success(res.message || MSG_SIGNUP_SUCCESS);
-    setLoading(false); //STOP LOADING
-    router.push("/auth/user/login");
   };
 
   const handleCreateEvent = () => {
-    router.push("/auth/organization/signup/category");
+    try {
+      setLoading(true); 
+      router.push("/auth/organization/signup/category");
+    } catch (err) {
+      setLoading(false);
+    }
   };
 
   return (
@@ -108,12 +115,13 @@ export default function UserSignupPage() {
       {/* FORM */}
       <div className="auth-right">
         <div className="auth-card signup-card">
-          <div className="organization-sections mt-4">  
+          <div className="organization-sections mt-4">
             <div className="Switch-to-Organizer" onClick={handleCreateEvent}>
               Switch to Organizer Sign Up
             </div>
             <div>{PAGEMOVEICON}</div>
           </div>
+
           <h1 className="auth-title mt-5">{TITLE_USER_SIGNUP}</h1>
           <p className="auth-sub">{SUBTITLE_USER_SIGNUP}</p>
 
@@ -144,7 +152,9 @@ export default function UserSignupPage() {
                 type={showPass ? "text" : "password"}
                 placeholder={PH_PASSWORD}
                 value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, password: e.target.value })
+                }
               />
               <span
                 className="auth-pass-toggle"
@@ -166,10 +176,7 @@ export default function UserSignupPage() {
                 onDrop={(e) => e.preventDefault()}
                 autoComplete="off"
                 onChange={(e) =>
-                  setForm({
-                    ...form,
-                    confirmPassword: e.target.value,
-                  })
+                  setForm({ ...form, confirmPassword: e.target.value })
                 }
               />
               <span
@@ -185,7 +192,8 @@ export default function UserSignupPage() {
 
             {/* FOOTER */}
             <div className="auth-footer">
-              {TEXT_NO_ACCOUNT} <a href="/auth/user/login">{TEXT_SIGNIN}</a>
+              {TEXT_NO_ACCOUNT}{" "}
+              <a href="/auth/user/login">{TEXT_SIGNIN}</a>
             </div>
           </form>
         </div>

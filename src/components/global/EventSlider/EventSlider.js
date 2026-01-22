@@ -13,6 +13,7 @@ import {
 } from "../../../const-value/config-icons/page";
 
 import "./EventSlider.css";
+import { useLoading } from "../../../context/LoadingContext";
 
 /* ================= HELPER ================= */
 const getLowestTicketPrice = (tickets = []) => {
@@ -35,6 +36,7 @@ export default function EventSlider({
 }) {
   const router = useRouter();
   const sliderRef = useRef(null);
+  const { setLoading } = useLoading();
 
   const [likedCards, setLikedCards] = useState({});
 
@@ -56,11 +58,24 @@ export default function EventSlider({
 
   const handleClick = (slug) => {
     if (!slug) return;
-    router.push(`/events/${slug}`);
+
+    try {
+      setLoading(true);
+      router.push(`/events/${slug}`);
+    } catch (error) {
+      console.error("Navigation failed", error);
+      setLoading(false);
+    }
   };
 
   const handleCardClick = () => {
-    router.push(`/events`);
+    try {
+      setLoading(true);
+      router.push("/events");
+    } catch (error) {
+      console.error("Navigation failed", error);
+      setLoading(false);
+    }
   };
 
   const formatDate = (date) => {
@@ -163,8 +178,8 @@ export default function EventSlider({
                       {lowestPrice === null
                         ? "N/A"
                         : lowestPrice === 0
-                        ? "Free"
-                        : `₹${lowestPrice}`}
+                          ? "Free"
+                          : `₹${lowestPrice}`}
                     </span>
                   </div>
 

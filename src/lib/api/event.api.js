@@ -213,6 +213,23 @@ export const filterEventsApi = async (payload) => {
     };
   }
 };
+/* =======================
+    EVENT STATUS
+======================= */
+export const getEventStatusesApi  = async () => {
+  try {
+    return await handleApi(
+      apiPublic.get(API_ENDPOINTS.EVENTS.STATUSES),
+    );
+  } catch (error) {
+    console.error("filterEventsApi error:", error);
+    return {
+      status: false,
+      message: "Failed to fetch event",
+      error,
+    };
+  }
+};
 
 /* =======================
    CREATE EVENT (ORGANIZER)

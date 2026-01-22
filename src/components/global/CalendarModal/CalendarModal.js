@@ -3,9 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "./CalendarModal.module.css";
 import { ADDICON, DELETICON } from "../../../const-value/config-icons/page";
-import { useLoading } from "../../../context/LoadingContext";
 export default function CalendarModal({ onClose, onSave }) {
-  const { setLoading } = useLoading(); // ONLY ADD
 
   const [multiDate, setMultiDate] = useState(false);
   const [rows, setRows] = useState([
@@ -17,16 +15,7 @@ export default function CalendarModal({ onClose, onSave }) {
   const today = new Date().toISOString().split("T")[0];
   const nowTime = new Date().toTimeString().slice(0, 5);
 
-  /* GLOBAL LOADING ON MOUNT */
-  // useEffect(() => {
-  //   setLoading(true);
 
-  //   return () => {
-  //     setLoading(false); // OFF ON UNMOUNT
-  //   };
-  // }, [setLoading]);
-
-  /* auto scroll when row added */
   useEffect(() => {
     if (rowsRef.current) {
       rowsRef.current.scrollTop = rowsRef.current.scrollHeight;

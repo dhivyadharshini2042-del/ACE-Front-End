@@ -3,17 +3,25 @@
 import styles from "./OrganizerCarousel.module.css";
 import { useRouter } from "next/navigation";
 import { encodeId } from "../../../lib/utils/secureId";
+import { useLoading } from "../../../context/LoadingContext";
 
 export default function OrganizersCarousel({ onOpenLeaderboard, data = [] }) {
   const router = useRouter();
+  const { setLoading } = useLoading();
 
   if (!Array.isArray(data) || data.length === 0) return null;
 
   const handleOrgClick = (slug) => {
-    // const encryptedId = encodeId(slug);
-    router.push(`/organization-details/${slug}`);
-  };
+    if (!slug) return;
 
+    try {
+      setLoading(true);
+      router.push(`/organization-details/${slug}`);
+    } catch (error) {
+      console.error("Navigation failed", error);
+      setLoading(false);
+    } 
+  };
 
   return (
     <section className={styles.topOrganizersroot}>

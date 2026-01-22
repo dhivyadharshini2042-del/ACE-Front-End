@@ -18,14 +18,17 @@ import SortBar from "./components/SortBar";
 import PaginationBar from "./components/PaginationBar";
 import EventsListFilter from "./components/EventsListFilter";
 import ActiveFilterChips from "./components/ActiveFilterChips";
+import { useLoading } from "../../context/LoadingContext";
+import { useSearchParams } from "next/navigation";
 
 const PAGE_SIZE = 10;
 
 /* ================= PAYLOAD BUILDER ================= */
-const buildFilterPayload = (filters, page) => {
+const buildFilterPayload = (filters, page, sort) => {
   const payload = {
     page,
     limit: PAGE_SIZE,
+    sortBy: sort,
   };
 
   // FEATURED / TRENDING
@@ -79,12 +82,19 @@ const buildFilterPayload = (filters, page) => {
 
 export default function EventsFilterPage() {
   /* ================= MASTER DATA ================= */
+  const { setLoading } = useLoading();
+  const searchParams = useSearchParams();
+  const eventTypeFromUrl =
+    searchParams.get("eventType") || searchParams.get("category");
+
   const [categories, setCategories] = useState([]);
   const [eventTypes, setEventTypes] = useState([]);
   const [perks, setPerks] = useState([]);
   const [certifications, setCertifications] = useState([]);
   const [eligibleDepartments, setEligibleDepartments] = useState([]);
   const [accommodations, setAccommodations] = useState([]);
+  const [sort, setSort] = useState("");
+  // default RECENT
 
   /* ================= EVENTS ================= */
   const [events, setEvents] = useState([]);
@@ -104,13 +114,23 @@ export default function EventsFilterPage() {
     priceRange: { min: 0, max: 10000 },
   });
 
-  const [sort, setSort] = useState("new");
   const [page, setPage] = useState(1);
+  // landing page event type filtered
+
+  useEffect(() => {
+    if (eventTypeFromUrl) {
+      setFilters((prev) => ({
+        ...prev,
+        eventTypeIdentity: eventTypeFromUrl,
+      }));
+    }
+  }, [eventTypeFromUrl]);
 
   /* ================= LOAD MASTER DATA ================= */
   useEffect(() => {
     const loadMasterData = async () => {
       try {
+        setLoading(true);
         const [catRes, perkRes, certRes, deptRes, accRes] = await Promise.all([
           getEventCategoriesApi(),
           getPerksApi(),
@@ -126,6 +146,8 @@ export default function EventsFilterPage() {
         if (accRes?.status) setAccommodations(accRes.data);
       } catch (err) {
         console.error("Master data error:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -152,7 +174,8 @@ export default function EventsFilterPage() {
   useEffect(() => {
     const loadFilteredEvents = async () => {
       try {
-        const payload = buildFilterPayload(filters, page);
+        setLoading(true);
+        const payload = buildFilterPayload(filters, page, sort);
         const res = await filterEventsApi(payload);
 
         if (res?.status) {
@@ -166,11 +189,13 @@ export default function EventsFilterPage() {
         console.error("Filter API error:", err);
         setEvents([]);
         setTotalPages(0);
+      } finally {
+        setLoading(false);
       }
     };
 
     loadFilteredEvents();
-  }, [filters, page]);
+  }, [filters, page, sort]);
 
   /* ================= RESET PAGE ON FILTER CHANGE ================= */
   useEffect(() => {
@@ -227,7 +252,12 @@ export default function EventsFilterPage() {
           <SortBar
             value={sort}
             onChange={setSort}
-            onSearch={(v) => setFilters((f) => ({ ...f, searchText: v }))}
+            onSearch={(v) =>
+              setFilters((f) => ({
+                ...f,
+                searchText: v,
+              }))
+            }
           />
 
           <ActiveFilterChips

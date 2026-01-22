@@ -19,9 +19,10 @@ import Footer from "../Footer/Footer";
 import "./EventDetailsView.css";
 import ConfirmModal from "../../ui/Modal/ConfirmModal";
 import { addEventViewApi } from "../../../lib/api/event.api";
-
+import { useLoading } from "../../../context/LoadingContext";
 
 export default function EventDetailsView({ event = {}, onBack }) {
+  const { setLoading } = useLoading();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -50,7 +51,6 @@ export default function EventDetailsView({ event = {}, onBack }) {
   const location = event?.location;
   const [bannerImages, setBannerImages] = useState(images);
   const [selectedTicket, setSelectedTicket] = useState(null);
-
 
   const [ticketForm, setTicketForm] = useState({
     name: "",
@@ -102,10 +102,8 @@ export default function EventDetailsView({ event = {}, onBack }) {
   }, [selectedTicket]);
 
   useEffect(() => {
-    // safety checks
     if (!event?.slug) return;
 
-    // prevent duplicate calls in same render lifecycle
     if (viewCalledRef.current) return;
 
     viewCalledRef.current = true;
@@ -113,11 +111,21 @@ export default function EventDetailsView({ event = {}, onBack }) {
     addEventViewApi(event.slug);
   }, [event?.slug]);
 
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+
   return (
     <>
       <div className="container event-wrapper my-4">
         <div className="event-details-wrapper">
-          <button className="event-back-btn" onClick={onBack}>
+          <button
+            className="event-back-btn"
+            onClick={() => {
+              setLoading(true); 
+              onBack(); 
+            }}
+          >
             🔙 Back
           </button>
 
@@ -187,7 +195,9 @@ export default function EventDetailsView({ event = {}, onBack }) {
                 <span className="tag green">{event?.mode || "===="}</span>
                 {/* BACKEND: event.tags */}
 
-                <span className="views">{VIEW_ICON} {event?.viewCount}</span>
+                <span className="views">
+                  {VIEW_ICON} {event?.viewCount}
+                </span>
                 {/* BACKEND: event.views */}
               </div>
             </div>
@@ -198,7 +208,10 @@ export default function EventDetailsView({ event = {}, onBack }) {
             </button>
             <div className="soc-mediya">
               {/* like , share , save */}
-              <span>{LIKE_ICON} 123</span>
+              <span>
+                {" "}
+                <LIKE_ICON /> 123
+              </span>
               <span>{SINGELEVENTSHARE_ICON}</span>
               <span>{SAVEICON}</span>
             </div>
@@ -279,7 +292,7 @@ export default function EventDetailsView({ event = {}, onBack }) {
           <div className="col-lg-6">
             <div className="card-box edit-wrapper">
               <h4 className="section-title mb-4">Ticket Availability</h4>
-      
+
               <div className="row g-4">
                 {(event?.tickets && event?.tickets?.length) || 0 > 0 ? (
                   event.tickets.map((ticket) => {
@@ -512,7 +525,6 @@ export default function EventDetailsView({ event = {}, onBack }) {
           onConfirm={handleConfirm}
         />
       </div>
-     
 
       {/* ================= 10. FOOTER SECTION ================= */}
       <div>

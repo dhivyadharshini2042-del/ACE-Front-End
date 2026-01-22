@@ -20,10 +20,14 @@ export default function SortBar({ value, onChange, onSearch }) {
       </div>
 
       {/* LOCATION */}
-      <div className="sort-location">
+      {/* <div className="sort-location">
         <span className="icon">{LOCATION_ICON}</span>
-        <input type="text" placeholder="Location" disabled />
-      </div>
+        <input
+          type="text"
+          placeholder="Search anything..."
+          onChange={(e) => onSearch(e.target.value)}
+        />
+      </div> */}
 
       {/* SORT */}
       <select
@@ -31,9 +35,12 @@ export default function SortBar({ value, onChange, onSearch }) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
       >
-        <option value="new">New Arrivals</option>
-        <option value="old">Oldest</option>
-        <option value="popular">Popular</option>
+        <option value="" disabled>Sort By Top Rated</option>
+        <option value="MOST_VIEWED">Top Rated</option>
+        <option value="MOST_VIEWED">Most Viewed</option>
+        <option value="A_Z">Alphabetical (A–Z)</option>
+        <option value="Z_A">Alphabetical (Z–A)</option>
+        <option value="RECENT">Recent</option>
       </select>
     </div>
   );

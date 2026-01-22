@@ -11,6 +11,7 @@ import {
 } from "../../../const-value/config-icons/page";
 import { encodeId } from "../../../lib/utils/secureId";
 import { useRouter } from "next/navigation";
+import { useLoading } from "../../../context/LoadingContext";
 
 /* -------- DATE FORMAT -------- */
 function formatDate(date, time) {
@@ -36,13 +37,22 @@ function getCountdown(targetIso) {
 
 /* -------- COMPONENT -------- */
 export default function SpotlightCarousel({ data = [] }) {
+  const { setLoading } = useLoading();
   const [current, setCurrent] = useState(0);
   const [, forceUpdate] = useState(0);
   const total = data.length;
   const router = useRouter();
 
   const handleClick = (slug) => {
-    router.push(`/events/${slug}`);
+    if (!slug) return;
+
+    try {
+      setLoading(true);
+      router.push(`/events/${slug}`);
+    } catch (error) {
+      console.error("Navigation failed", error);
+      setLoading(false); 
+    }
   };
 
   /* Auto slide */

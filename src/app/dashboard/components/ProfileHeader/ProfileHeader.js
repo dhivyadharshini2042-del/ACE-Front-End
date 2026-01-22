@@ -4,29 +4,31 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./ProfileHeader.module.css";
 
+// GLOBAL LOADING
+import { useLoading } from "../../../../context/LoadingContext";
+
 // USER API
 import { getOrganizationProfileApi } from "../../../../lib/api/organizer.api";
 import { getUserProfileApi } from "../../../../lib/api/user.api";
 import { getUserData } from "../../../../lib/auth";
-import { useLoading } from "../../../../context/LoadingContext";
 
 export default function ProfileHeader() {
   const router = useRouter();
+  const { setLoading } = useLoading(); // ✅ GLOBAL LOADER
 
-  // profile default-aa empty object
   const [profile, setProfile] = useState({});
-  const { setLoading } = useLoading();
 
   /* ================= LOAD PROFILE ================= */
   useEffect(() => {
     async function loadProfile() {
-      setLoading(true);
-
       try {
+        setLoading(true); // 🔥 START GLOBAL LOADER
+
         const user = getUserData();
         if (!user?.identity) return;
 
-        const role = user.role || (user.type === "org" ? "organizer" : "user");
+        const role =
+          user.role || (user.type === "org" ? "organizer" : "user");
 
         let res;
         if (role === "organizer") {
@@ -36,30 +38,27 @@ export default function ProfileHeader() {
         }
 
         if (res?.status && res.data) {
-          setProfile(res.data); 
+          setProfile(res.data);
         }
       } catch (err) {
         console.error("ProfileHeader error:", err);
       } finally {
-        setLoading(false);
+        setLoading(false); // ✅ STOP GLOBAL LOADER (VERY IMPORTANT)
       }
     }
 
     loadProfile();
-  }, [setLoading]);
+  }, []);
 
   /* ================= SAFE FALLBACK VALUES ================= */
-
   const displayName = profile.organizationName || profile.name || "User";
-
   const firstLetter = displayName.charAt(0).toUpperCase();
 
   const followersCount = profile.followersCount || 0;
   const followingCount = profile.followingCount || 0;
   const rank = profile.rank || 0;
 
-  /* ================= UI (UNCHANGED) ================= */
-
+  /* ================= UI ================= */
   return (
     <div className={styles.wrapper}>
       {/* COVER */}

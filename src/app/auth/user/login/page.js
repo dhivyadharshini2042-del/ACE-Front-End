@@ -39,14 +39,12 @@ import { loginApi, googleAuthLoginApi } from "../../../../lib/api/auth.api";
 
 import { saveToken } from "../../../../lib/auth";
 import { loginSuccess } from "../../../../store/authSlice";
-import { useLoading } from "../../../../context/LoadingContext";
+import { useLoading } from "../../../../context/LoadingContext"; 
 
 export default function UserLoginPage() {
   const router = useRouter();
   const dispatch = useDispatch();
-
-  // GLOBAL LOADING
-  const { loading, setLoading } = useLoading();
+  const { setLoading } = useLoading(); 
 
   const [showPass, setShowPass] = useState(false);
 
@@ -66,9 +64,9 @@ export default function UserLoginPage() {
       return toast.error(err.errors[0]);
     }
 
-    setLoading(true);
-
     try {
+      setLoading(true); 
+
       const res = await loginApi(form);
 
       if (!res?.status || !res?.token) {
@@ -84,15 +82,15 @@ export default function UserLoginPage() {
     } catch (err) {
       toast.error(MSG_LOGIN_FAILED);
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   };
 
   /* ================= GOOGLE LOGIN ================= */
   const handleGoogleSuccess = async (response) => {
-    setLoading(true);
-
     try {
+      setLoading(true);
+
       const googleToken = response.credential;
 
       const res = await googleAuthLoginApi({
@@ -112,11 +110,17 @@ export default function UserLoginPage() {
     } catch (err) {
       toast.error(MSG_GOOGLE_LOGIN_FAILED);
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   };
+
   const handleCreateEvent = () => {
-    router.push("/auth/organization/login");
+    try {
+      setLoading(true); 
+      router.push("/auth/organization/login");
+    } catch (err) {
+      setLoading(false);
+    }
   };
 
   return (
@@ -135,6 +139,7 @@ export default function UserLoginPage() {
             </div>
             <div>{PAGEMOVEICON}</div>
           </div>
+
           <h1 className="auth-title mt-5">{TITLE_USER_LOGIN}</h1>
           <p className="auth-sub">{SUBTITLE_USER_LOGIN}</p>
 
@@ -157,7 +162,9 @@ export default function UserLoginPage() {
                 type={showPass ? "text" : "password"}
                 placeholder={PH_PASSWORD}
                 value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, password: e.target.value })
+                }
               />
 
               <span
@@ -174,9 +181,7 @@ export default function UserLoginPage() {
             </div>
 
             {/* SUBMIT */}
-            <button className="auth-btn" disabled={loading}>
-              {loading ? "Signing in..." : TEXT_SIGNIN}
-            </button>
+            <button className="auth-btn">{TEXT_SIGNIN}</button>
 
             {/* DIVIDER */}
             <div className="auth-divider">— Or —</div>
@@ -191,7 +196,8 @@ export default function UserLoginPage() {
 
             {/* FOOTER */}
             <div className="auth-footer">
-              {TEXT_NO_ACCOUNT} <a href="/auth/user/signup">{TEXT_SIGNUP}</a>
+              {TEXT_NO_ACCOUNT}{" "}
+              <a href="/auth/user/signup">{TEXT_SIGNUP}</a>
             </div>
           </form>
         </div>

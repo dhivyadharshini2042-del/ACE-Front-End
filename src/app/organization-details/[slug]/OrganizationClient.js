@@ -20,14 +20,12 @@ import {
   YOUTUBEICON,
 } from "../../../const-value/config-icons/page";
 import Footer from "../../../components/global/Footer/Footer";
-import { useLoading } from "../../../context/LoadingContext";
 
 export default function OrganizationClient({ slug }) {
   const router = useRouter();
 
   const [data, setData] = useState([]);
   const [currentBanner, setCurrentBanner] = useState(0);
-  const { loading, setLoading } = useLoading();
 
   /* ================= FETCH EVENTS ================= */
   useEffect(() => {
@@ -36,7 +34,6 @@ export default function OrganizationClient({ slug }) {
     console.log("Slug received:", slug);
 
     const fetchData = async () => {
-      setLoading(true); 
 
       try {
         const res = await getOrganizationByEventsApi(slug);
@@ -47,12 +44,11 @@ export default function OrganizationClient({ slug }) {
         console.error("API error:", err);
         setData([]);
       } finally {
-        setLoading(false); // global loader OFF (ONLY here)
       }
     };
 
     fetchData();
-  }, [slug, setLoading]);
+  }, [slug]);
 
   const org = data?.[0]?.org || null;
   const events = data;

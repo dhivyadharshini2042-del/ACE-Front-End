@@ -19,10 +19,13 @@ import {
 } from "../../../const-value/config-message/page";
 
 import { verifyEmailApi } from "../../../lib/api/auth.api";
+import { useLoading } from "../../../context/LoadingContext"; 
 
 export default function EmailVerifyClient() {
   const searchParams = useSearchParams();
   const token = searchParams.get(STORAGE_TOKEN);
+
+  const { setLoading } = useLoading(); 
 
   const [status, setStatus] = useState(MSG_EMAIL_VERIFY_LOADING);
   // loading | success | failed
@@ -35,6 +38,8 @@ export default function EmailVerifyClient() {
 
     async function verify() {
       try {
+        setLoading(true); 
+
         const res = await verifyEmailApi(token);
 
         if (res?.status) {
@@ -43,7 +48,7 @@ export default function EmailVerifyClient() {
           );
 
           if (isMobile) {
-            // Try to open the mobile app (deep link)
+            // mobile deep link
             window.location.href = "myapp://email-verify?status=success";
           }
 
@@ -53,11 +58,13 @@ export default function EmailVerifyClient() {
         }
       } catch (err) {
         setStatus(MSG_EMAIL_VERIFY_FAILED);
-      } 
+      } finally {
+        setLoading(false); 
+      }
     }
 
     verify();
-  }, [token]);
+  }, [token, setLoading]);
 
   return (
     <div className="container min-vh-100 d-flex justify-content-center align-items-center">
@@ -99,7 +106,9 @@ export default function EmailVerifyClient() {
         {/* FAILED */}
         {status === MSG_EMAIL_VERIFY_FAILED && (
           <>
-            <h4 className="fw-bold text-danger">{TITLE_EMAIL_VERIFY_FAILED}</h4>
+            <h4 className="fw-bold text-danger">
+              {TITLE_EMAIL_VERIFY_FAILED}
+            </h4>
             <p className="text-muted">{SUB_TITLE_EMAIL_VERIFY_FAILED}</p>
 
             <button

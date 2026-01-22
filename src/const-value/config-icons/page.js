@@ -119,6 +119,12 @@ export const SAVEICON = (
     />
   </svg>
 );
+export const COLOR_SAVED_ICON = (<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44" fill="none">
+  <rect width="0" height="0" rx="22" fill="#F3F3F3"/>
+  <path d="M27.276 12.5H16.7205C15.5594 12.5 14.6199 13.45 14.6199 14.6111L14.6094 31.5L21.9983 28.3333L29.3872 31.5V14.6111C29.3872 13.45 28.4372 12.5 27.276 12.5ZM27.276 28.3333L21.9983 26.0322L16.7205 28.3333V15.6667C16.7205 15.0861 17.1955 14.6111 17.776 14.6111H26.2205C26.801 14.6111 27.276 15.0861 27.276 15.6667V28.3333Z" fill="#7F00FF"/>
+  <path d="M28 13.6992V29.2992L22 26.8992L16 29.2992V13.6992H28Z" fill="#7F00FF"/>
+</svg>
+);
 export const RIGHTSIDEARROW_ICON = (
   <svg
     xmlns="http://www.w3.org/2000/svg"

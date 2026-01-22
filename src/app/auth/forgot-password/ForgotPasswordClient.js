@@ -29,15 +29,16 @@ import { forgotApi } from "../../../lib/api/auth.api";
 /* AUTH */
 import { saveEmail } from "../../../lib/auth";
 
-/* LOADING */
-import { useLoading } from "../../../context/LoadingContext";
+/* GLOBAL LOADING */
+import { useLoading } from "../../../context/LoadingContext"; 
 
 export default function ForgotPasswordClient() {
   const router = useRouter();
   const params = useSearchParams();
   const role = params.get("role") || ROLE_USER;
 
-  const { setLoading } = useLoading();
+  const { setLoading } = useLoading(); 
+
   const [email, setEmail] = useState("");
 
   const config = {
@@ -70,12 +71,10 @@ export default function ForgotPasswordClient() {
       return toast.error(err.errors[0]);
     }
 
-    setLoading(true);
-
     try {
-      await forgotApi({
-        email,
-      });
+      setLoading(true);
+
+      await forgotApi({ email });
 
       saveEmail(email);
       toast.success(MSG_OTP_SEND_EMAIL);
@@ -83,7 +82,7 @@ export default function ForgotPasswordClient() {
     } catch (err) {
       toast.error(err?.message || MSG_OTP_SEND_EMAIL_ERROR);
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   }
 

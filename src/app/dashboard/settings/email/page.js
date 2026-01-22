@@ -2,22 +2,11 @@
 
 import { useEffect, useState } from "react";
 import styles from "./Email.module.css";
-import { useLoading } from "../../../../context/LoadingContext";
 
 export default function EmailSettingsPage() {
   const [created, setCreated] = useState(true);
   const [status, setStatus] = useState(false);
   const [completed, setCompleted] = useState(false);
-
-  const { setLoading } = useLoading(); // ONLY ADD
-
-  useEffect(() => {
-    setLoading(true); //START GLOBAL LOADING
-
-    return () => {
-      setLoading(false); //STOP GLOBAL LOADING
-    };
-  }, [setLoading]);
 
   return (
     <div className={styles.wrapper}>

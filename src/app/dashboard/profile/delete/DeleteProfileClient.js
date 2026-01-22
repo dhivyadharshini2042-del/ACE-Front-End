@@ -18,14 +18,12 @@ import {
 } from "../../../../const-value/config-message/page";
 
 import { getUserData } from "../../../../lib/auth";
-import { useLoading } from "../../../../context/LoadingContext";
 // import api from "../../../../lib/api";
 
 export default function DeleteProfilePage() {
   const [open, setOpen] = useState(false);
   const [deleted, setDeleted] = useState(false);
 
-  const { setLoading } = useLoading();
 
   const userData = getUserData();
 
@@ -33,7 +31,6 @@ export default function DeleteProfilePage() {
   if (!userData) return null;
 
   const handleDelete = async () => {
-    setLoading(true);
 
     try {
       const res = await api.delete(
@@ -52,7 +49,6 @@ export default function DeleteProfilePage() {
         err?.response?.data?.message || "Delete failed"
       );
     } finally {
-      setLoading(false);
     }
   };
 

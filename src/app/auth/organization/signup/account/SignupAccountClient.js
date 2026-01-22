@@ -15,13 +15,14 @@ import {
   PH_PASSWORD,
   PH_CONFIRM_PASSWORD,
   BTN_VERIFY_DOMAIN,
-  BTN_VERIFY_DOMAIN_LOADING,
   MSG_ERR_FILL_ALL_FIELDS,
   MSG_ERR_PASSWORD_MISMATCH,
   MSG_ERR_CATEGORY_MISSING,
   ROLE_ORGANIZER,
   INPUT_TEXT,
   INPUT_PASSWORD,
+  MSG_ERR_SIGNUP_FAILED,
+  MSG_SIGNUP_SUCCESS,
 } from "../../../../../const-value/config-message/page";
 
 import {
@@ -35,6 +36,7 @@ import { useLoading } from "../../../../../context/LoadingContext";
 export default function SignupAccountClient() {
   const router = useRouter();
   const params = useSearchParams();
+  const { setLoading } = useLoading(); 
 
   const category = params.get("cat");
   const country = params.get("country");
@@ -48,7 +50,6 @@ export default function SignupAccountClient() {
 
   const [showPass1, setShowPass1] = useState(false);
   const [showPass2, setShowPass2] = useState(false);
-  const { setLoading } = useLoading();
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -56,12 +57,15 @@ export default function SignupAccountClient() {
     if (!email || !password || !confirm)
       return toast.error(MSG_ERR_FILL_ALL_FIELDS);
 
-    if (password !== confirm) return toast.error(MSG_ERR_PASSWORD_MISMATCH);
+    if (password !== confirm)
+      return toast.error(MSG_ERR_PASSWORD_MISMATCH);
 
-    if (!category) return toast.error(MSG_ERR_CATEGORY_MISSING);
+    if (!category)
+      return toast.error(MSG_ERR_CATEGORY_MISSING);
 
-    setLoading(true);
     try {
+      setLoading(true); 
+
       const res = await signupApi({
         org_cat: category,
         country,
@@ -74,12 +78,11 @@ export default function SignupAccountClient() {
         platform: "web",
       });
 
-      //DO NOT THROW
       if (!res?.status) {
-        return toast.error(res?.message || MSG_ERR_SIGNUP_FAILED);
+        toast.error(res?.message || MSG_ERR_SIGNUP_FAILED);
+        return;
       }
 
-      //SUCCESS ONLY ONCE
       toast.success(res.message || MSG_SIGNUP_SUCCESS);
       router.push("/auth/organization/login");
     } catch (err) {

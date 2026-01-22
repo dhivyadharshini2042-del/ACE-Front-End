@@ -17,9 +17,9 @@ import { forgotApi, updateAuthProfile } from "../../../lib/api/auth.api";
 
 /* Utils */
 import { getUserData } from "../../../lib/auth";
-import { useLoading } from "../../../context/LoadingContext";
 import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
 import { useRouter } from "next/navigation";
+import { useLoading } from "../../../context/LoadingContext";
 
 /* ================= ROLE BASED API ================= */
 const getProfileApis = (user) => {
@@ -41,9 +41,8 @@ const getProfileApis = (user) => {
 };
 
 export default function ProfilePage() {
-  const { setLoading: setGlobalLoading } = useLoading();
   const fileRef = useRef(null);
-
+  const { setLoading } = useLoading();
   const [profile, setProfile] = useState(null);
   const [mode, setMode] = useState("view");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -59,11 +58,12 @@ export default function ProfilePage() {
   const [imagePreview, setImagePreview] = useState(null);
 
   /* ================= LOAD PROFILE ================= */
-  
+
   useEffect(() => {
     const loadProfile = async () => {
-      setGlobalLoading(true);
       try {
+        setLoading(true); 
+
         const user = getUserData();
         if (!user?.identity) return;
 
@@ -81,70 +81,64 @@ export default function ProfilePage() {
       } catch {
         toast.error("Failed to load profile");
       } finally {
-        setGlobalLoading(false);
+        setLoading(false); 
       }
     };
 
     loadProfile();
-  }, [setGlobalLoading]);
+  }, []);
 
   /* ================= SAVE PROFILE ================= */
   const saveProfile = async () => {
-    setGlobalLoading(true);
     try {
+      setLoading(true);
+
       const user = getUserData();
+      if (!user?.identity) return;
 
       const payload = new FormData();
 
-      //IDENTITY (IMPORTANT)
-      payload.append("identity", user?.identity);
+      payload.append("identity", user.identity);
+      payload.append("type", user.type);
 
-      //TYPE
-      payload.append("type", user?.type);
       // ROLE BASED NAME
-      if (user?.type === "org") {
+      if (user.type === "org") {
         payload.append("organizationName", form.name);
       } else {
         payload.append("name", form.name);
       }
 
-      //IMAGE (optional)
+      // IMAGE (optional)
       if (form.image) {
         payload.append("profileImage", form.image);
-      }
-
-      // DEBUG
-      for (const pair of payload.entries()) {
-        console.log(pair[0], "=>", pair[1]);
       }
 
       const res = await updateAuthProfile(payload);
 
       if (res?.success) {
         toast.success("Profile updated successfully");
+
         setMode("view");
         setImagePreview(null);
         setForm((prev) => ({ ...prev, image: null }));
       } else {
         toast.error(res?.message || "Update failed");
       }
-    } catch {
+    } catch (err) {
       toast.error("Profile update failed");
     } finally {
-      setGlobalLoading(false);
+      setLoading(false);
     }
   };
 
   /* ================= SEND RESET MAIL ================= */
   const handleSendResetMail = async () => {
-    setGlobalLoading(true);
     try {
       router.push("/auth/forgot-password");
       setShowConfirmModal(false);
     } catch {
       toast.error("Failed to send reset email");
     } finally {
-      setGlobalLoading(false);
     }
   };
 

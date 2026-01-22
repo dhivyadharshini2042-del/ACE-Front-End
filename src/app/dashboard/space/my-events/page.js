@@ -6,46 +6,62 @@ import MyEventsList from "./MyEventsList";
 import { FaThLarge, FaListUl } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+
 import { getOrganizerEventsApi } from "../../../../lib/api/organizer.api";
+import { getEventStatusesApi } from "../../../../lib/api/event.api";
 import { getUserData } from "../../../../lib/auth";
 import { useLoading } from "../../../../context/LoadingContext";
 
 export default function MyEventPage() {
   const [events, setEvents] = useState([]);
+  const [statuses, setStatuses] = useState([]);
   const [view, setView] = useState("grid");
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true); 
+
   const router = useRouter();
+  const { setLoading } = useLoading();
 
-  const { setLoading: setGlobalLoading } = useLoading(); 
-
-  /* ================= FETCH EVENTS ================= */
+  /* ================= FETCH EVENTS + STATUSES ================= */
   useEffect(() => {
-    async function loadEvents() {
-      setGlobalLoading(true); // START GLOBAL LOADING
-
+    async function loadAll() {
       try {
+        setLoading(true);
+
         const user = getUserData();
-        if (!user?.identity) return;
+        if (!user?.identity) {
+          setEvents([]);
+          return;
+        }
 
-        const res = await getOrganizerEventsApi(user.identity);
+        // parallel API calls
+        const [eventsRes, statusRes] = await Promise.all([
+          getOrganizerEventsApi(user.identity),
+          getEventStatusesApi(),
+        ]);
 
-        if (res?.status) {
-          setEvents(res.data || []);
+        // EVENTS
+        if (eventsRes?.status) {
+          setEvents(eventsRes.data || []);
         } else {
-          toast.error(res.message || "Failed to load events");
+          toast.error(eventsRes?.message || "Failed to load events");
+          setEvents([]);
+        }
+
+        // STATUSES
+        if (statusRes?.status) {
+          setStatuses(statusRes.data || []);
         }
       } catch (err) {
         toast.error("Error loading events");
+        setEvents([]);
       } finally {
-        setLoading(false);           
-        setGlobalLoading(false);    
+        setLoading(false);
       }
     }
 
-    loadEvents();
-  }, [setGlobalLoading]);
+    loadAll();
+  }, []); 
 
   /* ================= FILTER + SEARCH ================= */
   const filteredEvents = events.filter((e) => {
@@ -55,16 +71,8 @@ export default function MyEventPage() {
     return true;
   });
 
-  if (loading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center py-5">
-        <div className="spinner-border text-primary" />
-      </div>
-    );
-  }
-
   return (
-    <div className="container-fluid shadow-sm p-3 mb-5 bg-body-tertiary rounded">
+    <div className="container-fluid p-3 mb-5 rounded">
       {/* ================= HEADER ================= */}
       <div className="d-flex align-items-center justify-content-between mb-4">
         <h2 className="fw-bold mb-0">My Events</h2>
@@ -78,69 +86,66 @@ export default function MyEventPage() {
       </div>
 
       {/* ================= CONTROLS ================= */}
-      <div className="p-4 ">
-        <div className="card-body">
-          <div className="row g-3 align-items-center">
-            {/* SEARCH */}
-            <div className="col-md-5">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search events"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
+      <div className="p-4">
+        <div className="row g-3 align-items-center">
+          {/* SEARCH */}
+          <div className="col-md-5">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search events"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
 
-            {/* FILTER */}
-            <div className="col-md-3">
-              <select
-                className="form-select"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
+          {/* FILTER (DYNAMIC) */}
+          <div className="col-md-3">
+            <select
+              className="form-select"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <option value="all">All Events</option>
+
+              {statuses.map((s) => (
+                <option key={s} value={s}>
+                  {s.charAt(0) + s.slice(1).toLowerCase()}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* VIEW TOGGLE */}
+          <div className="col-md-4 text-md-end">
+            <div className="btn-group">
+              {/* GRID BUTTON */}
+              <button
+                className={`btn ${view === "grid" ? "btn-grid" : "btn-list"}`}
+                onClick={() => setView("grid")}
               >
-                <option value="all">All Events</option>
-                <option value="APPROVED">Published</option>
-                <option value="DRAFT">Draft</option>
-                <option value="COMPLETED">Completed</option>
-              </select>
-            </div>
+                <FaThLarge />
+              </button>
 
-            {/* VIEW TOGGLE */}
-            <div className="col-md-4 text-md-end">
-              <div className="btn-group">
-                <button
-                  className={`btn ${
-                    view === "grid" ? "btn-primary" : "btn-outline-secondary"
-                  }`}
-                  onClick={() => setView("grid")}
-                >
-                  <FaThLarge />
-                </button>
-
-                <button
-                  className={`btn ${
-                    view === "list" ? "btn-primary" : "btn-outline-secondary"
-                  }`}
-                  onClick={() => setView("list")}
-                >
-                  <FaListUl />
-                </button>
-              </div>
+              {/* LIST BUTTON */}
+              <button
+                className={`btn ${view === "list" ? "btn-grid" : "btn-list"}`}
+                onClick={() => setView("list")}
+              >
+                <FaListUl />
+              </button>
             </div>
           </div>
         </div>
       </div>
 
       {/* ================= CONTENT ================= */}
-      <div className="border-0 mt-5">
-        <div className="card-body">
-          {view === "grid" ? (
-            <MyEventsGrid events={filteredEvents} />
-          ) : (
-            <MyEventsList events={filteredEvents} />
-          )}
-        </div>
+      <div className="mt-5">
+        {view === "grid" ? (
+          <MyEventsGrid events={filteredEvents} />
+        ) : (
+          <MyEventsList events={filteredEvents} />
+        )}
       </div>
     </div>
   );

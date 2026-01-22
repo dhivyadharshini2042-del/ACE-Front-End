@@ -1,7 +1,7 @@
 "use client";
 
 import "./organizer-login.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
@@ -40,37 +40,36 @@ import {
   MSG_LOGIN_SUCCESS_ORGANIZER,
   MSG_LOGIN_FAILED,
 } from "../../../../const-value/config-message/page";
+
 import { useLoading } from "../../../../context/LoadingContext";
 
 export default function OrganizerLoginPage() {
   const router = useRouter();
+  const { setLoading } = useLoading();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
-  // GLOBAL LOADING
-  const { setLoading } = useLoading();
 
-  // -----------------------------
-  // SUBMIT
-  // -----------------------------
+  /* ================= SUBMIT ================= */
   async function onSubmit(e) {
     e.preventDefault();
-    setLoading(true);
 
-    // validation
+    // VALIDATION
     try {
       await organizerLoginSchema.validate(
         { email, password },
-        { abortEarly: false }
+        { abortEarly: false },
       );
     } catch (err) {
       toast.error(err.errors[0]);
-      setLoading(false);
       return;
     }
 
+    // API CALL
     try {
+      setLoading(true);
+
       const res = await loginApi({
         email,
         password,
@@ -79,7 +78,6 @@ export default function OrganizerLoginPage() {
 
       if (!res?.status || !res?.token) {
         toast.error(res?.message || MSG_INVALID_CREDENTIALS);
-        setLoading(false);
         return;
       }
 
@@ -99,9 +97,19 @@ export default function OrganizerLoginPage() {
     }
   }
 
+  /* ================= SWITCH TO USER LOGIN ================= */
   const handleUserLogin = () => {
-    router.push("/auth/user/login");
+    try {
+      setLoading(true);
+      router.push("/auth/user/login");
+    } catch (err) {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   return (
     <div className="org-login-shell">
@@ -119,6 +127,7 @@ export default function OrganizerLoginPage() {
             </div>
             <div>{PAGEMOVEICON}</div>
           </div>
+
           <h1 className="org-title mt-5">{TITLE_ORG_LOGIN_MAIN}</h1>
           <p className="org-sub">{SUBTITLE_ORG_LOGIN}</p>
 

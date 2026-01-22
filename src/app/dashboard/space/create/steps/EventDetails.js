@@ -13,7 +13,6 @@ import {
   getStates,
   getCities,
 } from "../../../../../lib/location.api";
-import { useLoading } from "../../../../../context/LoadingContext";
 
 export default function EventDetails({
   data,
@@ -29,7 +28,6 @@ export default function EventDetails({
   const [eventTypes, setEventTypes] = useState([]);
 
   /* ===== LOCATION STATE ===== */
-  const { setLoading } = useLoading();
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -71,13 +69,11 @@ export default function EventDetails({
   /* ================= LOAD COUNTRIES ================= */
   useEffect(() => {
     async function loadCountries() {
-      setLoading(true);
       const res = await getCountries();
       setCountries(res || []);
-      setLoading(false);
     }
     loadCountries();
-  }, [setLoading]);
+  }, []);
 
   /* ================= LOAD STATES ================= */
   useEffect(() => {
@@ -87,13 +83,11 @@ export default function EventDetails({
     }
 
     async function loadStates() {
-      setLoading(true);
       const res = await getStates(data.country);
       setStates(res || []);
-      setLoading(false);
     }
     loadStates();
-  }, [data.country, setLoading]);
+  }, [data.country]);
 
   /* ================= LOAD CITIES ================= */
   useEffect(() => {
@@ -103,13 +97,11 @@ export default function EventDetails({
     }
 
     async function loadCities() {
-      setLoading(true);
       const res = await getCities(data.country, data.state);
       setCities(res || []);
-      setLoading(false);
     }
     loadCities();
-  }, [data.state, data.country, setLoading]);
+  }, [data.state, data.country]);
 
   const addTag = () => {
     let value = tagInput.trim();
