@@ -8,7 +8,7 @@ import { NextResponse } from "next/server";
    ROUTE CONFIG
 ================================ */
 
-// Public routes (token / consent illa kooda ok)
+// Public routes (token / no consent )
 const PUBLIC_ROUTES = [
   "/",
   "/about",
@@ -92,8 +92,8 @@ export function middleware(request) {
     CONSENT_REQUIRED_ROUTES.some((route) => pathname.startsWith(route)) &&
     !consent
   ) {
-    // Consent illa → page load aagum
-    // consent modal client side handle pannum
+    // Consent no → page load 
+    // consent modal client side handle 
     return NextResponse.next();
   }
 
