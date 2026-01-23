@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import "./landing.css";
+
 // ICONS
 import {
   DATEICON,
@@ -9,33 +10,36 @@ import {
   HOME_PAGE_LOCATION_ICON,
   WHATICON,
 } from "../../const-value/config-icons/page.js";
+
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+
 // API
 import { getAllEventsApi } from "../../lib/api/event.api.js";
-import toast from "react-hot-toast";
+import { getAllOrganizationsApi } from "../../lib/api/organizer.api.js";
+import { isUserLoggedIn } from "../../lib/auth.js";
+
+// COMPONENTS
 import ChooseEventCategory from "../../components/global/ChooseEventCategory/ChooseEventCategory";
 import EventSearchBar from "../../components/global/EventSearchBar/EventSearchBar";
 import EventSlider from "../../components/global/EventSlider/EventSlider";
 import Footer from "../../components/global/Footer/Footer";
-
 import HeroBanner from "../../components/global/HeroBanner/HeroBanner.js";
 import HeroBannerCarousel from "../../components/global/HeroBannerCarousel/HeroBannerCarousel";
 import SpotlightCarousel from "../../components/global/SpotlightCarousel/SpotlightCarousel";
-import LeaderboardModal from "../../components/global/LeaderboardModal/LeaderboardModal";
 import LocationHighlights from "../../components/global/LocationHighlights/LocationHighlights";
 import OrganizersCarousel from "../../components/global/OrganizerCarousel/OrganizerCarousel.js";
-// import HowItWorks from "../../components/global/HowItWorks/HowItWorks.js";
-import { getAllOrganizationsApi } from "../../lib/api/organizer.api.js";
 import FloatingExploreButton from "../../components/global/FloatingExploreButton/FloatingExploreButton.js";
+
 import { useLoading } from "../../context/LoadingContext.js";
 
 export default function LandingPage() {
   const { setLoading } = useLoading();
-  const [openLB, setOpenLB] = useState(false);
+
   const [events, setEvents] = useState([]);
   const [organization, setOrganization] = useState([]);
-  const exploreRef = useRef(null);
 
+  const exploreRef = useRef(null);
   const router = useRouter();
 
   const apiText = "What Event would you like to go to?";
@@ -51,42 +55,24 @@ export default function LandingPage() {
   ];
 
   const CATEGORIES = [
-    {
-      name: "Conferences",
-      img: "/images/Conferences.png",
-      class: "conference",
-    },
+    { name: "Conferences", img: "/images/Conferences.png", class: "conference" },
     { name: "Hackathon", img: "/images/Hackathon.png", class: "hackathon" },
     { name: "Webinars", img: "/images/Webinars.png", class: "webinar" },
     { name: "Athletics", img: "/images/Athletics.png", class: "athletics" },
     { name: "Concerts", img: "/images/concert.png", class: "concerts" },
-    {
-      name: "Tournaments",
-      img: "/images/Tournaments.png",
-      class: "tournaments",
-    },
+    { name: "Tournaments", img: "/images/Tournaments.png", class: "tournaments" },
     { name: "Job Fairs", img: "/images/JobFairs.png", class: "jobfairs" },
     { name: "Explore more", img: "/images/Explore.png", class: "explore" },
   ];
 
-  const ORGANIZERSS = [
-    {
-      id: 1,
-      name: "Swaram Academy",
-      avatar:
-        "https://png.pngtree.com/element_pic/00/16/07/06577d261edb9ec.jpg",
-      events: 17,
-      views: 2517,
-      rank: 1,
-    },
-  ];
-
+  /* ================= LOAD DATA ================= */
   const loadLandingData = async () => {
     try {
-      setLoading(true); // 🔥 FIRST SCREEN LOADING
+      const loggedIn = isUserLoggedIn();
+      setLoading(true);
 
       const [eventsRes, orgRes] = await Promise.all([
-        getAllEventsApi(),
+        getAllEventsApi(loggedIn),
         getAllOrganizationsApi(),
       ]);
 
@@ -97,10 +83,10 @@ export default function LandingPage() {
       if (orgRes?.status) {
         setOrganization(orgRes.data);
       }
-    } catch {
+    } catch (error) {
       toast.error("Something went wrong");
     } finally {
-      setLoading(false); // 🔥 LOADING END
+      setLoading(false);
     }
   };
 
@@ -108,13 +94,14 @@ export default function LandingPage() {
     loadLandingData();
   }, []);
 
+  /* ================= UI ================= */
   return (
     <div className="dashboard-root">
       <main className="dash-hero" ref={exploreRef}>
         <HeroBanner text={apiText} />
 
         <div className="exp-btn">
-          <img src="/images/sparkles.png" alt="no image" />
+          <img src="/images/sparkles.png" alt="sparkles" />
           <button
             className="btn-explore"
             onClick={() => router.push("/explore-events")}
@@ -136,25 +123,15 @@ export default function LandingPage() {
 
       <ChooseEventCategory categories={CATEGORIES} />
 
-      <>
-        <EventSlider title="Trending Events" data={events} />
-        <EventSlider title="Virtual Events" data={events} />
-      </>
+      <EventSlider title="Trending Events" data={events} />
+      <EventSlider title="Virtual Events" data={events} />
 
       <SpotlightCarousel data={events} />
 
-      <OrganizersCarousel
-        onOpenLeaderboard={() => setOpenLB(true)}
-        data={organization}
-      />
-      <EventSlider title="Upcoming Events" data={events} />
-      {/* <HowItWorks /> */}
+      {/*  View Leaderboard navigates to /leaderboard */}
+      <OrganizersCarousel data={organization} />
 
-      <LeaderboardModal
-        open={openLB}
-        onClose={() => setOpenLB(false)}
-        data={ORGANIZERSS}
-      />
+      <EventSlider title="Upcoming Events" data={events} />
 
       <LocationHighlights />
       <FloatingExploreButton targetRef={exploreRef} />

@@ -105,20 +105,25 @@ export const WHATICON = (
     />
   </svg>
 );
-export const SAVEICON = (
+export const SAVEICON = ({ active = false }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="15"
-    height="19"
-    viewBox="0 0 15 19"
+    width="22"
+    height="24"
+    viewBox="0 0 24 24"
     fill="none"
+    style={{ cursor: "pointer" }}
   >
     <path
-      d="M12.6667 0H2.11111C0.95 0 0.0105558 0.95 0.0105558 2.11111L0 19L7.38889 15.8333L14.7778 19V2.11111C14.7778 0.95 13.8278 0 12.6667 0ZM12.6667 15.8333L7.38889 13.5322L2.11111 15.8333V3.16667C2.11111 2.58611 2.58611 2.11111 3.16667 2.11111H11.6111C12.1917 2.11111 12.6667 2.58611 12.6667 3.16667V15.8333Z"
-      fill="#1C1C1C"
+      d="M6 2C4.89543 2 4 2.89543 4 4V22C4 22.3795 4.214 22.725 4.553 22.894C4.892 23.063 5.298 23.026 5.6 22.8L12 18L18.4 22.8C18.702 23.026 19.108 23.063 19.447 22.894C19.786 22.725 20 22.3795 20 22V4C20 2.89543 19.1046 2 18 2H6Z"
+      fill={active ? "#6A00FF" : "none"}     // active → purple fill
+      stroke={active ? "#6A00FF" : "#3D3D3D"} // inactive → grey outline
+      strokeWidth="1.8"
+      strokeLinejoin="round"
     />
   </svg>
 );
+
 export const COLOR_SAVED_ICON = (<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44" fill="none">
   <rect width="0" height="0" rx="22" fill="#F3F3F3"/>
   <path d="M27.276 12.5H16.7205C15.5594 12.5 14.6199 13.45 14.6199 14.6111L14.6094 31.5L21.9983 28.3333L29.3872 31.5V14.6111C29.3872 13.45 28.4372 12.5 27.276 12.5ZM27.276 28.3333L21.9983 26.0322L16.7205 28.3333V15.6667C16.7205 15.0861 17.1955 14.6111 17.776 14.6111H26.2205C26.801 14.6111 27.276 15.0861 27.276 15.6667V28.3333Z" fill="#7F00FF"/>

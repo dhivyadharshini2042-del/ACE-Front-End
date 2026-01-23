@@ -38,6 +38,7 @@ export const clearToken = async () => {
   });
 };
 
+
 /* ================= EMAIL (FOR OTP FLOW) ================= */
 
 export const saveEmail = (email) => {
@@ -53,4 +54,11 @@ export const getEmail = () => {
 export const clearEmail = () => {
   if (typeof window === "undefined") return;
   localStorage.removeItem("userEmail");
+};
+
+/* ================= LOGIN CHECK ================= */
+
+export const isUserLoggedIn = () => {
+  if (typeof window === "undefined") return false;
+  return !!getToken();
 };

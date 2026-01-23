@@ -20,6 +20,7 @@ import "./EventDetailsView.css";
 import ConfirmModal from "../../ui/Modal/ConfirmModal";
 import { addEventViewApi } from "../../../lib/api/event.api";
 import { useLoading } from "../../../context/LoadingContext";
+import ShareModal from "../../ui/ShareModal/ShareModal";
 
 export default function EventDetailsView({ event = {}, onBack }) {
   const { setLoading } = useLoading();
@@ -27,6 +28,7 @@ export default function EventDetailsView({ event = {}, onBack }) {
   const [expanded, setExpanded] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const viewCalledRef = useRef(false);
+  const [openShare, setOpenShare] = useState(false);
 
   const [countdown, setCountdown] = useState({
     days: "00",
@@ -115,6 +117,8 @@ export default function EventDetailsView({ event = {}, onBack }) {
     setLoading(false);
   }, []);
 
+  console.log("==================bnbnbn", event);
+
   return (
     <>
       <div className="container event-wrapper my-4">
@@ -122,8 +126,8 @@ export default function EventDetailsView({ event = {}, onBack }) {
           <button
             className="event-back-btn"
             onClick={() => {
-              setLoading(true); 
-              onBack(); 
+              setLoading(true);
+              onBack();
             }}
           >
             🔙 Back
@@ -210,9 +214,12 @@ export default function EventDetailsView({ event = {}, onBack }) {
               {/* like , share , save */}
               <span>
                 {" "}
-                <LIKE_ICON /> 123
+                <LIKE_ICON /> {event?.likeCount || 0}
               </span>
-              <span>{SINGELEVENTSHARE_ICON}</span>
+              <span className="share-icon" onClick={() => setOpenShare(true)}>
+                {SINGELEVENTSHARE_ICON}
+              </span>
+
               <span>{SAVEICON}</span>
             </div>
           </div>
@@ -523,6 +530,11 @@ export default function EventDetailsView({ event = {}, onBack }) {
           image="/images/logo.png"
           onCancel={handleCancel}
           onConfirm={handleConfirm}
+        />
+        <ShareModal
+          open={openShare}
+          onClose={() => setOpenShare(false)}
+          title={event?.title}
         />
       </div>
 

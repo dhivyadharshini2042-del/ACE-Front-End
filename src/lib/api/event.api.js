@@ -7,16 +7,20 @@ import { handleApi } from "./apiHelper";
    EVENTS (PUBLIC)
 ======================= */
 
-// ALL EVENTS (Landing page, sliders)
-export const getAllEventsApi = async () => {
+export const getAllEventsApi = async (isLoggedIn = false) => {
   try {
-    return await handleApi(apiPublic.get(API_ENDPOINTS.EVENTS.ALL));
+    const api = isLoggedIn ? apiPrivate : apiPublic;
+
+    const url = isLoggedIn
+      ? API_ENDPOINTS.EVENTS.ALL_PRIVATE
+      : API_ENDPOINTS.EVENTS.ALL_PUBLIC;
+
+    return await handleApi(api.get(url));
   } catch (error) {
     console.error("getAllEventsApi error:", error);
     return {
       status: false,
       message: "Failed to fetch events",
-      error,
     };
   }
 };
@@ -36,6 +40,21 @@ export const getEventBySlugApi = async (slug) => {
   }
 };
 
+export const likeEventApi = async (payload) => {
+  try {
+    return await handleApi(apiPrivate.post("/v1/events/like", payload));
+  } catch {
+    return { status: false };
+  }
+};
+
+export const saveEventApi = async (payload) => {
+  try {
+    return await handleApi(apiPrivate.post("/v1/events/save", payload));
+  } catch {
+    return { status: false };
+  }
+};
 // EVENT VIEW COUNT
 export const addEventViewApi = async (slug) => {
   try {
@@ -144,9 +163,7 @@ export const getEventTypesApi = async (categoryId) => {
 };
 export const getAllEventTypesApi = async () => {
   try {
-    return await handleApi(
-      apiPublic.get(API_ENDPOINTS.MASTER.ALL_EVENT_TYPES),
-    );
+    return await handleApi(apiPublic.get(API_ENDPOINTS.MASTER.ALL_EVENT_TYPES));
   } catch (error) {
     console.error("getEventTypesApi error:", error);
     return { status: false, error };
@@ -216,11 +233,9 @@ export const filterEventsApi = async (payload) => {
 /* =======================
     EVENT STATUS
 ======================= */
-export const getEventStatusesApi  = async () => {
+export const getEventStatusesApi = async () => {
   try {
-    return await handleApi(
-      apiPublic.get(API_ENDPOINTS.EVENTS.STATUSES),
-    );
+    return await handleApi(apiPublic.get(API_ENDPOINTS.EVENTS.STATUSES));
   } catch (error) {
     console.error("filterEventsApi error:", error);
     return {

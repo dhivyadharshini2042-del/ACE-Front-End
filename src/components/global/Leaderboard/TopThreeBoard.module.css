@@ -1,0 +1,39 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 40px;
+  padding: 60px 20px;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 240px;
+  padding: 22px 18px;
+  border-radius: 18px;
+  text-align: center;
+  color: #fff;
+}
+
+.card img {
+  width: 130px;
+  margin-bottom: 12px;
+}
+
+.stars {
+  color: gold;
+  margin-bottom: 10px;
+}
+
+.first {
+  background: linear-gradient(180deg, #6a00ff, #4b00b5);
+  transform: translateY(-40px);
+}
+
+.second {
+  background: linear-gradient(180deg, #0b3c8a, #062e6f);
+}
+
+.third {
+  background: linear-gradient(180deg, #8a0022, #630017);
+}

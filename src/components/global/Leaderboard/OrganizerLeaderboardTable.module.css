@@ -1,0 +1,33 @@
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 40px 20px 80px;
+}
+
+.container h3 {
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.container p {
+  text-align: center;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 0.5fr;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #f5efff;
+  margin-bottom: 12px;
+  align-items: center;
+  font-weight: 500;
+}
+
+.rank {
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}

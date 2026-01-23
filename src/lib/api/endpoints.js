@@ -1,7 +1,8 @@
 export const API_ENDPOINTS = {
   /* ================= EVENTS ================= */
   EVENTS: {
-    ALL: "/v1/events",
+    ALL_PUBLIC: "/v1/events",
+    ALL_PRIVATE: "/v1/events_protec",
     SINGLE: (slug) => `/v1/events/${slug}`,
     VIEW: (slug) => `/v1/events/${slug}/view`,
     FILTER: "/v1/filter",

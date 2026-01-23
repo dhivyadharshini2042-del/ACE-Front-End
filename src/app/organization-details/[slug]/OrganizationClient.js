@@ -9,9 +9,11 @@ import { getOrganizationByEventsApi } from "../../../lib/api/organizer.api";
 
 import EventSlider from "../../../components/global/EventSlider/EventSlider";
 import {
+  DATEICON,
   FACEBOOKICON,
   INSTAGRAMICON,
   LINKEDINICON,
+  LOCATION_ICON,
   SHAREICON,
   START_ICON,
   TELEGRAMICON,
@@ -34,7 +36,6 @@ export default function OrganizationClient({ slug }) {
     console.log("Slug received:", slug);
 
     const fetchData = async () => {
-
       try {
         const res = await getOrganizationByEventsApi(slug);
         console.log("API response:", res);
@@ -65,7 +66,7 @@ export default function OrganizationClient({ slug }) {
 
     const interval = setInterval(() => {
       setCurrentBanner((prev) =>
-        prev === bannerImages.length - 1 ? 0 : prev + 1
+        prev === bannerImages.length - 1 ? 0 : prev + 1,
       );
     }, 4000);
 
@@ -76,11 +77,11 @@ export default function OrganizationClient({ slug }) {
   const now = new Date();
 
   const upcomingEvents = events.filter(
-    (e) => new Date(e.calendars?.[0]?.startDate) >= now
+    (e) => new Date(e.calendars?.[0]?.startDate) >= now,
   );
 
   const pastEvents = events.filter(
-    (e) => new Date(e.calendars?.[0]?.startDate) < now
+    (e) => new Date(e.calendars?.[0]?.startDate) < now,
   );
 
   return (
@@ -134,14 +135,77 @@ export default function OrganizationClient({ slug }) {
           {XICON} {SHAREICON}
         </div>
       </div>
+      {/* ================= UPCOMING EVENTS ================= */}
+      <section className="mt-5">
+        <h5 className="fw-semibold">Upcoming Events</h5>
+        <p className="text-muted mb-4" style={{ fontSize: "13px" }}>
+          Explore the complete event schedule to find sessions, speakers, and
+          activities that match your interests and needs.
+        </p>
 
-      <div className="mt-5">
-        <EventSlider title="Upcoming Events" data={upcomingEvents} />
-      </div>
+        <div className="upcoming-grid">
+          {upcomingEvents.map((e , index) => (
+            <div key={e._id ?? `upcoming-${index}`} className="event-card-new">
+              <img
+                src={e.bannerImages?.[0] || "/images/event.jpg"}
+                alt={e.title}
+                className="event-card-img"
+              />
 
-      <div className="mt-4">
-        <EventSlider title="Past Events" data={pastEvents} />
-      </div>
+              <div className="event-card-body">
+                <h6 className="event-title">{e.title}</h6>
+
+                <p className="event-meta">
+                  {LOCATION_ICON} {e.location?.city || "Location"}
+                </p>
+
+                <p className="event-meta">
+                  {DATEICON}{" "}
+                  {new Date(e.calendars?.[0]?.startDate).toDateString()}
+                </p>
+
+                <div className="event-footer">
+                  <span className="event-price">₹{e.price || 0}</span>
+
+                  <span className="badge-paid rounded-pill px-2 py-1">
+                    {e.eventType || "Conference"}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ================= PAST EVENTS ================= */}
+      <section className="mt-5">
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <h5 className="fw-semibold">Past Events</h5>
+
+          <div className="d-flex gap-2">
+            <button className="btn btn-light rounded-circle">‹</button>
+            <button className="btn btn-light rounded-circle">›</button>
+          </div>
+        </div>
+
+        <div className="past-grid">
+          {upcomingEvents.map((e , index) => (
+            <div  key={e._id ?? `past-${index}`} className="past-card">
+              <img
+                src={e.bannerImages?.[0] || "/images/event.jpg"}
+                alt={e.title}
+              />
+
+              <div className="past-overlay">
+                <h6>{e.title}</h6>
+                <span style={{ fontSize: "12px" }}>
+                  {new Date(e.calendars?.[0]?.startDate).toDateString()}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <Footer />
     </div>

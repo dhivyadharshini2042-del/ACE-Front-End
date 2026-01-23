@@ -4,6 +4,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import ClientLayout from "../components/ClientLayout";
 import Providers from "../components/Providers";
 import { Poppins } from "next/font/google";
+import { LoadingProvider } from "../context/LoadingContext";
 
 export const metadata = {
   metadataBase: new URL(
@@ -24,9 +25,11 @@ export default function RootLayout({ children }) {
         <GoogleOAuthProvider
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
         >
-          <Providers>
-            <ClientLayout>{children}</ClientLayout>
-          </Providers>
+          <LoadingProvider>
+            <Providers>
+              <ClientLayout>{children}</ClientLayout>
+            </Providers>
+          </LoadingProvider>
         </GoogleOAuthProvider>
       </body>
     </html>

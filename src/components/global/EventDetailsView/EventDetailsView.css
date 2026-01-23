@@ -56,7 +56,9 @@
   width: 600px;
   max-width: 90%;
 }
-
+.share-icon{
+  cursor: pointer;
+}
 .edit-wrapper {
   position: relative;
 }

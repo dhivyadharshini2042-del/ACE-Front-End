@@ -1,21 +1,22 @@
 import LandingPage from "./home/LandingPage";
-import { getAllOrganizationsApi } from "../lib/api/organizer.api";
 import { getAllEventsApi } from "../lib/api/event.api";
+import { getAllOrganizationsApi } from "../lib/api/organizer.api";
 
 export const metadata = {
   title: "All College Events | Discover Events Near You",
   description:
-    "Explore college events, workshops, hackathons, concerts and more in one platform.",
+    "Explore college events, workshops, hackathons, concerts and more.",
 };
 
 export default async function Page() {
-  const eventsRes = await getAllEventsApi();
+
+  const eventsRes = await getAllEventsApi(false);
   const orgRes = await getAllOrganizationsApi();
 
   return (
     <LandingPage
-      events={eventsRes?.data || []}
-      organization={orgRes?.data || []}
+      initialEvents={eventsRes?.data || []}
+      initialOrganization={orgRes?.data || []}
     />
   );
 }

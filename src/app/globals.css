@@ -11,3 +11,30 @@
   font-weight: 700;
   font-style: normal;
 }
+
+/* ================= TOAST STYLES ================= */
+
+/* WARNING TOAST */
+.toast-warning {
+  border: 1px solid #facc15 !important;
+  background: #fffbeb !important;
+  color: #92400e !important;
+  font-weight: 500;
+}
+
+/* SUCCESS TOAST */
+.toast-success {
+  border: 1px solid #22c55e !important;
+  background: #ecfdf5 !important;
+  color: #065f46 !important;
+  font-weight: 500;
+}
+
+/* ERROR TOAST */
+.toast-error {
+  border: 1px solid #ef4444 !important;
+  background: #fef2f2 !important;
+  color: #7f1d1d !important;
+  font-weight: 500;
+}
+

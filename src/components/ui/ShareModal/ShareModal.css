@@ -1,0 +1,249 @@
+/* =========================
+   BACKDROP / OVERLAY
+========================= */
+.share-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    circle at top,
+    rgba(122, 18, 255, 0.28),
+    rgba(0, 0, 0, 0.75)
+  );
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================
+   MODAL CONTAINER
+========================= */
+.share-modal {
+  width: 380px;
+  max-width: 94%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+  animation: scaleIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* =========================
+   ENTRY ANIMATION
+========================= */
+@keyframes scaleIn {
+  from {
+    transform: translateY(20px) scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* =========================
+   HEADER
+========================= */
+.share-header {
+  background: linear-gradient(135deg, #7a12ff, #b86bff);
+  color: #fff;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.share-header h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+/* CLOSE BUTTON */
+.close-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: rotate(90deg);
+}
+
+/* =========================
+   DRAG BAR (MOBILE FEEL)
+========================= */
+.drag-bar {
+  width: 48px;
+  height: 5px;
+  background: #d0d0d0;
+  border-radius: 10px;
+  margin: 10px auto 4px;
+}
+
+/* =========================
+   BODY / OPTIONS GRID
+========================= */
+.share-options {
+  padding: 22px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+/* =========================
+   SOCIAL BUTTON
+========================= */
+.share-options button {
+  position: relative;
+  border: none;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 16px 10px;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
+  transition: all 0.25s ease;
+  overflow: hidden;
+}
+
+.share-options button svg {
+  font-size: 26px;
+}
+
+/* TAP FEEDBACK */
+.share-options button:active {
+  transform: scale(0.94);
+}
+
+/* LIGHT GLOW EFFECT */
+.share-options button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.4),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.share-options button:hover::after {
+  opacity: 1;
+}
+
+/* FLOAT HOVER */
+.share-options button:hover {
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================
+   BRAND COLORS
+========================= */
+.share-options button.linkedin {
+  color: #0a66c2;
+}
+.share-options button.linkedin:hover {
+  background: #0a66c2;
+  color: #fff;
+  box-shadow: 0 0 32px rgba(10, 102, 194, 0.65);
+}
+
+.share-options button.instagram {
+  color: #e1306c;
+}
+.share-options button.instagram:hover {
+  background: linear-gradient(
+    135deg,
+    #f58529,
+    #dd2a7b,
+    #8134af
+  );
+  color: #fff;
+  box-shadow: 0 0 34px rgba(225, 48, 108, 0.6);
+}
+
+.share-options button.youtube {
+  color: #ff0000;
+}
+.share-options button.youtube:hover {
+  background: #ff0000;
+  color: #fff;
+  box-shadow: 0 0 34px rgba(255, 0, 0, 0.6);
+}
+
+/* =========================
+   COPY BUTTON (FULL WIDTH)
+========================= */
+.share-options button.copy {
+  grid-column: span 3;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  background: #f4f4f6;
+}
+
+.share-options button.copy:hover {
+  background: #7a12ff;
+  color: #fff;
+  box-shadow: 0 0 30px rgba(122, 18, 255, 0.6);
+}
+
+/* =========================
+   MOBILE – BOTTOM SHEET
+========================= */
+@media (max-width: 640px) {
+  .share-overlay {
+    align-items: flex-end;
+  }
+
+  .share-modal {
+    width: 100%;
+    border-radius: 28px 28px 0 0;
+    animation: slideUp 0.35s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+
+  .share-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .share-options button.copy {
+    grid-column: span 2;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

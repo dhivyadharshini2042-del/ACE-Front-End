@@ -1,7 +1,12 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background:  #F6F0FF;
+
+  background: rgba(255, 255, 255, 0.877);
+  backdrop-filter: blur(150px);
+
+  -webkit-backdrop-filter: blur(10px);
+
   z-index: 9999;
 
   display: flex;
@@ -14,5 +19,6 @@
   margin-top: 12px;
   font-size: 14px;
   font-weight: 500;
-  color: #555;
+  color: #333;
+  letter-spacing: 0.3px;
 }

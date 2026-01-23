@@ -3,7 +3,11 @@
 import { useState } from "react";
 import DeleteConfirmModal from "../../../../components/ui/DeleteConfirmModal/DeleteConfirmModal";
 import EmptyState from "../../../../components/global/EmptyState/EmptyState";
-import { DATEICON, LOCATION_ICON, TIMEICON } from "../../../../const-value/config-icons/page";
+import {
+  DATEICON,
+  LOCATION_ICON,
+  TIMEICON,
+} from "../../../../const-value/config-icons/page";
 
 export default function MyEventsList({ events = [] }) {
   const [deleteId, setDeleteId] = useState(null);
@@ -17,6 +21,9 @@ export default function MyEventsList({ events = [] }) {
       />
     );
   }
+  const handleClick = (event) => {
+    router.push(`/dashboard/space/dashboard-chart/${event.slug}`);
+  };
 
   const handleDelete = () => {
     console.log("DELETE EVENT:", deleteId);
@@ -53,6 +60,7 @@ export default function MyEventsList({ events = [] }) {
             <div
               key={e.id}
               className="shadow-sm p-3 mb-5 bg-body-tertiary rounded"
+              onClick={() => handleClick(e)}
             >
               <div className="d-flex justify-content-between align-items-start">
                 <div className="d-flex gap-4">

@@ -2,15 +2,15 @@
 
 import styles from "./OrganizerCarousel.module.css";
 import { useRouter } from "next/navigation";
-import { encodeId } from "../../../lib/utils/secureId";
 import { useLoading } from "../../../context/LoadingContext";
 
-export default function OrganizersCarousel({ onOpenLeaderboard, data = [] }) {
+export default function OrganizersCarousel({ data = [] }) {
   const router = useRouter();
   const { setLoading } = useLoading();
 
   if (!Array.isArray(data) || data.length === 0) return null;
 
+  /* ================= ORGANIZER CLICK ================= */
   const handleOrgClick = (slug) => {
     if (!slug) return;
 
@@ -20,12 +20,23 @@ export default function OrganizersCarousel({ onOpenLeaderboard, data = [] }) {
     } catch (error) {
       console.error("Navigation failed", error);
       setLoading(false);
-    } 
+    }
+  };
+
+  /* ================= LEADERBOARD CLICK ================= */
+  const handleLeaderboardClick = () => {
+    try {
+      setLoading(true);
+      router.push("/leaderboard");
+    } catch (error) {
+      console.error("Leaderboard navigation failed", error);
+      setLoading(false);
+    }
   };
 
   return (
     <section className={styles.topOrganizersroot}>
-      {/* Header */}
+      {/* HEADER */}
       <div className={styles.header}>
         <div>
           <h2 className={styles.title}>Our Top Organizers</h2>
@@ -35,12 +46,16 @@ export default function OrganizersCarousel({ onOpenLeaderboard, data = [] }) {
           </p>
         </div>
 
-        <button className={styles.leaderboardBtn} onClick={onOpenLeaderboard}>
+        {/*ROUTE TO LEADERBOARD PAGE */}
+        <button
+          className={styles.leaderboardBtn}
+          onClick={handleLeaderboardClick}
+        >
           View Leaderboard &gt;&gt;&gt;
         </button>
       </div>
 
-      {/* Organizer Cards */}
+      {/* ORGANIZER CARDS */}
       <div className={styles.row}>
         <div className={styles.list}>
           {data.map((org, index) => (
@@ -64,9 +79,12 @@ export default function OrganizersCarousel({ onOpenLeaderboard, data = [] }) {
                 )}
               </div>
 
-              <div className={styles.name}>{org.organizationName}</div>
+              <div className={styles.name}>
+                {org.organizationName}
+              </div>
+
               <div className={styles.events}>
-                {org._count.events || 0} events
+                {org._count?.events || 0} events
               </div>
             </div>
           ))}
