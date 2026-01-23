@@ -1,5 +1,6 @@
 "use client";
 
+import { SEARCH_ICON } from "../../../const-value/config-icons/page";
 import styles from "./LeaderboardHero.module.css";
 
 export default function LeaderboardHero() {
@@ -23,12 +24,12 @@ export default function LeaderboardHero() {
 
       <h2 className={styles.subHeading}>
         Event Organizers
-        <span className={styles.sparkle}><img src="/images/sparkles.png" alt="no"/></span>
+        <img src="/images/sparkles.png" alt="no"/>
       </h2>
 
       <div className={styles.searchWrapper}>
         {/* <img src="/images/Vector.png" alt="no"/> */}
-        <span className={styles.searchIcon}>🔍</span>
+        <span className={styles.searchIcon}>{SEARCH_ICON}</span>
         <input
           type="text"
           placeholder="Search event organizers name"
