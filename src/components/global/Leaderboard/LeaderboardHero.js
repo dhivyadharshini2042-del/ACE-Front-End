@@ -3,7 +3,7 @@
 import { SEARCH_ICON } from "../../../const-value/config-icons/page";
 import styles from "./LeaderboardHero.module.css";
 
-export default function LeaderboardHero() {
+export default function LeaderboardHero({ search, onSearchChange }) {
   return (
     <section className={styles.hero}>
       <p className={styles.topLine}>
@@ -24,20 +24,25 @@ export default function LeaderboardHero() {
 
       <h2 className={styles.subHeading}>
         Event Organizers
-        <img src="/images/sparkles.png" alt="no"/>
+        <img src="/images/sparkles.png" alt="no" />
       </h2>
 
+      {/* 🔥 SEARCH */}
       <div className={styles.searchWrapper}>
-        {/* <img src="/images/Vector.png" alt="no"/> */}
         <span className={styles.searchIcon}>{SEARCH_ICON}</span>
         <input
           type="text"
           placeholder="Search event organizers name"
+          value={search}
+          onChange={(e) => onSearchChange(e.target.value)}
         />
       </div>
 
       <h3 className={styles.boardTitle}>
-        Star Organizers Board <span><img src="/images/sparkles_s.png" alt="no"/></span>
+        Star Organizers Board{" "}
+        <span>
+          <img src="/images/sparkles_s.png" alt="no" />
+        </span>
       </h3>
 
       <p className={styles.boardSub}>

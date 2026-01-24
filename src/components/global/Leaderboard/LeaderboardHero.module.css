@@ -8,6 +8,7 @@
 .topLine {
   font-size: 14px;
   color: #888;
+  font-family: var(--font-poppins), sans-serif;
   margin-bottom: 20px;
 }
 
@@ -19,6 +20,7 @@
   justify-content: center;
   align-items: center;
   gap: 18px;
+  font-family: "BL Melody", sans-serif;
   flex-wrap: wrap;
 }
 
@@ -55,6 +57,7 @@
   font-size: 45px;
   font-weight: 700;
   color: #222;
+  font-family: "BL Melody", sans-serif;
 }
 
 .sparkle {
@@ -91,6 +94,7 @@
   font-size: 22px;
   font-weight: 600;
   margin-top: 20px;
+  font-family: "BL Melody", sans-serif;
 }
 
 .boardTitle span {
@@ -101,6 +105,7 @@
   font-size: 14px;
   color: #666;
   margin-top: 6px;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* RESPONSIVE */

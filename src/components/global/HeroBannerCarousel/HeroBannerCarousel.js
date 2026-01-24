@@ -18,10 +18,6 @@ export default function HeroBannerCarousel({ images = [], interval = 4500 }) {
     return () => clearInterval(timerRef.current);
   }, [n, interval]);
 
-  const handleClick = (idx) => {
-    setCenterIdx(idx);
-  };
-
   const getPosClass = (imgIdx) => {
     if (n === 1) return styles.posCenter;
 
@@ -46,9 +42,8 @@ export default function HeroBannerCarousel({ images = [], interval = 4500 }) {
           <div
             key={idx}
             className={`${styles.cardItem} ${getPosClass(idx)}`}
-            onClick={() => handleClick(idx)}
           >
-            <img src={src} alt={`poster-${idx}`} draggable={false} />
+            <img src={src} alt={`banner-${idx}`} draggable={false} />
           </div>
         ))}
       </div>

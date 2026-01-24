@@ -7,6 +7,7 @@
   flex-wrap: wrap;
 }
 
+/* CARD */
 .card {
   width: 240px;
   padding: 22px 18px;
@@ -14,17 +15,43 @@
   text-align: center;
   color: #fff;
 }
-
-.card img {
-  width: 130px;
+.avatarFallbackSection{
+  display: flex;
+  justify-content: center;
+}
+/* PROFILE IMAGE */
+.avatarImg {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
   margin-bottom: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
+/* FALLBACK LETTER AVATAR */
+.avatarFallback {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7f00ff, #e100ff);
+  color: #fff;
+  font-size: 40px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* ⭐ STARS */
 .stars {
   color: gold;
   margin-bottom: 10px;
 }
 
+/* RANK COLORS */
 .first {
   background: linear-gradient(180deg, #6a00ff, #4b00b5);
   transform: translateY(-40px);
@@ -36,4 +63,11 @@
 
 .third {
   background: linear-gradient(180deg, #8a0022, #630017);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .first {
+    transform: translateY(0);
+  }
 }
