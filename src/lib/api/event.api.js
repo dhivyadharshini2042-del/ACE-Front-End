@@ -4,20 +4,19 @@ import { API_ENDPOINTS } from "./endpoints";
 import { handleApi } from "./apiHelper";
 import { isUserLoggedIn } from "../auth";
 
+
 /* =======================
    EVENTS (PUBLIC / PRIVATE)
    Try PRIVATE → fallback PUBLIC
 ======================= */
 
 export const getAllEventsApi = async () => {
-  // 👤 NOT LOGGED IN → DIRECT PUBLIC
   if (!isUserLoggedIn()) {
     return handleApi(apiPublic.get(API_ENDPOINTS.EVENTS.ALL_PUBLIC));
   }
-
-  // 🔐 LOGGED IN → PRIVATE
   return handleApi(apiPrivate.get(API_ENDPOINTS.EVENTS.ALL_PRIVATE));
 };
+
 
 /* =======================
    SINGLE EVENT
@@ -27,9 +26,9 @@ export const getEventBySlugApi = async (slug) => {
   if (!isUserLoggedIn()) {
     return handleApi(apiPublic.get(API_ENDPOINTS.EVENTS.SINGLE_PUBLIC(slug)));
   }
-
   return handleApi(apiPrivate.get(API_ENDPOINTS.EVENTS.SINGLE_PRIVATE(slug)));
 };
+
 
 /* =======================
    LIKE / SAVE (AUTH ONLY)

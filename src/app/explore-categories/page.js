@@ -59,6 +59,8 @@ export default function ExploreCategoriesPage() {
     }
   };
 
+  console.log("4565656567",categories)
+
   /* ================= UI ================= */
   return (
     <div className="explore-page">

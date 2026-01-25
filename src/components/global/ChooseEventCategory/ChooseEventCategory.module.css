@@ -22,7 +22,7 @@
 }
 
 /* =========================
-   CARD BASE
+   CARD BASE (COMMON)
 ========================= */
 .card {
   height: 160px;
@@ -36,18 +36,20 @@
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
+/* hover lift */
 .card:hover {
   transform: translateY(-6px) scale(1.02);
   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
 }
 
 /* =========================
-   FULL CARD HOVER COLOR MOVE
+   COLOR SLIDE (API COLOR)
 ========================= */
 .card::before {
   content: "";
   position: absolute;
   inset: 0;
+  background: var(--card-color, #f5f5f5);
   transform: translateX(-100%);
   transition: transform 0.45s ease;
   z-index: 0;
@@ -58,22 +60,7 @@
 }
 
 /* =========================
-   BOTTOM ADI
-========================= */
-.card::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 5px;
-  width: 0%;
-  background: rgba(0, 0, 0, 0.22);
-  transition: width 0.35s ease;
-}
-
-/* =========================
-   LEFT (IMAGE AREA)
-   DEFAULT COLOR HERE
+   LEFT (IMAGE)
 ========================= */
 .left {
   width: 45%;
@@ -82,13 +69,14 @@
   justify-content: center;
   position: relative;
   z-index: 2;
+  background: var(--card-color, #f5f5f5);
   border-radius: 16px 0 0 16px;
 }
 
 .left img {
   width: 75%;
   max-width: 90px;
-  transition: transform 0.25s ease;
+  transition: transform 0.3s ease;
 }
 
 .card:hover .left img {
@@ -96,7 +84,7 @@
 }
 
 /* =========================
-   RIGHT
+   RIGHT (TEXT)
 ========================= */
 .right {
   width: 55%;
@@ -113,86 +101,49 @@
   font-family: "BL Melody", sans-serif;
 }
 
-/* =========================
-   CATEGORY COLORS
-   👉 Default: LEFT only
-   👉 Hover: FULL card
-========================= */
-.conference .left {
-  background: #ffe3bf;
-}
-.conference::before {
-  background: #ffe3bf;
-}
-
-.hackathon .left {
-  background: #bde6ff;
-}
-.hackathon::before {
-  background: #bde6ff;
-}
-
-.webinar .left {
-  background: #ead7ff;
-}
-.webinar::before {
-  background: #ead7ff;
-}
-
-.athletics .left {
-  background: #ffd4d4;
-}
-.athletics::before {
-  background: #ffd4d4;
-}
-
-.concerts .left {
-  background: #c9e7ff;
-}
-.concerts::before {
-  background: #c9e7ff;
-}
-
-.tournaments .left {
-  background: #ffeab5;
-}
-.tournaments::before {
-  background: #ffeab5;
-}
-
-.jobfairs .left {
-  background: #ffd0e4;
-}
-.jobfairs::before {
-  background: #ffd0e4;
-}
+/* ======================================================
+   ⭐ EXPLORE CARD ONLY (SPECIAL BEHAVIOUR)
+====================================================== */
 
 .explore {
   background: #e3d8ff;
   flex-direction: column;
-  transition: flex-direction 0.4s ease, padding 0.4s ease, gap 0.4s ease;
+  transition: flex-direction 0.4s ease,
+              padding 0.4s ease,
+              gap 0.4s ease;
 }
+
+/* default – full width */
 .explore .left,
 .explore .right {
   width: 100%;
-  transition: width 0.5s ease, transform 0.5s ease, padding 0.5s ease;
+  transition: width 0.5s ease,
+              transform 0.5s ease,
+              padding 0.5s ease;
 }
 
-/* center align text in default */
+/* default center */
 .explore .right {
   text-align: center;
-  transition: text-align 0.35s ease, padding-left 0.5s ease;
-}
-/* HOVER – row layout */
-.explore:hover {
-  flex-direction: row; /*  main requirement */
+  justify-content: center;
 }
 
-/* left & right split on hover */
+/* image animation */
+.explore .left img {
+  transition: transform 0.45s ease;
+}
+
+/* hover → row layout */
+.explore:hover {
+  flex-direction: row;
+}
+
+/* left shrink */
 .explore:hover .left {
   width: 45%;
 }
 
+/* right expand */
 .explore:hover .right {
   width: 55%;
   text-align: left;
@@ -200,9 +151,11 @@
   padding-left: 16px;
 }
 
-.explore .left img {
-  transition: transform 0.45s ease;
+/* zoom image */
+.explore:hover .left img {
+  transform: scale(1.1);
 }
+
 /* =========================
    RESPONSIVE
 ========================= */

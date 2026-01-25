@@ -15,7 +15,10 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 // API
-import { getAllEventsApi } from "../../lib/api/event.api.js";
+import {
+  getAllEventsApi,
+  getExploreEventTypes,
+} from "../../lib/api/event.api.js";
 import { getAllOrganizationsApi } from "../../lib/api/organizer.api.js";
 
 // COMPONENTS
@@ -37,6 +40,7 @@ export default function LandingPage() {
 
   const [events, setEvents] = useState([]);
   const [organization, setOrganization] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const exploreRef = useRef(null);
   const router = useRouter();
@@ -72,6 +76,36 @@ export default function LandingPage() {
     { name: "Explore more", img: "/images/Explore.png", class: "explore" },
   ];
 
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const res = await getExploreEventTypes();
+console.log("34567",res)
+        if (res?.status && Array.isArray(res.data)) {
+          const apiCategories = res.data.slice(0, 7).map((item) => ({
+            name: item.name,
+            color: item.color,
+            identity: item.identity,
+            imageUrl: item.imageUrl || "/images/default.png",
+            class: item.slug || item.name.toLowerCase(),
+          }));
+
+          const exploreMore = {
+            name: "Explore more",
+            imageUrl: "/images/Explore.png",
+            class: "explore",
+          };
+
+          setCategories([...apiCategories, exploreMore]);
+        }
+      } catch (err) {
+        console.error("Category load failed", err);
+      }
+    };
+
+    loadCategories();
+  }, []);
+
   /* ================= LOAD DATA ================= */
   const loadLandingData = async () => {
     try {
@@ -100,6 +134,8 @@ export default function LandingPage() {
     loadLandingData();
   }, []);
 
+  console.log("jkjkjkjkjkjkjk",categories)
+
   /* ================= UI ================= */
   return (
     <div className="dashboard-root">
@@ -127,7 +163,8 @@ export default function LandingPage() {
         />
       </main>
 
-      <ChooseEventCategory categories={CATEGORIES} />
+      <ChooseEventCategory categories={categories} />
+
 
       <EventSlider title="Trending Events" data={events} />
       <EventSlider title="Virtual Events" data={events} />

@@ -15,7 +15,6 @@ export default function ChooseEventCategory({ categories = [] }) {
       if (category.class === "explore") {
         router.push("/explore-categories");
       } else {
-        console.log("gggggggggg",category)
         router.push(`/events?eventType=${category.identity}`);
       }
     } catch (error) {
@@ -32,12 +31,15 @@ export default function ChooseEventCategory({ categories = [] }) {
       <div className={styles.grid}>
         {categories.map((c, i) => (
           <div
-            key={i}
-            className={`${styles.card} ${styles[c.class]}`}
-            onClick={() => handleCardClick(c)}
+            key={c.identity || `category-${i}`}  
+            className={`${styles.card} ${
+              c.class === "explore" ? styles.explore : ""
+            }`}
+            style={{ "--card-color": c.color || "#e3d8ff" }}
+            onClick={() => handleCardClick(c)}  
           >
             <div className={styles.left}>
-              <img src={c.img} alt={c.name} />
+              <img src={c.img || c.imageUrl} alt={c.name} />
             </div>
             <div className={styles.right}>{c.name}</div>
           </div>

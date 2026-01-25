@@ -8,33 +8,45 @@ import styles from "./ProfileHeader.module.css";
 // GLOBAL LOADING
 import { useLoading } from "../../../../context/LoadingContext";
 
-// USER API
+// API
 import { getOrganizationProfileApi } from "../../../../lib/api/organizer.api";
 import { getUserProfileApi } from "../../../../lib/api/user.api";
+
+// JWT FALLBACK
+import { getAuthFromToken } from "../../../../lib/auth";
 
 export default function ProfileHeader() {
   const router = useRouter();
   const { setLoading } = useLoading();
-
   const [profile, setProfile] = useState({});
 
-  // ✅ REDUX AUTH
-  const { user, organizer, role, isLoggedIn } = useSelector(
-    (state) => state.auth
-  );
+  // REDUX (may be empty)
+  const reduxAuth = useSelector((state) => state.auth);
 
   /* ================= LOAD PROFILE ================= */
   useEffect(() => {
     async function loadProfile() {
       try {
-        if (!isLoggedIn) return;
+        // 1️⃣ Try redux first
+        let identity =
+          reduxAuth?.role === "organizer"
+            ? reduxAuth?.organizer?.identity
+            : reduxAuth?.user?.identity;
 
-        const identity =
-          role === "organizer"
-            ? organizer?.identity
-            : user?.identity;
+        let role = reduxAuth?.role;
+        let isLoggedIn = reduxAuth?.isLoggedIn;
 
-        if (!identity) return;
+        // 2️⃣ Fallback to JWT
+        if (!identity || !role || !isLoggedIn) {
+          const tokenAuth = getAuthFromToken();
+          if (!tokenAuth) return;
+
+          identity = tokenAuth.identity;
+          role = tokenAuth.role;
+          isLoggedIn = tokenAuth.isLoggedIn;
+        }
+
+        if (!identity || !isLoggedIn) return;
 
         setLoading(true);
 
@@ -56,9 +68,9 @@ export default function ProfileHeader() {
     }
 
     loadProfile();
-  }, [isLoggedIn, role, user?.identity, organizer?.identity]);
+  }, [reduxAuth?.isLoggedIn, reduxAuth?.role]);
 
-  /* ================= SAFE FALLBACK VALUES ================= */
+  /* ================= UI SAFE FALLBACKS ================= */
   const displayName =
     profile.organizationName || profile.name || "User";
   const firstLetter = displayName.charAt(0).toUpperCase();
@@ -67,15 +79,11 @@ export default function ProfileHeader() {
   const followingCount = profile.followingCount || 0;
   const rank = profile.rank || 0;
 
-  /* ================= UI ================= */
   return (
     <div className={styles.wrapper}>
-      {/* COVER */}
       <div className={styles.cover} />
 
-      {/* CONTENT */}
       <div className={styles.content}>
-        {/* AVATAR */}
         {profile.profileImage ? (
           <img
             src={profile.profileImage}
@@ -88,29 +96,19 @@ export default function ProfileHeader() {
           </div>
         )}
 
-        {/* INFO */}
         <div className={styles.info}>
           <h2 className={styles.name}>
             {displayName}
             <span className={styles.role}>
-              ({role === "organizer" ? "Organization" : "User"})
+              ({profile.type === "org" ? "Organization" : "User"})
             </span>
           </h2>
 
           <div className={styles.followInfo}>
-            <span
-              onClick={() =>
-                router.push("/dashboard/profile/followers")
-              }
-            >
+            <span onClick={() => router.push("/dashboard/profile/followers")}>
               {followersCount} Followers
             </span>
-
-            <span
-              onClick={() =>
-                router.push("/dashboard/profile/following")
-              }
-            >
+            <span onClick={() => router.push("/dashboard/profile/following")}>
               {followingCount} Following
             </span>
           </div>
