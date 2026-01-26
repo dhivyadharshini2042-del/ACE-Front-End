@@ -24,7 +24,7 @@ import {
 import Footer from "../../../components/global/Footer/Footer";
 import { HEART_ICON, SAVEICON } from "../../../const-value/config-icons/page";
 import { likeEventApi, saveEventApi } from "../../../lib/api/event.api";
-import { isUserLoggedIn } from "../../../lib/auth";
+import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import toast from "react-hot-toast";
 
 export default function OrganizationClient({ slug }) {
@@ -35,6 +35,14 @@ export default function OrganizationClient({ slug }) {
   const [likedMap, setLikedMap] = useState({});
   const [savedMap, setSavedMap] = useState({});
   const [likeCountMap, setLikeCountMap] = useState({});
+  const [auth, setAuth] = useState(null);
+
+  /* ================= INIT AUTH ================= */
+  useEffect(() => {
+    if (isUserLoggedIn()) {
+      setAuth(getAuthFromSession());
+    }
+  }, []);
 
   /* ================= FETCH EVENTS ================= */
   useEffect(() => {
@@ -112,7 +120,7 @@ export default function OrganizationClient({ slug }) {
       [eventId]: wasLiked ? p[eventId] - 1 : p[eventId] + 1,
     }));
 
-    const res = await likeEventApi({ eventIdentity: eventId });
+    const res = await likeEventApi({ eventIdentity: eventId ,userIdentity: auth.identity,});
 
     if (!res?.status) {
       // rollback
@@ -133,7 +141,7 @@ export default function OrganizationClient({ slug }) {
 
     setSavedMap((p) => ({ ...p, [eventId]: !wasSaved }));
 
-    const res = await saveEventApi({ eventIdentity: eventId });
+    const res = await saveEventApi({ eventIdentity: eventId ,userIdentity: auth.identity,});
 
     if (!res?.status) {
       setSavedMap((p) => ({ ...p, [eventId]: wasSaved }));

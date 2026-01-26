@@ -110,6 +110,7 @@ export default function EventSlider({
 
     const res = await likeEventApi({
       eventIdentity: eventId,
+      userIdentity: auth.identity,
     });
 
     if (!res?.status) {
@@ -148,6 +149,7 @@ export default function EventSlider({
 
     const res = await saveEventApi({
       eventIdentity: eventId,
+      userIdentity: auth.identity,
     });
 
     if (!res?.status) {
@@ -211,6 +213,8 @@ export default function EventSlider({
       </section>
     );
   }
+
+  console.log("ooooooooooooo",data)
 
   /* ================= UI (UNCHANGED) ================= */
   return (

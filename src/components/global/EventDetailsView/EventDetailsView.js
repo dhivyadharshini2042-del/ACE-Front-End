@@ -20,7 +20,7 @@ import ConfirmModal from "../../ui/Modal/ConfirmModal";
 import { addEventViewApi, likeEventApi } from "../../../lib/api/event.api";
 import { useLoading } from "../../../context/LoadingContext";
 import ShareModal from "../../ui/ShareModal/ShareModal";
-import { isUserLoggedIn } from "../../../lib/auth";
+import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import { toast } from "react-hot-toast";
 
 export default function EventDetailsView({ event = {}, onBack }) {
@@ -56,6 +56,13 @@ export default function EventDetailsView({ event = {}, onBack }) {
   const [selectedTicket, setSelectedTicket] = useState(null);
   // ================= LIKE STATE =================
   const [isLiked, setIsLiked] = useState(false);
+  const [auth, setAuth] = useState(null); 
+  /* ================= INIT AUTH ================= */
+  useEffect(() => {
+    if (isUserLoggedIn()) {
+      setAuth(getAuthFromSession());
+    }
+  }, []);
 
   const [ticketForm, setTicketForm] = useState({
     name: "",
@@ -87,6 +94,7 @@ export default function EventDetailsView({ event = {}, onBack }) {
 
     const res = await likeEventApi({
       eventIdentity: event.identity,
+      userIdentity: auth.identity,
     });
 
     if (!res?.status) {
@@ -148,6 +156,8 @@ export default function EventDetailsView({ event = {}, onBack }) {
   useEffect(() => {
     setLoading(false);
   }, []);
+
+  console.log("lllllllllllllll",event)
 
   return (
     <>

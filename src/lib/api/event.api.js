@@ -24,8 +24,10 @@ export const getAllEventsApi = async () => {
 
 export const getEventBySlugApi = async (slug) => {
   if (!isUserLoggedIn()) {
+    console.log("chek one")
     return handleApi(apiPublic.get(API_ENDPOINTS.EVENTS.SINGLE_PUBLIC(slug)));
   }
+  console.log("chek two")
   return handleApi(apiPrivate.get(API_ENDPOINTS.EVENTS.SINGLE_PRIVATE(slug)));
 };
 
@@ -35,11 +37,11 @@ export const getEventBySlugApi = async (slug) => {
 ======================= */
 
 export const likeEventApi = async (payload) => {
-  return handleApi(apiPrivate.get(API_ENDPOINTS.EVENTS.LIKE_EVENT , payload));
+  return handleApi(apiPrivate.post(API_ENDPOINTS.EVENTS.LIKE_EVENT , payload));
 };
 
 export const saveEventApi = async (payload) => {
- return handleApi(apiPrivate.get(API_ENDPOINTS.EVENTS.SAVE_EVENT , payload));
+ return handleApi(apiPrivate.post(API_ENDPOINTS.EVENTS.SAVE_EVENT , payload));
 };
 
 /* =======================

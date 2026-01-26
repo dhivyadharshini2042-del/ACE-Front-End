@@ -22,12 +22,12 @@ export default function DashboardChartPage() {
       try {
         setLoading(true);
 
-        console.log("📡 Fetching event by slug:", slug);
+        console.log(" Fetching event by slug:", slug);
 
-        // ✅ FIX: await + res
+        //  FIX: await + res
         const res = await getEventBySlugApi(slug);
 
-        console.log("✅ Event API response:", res);
+        console.log(" Event API response:", res);
 
         if (res?.status && res.data) {
           setEvent(res.data);
@@ -36,7 +36,7 @@ export default function DashboardChartPage() {
           router.back();
         }
       } catch (err) {
-        console.error("❌ DashboardChartPage error:", err);
+        console.error(" DashboardChartPage error:", err);
         toast.error("Something went wrong");
       } finally {
         setLoading(false);
