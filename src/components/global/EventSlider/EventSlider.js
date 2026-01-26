@@ -214,8 +214,6 @@ export default function EventSlider({
     );
   }
 
-  console.log("ooooooooooooo",data)
-
   /* ================= UI (UNCHANGED) ================= */
   return (
     <section className="container-fluid mt-4 px-5">

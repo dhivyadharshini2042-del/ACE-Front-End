@@ -157,8 +157,6 @@ export default function EventDetailsView({ event = {}, onBack }) {
     setLoading(false);
   }, []);
 
-  console.log("lllllllllllllll",event)
-
   return (
     <>
       <div className="container event-wrapper my-4">

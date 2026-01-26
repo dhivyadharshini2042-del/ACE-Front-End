@@ -80,7 +80,6 @@ export default function LandingPage() {
     const loadCategories = async () => {
       try {
         const res = await getExploreEventTypes();
-console.log("34567",res)
         if (res?.status && Array.isArray(res.data)) {
           const apiCategories = res.data.slice(0, 7).map((item) => ({
             name: item.name,
@@ -133,8 +132,6 @@ console.log("34567",res)
   useEffect(() => {
     loadLandingData();
   }, []);
-
-  console.log("jkjkjkjkjkjkjk",categories)
 
   /* ================= UI ================= */
   return (

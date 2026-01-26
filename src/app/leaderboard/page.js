@@ -17,7 +17,6 @@ export default function LeaderboardPage() {
     const loadLeaderboard = async () => {
       try {
         const res = await getAllOrganizationsApi();
-        console.log("ooooooooo",res)
 
         if (res?.status) {
           setOrganizations(res.data || []);
@@ -43,9 +42,6 @@ export default function LeaderboardPage() {
   const topThree = [...organizations]
     .sort((a, b) => a.rank - b.rank)
     .slice(0, 3);
-
-    console.log("866666666",organizations)
-    console.log("topThree",topThree)
 
   return (
     <>
