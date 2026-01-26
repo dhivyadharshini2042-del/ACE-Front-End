@@ -68,14 +68,25 @@
 }
 
 /* MODE */
-.mode-online {
-  color: #121111;
-  font-weight: 700;
+.mode-text.online {
+  color: #16a34a;
+}
+.mode-text.online .mode-dot {
+  background: #22c55e;
 }
 
-.mode-offline {
-  color: #121111;
-  font-weight: 700;
+.mode-text.offline {
+  color: #dc2626;
+}
+.mode-text.offline .mode-dot {
+  background: #ef4444;
+}
+
+.mode-text.hybrid {
+  color: #7c3aed;
+}
+.mode-text.hybrid .mode-dot {
+  background: linear-gradient(135deg, #22c55e 50%, #ef4444 50%);
 }
 
 /* DATE & TIME */

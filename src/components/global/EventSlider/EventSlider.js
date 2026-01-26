@@ -16,16 +16,10 @@ import {
 import "./EventSlider.css";
 import { useLoading } from "../../../context/LoadingContext";
 
-import {
-  likeEventApi,
-  saveEventApi,
-} from "../../../lib/api/event.api";
+import { likeEventApi, saveEventApi } from "../../../lib/api/event.api";
 
 /* 🔐 SESSION AUTH */
-import {
-  getAuthFromSession,
-  isUserLoggedIn,
-} from "../../../lib/auth";
+import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 
 /* ================= HELPER ================= */
 const getLowestTicketPrice = (tickets = []) => {
@@ -103,9 +97,7 @@ export default function EventSlider({
 
     setLikeCounts((prev) => ({
       ...prev,
-      [eventId]: wasLiked
-        ? (prev[eventId] || 1) - 1
-        : (prev[eventId] || 0) + 1,
+      [eventId]: wasLiked ? (prev[eventId] || 1) - 1 : (prev[eventId] || 0) + 1,
     }));
 
     const res = await likeEventApi({
@@ -183,6 +175,10 @@ export default function EventSlider({
     router.push(`/events/${slug}`);
   };
 
+  const handleCardClick = () => {
+    router.push(`/events`);
+  };
+
   const formatDate = (date) => {
     if (!date) return "N/A";
     return new Date(date).toLocaleDateString("en-IN", {
@@ -190,6 +186,21 @@ export default function EventSlider({
       month: "short",
       year: "numeric",
     });
+  };
+
+  const getModeClass = (mode) => {
+    if (!mode) return "online";
+
+    switch (mode.toUpperCase()) {
+      case "ONLINE":
+        return "online";
+      case "OFFLINE":
+        return "offline";
+      case "HYBRID":
+        return "hybrid";
+      default:
+        return "online";
+    }
   };
 
   /* ================= LOADING ================= */
@@ -207,9 +218,7 @@ export default function EventSlider({
     return (
       <section className="container-fluid mt-4 px-5">
         <h5 className="fw-bold">{title}</h5>
-        <p className="text-center text-muted py-4">
-          No events found
-        </p>
+        <p className="text-center text-muted py-4">No events found</p>
       </section>
     );
   }
@@ -220,27 +229,22 @@ export default function EventSlider({
       {/* HEADER */}
       <div className="d-flex justify-content-between align-items-center mb-2">
         <div>
-          <h5 className="fw-bold mb-0 land-title">
-            {title}
-          </h5>
+          <h5 className="fw-bold mb-0 land-title">{title}</h5>
           {des && <p className="mt-2">{des}</p>}
         </div>
+        <button className="see-all-btn" onClick={handleCardClick}>
+          See all
+        </button>
       </div>
 
       <hr />
 
       {/* NAV */}
       <div className="d-flex justify-content-end gap-4 mb-3">
-        <button
-          className="scroll-rounded-circle"
-          onClick={slideLeft}
-        >
+        <button className="scroll-rounded-circle" onClick={slideLeft}>
           ❮
         </button>
-        <button
-          className="scroll-rounded-circle"
-          onClick={slideRight}
-        >
+        <button className="scroll-rounded-circle" onClick={slideRight}>
           ❯
         </button>
       </div>
@@ -255,37 +259,23 @@ export default function EventSlider({
           const calendar = event.calendars?.[0];
           const isLiked = likedCards[event.identity];
           const isSaved = savedCards[event.identity];
-          const lowestPrice = getLowestTicketPrice(
-            event.tickets,
-          );
+          const lowestPrice = getLowestTicketPrice(event.tickets);
 
           return (
-            <div
-              key={event.identity}
-              className="card event-card"
-            >
+            <div key={event.identity} className="card event-card">
               <img
-                src={
-                  event.bannerImages?.[0] ||
-                  "/images/event.png"
-                }
+                src={event.bannerImages?.[0] || "/images/event.png"}
                 className="event-img"
                 alt={event.title}
-                onClick={() =>
-                  handleClick(event.slug)
-                }
+                onClick={() => handleClick(event.slug)}
               />
 
               <div className="card-body p-3">
                 <div className="d-flex justify-content-between align-items-start mt-2">
-                  <span className="fw-semibold card-titel">
-                    {event.title}
-                  </span>
+                  <span className="fw-semibold card-titel">{event.title}</span>
 
                   {/* SAVE */}
-                  <span
-                    onClick={() => handleSave(event)}
-                  >
+                  <span onClick={() => handleSave(event)}>
                     <SAVEICON active={isSaved} />
                   </span>
 
@@ -295,17 +285,19 @@ export default function EventSlider({
                     className="text-center"
                   >
                     <HEART_ICON active={isLiked} />
-                    <p>
-                      {likeCounts[event.identity] ?? 0}
-                    </p>
+                    <p>{likeCounts[event.identity] ?? 0}</p>
                   </div>
                 </div>
 
                 <div className="mt-2 event-details">
                   <div className="d-flex justify-content-between">
                     <span>
-                      {LOCATION_ICON}{" "}
-                      {event.location?.city || "N/A"}
+                      <span>
+                        {LOCATION_ICON}{" "}
+                        {event.location?.city ||
+                          event.org?.city ||
+                          (event.mode === "ONLINE" ? "Online Event" : "N/A")}
+                      </span>
                     </span>
 
                     <span>
@@ -313,26 +305,30 @@ export default function EventSlider({
                       {lowestPrice === null
                         ? "N/A"
                         : lowestPrice === 0
-                        ? "Free"
-                        : `₹${lowestPrice}`}
+                          ? "Free"
+                          : `₹${lowestPrice}`}
                     </span>
                   </div>
 
-                  <div className="mt-2">
-                    {DATEICON}{" "}
-                    {formatDate(calendar?.startDate)}
+                  <div className="mt-2 d-flex justify-content-between align-items-center">
+                    <span>
+                      {DATEICON} {formatDate(calendar?.startDate)}
+                    </span>
+
+                    <span className={`mode-text ${getModeClass(event.mode)}`}>
+                      <span className="mode-dot"></span>
+                      {event.mode || "ONLINE"}
+                    </span>
                   </div>
                 </div>
 
                 <div className="d-flex justify-content-between align-items-center mt-3">
                   <span className="view-badge">
-                    {VIEW_ICON}{" "}
-                    {event.viewCount || 0}
+                    {VIEW_ICON} {event.viewCount || 0}
                   </span>
 
                   <span className="badge-paid">
-                    {event.categoryName ||
-                      "No category"}
+                    {event.categoryName || "No category"}
                   </span>
                 </div>
               </div>

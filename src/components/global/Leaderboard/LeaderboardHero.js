@@ -14,9 +14,9 @@ export default function LeaderboardHero({ search, onSearchChange }) {
         <span className={styles.discover}>Discover</span>
 
         <span className={styles.avatarGroup}>
-          <img src="/images/avatar1.jpg" alt="" />
-          <img src="/images/avatar2.jpg" alt="" />
-          <img src="/images/avatar3.jpg" alt="" />
+          <img src="/images/meetUpsCategories.png" alt="" />
+          <img src="/images/culturaleventsCategories.png" alt="" />
+          <img src="/images/concertsCategories.png" alt="" />
         </span>
 
         <span className={styles.amazing}>Amazing</span>

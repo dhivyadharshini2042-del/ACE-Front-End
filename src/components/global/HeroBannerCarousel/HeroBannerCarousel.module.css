@@ -13,7 +13,6 @@
 .cardsStage {
   position: relative;
   width: 100%;
-   max-width: none; 
   height: 420px;
   display: flex;
   align-items: center;
@@ -43,7 +42,6 @@
   height: 100%;
   object-fit: contain;
   /* user-select: none; */
-  show-drag-icon: none;
 }
 
 /* =========================
@@ -57,29 +55,26 @@
 }
 
 /* =========================
-   LEFT SIDE
+   DESKTOP (≥1240px SAFE – VW BASED)
 ========================= */
 .posLeftXFar {
-  transform: translateX(-600px) scale(0.65) rotate(-15deg);
+  transform: translateX(-42vw) scale(0.65) rotate(-15deg);
   opacity: 0.25;
   filter: blur(8px);
 }
 
 .posLeftFar {
-  transform: translateX(-420px) scale(0.78) rotate(-12deg);
+  transform: translateX(-30vw) scale(0.78) rotate(-12deg);
   opacity: 0.45;
   filter: blur(6px);
 }
 
 .posLeft {
-  transform: translateX(-210px) scale(0.9) rotate(-8deg);
+  transform: translateX(-15vw) scale(0.9) rotate(-8deg);
   opacity: 0.7;
   filter: blur(3px);
 }
 
-/* =========================
-   CENTER
-========================= */
 .posCenter {
   transform: scale(1.15);
   opacity: 1;
@@ -88,128 +83,95 @@
   box-shadow: 0 22px 60px rgba(15, 15, 15, 0.35);
 }
 
-/* =========================
-   RIGHT SIDE
-========================= */
 .posRight {
-  transform: translateX(210px) scale(0.9) rotate(8deg);
+  transform: translateX(15vw) scale(0.9) rotate(8deg);
   opacity: 0.7;
   filter: blur(3px);
 }
 
 .posRightFar {
-  transform: translateX(420px) scale(0.78) rotate(12deg);
+  transform: translateX(30vw) scale(0.78) rotate(12deg);
   opacity: 0.45;
   filter: blur(6px);
 }
 
 .posRightXFar {
-  transform: translateX(600px) scale(0.65) rotate(15deg);
+  transform: translateX(42vw) scale(0.65) rotate(15deg);
   opacity: 0.25;
   filter: blur(8px);
 }
 
 /* =========================
-   TABLET (≤1024px) – SYMMETRICAL
+   TABLET (≤1024px)
 ========================= */
 @media (max-width: 1024px) {
   .cardsStage {
     height: 340px;
-    max-width: 900px;
   }
 
   .cardItem {
     width: 220px;
   }
 
-  /* LEFT */
   .posLeft {
-    transform: translateX(-170px) scale(0.88) rotate(-6deg);
-    opacity: 0.75;
-    filter: blur(2px);
+    transform: translateX(-18vw) scale(0.88) rotate(-6deg);
+  }
+
+  .posRight {
+    transform: translateX(18vw) scale(0.88) rotate(6deg);
   }
 
   .posLeftFar {
-    transform: translateX(-320px) scale(0.72) rotate(-10deg);
-    opacity: 0.45;
-    filter: blur(4px);
-  }
-
-  .posLeftXFar {
-    transform: translateX(-470px) scale(0.6) rotate(-14deg);
-    opacity: 0.25;
-    filter: blur(6px);
-  }
-
-  /* CENTER */
-  .posCenter {
-    transform: scale(1.08);
-    z-index: 10;
-  }
-
-  /* RIGHT */
-  .posRight {
-    transform: translateX(170px) scale(0.88) rotate(6deg);
-    opacity: 0.75;
-    filter: blur(2px);
+    transform: translateX(-32vw) scale(0.72) rotate(-10deg);
   }
 
   .posRightFar {
-    transform: translateX(320px) scale(0.72) rotate(10deg);
-    opacity: 0.45;
-    filter: blur(4px);
+    transform: translateX(32vw) scale(0.72) rotate(10deg);
   }
 
+  .posLeftXFar,
   .posRightXFar {
-    transform: translateX(470px) scale(0.6) rotate(14deg);
-    opacity: 0.25;
-    filter: blur(6px);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .posCenter {
+    transform: scale(1.08);
   }
 }
 
 /* =========================
    MOBILE (≤768px)
 ========================= */
-
 @media (max-width: 768px) {
   .cardsStage {
     height: 300px;
-    padding-top: 40px; 
+    padding-top: 40px;
   }
 
   .cardItem {
     width: 200px;
   }
 
-  /* CENTER */
   .posCenter {
     transform: scale(1.05);
-    z-index: 10;
-    opacity: 1;
-    filter: none;
   }
 
-  /* LEFT (only one card) */
   .posLeft {
-    transform: translateX(-150px) scale(0.85) rotate(-5deg);
+    transform: translateX(-40vw) scale(0.85) rotate(-5deg);
     opacity: 0.75;
-    filter: blur(2px);
   }
 
-  /* RIGHT (only one card) */
   .posRight {
-    transform: translateX(150px) scale(0.85) rotate(5deg);
+    transform: translateX(40vw) scale(0.85) rotate(5deg);
     opacity: 0.75;
-    filter: blur(2px);
   }
 
-  /* HIDE EXTRA DEPTH */
   .posLeftFar,
   .posLeftXFar,
   .posRightFar,
   .posRightXFar {
     opacity: 0;
     pointer-events: none;
-    transform: scale(0.6);
   }
 }

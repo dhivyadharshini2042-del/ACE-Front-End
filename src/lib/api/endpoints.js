@@ -45,6 +45,7 @@ export const API_ENDPOINTS = {
     UPDATE: (orgId) => `/v1/organizations/${orgId}`,
     DELETE: (orgId) => `/v1/organizations/${orgId}`,
     EVENTS: (orgId) => `/v1/organization/${orgId}/events`,
+    CREATEVENTS: (orgId) => `/v1/organizations/${orgId}/events`,
     APPROVEDEVENTS: (orgId) => `/v1/organizations/${orgId}/events`,
     ORG_EVENTS_PUBLIC: (slug) => `/v1/organizations/${slug}/events`,
     ORG_EVENTS_PRIVATE: (slug) => `/v1/organizations/${slug}/events_protec`,

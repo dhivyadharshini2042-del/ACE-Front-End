@@ -57,29 +57,11 @@ export default function LandingPage() {
     "/images/bannerImageSev.png",
   ];
 
-  const CATEGORIES = [
-    {
-      name: "Conferences",
-      img: "/images/Conferences.png",
-      class: "conference",
-    },
-    { name: "Hackathon", img: "/images/Hackathon.png", class: "hackathon" },
-    { name: "Webinars", img: "/images/Webinars.png", class: "webinar" },
-    { name: "Athletics", img: "/images/Athletics.png", class: "athletics" },
-    { name: "Concerts", img: "/images/concert.png", class: "concerts" },
-    {
-      name: "Tournaments",
-      img: "/images/Tournaments.png",
-      class: "tournaments",
-    },
-    { name: "Job Fairs", img: "/images/JobFairs.png", class: "jobfairs" },
-    { name: "Explore more", img: "/images/Explore.png", class: "explore" },
-  ];
-
   useEffect(() => {
     const loadCategories = async () => {
       try {
         const res = await getExploreEventTypes();
+        console.log("iiiiiiiiiii",res)
         if (res?.status && Array.isArray(res.data)) {
           const apiCategories = res.data.slice(0, 7).map((item) => ({
             name: item.name,
@@ -133,6 +115,7 @@ export default function LandingPage() {
     loadLandingData();
   }, []);
 
+  console.log("============categories",categories)
   /* ================= UI ================= */
   return (
     <div className="dashboard-root">

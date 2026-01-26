@@ -7,10 +7,16 @@ import OrganizerLeaderboardTable from "../../components/global/Leaderboard/Organ
 import TopThreeBoard from "../../components/global/Leaderboard/TopThreeBoard";
 import { getAllOrganizationsApi } from "../../lib/api/organizer.api";
 import toast from "react-hot-toast";
+import { useLoading } from "../../context/LoadingContext";
 
 export default function LeaderboardPage() {
   const [organizations, setOrganizations] = useState([]);
   const [search, setSearch] = useState("");
+  const { setLoading } = useLoading();
+
+    useEffect(() => {
+    setLoading(false);
+  }, []);
 
   /* ================= FETCH DATA ================= */
   useEffect(() => {
