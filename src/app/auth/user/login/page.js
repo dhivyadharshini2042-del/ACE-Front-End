@@ -38,6 +38,7 @@ import {
 import { loginApi, googleAuthLoginApi } from "../../../../lib/api/auth.api";
 
 import { useLoading } from "../../../../context/LoadingContext";
+import { setAuthSession } from "../../../../lib/auth";
 
 export default function UserLoginPage() {
   const router = useRouter();
@@ -72,10 +73,7 @@ export default function UserLoginPage() {
       }
 
       // ✅ CALL AUTH FUNCTION
-      setAuthSession({
-        ...res.data,
-        type: "user",
-      });
+      setAuthSession(res.token);
 
       toast.success(MSG_LOGIN_SUCCESS_USER);
       router.push("/");
@@ -100,11 +98,8 @@ export default function UserLoginPage() {
         return;
       }
 
-      // ✅ CALL AUTH FUNCTION
-      setAuthSession({
-        ...res.data,
-        type: "user",
-      });
+     
+      setAuthSession(es.token);
 
       toast.success(MSG_GOOGLE_LOGIN_SUCCESS_USER);
       router.push("/");
