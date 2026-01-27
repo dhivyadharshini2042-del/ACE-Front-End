@@ -163,6 +163,7 @@ export default function SpotlightCarousel({ data = [] }) {
                       href={event.paymentLink}
                       target="_blank"
                       rel="noopener noreferrer"
+                      style={{display:"none"}}
                       className={styles.cta}
                     >
                       Register
