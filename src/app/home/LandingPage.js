@@ -34,6 +34,7 @@ import OrganizersCarousel from "../../components/global/OrganizerCarousel/Organi
 import FloatingExploreButton from "../../components/global/FloatingExploreButton/FloatingExploreButton.js";
 
 import { useLoading } from "../../context/LoadingContext.js";
+import AppLandingHero from "../../components/global/AppLandingHero/AppLandingHero.js";
 
 export default function LandingPage() {
   const { setLoading } = useLoading();
@@ -157,6 +158,7 @@ export default function LandingPage() {
       <EventSlider title="Upcoming Events" data={events} />
 
       <LocationHighlights />
+      <AppLandingHero/>
       <FloatingExploreButton targetRef={exploreRef} />
       <Footer />
     </div>
