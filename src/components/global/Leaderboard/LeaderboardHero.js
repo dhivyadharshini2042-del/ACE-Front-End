@@ -24,7 +24,9 @@ export default function LeaderboardHero({ search, onSearchChange }) {
 
       <h2 className={styles.subHeading}>
         Event Organizers
-        <img src="/images/sparkles.png" alt="no" />
+        <div className={styles.subImg}>
+          <img src="/images/sparkles.png" alt="no" />
+        </div>
       </h2>
 
       {/* 🔥 SEARCH */}
@@ -39,14 +41,15 @@ export default function LeaderboardHero({ search, onSearchChange }) {
       </div>
 
       <h3 className={styles.boardTitle}>
-        Star Organizers Board{" "}
-        <span>
+        <span className={styles.boardimg}>
           <img src="/images/sparkles_s.png" alt="no" />
         </span>
+        Star Organizers Board{" "}
       </h3>
 
       <p className={styles.boardSub}>
-        Where brilliant organizers rise — your dedication builds the stage for every success!
+        Where brilliant organizers rise — your dedication builds the stage for
+        every success!
       </p>
     </section>
   );

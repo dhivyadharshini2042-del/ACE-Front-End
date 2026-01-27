@@ -1,14 +1,14 @@
 export const metadata = {
-  title: "TEST – Browse All Events | ACE",
+  title: "All Events | ACE",
   description:
-    "TEST description: Explore all college events with filters like category, mode, perks, certifications and more.",
+    "description: Explore all college events with filters like category, mode, perks, certifications and more.",
   alternates: {
     canonical: "/events",
   },
   openGraph: {
-    title: "TEST OG – All College Events",
+    title: "All College Events",
     description:
-      "TEST OG Description: Find upcoming, trending and popular college events in one place.",
+      "Description: Find upcoming, trending and popular college events in one place.",
     url: "/events",
     siteName: "ACE – All College Events",
     images: [
@@ -23,9 +23,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "TEST Twitter – Events Listing",
+    title: "Twitter – Events Listing",
     description:
-      "TEST Twitter Description: Browse and filter college events easily.",
+      "Twitter Description: Browse and filter college events easily.",
     images: ["/images/test-events-og.png"],
   },
 };

@@ -187,6 +187,7 @@ export default function Sidebar() {
           {auth?.type === "org" && (
             <Link
               href="/dashboard/activities/bookings"
+              style={{display:"none"}}
               className={
                 isActive("/dashboard/activities/bookings")
                   ? styles.activeLink

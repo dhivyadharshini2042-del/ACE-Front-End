@@ -7,10 +7,7 @@ import { getUserProfileApi } from "../../../lib/api/user.api";
 import { getOrganizationProfileApi } from "../../../lib/api/organizer.api";
 
 // 🔐 SESSION AUTH (NO REDUX)
-import {
-  getAuthFromSession,
-  isUserLoggedIn,
-} from "../../../lib/auth";
+import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 
 import "./Navbar.css";
 import {
@@ -83,6 +80,28 @@ export default function Navbar() {
   if (!mounted) return null;
 
   /* ================= HANDLERS ================= */
+  const handleCreateEventClick = () => {
+    // not logged in
+    if (!isLoggedIn) {
+      router.push("/auth/organization/login");
+      return;
+    }
+
+    // logged in but USER
+    if (auth?.type === "user") {
+      router.push("/auth/organization/login");
+      return;
+    }
+
+    // logged in & ORGANIZER
+    if (auth?.type === "org") {
+      router.push("/dashboard/space/create");
+      return;
+    }
+
+    // fallback
+    router.push("/auth/organization/login");
+  };
 
   const handleSignup = () => {
     setMenuOpen(false);
@@ -105,9 +124,7 @@ export default function Navbar() {
           className="nav-logo"
           onClick={() => router.push("/")}
         />
-        <button className="nav-explore">
-          Explore {EXPLORE_ICON}
-        </button>
+        <button className="nav-explore">Explore {EXPLORE_ICON}</button>
       </div>
 
       {/* CENTER */}
@@ -120,24 +137,14 @@ export default function Navbar() {
           />
         </div>
 
-        <button className="nav-location-btn">
-          {LOCATION_ICON}
+        <button className="nav-location-btn">{LOCATION_ICON}</button>
+
+        <button className="nav-create" onClick={handleCreateEventClick}>
+          + Create Event
         </button>
 
         {!isLoggedIn && (
-          <button
-            className="nav-create"
-            onClick={() => router.push("/dashboard/space/create")}
-          >
-            + Create Event
-          </button>
-        )}
-
-        {!isLoggedIn && (
-          <button
-            className="nav-sinup"
-            onClick={handleSignup}
-          >
+          <button className="nav-sinup" onClick={handleSignup}>
             Sign In
           </button>
         )}
@@ -146,10 +153,7 @@ export default function Navbar() {
       {/* RIGHT */}
       {isLoggedIn && (
         <div className={`nav-right ${menuOpen ? "open" : ""}`}>
-          <button
-            className="nav-avatar-btn"
-            onClick={handleProfileClick}
-          >
+          <button className="nav-avatar-btn" onClick={handleProfileClick}>
             {profileImage ? (
               <img
                 src={profileImage}
@@ -158,9 +162,7 @@ export default function Navbar() {
                 onError={() => setProfileImage(null)}
               />
             ) : (
-              <div className="nav-letter-avatar">
-                {initial}
-              </div>
+              <div className="nav-letter-avatar">{initial}</div>
             )}
           </button>
         </div>

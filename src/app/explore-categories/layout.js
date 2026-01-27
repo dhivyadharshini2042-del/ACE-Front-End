@@ -1,10 +1,10 @@
 export const metadata = {
   // 1️⃣ Browser tab + Google blue link
-  title: "TEST – Event Categories | ACE",
+  title: "Event Categories | ACE",
 
   // 2️⃣ Google search description
   description:
-    "TEST description: This page lets users explore different types of college events.",
+    " description: This page lets users explore different types of college events.",
 
   // 3️⃣ Canonical (original URL)
   alternates: {
@@ -13,9 +13,9 @@ export const metadata = {
 
   // 4️⃣ WhatsApp / Facebook / LinkedIn preview
   openGraph: {
-    title: "TEST OG Title – Explore Categories",
+    title: "OG Title – Explore Categories",
     description:
-      "TEST OG Description: Browse hackathons, workshops, concerts and more.",
+      "OG Description: Browse hackathons, workshops, concerts and more.",
     url: "/explore-categories",
     siteName: "ACE – All College Events",
     images: [
@@ -23,7 +23,7 @@ export const metadata = {
         url: "/images/test-og.png", // try changing image
         width: 1200,
         height: 630,
-        alt: "TEST OG Image",
+        alt: "Image",
       },
     ],
     type: "website",
@@ -32,9 +32,9 @@ export const metadata = {
   // 5️⃣ Twitter / X preview
   twitter: {
     card: "summary_large_image",
-    title: "TEST Twitter Title – Categories",
+    title: "Twitter Title – Categories",
     description:
-      "TEST Twitter Description: Discover college events by category.",
+      "Twitter Description: Discover college events by category.",
     images: ["/images/test-og.png"],
   },
 };

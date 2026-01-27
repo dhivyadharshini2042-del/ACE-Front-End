@@ -93,13 +93,15 @@ export default function UserLoginPage() {
 
       const res = await googleAuthLoginApi({ googleToken });
 
-      if (!res?.status || !res?.data) {
+      console.log("============res",res)
+
+      if (!res?.status) {
         toast.error(MSG_GOOGLE_LOGIN_FAILED);
         return;
       }
 
      
-      setAuthSession(es.token);
+      setAuthSession(res.token);
 
       toast.success(MSG_GOOGLE_LOGIN_SUCCESS_USER);
       router.push("/");
