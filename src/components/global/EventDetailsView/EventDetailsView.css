@@ -206,7 +206,7 @@
 }
 .title-row h1 {
   font-weight: 700;
-  text-transform: uppercase;
+  text-transform: capitalize;
   font-family: "BL Melody", sans-serif;
 }
 .meta-row {
