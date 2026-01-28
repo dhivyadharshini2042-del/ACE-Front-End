@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { getUserProfileApi } from "../../../lib/api/user.api";
 import { getOrganizationProfileApi } from "../../../lib/api/organizer.api";
+import { usePathname, useSearchParams } from "next/navigation";
 
 // 🔐 SESSION AUTH (NO REDUX)
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
@@ -26,6 +27,11 @@ export default function Navbar() {
   const [initial, setInitial] = useState("U");
   const [profileImage, setProfileImage] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const hideNavbarSearch =
+    pathname === "/events" && searchParams.get("focusSearch") === "1";
 
   /* ================= INITIAL MOUNT ================= */
   useEffect(() => {
@@ -129,13 +135,16 @@ export default function Navbar() {
 
       {/* CENTER */}
       <div className="nav-center">
-        <div className="nav-search-box">
-          <input
-            type="text"
-            placeholder="Search anything"
-            className="search-input"
-          />
-        </div>
+        {!hideNavbarSearch && (
+          <div className="nav-search-box">
+            <input
+              type="text"
+              placeholder="Search anything"
+              className="search-input"
+              onFocus={() => router.push("/events?focusSearch=1")}
+            />
+          </div>
+        )}
 
         <button className="nav-location-btn">{LOCATION_ICON}</button>
 

@@ -94,8 +94,9 @@ export default function EventsFilterPage() {
   const [eligibleDepartments, setEligibleDepartments] = useState([]);
   const [accommodations, setAccommodations] = useState([]);
   const [sort, setSort] = useState("");
+  const focusSearch = searchParams.get("focusSearch") === "1";
 
-  
+
   // default RECENT
 
   /* ================= EVENTS ================= */
@@ -260,6 +261,7 @@ export default function EventsFilterPage() {
                 searchText: v,
               }))
             }
+            autoFocus={focusSearch}
           />
 
           <ActiveFilterChips

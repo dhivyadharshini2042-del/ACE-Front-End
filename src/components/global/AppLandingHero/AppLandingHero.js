@@ -19,16 +19,14 @@ export default function AppLandingHero() {
       </a>
 
       {/* STORE BUTTONS */}
+     
       <div className={styles.stores}>
         <a
           href="https://play.google.com"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
-            src="/images/app-play.png"
-            alt="Play Store"
-          />
+          <img src="/images/app-play.png" alt="Play Store" />
         </a>
 
         <a
@@ -36,10 +34,7 @@ export default function AppLandingHero() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
-            src="/images/apps-img.png"
-            alt="App Store"
-          />
+          <img src="/images/apps-img.png" alt="App Store" />
         </a>
       </div>
     </section>
