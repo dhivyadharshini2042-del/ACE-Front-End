@@ -13,7 +13,10 @@ import {
   getStates,
   getCities,
 } from "../../../../../lib/location.api";
-import { DATEICON, TIMEICON } from "../../../../../const-value/config-icons/page";
+import {
+  DATEICON,
+  TIMEICON,
+} from "../../../../../const-value/config-icons/page";
 
 export default function EventDetails({
   data,
@@ -297,7 +300,9 @@ export default function EventDetails({
           <div className={styles.calendarGrid}>
             {data.calendar.map((c, i) => (
               <div key={i} className={styles.calendarItem}>
-                <div className={styles.calendarDate}>{DATEICON} {c.date}</div>
+                <div className={styles.calendarDate}>
+                  {DATEICON} {c.date}
+                </div>
 
                 <div className={styles.calendarTime}>
                   {TIMEICON} {c.startTime} – {c.endTime}
