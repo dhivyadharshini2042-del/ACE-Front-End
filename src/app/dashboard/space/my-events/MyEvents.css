@@ -1,58 +1,53 @@
-/* IMAGE */
+/* ================= GRID ================= */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* ================= CARD ================= */
+.event-card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1.5px solid #e9e9e9;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* ================= IMAGE ================= */
 .event-img-wrapper {
   position: relative;
   height: 160px;
-  padding: 10px;
-}
-.btn-grid {
-  background-color: #7a12ff;
-  color: #ffffff;
-}
-
-.btn-list {
-  background-color: transparent;
-  color: #7a12ff;
-  border: 1px solid #7a12ff;
-}
-
-.btn-list:hover {
-  background-color: transparent;
-  border: 1px solid #7a12ff;
-  color: #7a12ff;
-}
-.btn-grid:hover {
-  background-color: transparent;
-  border: 1px solid #7a12ff;
-  color: #7a12ff;
 }
 
 .event-img-wrapper img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 5px;
 }
-.create-btn {
-  background: #7a12ff;
-  border: none;
-  color: #ffffff;
-  padding: 10px 25px;
-  border-radius: 25px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: "BL Melody", sans-serif;
-}
-/* STATUS */
+
+/* ================= STATUS ================= */
 .event-status {
   position: absolute;
   top: 12px;
   right: 12px;
-  border-radius: 3px;
+  border-radius: 4px;
   padding: 4px 12px;
   font-size: 12px;
   font-weight: 600;
   text-transform: capitalize;
 }
 
-/* STATUS COLORS */
 .event-status.approved {
   background-color: #e6f4ea;
   color: #137333;
@@ -74,6 +69,14 @@
   color: #6b7280;
 }
 
+/* ================= BODY ================= */
+.card-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
 /* TITLE ROW */
 .event-title-row {
   display: flex;
@@ -81,12 +84,20 @@
   align-items: center;
 }
 
-/* MENU WRAPPER (IMPORTANT FIX) */
+.event-title {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* MENU */
 .event-menu-wrapper {
   position: relative;
 }
 
-/* THREE DOT */
 .event-menu {
   font-size: 18px;
   cursor: pointer;
@@ -98,25 +109,24 @@
   background-color: #f1f1f1;
 }
 
-/* DROPDOWN */
 .event-menu-dropdown {
   position: absolute;
-  top: -18px;
-  right: 15px;
+  top: 22px;
+  right: 0;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   z-index: 20;
-  overflow: hidden;
   min-width: 120px;
+  overflow: hidden;
 }
 
 .dropdown-item {
   padding: 10px 14px;
   font-size: 14px;
   cursor: pointer;
-  background: none;
   border: none;
+  background: none;
   width: 100%;
   text-align: left;
 }
@@ -129,62 +139,96 @@
   color: #dc3545;
 }
 
-/* EVENT META */
-.event-meta {
+/* ================= META ================= */
+.event-location {
   font-size: 13px;
-  color: #000000;
-  margin-top: 8px;
-  font-family: var(--font-poppins), sans-serif;
+  margin-top: 6px;
 }
-/* STATUS BADGE BASE */
-.event-list-status {
-  display: inline-block;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 12px;
+
+.event-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-top: 10px;
+  gap: 8px;
+}
+/* ================= CREATE EVENT BUTTON ================= */
+.create-btn {
+  background: linear-gradient(135deg, #7a12ff, #9b5cff);
+  color: #fff;
+  border: none;
+  padding: 10px 26px;
+  border-radius: 30px;
+  font-size: 14px;
   font-weight: 600;
-  text-transform: capitalize;
-  font-family: "BL Melody", sans-serif;
-  line-height: 1;
-  width: fit-content;
-}
-
-/* APPROVED */
-.event-list-status.approved {
-  background-color: #e6f4ea;
-  color: #137333;
-  border: 1px solid #b7e1cd;
-}
-
-/* PENDING */
-.event-list-status.pending {
-  background-color: #fff4e5;
-  color: #b26a00;
-  border: 1px solid #ffd8a8;
-}
-
-/* REJECTED */
-.event-list-status.rejected {
-  background-color: #fdecea;
-  color: #b3261e;
-  border: 1px solid #f5c2c7;
-}
-
-/* DRAFT */
-.event-list-status.draft {
-  background-color: #f2f2f2;
-  color: #6b7280;
-  border: 1px solid #e5e7eb;
-}
-
-/* PRIVATE */
-.event-list-status.private {
-  background-color: #eef1f6;
-  color: #344054;
-  border: 1px solid #d0d5dd;
-}
-.event-card {
   cursor: pointer;
-  border-radius: 13.91px;
-  border: 1.5px solid #e9e9e9;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.create-btn:hover {
+  background: linear-gradient(135deg, #6a0fe0, #8a4de8);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(122, 18, 255, 0.3);
+}
+
+.create-btn:active {
+  transform: scale(0.96);
+}
+
+/* ================= GRID / LIST TOGGLE ================= */
+.btn-group {
+  display: inline-flex;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #7a12ff;
+}
+
+.btn-grid,
+.btn-list {
+  background: #fff;
+  color: #7a12ff;
+  border: none;
+  padding: 8px 14px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-grid svg,
+.btn-list svg {
+  font-size: 16px;
+}
+
+/* ACTIVE */
+.btn-grid {
+  background: #7a12ff;
+  color: #fff;
+}
+
+.btn-list:hover,
+.btn-grid:hover {
+  background: #f3ecff;
+}
+/* ================= MOBILE ================= */
+@media (max-width: 576px) {
+  .create-btn {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .btn-group {
+    width: 100%;
+  }
+
+  .btn-grid,
+  .btn-list {
+    flex: 1;
+    padding: 10px 0;
+  }
 }

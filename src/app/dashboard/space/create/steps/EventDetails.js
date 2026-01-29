@@ -301,7 +301,10 @@ export default function EventDetails({
             {data.calendar.map((c, i) => (
               <div key={i} className={styles.calendarItem}>
                 <div className={styles.calendarDate}>
-                  {DATEICON} {c.date}
+                  {DATEICON}{" "}
+                  {c.startDate === c.endDate
+                    ? c.startDate
+                    : `${c.startDate} → ${c.endDate}`}
                 </div>
 
                 <div className={styles.calendarTime}>
@@ -459,12 +462,11 @@ export default function EventDetails({
           onClose={() => setShowCalendar(false)}
           onSave={(rows) => {
             const formatted = rows.map((r) => ({
-              date:
-                r.startDate === r.endDate
-                  ? r.startDate
-                  : `${r.startDate} → ${r.endDate}`,
+              startDate: r.startDate,
+              endDate: r.endDate,
               startTime: r.startTime,
               endTime: r.endTime,
+              timeZone: "Asia/Kolkata",
             }));
 
             setData({

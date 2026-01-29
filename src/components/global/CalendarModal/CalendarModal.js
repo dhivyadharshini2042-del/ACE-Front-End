@@ -21,6 +21,18 @@ export default function CalendarModal({ onClose, onSave }) {
     String(i).padStart(2, "0"),
   );
 
+  const timeToMinutes = (time) => {
+    if (!time) return 0;
+
+    const [t, meridian] = time.split(" ");
+    const [h, m] = t.split(":").map(Number);
+
+    let hour = h % 12;
+    if (meridian === "PM") hour += 12;
+
+    return hour * 60 + m;
+  };
+
   useEffect(() => {
     if (rowsRef.current) {
       rowsRef.current.scrollTop = rowsRef.current.scrollHeight;
@@ -42,20 +54,27 @@ export default function CalendarModal({ onClose, onSave }) {
     const updated = [...rows];
     updated[index][field] = value;
 
-    // reset invalid end date/time
-    if (field === "startDate") {
-      if (updated[index].endDate < value) {
-        updated[index].endDate = "";
-        updated[index].endTime = "";
-      }
+    const row = updated[index];
+
+    // ❌ If endDate < startDate → reset end
+    if (field === "startDate" && row.endDate && row.endDate < value) {
+      row.endDate = "";
+      row.endTime = "";
     }
 
-    if (field === "startTime") {
-      if (
-        updated[index].endDate === updated[index].startDate &&
-        updated[index].endTime < value
-      ) {
-        updated[index].endTime = "";
+    // ❌ Same date → endTime must be AFTER startTime
+    if (
+      row.startDate &&
+      row.endDate &&
+      row.startDate === row.endDate &&
+      row.startTime &&
+      row.endTime
+    ) {
+      const startMinutes = timeToMinutes(row.startTime);
+      const endMinutes = timeToMinutes(row.endTime);
+
+      if (endMinutes <= startMinutes) {
+        row.endTime = "";
       }
     }
 

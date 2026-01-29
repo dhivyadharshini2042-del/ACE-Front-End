@@ -29,8 +29,8 @@ export default function MediaTickets({
   onBack,
   onSubmit,
   resetSignal,
-  minDate,
-  maxDate,
+  ticketMinDate,
+  ticketMaxDate,
 }) {
   /* ================= LOCAL STATE (WITH PREFILL) ================= */
   const [tickets, setTickets] = useState(data?.tickets || []);
@@ -462,8 +462,8 @@ export default function MediaTickets({
         ticketType={ticketType}
         setTicketType={setTicketType}
         onSave={handleSaveTicket}
-        minDate={minDate}
-        maxDate={maxDate}
+        minDate={ticketMinDate}
+        maxDate={ticketMaxDate}
       />
 
       <ConfirmModal

@@ -76,27 +76,27 @@ export default function CreateEvent() {
   const [auth, setAuth] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
 
-  const getEventDateRange = () => {
+  const getTicketDateRange = () => {
     const calendar = formData.event.calendar;
 
     if (!calendar || calendar.length === 0) return {};
 
-    const dates = calendar.flatMap((c) => {
-      const start = c.date.includes("→") ? c.date.split("→")[0].trim() : c.date;
+    // today
+    const today = new Date().toISOString().split("T")[0];
 
-      const end = c.date.includes("→") ? c.date.split("→")[1].trim() : c.date;
+    // last event end date
+    const endDates = calendar
+      .map((c) => c.endDate)
+      .filter(Boolean)
+      .sort();
 
-      return [start, end];
-    });
-
-    const sorted = dates.sort();
     return {
-      minDate: sorted[0],
-      maxDate: sorted[sorted.length - 1],
+      ticketMinDate: today,
+      ticketMaxDate: endDates[endDates.length - 1],
     };
   };
 
-  const { minDate, maxDate } = getEventDateRange();
+  const { ticketMinDate, ticketMaxDate } = getTicketDateRange();
 
   /* ================= INIT AUTH ================= */
   useEffect(() => {
@@ -310,8 +310,8 @@ export default function CreateEvent() {
           setData={(d) => setFormData({ ...formData, media: d })}
           onBack={() => setStep(2)}
           onSubmit={handleFinalSubmit}
-          minDate={minDate}
-          maxDate={maxDate}
+          ticketMinDate={ticketMinDate}
+          ticketMaxDate={ticketMaxDate}
         />
       )}
     </div>

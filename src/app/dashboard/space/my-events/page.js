@@ -12,10 +12,7 @@ import {
   getOrganizerEventsApi,
 } from "../../../../lib/api/event.api";
 
-import {
-  getAuthFromSession,
-  isUserLoggedIn,
-} from "../../../../lib/auth";
+import { getAuthFromSession, isUserLoggedIn } from "../../../../lib/auth";
 
 export default function MyEventPage() {
   const [events, setEvents] = useState([]);
@@ -81,7 +78,7 @@ export default function MyEventPage() {
 
   return (
     <div className="container-fluid p-3 mb-5 rounded">
-      <div className="d-flex align-items-center justify-content-between mb-4">
+      <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
         <h2 className="fw-bold mb-0">My Events</h2>
 
         <button
