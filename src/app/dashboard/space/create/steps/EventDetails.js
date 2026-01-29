@@ -13,6 +13,7 @@ import {
   getStates,
   getCities,
 } from "../../../../../lib/location.api";
+import { DATEICON, TIMEICON } from "../../../../../const-value/config-icons/page";
 
 export default function EventDetails({
   data,
@@ -293,10 +294,14 @@ export default function EventDetails({
           </button>
         </div>
         {data.calendar?.length > 0 ? (
-          <div className={styles.calendarPreview}>
+          <div className={styles.calendarGrid}>
             {data.calendar.map((c, i) => (
-              <div key={i}>
-                {c.date} | {c.startTime} – {c.endTime}
+              <div key={i} className={styles.calendarItem}>
+                <div className={styles.calendarDate}>{DATEICON} {c.date}</div>
+
+                <div className={styles.calendarTime}>
+                  {TIMEICON} {c.startTime} – {c.endTime}
+                </div>
               </div>
             ))}
           </div>
@@ -448,10 +453,20 @@ export default function EventDetails({
         <CalendarModal
           onClose={() => setShowCalendar(false)}
           onSave={(rows) => {
+            const formatted = rows.map((r) => ({
+              date:
+                r.startDate === r.endDate
+                  ? r.startDate
+                  : `${r.startDate} → ${r.endDate}`,
+              startTime: r.startTime,
+              endTime: r.endTime,
+            }));
+
             setData({
               ...data,
-              calendar: rows,
+              calendar: formatted,
             });
+
             setShowCalendar(false);
           }}
         />
