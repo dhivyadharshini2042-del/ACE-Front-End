@@ -19,10 +19,7 @@ import { createEventApi } from "../../../../lib/api/event.api";
 import { useLoading } from "../../../../context/LoadingContext";
 
 // 🔐 SESSION AUTH
-import {
-  getAuthFromSession,
-  isUserLoggedIn,
-} from "../../../../lib/auth";
+import { getAuthFromSession, isUserLoggedIn } from "../../../../lib/auth";
 
 /* ================= INITIAL STATE ================= */
 
@@ -78,6 +75,28 @@ export default function CreateEvent() {
   // 🔐 SESSION STATE
   const [auth, setAuth] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+
+  const getEventDateRange = () => {
+    const calendar = formData.event.calendar;
+
+    if (!calendar || calendar.length === 0) return {};
+
+    const dates = calendar.flatMap((c) => {
+      const start = c.date.includes("→") ? c.date.split("→")[0].trim() : c.date;
+
+      const end = c.date.includes("→") ? c.date.split("→")[1].trim() : c.date;
+
+      return [start, end];
+    });
+
+    const sorted = dates.sort();
+    return {
+      minDate: sorted[0],
+      maxDate: sorted[sorted.length - 1],
+    };
+  };
+
+  const { minDate, maxDate } = getEventDateRange();
 
   /* ================= INIT AUTH ================= */
   useEffect(() => {
@@ -139,15 +158,16 @@ export default function CreateEvent() {
         return;
       }
 
-      const collaboratorsPayload =
-        (formData.organizer.organizations || []).map((org) => ({
+      const collaboratorsPayload = (formData.organizer.organizations || []).map(
+        (org) => ({
           hostIdentity: org.hostBy,
           organizationName: org.orgName,
           organizerNumber: org.organizerNumber,
           orgDept: org.department || "",
           organizerName: org.organizerName,
           location: org.location,
-        }));
+        }),
+      );
 
       const event = formData.event;
       const media = formData.media;
@@ -181,8 +201,8 @@ export default function CreateEvent() {
             endDate: c.endDate,
             startTime: c.startTime,
             endTime: c.endTime,
-          }))
-        )
+          })),
+        ),
       );
 
       fd.append(
@@ -196,8 +216,8 @@ export default function CreateEvent() {
             isPaid: t.type === "PAID",
             price: t.type === "PAID" ? Number(t.amount) : 0,
             totalQuantity: Number(t.total),
-          }))
-        )
+          })),
+        ),
       );
 
       fd.append("perkIdentities", JSON.stringify(media.perks || []));
@@ -205,7 +225,7 @@ export default function CreateEvent() {
       if (media.accommodation) {
         fd.append(
           "accommodationIdentities",
-          JSON.stringify(media.accommodation || [])
+          JSON.stringify(media.accommodation || []),
         );
       }
 
@@ -219,7 +239,7 @@ export default function CreateEvent() {
             mapLink: event.mapLink,
             offers: event.offers,
             venue: event.venue,
-          })
+          }),
         );
       }
 
@@ -232,7 +252,7 @@ export default function CreateEvent() {
           whatsapp: media.whatsapp,
           instagram: media.instagram,
           linkedin: media.linkedin,
-        })
+        }),
       );
 
       if (media.bannerImages?.length) {
@@ -290,6 +310,8 @@ export default function CreateEvent() {
           setData={(d) => setFormData({ ...formData, media: d })}
           onBack={() => setStep(2)}
           onSubmit={handleFinalSubmit}
+          minDate={minDate}
+          maxDate={maxDate}
         />
       )}
     </div>

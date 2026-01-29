@@ -29,13 +29,15 @@ export default function MediaTickets({
   onBack,
   onSubmit,
   resetSignal,
+  minDate,
+  maxDate,
 }) {
   /* ================= LOCAL STATE (WITH PREFILL) ================= */
   const [tickets, setTickets] = useState(data?.tickets || []);
   const [perks, setPerks] = useState(data?.perks?.[0] || "");
   const [certification, setCertification] = useState(data?.certification || "");
   const [accommodation, setAccommodation] = useState(
-    data?.accommodation?.[0] || ""
+    data?.accommodation?.[0] || "",
   );
 
   const [paymentLink, setPaymentLink] = useState(data?.paymentLink || "");
@@ -144,7 +146,7 @@ export default function MediaTickets({
     getPerksApi().then((res) => res?.status && setPerksList(res.data));
     getCertificationsApi().then((res) => res?.status && setCertList(res.data));
     getAccommodationsApi().then(
-      (res) => res?.status && setAccommodationList(res.data)
+      (res) => res?.status && setAccommodationList(res.data),
     );
   }, []);
 
@@ -178,7 +180,7 @@ export default function MediaTickets({
           ...ticketForm,
           ticketType,
         },
-        { abortEarly: false }
+        { abortEarly: false },
       );
 
       const payload = {
@@ -460,7 +462,10 @@ export default function MediaTickets({
         ticketType={ticketType}
         setTicketType={setTicketType}
         onSave={handleSaveTicket}
+        minDate={minDate}
+        maxDate={maxDate}
       />
+
       <ConfirmModal
         open={openSuccessModal}
         image="/images/logo.png"

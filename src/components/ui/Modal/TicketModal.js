@@ -10,6 +10,8 @@ export default function TicketModal({
   ticketType,
   setTicketType,
   onSave,
+  minDate,
+  maxDate,
 }) {
   if (!open) return null;
 
@@ -43,7 +45,9 @@ export default function TicketModal({
         {/* Form */}
         <div className={styles.grid2}>
           <div className={styles.field}>
-            <label>Ticket Name <span>*</span></label>
+            <label>
+              Ticket Name <span>*</span>
+            </label>
             <input
               className={styles.input}
               value={ticketForm.name}
@@ -65,16 +69,20 @@ export default function TicketModal({
           </div>
 
           <div className={styles.field}>
-            <label>From Date<span>*</span></label>
+            <label>
+              From Date<span>*</span>
+            </label>
             <input
               type="date"
               className={styles.input}
+              min={minDate}
+              max={maxDate}
               value={ticketForm.from?.split("T")[0] || ""}
               onChange={(e) =>
                 setTicketForm({
                   ...ticketForm,
                   from: new Date(
-                    `${e.target.value}T00:00:00.000Z`
+                    `${e.target.value}T00:00:00.000Z`,
                   ).toISOString(),
                 })
               }
@@ -82,17 +90,19 @@ export default function TicketModal({
           </div>
 
           <div className={styles.field}>
-            <label>To Date <span>*</span></label>
+            <label>
+              To Date <span>*</span>
+            </label>
             <input
               type="date"
               className={styles.input}
+              min={ticketForm.from?.split("T")[0] || minDate}
+              max={maxDate}
               value={ticketForm.to?.split("T")[0] || ""}
               onChange={(e) =>
                 setTicketForm({
                   ...ticketForm,
-                  to: new Date(
-                    `${e.target.value}T23:59:59.000Z`
-                  ).toISOString(),
+                  to: new Date(`${e.target.value}T23:59:59.000Z`).toISOString(),
                 })
               }
             />
@@ -100,7 +110,9 @@ export default function TicketModal({
 
           {ticketType === "PAID" && (
             <div className={styles.field}>
-              <label>Amount <span>*</span></label>
+              <label>
+                Amount <span>*</span>
+              </label>
               <input
                 className={styles.input}
                 value={ticketForm.amount}
