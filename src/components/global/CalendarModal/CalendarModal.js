@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import styles from "./CalendarModal.module.css";
 import { ADDICON, DELETICON } from "../../../const-value/config-icons/page";
 export default function CalendarModal({ onClose, onSave }) {
-
   const [multiDate, setMultiDate] = useState(false);
   const [rows, setRows] = useState([
     { startDate: "", startTime: "", endDate: "", endTime: "" },
@@ -14,7 +13,13 @@ export default function CalendarModal({ onClose, onSave }) {
 
   const today = new Date().toISOString().split("T")[0];
   const nowTime = new Date().toTimeString().slice(0, 5);
+  const HOURS = Array.from({ length: 12 }, (_, i) =>
+    String(i + 1).padStart(2, "0"),
+  );
 
+  const MINUTES = Array.from({ length: 60 }, (_, i) =>
+    String(i).padStart(2, "0"),
+  );
 
   useEffect(() => {
     if (rowsRef.current) {
@@ -100,15 +105,59 @@ export default function CalendarModal({ onClose, onSave }) {
                 <label>
                   Start Time <span>*</span>
                 </label>
-                <input
-                  type="time"
-                  className={styles.input}
-                  min={row.startDate === today ? nowTime : undefined}
-                  value={row.startTime}
-                  onChange={(e) =>
-                    updateRow(index, "startTime", e.target.value)
-                  }
-                />
+                <div className={styles.timeRow}>
+                  {/* HOUR */}
+                  <select
+                    className={styles.input}
+                    onChange={(e) =>
+                      updateRow(
+                        index,
+                        "startTime",
+                        `${e.target.value}:${row.startTime?.split(":")[1] || "00"} ${row.startTime?.includes("PM") ? "PM" : "AM"}`,
+                      )
+                    }
+                  >
+                    <option value="">HH</option>
+                    {HOURS.map((h) => (
+                      <option key={h} value={h}>
+                        {h}
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* MINUTE */}
+                  <select
+                    className={styles.input}
+                    onChange={(e) =>
+                      updateRow(
+                        index,
+                        "startTime",
+                        `${row.startTime?.split(":")[0] || "01"}:${e.target.value} ${row.startTime?.includes("PM") ? "PM" : "AM"}`,
+                      )
+                    }
+                  >
+                    {MINUTES.map((m) => (
+                      <option key={m} value={m}>
+                        {m}
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* AM / PM */}
+                  <select
+                    className={styles.input}
+                    onChange={(e) =>
+                      updateRow(
+                        index,
+                        "startTime",
+                        `${row.startTime?.split(" ")[0] || "01:00"} ${e.target.value}`,
+                      )
+                    }
+                  >
+                    <option>AM</option>
+                    <option>PM</option>
+                  </select>
+                </div>
               </div>
 
               <div className={styles.field}>
@@ -120,9 +169,7 @@ export default function CalendarModal({ onClose, onSave }) {
                   className={styles.input}
                   min={row.startDate || today}
                   value={row.endDate}
-                  onChange={(e) =>
-                    updateRow(index, "endDate", e.target.value)
-                  }
+                  onChange={(e) => updateRow(index, "endDate", e.target.value)}
                 />
               </div>
 
@@ -130,19 +177,56 @@ export default function CalendarModal({ onClose, onSave }) {
                 <label>
                   End Time <span>*</span>
                 </label>
-                <input
-                  type="time"
-                  className={styles.input}
-                  min={
-                    row.endDate === row.startDate
-                      ? row.startTime
-                      : undefined
-                  }
-                  value={row.endTime}
-                  onChange={(e) =>
-                    updateRow(index, "endTime", e.target.value)
-                  }
-                />
+                <div className={styles.timeRow}>
+                  <select
+                    className={styles.input}
+                    onChange={(e) =>
+                      updateRow(
+                        index,
+                        "endTime",
+                        `${e.target.value}:${row.endTime?.split(":")[1] || "00"} ${row.endTime?.includes("PM") ? "PM" : "AM"}`,
+                      )
+                    }
+                  >
+                    <option value="">HH</option>
+                    {HOURS.map((h) => (
+                      <option key={h} value={h}>
+                        {h}
+                      </option>
+                    ))}
+                  </select>
+
+                  <select
+                    className={styles.input}
+                    onChange={(e) =>
+                      updateRow(
+                        index,
+                        "endTime",
+                        `${row.endTime?.split(":")[0] || "01"}:${e.target.value} ${row.endTime?.includes("PM") ? "PM" : "AM"}`,
+                      )
+                    }
+                  >
+                    {MINUTES.map((m) => (
+                      <option key={m} value={m}>
+                        {m}
+                      </option>
+                    ))}
+                  </select>
+
+                  <select
+                    className={styles.input}
+                    onChange={(e) =>
+                      updateRow(
+                        index,
+                        "endTime",
+                        `${row.endTime?.split(" ")[0] || "01:00"} ${e.target.value}`,
+                      )
+                    }
+                  >
+                    <option>AM</option>
+                    <option>PM</option>
+                  </select>
+                </div>
               </div>
 
               {multiDate && index > 0 && (
@@ -159,8 +243,8 @@ export default function CalendarModal({ onClose, onSave }) {
 
         {/* MULTI DATE TOGGLE */}
         <div className={styles.toggleRow}>
-          <span>Schedule on Multiple Dates</span>
-          <label className={styles.switch}>
+          {/* <span>Schedule on Multiple Dates</span> */}
+          {/* <label className={styles.switch}>
             <input
               type="checkbox"
               checked={multiDate}
@@ -170,7 +254,7 @@ export default function CalendarModal({ onClose, onSave }) {
               }}
             />
             <span className={styles.slider}></span>
-          </label>
+          </label> */}
         </div>
 
         {/* ACTIONS */}

@@ -60,9 +60,32 @@
 
 .rowGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr) auto;
+  grid-template-columns: 1fr 1.3fr 1fr 1.3fr auto;
   gap: 16px;
   margin-top: 20px;
+  align-items: flex-end;
+}
+
+.timeRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.timeRow .input {
+  height: 36px;
+  padding: 0 8px;
+  font-size: 13px;
+  text-align: center;
+}
+.timeRow select {
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.timeRow select option {
+  font-size: 13px;
+  padding: 6px;
 }
 
 .deleteIcon {
