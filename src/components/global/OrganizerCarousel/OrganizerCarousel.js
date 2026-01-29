@@ -12,6 +12,7 @@ export default function OrganizersCarousel({ data = [] }) {
 
   /* ================= ORGANIZER CLICK ================= */
   const handleOrgClick = (slug) => {
+    console.log(",,,,,,,,,,,,,",slug)
     if (!slug) return;
 
     try {

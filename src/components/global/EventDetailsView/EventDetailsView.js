@@ -13,6 +13,7 @@ import {
   WHATSAPPICON,
   XICON,
   YOUTUBEICON,
+  LEFTSIDEARROW_ICON,
 } from "../../../const-value/config-icons/page";
 import Footer from "../Footer/Footer";
 import "./EventDetailsView.css";
@@ -22,6 +23,7 @@ import { useLoading } from "../../../context/LoadingContext";
 import ShareModal from "../../ui/ShareModal/ShareModal";
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import { toast } from "react-hot-toast";
+import { NO_IMAGE_FOUND_IMAGE } from "../../../const-value/config-message/page";
 
 export default function EventDetailsView({ event = {}, onBack }) {
   const { setLoading } = useLoading();
@@ -40,9 +42,7 @@ export default function EventDetailsView({ event = {}, onBack }) {
   const images =
     event?.bannerImages?.length > 0
       ? event?.bannerImages
-      : [
-          "https://cloudinary-marketing-res.cloudinary.com/images/w_1000,c_scale/v1679921049/Image_URL_header/Image_URL_header-png?_i=AA",
-        ];
+      : NO_IMAGE_FOUND_IMAGE;
 
   const MAX_LENGTH = 120;
   const description = event?.description || "";
@@ -56,7 +56,7 @@ export default function EventDetailsView({ event = {}, onBack }) {
   const [selectedTicket, setSelectedTicket] = useState(null);
   // ================= LIKE STATE =================
   const [isLiked, setIsLiked] = useState(false);
-  const [auth, setAuth] = useState(null); 
+  const [auth, setAuth] = useState(null);
   /* ================= INIT AUTH ================= */
   useEffect(() => {
     if (isUserLoggedIn()) {
@@ -168,7 +168,7 @@ export default function EventDetailsView({ event = {}, onBack }) {
               onBack();
             }}
           >
-            🔙 Back
+            Back
           </button>
 
           {/* rest of your event details UI */}
@@ -192,6 +192,9 @@ export default function EventDetailsView({ event = {}, onBack }) {
           </span>
           {/* SLIDER CONTROLS – BELOW IMAGE */}
         </div>
+        <span onClick={prevSlide} className="arrow-side">
+          {LEFTSIDEARROW_ICON}
+        </span>
         {images.length > 1 && (
           <div className="slider-controls">
             <div className="slider-dots">

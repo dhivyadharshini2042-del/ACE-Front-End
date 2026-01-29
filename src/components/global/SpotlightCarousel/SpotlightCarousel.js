@@ -16,7 +16,12 @@ import { useLoading } from "../../../context/LoadingContext";
 /* -------- DATE FORMAT -------- */
 function formatDate(date, time) {
   if (!date) return "TBA";
-  return `${date} ${time || ""}`;
+
+  if (!time || time.trim() === "") {
+    return date; // time illa na date mattum
+  }
+
+  return `${date} ${time}`;
 }
 
 /* -------- COUNTDOWN -------- */
@@ -40,7 +45,7 @@ export default function SpotlightCarousel({ data = [] }) {
   const { setLoading } = useLoading();
   const [current, setCurrent] = useState(0);
   const [, forceUpdate] = useState(0);
-  const total = data.length;
+
   const router = useRouter();
 
   const handleClick = (slug) => {
@@ -51,9 +56,28 @@ export default function SpotlightCarousel({ data = [] }) {
       router.push(`/events/${slug}`);
     } catch (error) {
       console.error("Navigation failed", error);
-      setLoading(false); 
+      setLoading(false);
     }
   };
+
+  const now = new Date();
+
+  const upcomingEvents = data.filter((event) => {
+    const calendar = event.calendars?.[0];
+    if (!calendar?.startDate) return false;
+
+    const startTime =
+      calendar.startTime && calendar.startTime.trim() !== ""
+        ? calendar.startTime
+        : "10:00";
+
+    const eventDateTime = new Date(`${calendar.startDate}T${startTime}:00`);
+
+    return eventDateTime >= now; // ❌ past remove
+  });
+
+  const spotlightEvents = upcomingEvents.slice(0, 10);
+  const total = spotlightEvents.length;
 
   /* Auto slide */
   useEffect(() => {
@@ -70,9 +94,11 @@ export default function SpotlightCarousel({ data = [] }) {
     return () => clearInterval(timer);
   }, []);
 
-  if (!Array.isArray(data) || data.length === 0) return null;
+  if (!spotlightEvents.length) return null;
 
   const goto = (i) => setCurrent((i + total) % total);
+
+  console.log("kkkkkkkk", data);
 
   return (
     <section className={styles.root}>
@@ -83,10 +109,15 @@ export default function SpotlightCarousel({ data = [] }) {
           className={styles.track}
           style={{ transform: `translateX(-${current * 100}%)` }}
         >
-          {data.map((event) => {
+          {spotlightEvents.map((event) => {
             const calendar = event.calendars?.[0];
-            const eventStartISO = calendar
-              ? `${calendar.startDate}T${calendar.startTime}:00`
+            const startTime =
+              calendar?.startTime && calendar.startTime.trim() !== ""
+                ? calendar.startTime
+                : "10:00"; // DEFAULT TIME
+
+            const eventStartISO = calendar?.startDate
+              ? `${calendar.startDate}T${startTime}:00`
               : null;
 
             const { days, hours, mins, secs } = getCountdown(eventStartISO);
@@ -163,7 +194,7 @@ export default function SpotlightCarousel({ data = [] }) {
                       href={event.paymentLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{display:"none"}}
+                      style={{ display: "none" }}
                       className={styles.cta}
                     >
                       Register
@@ -181,7 +212,7 @@ export default function SpotlightCarousel({ data = [] }) {
         <button onClick={() => goto(current - 1)}>❮</button>
 
         <div className={styles.dots}>
-          {data.map((_, i) => (
+          {spotlightEvents.map((_, i) => (
             <span
               key={i}
               className={i === current ? styles.activeDot : styles.dot}

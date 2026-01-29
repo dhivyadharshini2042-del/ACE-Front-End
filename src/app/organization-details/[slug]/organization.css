@@ -3,6 +3,12 @@
   object-fit: cover;
   border-radius: 20px;
 }
+.view-badge {
+  background: #f3f3f3;
+  padding: 5px 14px;
+  border-radius: 18px;
+  font-size: 12px;
+}
 .event-card-new {
   background: #fff;
   border-radius: 16px;
@@ -27,24 +33,36 @@
 .past-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
   color: #fff;
   padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
 }
-
+.org-name {
+  color: #7f00ff;
+  font-weight: 700;
+  font-family: "BL Melody", sans-serif;
+}
 .event-card-new:hover {
   transform: translateY(-6px);
 }
-
+.share-icon {
+  cursor: pointer;
+}
 .event-card-img {
   width: 100%;
   height: 180px;
   object-fit: cover;
+  border-radius: 20px;
+  padding: 10px;
 }
-
+.event-heading {
+  color: #1c1c1c;
+  font-weight: 700;
+  font-family: "BL Melody", sans-serif;
+}
 .event-card-body {
   padding: 14px;
 }
@@ -52,12 +70,40 @@
 .event-title {
   font-weight: 600;
   margin-bottom: 6px;
+  line-height: 1.3;
+  font-family: "BL Melody", sans-serif;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .event-meta {
   font-size: 13px;
   color: #555;
   margin-bottom: 4px;
+}
+.past-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.location-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 10px;
 }
 
 .event-footer {
@@ -138,8 +184,9 @@
 }
 
 .past-card img {
-  width: 100%;
   object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
 
 .past-overlay {

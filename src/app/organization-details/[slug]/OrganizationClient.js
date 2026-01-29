@@ -15,9 +15,11 @@ import {
   LINKEDINICON,
   LOCATION_ICON,
   SHAREICON,
+  SINGELEVENTSHARE_ICON,
   START_ICON,
   TELEGRAMICON,
   TICKET_COLOR_ICON,
+  VIEW_ICON,
   XICON,
   YOUTUBEICON,
 } from "../../../const-value/config-icons/page";
@@ -26,6 +28,9 @@ import { HEART_ICON, SAVEICON } from "../../../const-value/config-icons/page";
 import { likeEventApi, saveEventApi } from "../../../lib/api/event.api";
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import toast from "react-hot-toast";
+import { NO_IMAGE_FOUND_IMAGE } from "../../../const-value/config-message/page";
+import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
+import ShareModal from "../../../components/ui/ShareModal/ShareModal";
 
 export default function OrganizationClient({ slug }) {
   const router = useRouter();
@@ -36,6 +41,9 @@ export default function OrganizationClient({ slug }) {
   const [savedMap, setSavedMap] = useState({});
   const [likeCountMap, setLikeCountMap] = useState({});
   const [auth, setAuth] = useState(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null); // "like" | "save"
+  const [openShare, setOpenShare] = useState(false);
 
   /* ================= INIT AUTH ================= */
   useEffect(() => {
@@ -105,8 +113,9 @@ export default function OrganizationClient({ slug }) {
   }, [data]);
 
   const handleLike = async (event) => {
-    if (!isUserLoggedIn()) {
-      toast("Please login to like events", { icon: "⚠️" });
+    if (!auth?.identity) {
+      setPendingAction("like");
+      setShowLoginModal(true);
       return;
     }
 
@@ -120,7 +129,10 @@ export default function OrganizationClient({ slug }) {
       [eventId]: wasLiked ? p[eventId] - 1 : p[eventId] + 1,
     }));
 
-    const res = await likeEventApi({ eventIdentity: eventId ,userIdentity: auth.identity,});
+    const res = await likeEventApi({
+      eventIdentity: eventId,
+      userIdentity: auth.identity,
+    });
 
     if (!res?.status) {
       // rollback
@@ -131,8 +143,9 @@ export default function OrganizationClient({ slug }) {
   };
 
   const handleSave = async (event) => {
-    if (!isUserLoggedIn()) {
-      toast("Please login to save events", { icon: "⚠️" });
+    if (!auth?.identity) {
+      setPendingAction("save");
+      setShowLoginModal(true);
       return;
     }
 
@@ -141,7 +154,10 @@ export default function OrganizationClient({ slug }) {
 
     setSavedMap((p) => ({ ...p, [eventId]: !wasSaved }));
 
-    const res = await saveEventApi({ eventIdentity: eventId ,userIdentity: auth.identity,});
+    const res = await saveEventApi({
+      eventIdentity: eventId,
+      userIdentity: auth.identity,
+    });
 
     if (!res?.status) {
       setSavedMap((p) => ({ ...p, [eventId]: wasSaved }));
@@ -161,152 +177,187 @@ export default function OrganizationClient({ slug }) {
   );
 
   return (
-    <div className="container-fuiled px-5 py-5 org-page">
-      <button
-        className="btn btn-light rounded-pill mb-3"
-        onClick={() => router.back()}
-      >
-        🔙 Back
-      </button>
+    <>
+      <div className="container-fuiled px-5 py-5 org-page">
+        <button
+          className="btn btn-light rounded-pill mb-3"
+          onClick={() => router.back()}
+        >
+          Back
+        </button>
 
-      {/* ===== HERO ===== */}
-      <div className="org-hero position-relative rounded-4 overflow-hidden">
-        <img
-          src={bannerImages[currentBanner]}
-          className="w-100 org-hero-img"
-          alt={org?.organizationName || "Organization"}
-        />
+        {/* ===== HERO ===== */}
+        <div className="org-hero position-relative rounded-4 overflow-hidden">
+          <img
+            src={bannerImages[currentBanner]}
+            className="w-100 org-hero-img"
+            alt={org?.organizationName || "Organization"}
+          />
 
-        <div className="org-hero-dots">
-          {bannerImages.map((_, i) => (
-            <span
-              key={i}
-              className={`dot ${i === currentBanner ? "active" : ""}`}
-              onClick={() => setCurrentBanner(i)}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* ===== ORG INFO ===== */}
-      <div className="org-info-card shadow-sm rounded-4 p-4 mt-4 d-flex justify-content-between">
-        <div>
-          <h5 className="fw-bold">{org?.organizationName}</h5>
-          <div className="org-meta">
-            <span>
-              {TICKET_COLOR_ICON} {events.length} Events
-            </span>
-            <span>
-              {START_ICON} {org?.rating || "0.0"}
-            </span>
+          <div className="org-hero-dots">
+            {bannerImages.map((_, i) => (
+              <span
+                key={i}
+                className={`dot ${i === currentBanner ? "active" : ""}`}
+                onClick={() => setCurrentBanner(i)}
+              />
+            ))}
           </div>
         </div>
 
-        <div className="d-flex gap-3 align-items-center">
-          {INSTAGRAMICON}
-          {LINKEDINICON}
-          {YOUTUBEICON}
-          {FACEBOOKICON}
-          {TELEGRAMICON}
-          {XICON} {SHAREICON}
+        {/* ===== ORG INFO ===== */}
+        <div className="org-info-card shadow-sm rounded-4 p-4 mt-4 d-flex justify-content-between">
+          <div>
+            <h1 className="org-name">{org?.organizationName}</h1>
+            <div className="org-meta">
+              <h4>
+                {TICKET_COLOR_ICON} {events.length} Events
+              </h4>
+              <span>{/* {START_ICON} {org?.rank || "0.0"} */}</span>
+            </div>
+          </div>
+
+          <div className="d-flex gap-3 align-items-center">
+            {INSTAGRAMICON}
+            {LINKEDINICON}
+            {YOUTUBEICON}
+            {FACEBOOKICON}
+            {TELEGRAMICON}
+            {XICON}
+            <span className="share-icon" onClick={() => setOpenShare(true)}>
+              {SHAREICON}
+            </span>
+          </div>
         </div>
-      </div>
-      {/* ================= UPCOMING EVENTS ================= */}
-      <section className="mt-5">
-        <h5 className="fw-semibold">Upcoming Events</h5>
-        <p className="text-muted mb-4" style={{ fontSize: "13px" }}>
-          Explore the complete event schedule to find sessions, speakers, and
-          activities that match your interests and needs.
-        </p>
+        {/* ================= UPCOMING EVENTS ================= */}
+        <section className="mt-5">
+          <h3 className="event-heading">Upcoming Events</h3>
+          <p className="text-muted mb-4" style={{ fontSize: "13px" }}>
+            Explore the complete event schedule to find sessions, speakers, and
+            activities that match your interests and needs.
+          </p>
 
-        <div className="upcoming-grid">
-          {upcomingEvents.map((e, index) => (
-            <div key={e._id ?? `upcoming-${index}`} className="event-card-new">
-              <img
-                src={e.bannerImages?.[0] || "/images/event.jpg"}
-                alt={e.title}
-                className="event-card-img"
-              />
+          <div className="upcoming-grid">
+            {upcomingEvents.map((e, index) => (
+              <div
+                key={e._id ?? `upcoming-${index}`}
+                className="event-card-new"
+              >
+                <img
+                  src={e.bannerImages?.[0] || NO_IMAGE_FOUND_IMAGE}
+                  alt={e.title}
+                  className="event-card-img"
+                />
 
-              <div className="event-card-body">
-                <div className="d-flex justify-content-between align-items-center">
-                  <h6 className="event-title">{e.title}</h6>
+                <div className="event-card-body">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <h6 className="event-title">{e.title}</h6>
 
-                  <div className="d-flex gap-3">
-                    {/* LIKE */}
-                    <span
-                      onClick={() => handleLike(e)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <div className="text-center">
-                        <HEART_ICON active={likedMap[e.identity]} />
-                        <small>{likeCountMap[e.identity] ?? 0}</small>
-                      </div>
+                    <div className="d-flex gap-3">
+                      {/* LIKE */}
+                      <span
+                        onClick={() => handleLike(e)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <div className="d-flex flex-column align-items-center">
+                          <HEART_ICON active={likedMap[e.identity]} />
+                          <small>{likeCountMap[e.identity] ?? 0}</small>
+                        </div>
+                      </span>
+
+                      {/* SAVE */}
+                      <span
+                        onClick={() => handleSave(e)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <SAVEICON active={savedMap[e.identity]} />
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="event-meta location-text">
+                    {LOCATION_ICON}{" "}
+                    {[e.location?.venue, e.location?.country]
+                      .filter(Boolean)
+                      .join(", ")}
+                  </p>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <p className="event-meta">
+                      {DATEICON}{" "}
+                      {new Date(e.calendars?.[0]?.startDate).toDateString()}
+                    </p>
+                    <span className="view-badge">
+                      {VIEW_ICON} {e.viewCount || 0}
                     </span>
+                  </div>
 
-                    {/* SAVE */}
-                    <span
-                      onClick={() => handleSave(e)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <SAVEICON active={savedMap[e.identity]} />
+                  <div className="event-footer">
+                    <span className="badge-paid rounded-pill px-2 py-1">
+                      {e.eventType || "Conference"}
                     </span>
                   </div>
                 </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
-                <p className="event-meta">
-                  {LOCATION_ICON} {e.location?.city || "Location"}
-                </p>
+        {/* ================= PAST EVENTS ================= */}
+        <section className="mt-5">
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h3 className="event-heading">Past Events</h3>
 
-                <p className="event-meta">
-                  {DATEICON}{" "}
-                  {new Date(e.calendars?.[0]?.startDate).toDateString()}
-                </p>
+            <div className="d-flex gap-2">
+              <button className="btn btn-light rounded-circle">‹</button>
+              <button className="btn btn-light rounded-circle">›</button>
+            </div>
+          </div>
 
-                <div className="event-footer">
-                  <span className="event-price">₹{e.price || 0}</span>
+          <div className="past-grid">
+            {upcomingEvents.map((e, index) => (
+              <div key={e._id ?? `past-${index}`} className="past-card">
+                <img
+                  src={e.bannerImages?.[0] || NO_IMAGE_FOUND_IMAGE}
+                  alt={e.title}
+                />
 
-                  <span className="badge-paid rounded-pill px-2 py-1">
-                    {e.eventType || "Conference"}
+                <div className="past-overlay">
+                  <h6 className="past-title">{e.title}</h6>
+                  <span className="past-date">
+                    {new Date(e.calendars?.[0]?.startDate).toDateString()}
                   </span>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ================= PAST EVENTS ================= */}
-      <section className="mt-5">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5 className="fw-semibold">Past Events</h5>
-
-          <div className="d-flex gap-2">
-            <button className="btn btn-light rounded-circle">‹</button>
-            <button className="btn btn-light rounded-circle">›</button>
+            ))}
           </div>
-        </div>
+        </section>
 
-        <div className="past-grid">
-          {upcomingEvents.map((e, index) => (
-            <div key={e._id ?? `past-${index}`} className="past-card">
-              <img
-                src={e.bannerImages?.[0] || "/images/event.jpg"}
-                alt={e.title}
-              />
-
-              <div className="past-overlay">
-                <h6>{e.title}</h6>
-                <span style={{ fontSize: "12px" }}>
-                  {new Date(e.calendars?.[0]?.startDate).toDateString()}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+      <ConfirmModal
+        open={showLoginModal}
+        image="/images/logo.png"
+        title="Login Required"
+        description={
+          pendingAction === "like"
+            ? "You need to login to like this event."
+            : "You need to login to save this event."
+        }
+        onCancel={() => {
+          setShowLoginModal(false);
+          setPendingAction(null);
+        }}
+        onConfirm={() => {
+          setShowLoginModal(false);
+          setPendingAction(null);
+          router.push("/auth/user/login");
+        }}
+      />
+      <ShareModal
+        open={openShare}
+        onClose={() => setOpenShare(false)}
+        title={org?.organizationName || "Event"}
+      />
+    </>
   );
 }

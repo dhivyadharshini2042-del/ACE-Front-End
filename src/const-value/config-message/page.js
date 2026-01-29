@@ -385,3 +385,6 @@ export const CONDITION_OTP_RESEND = "Resend Code";
 
 export const LABEL_FULL_NAME = "Full Name";
 export const LABEL_DOMAIN_MAIL_ID = "Domain Mail ID";
+
+
+export const NO_IMAGE_FOUND_IMAGE = "/images/no-image-found.jpeg";

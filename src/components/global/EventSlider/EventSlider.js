@@ -20,6 +20,7 @@ import { likeEventApi, saveEventApi } from "../../../lib/api/event.api";
 
 /* 🔐 SESSION AUTH */
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
+import ConfirmModal from "../../ui/Modal/ConfirmModal";
 
 /* ================= HELPER ================= */
 const getLowestTicketPrice = (tickets = []) => {
@@ -45,6 +46,8 @@ export default function EventSlider({
   /* ================= AUTH (SESSION) ================= */
   const [auth, setAuth] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null); // "like" | "save"
 
   useEffect(() => {
     const ok = isUserLoggedIn();
@@ -80,9 +83,8 @@ export default function EventSlider({
   /* ================= LIKE ================= */
   const handleLike = async (event) => {
     if (!loggedIn || !auth?.identity) {
-      toast("Please login to like events", {
-        icon: "⚠️",
-      });
+      setPendingAction("like");
+      setShowLoginModal(true);
       return;
     }
 
@@ -124,9 +126,8 @@ export default function EventSlider({
   /* ================= SAVE ================= */
   const handleSave = async (event) => {
     if (!loggedIn || !auth?.identity) {
-      toast("Please login to save events", {
-        icon: "⚠️",
-      });
+      setPendingAction("save");
+      setShowLoginModal(true);
       return;
     }
 
@@ -225,117 +226,140 @@ export default function EventSlider({
 
   /* ================= UI (UNCHANGED) ================= */
   return (
-    <section className="container-fluid mt-4 px-5">
-      {/* HEADER */}
-      <div className="d-flex justify-content-between align-items-center mb-2">
-        <div>
-          <h5 className="fw-bold mb-0 land-title">{title}</h5>
-          {des && <p className="mt-2">{des}</p>}
+    <>
+      <section className="container-fluid mt-4 px-5">
+        {/* HEADER */}
+        <div className="d-flex justify-content-between align-items-center mb-2">
+          <div>
+            <h5 className="fw-bold mb-0 land-title">{title}</h5>
+            {des && <p className="mt-2">{des}</p>}
+          </div>
+          <button className="see-all-btn" onClick={handleCardClick}>
+            See all
+          </button>
         </div>
-        <button className="see-all-btn" onClick={handleCardClick}>
-          See all
-        </button>
-      </div>
 
-      <hr />
+        <hr />
 
-      {/* NAV */}
-      <div className="d-flex justify-content-end gap-4 mb-3">
-        <button className="scroll-rounded-circle" onClick={slideLeft}>
-          ❮
-        </button>
-        <button className="scroll-rounded-circle" onClick={slideRight}>
-          ❯
-        </button>
-      </div>
+        {/* NAV */}
+        <div className="d-flex justify-content-end gap-4 mb-3">
+          <button className="scroll-rounded-circle" onClick={slideLeft}>
+            ❮
+          </button>
+          <button className="scroll-rounded-circle" onClick={slideRight}>
+            ❯
+          </button>
+        </div>
 
-      {/* SLIDER */}
-      <div
-        className="d-flex gap-3 overflow-hidden"
-        ref={sliderRef}
-        style={{ scrollBehavior: "smooth" }}
-      >
-        {data.map((event) => {
-          const calendar = event.calendars?.[0];
-          const isLiked = likedCards[event.identity];
-          const isSaved = savedCards[event.identity];
-          const lowestPrice = getLowestTicketPrice(event.tickets);
+        {/* SLIDER */}
+        <div
+          className="d-flex gap-3 overflow-hidden"
+          ref={sliderRef}
+          style={{ scrollBehavior: "smooth" }}
+        >
+          {data.map((event) => {
+            const calendar = event.calendars?.[0];
+            const isLiked = likedCards[event.identity];
+            const isSaved = savedCards[event.identity];
+            const lowestPrice = getLowestTicketPrice(event.tickets);
 
-          return (
-            <div key={event.identity} className="card event-card">
-              <img
-                src={event.bannerImages?.[0] || "/images/event.png"}
-                className="event-img"
-                alt={event.title}
-                onClick={() => handleClick(event.slug)}
-              />
+            return (
+              <div key={event.identity} className="card event-card">
+                <img
+                  src={event.bannerImages?.[0] || "/images/event.png"}
+                  className="event-img"
+                  alt={event.title}
+                  onClick={() => handleClick(event.slug)}
+                />
 
-              <div className="card-body p-3">
-                <div className="d-flex justify-content-between align-items-start mt-2">
-                  <span className="fw-semibold card-titel">{event.title}</span>
+                <div className="card-body p-3">
+                  <div className="d-flex justify-content-between align-items-start mt-2">
+                    <span className="fw-semibold card-titel">
+                      {event.title}
+                    </span>
 
-                  {/* SAVE */}
-                  <span onClick={() => handleSave(event)}>
-                    <SAVEICON active={isSaved} />
-                  </span>
+                    {/* SAVE */}
+                    <span onClick={() => handleSave(event)}>
+                      <SAVEICON active={isSaved} />
+                    </span>
 
-                  {/* LIKE */}
-                  <div
-                    onClick={() => handleLike(event)}
-                    className="text-center"
-                  >
-                    <HEART_ICON active={isLiked} />
-                    <p>{likeCounts[event.identity] ?? 0}</p>
+                    {/* LIKE */}
+                    <div
+                      onClick={() => handleLike(event)}
+                      className="text-center"
+                    >
+                      <HEART_ICON active={isLiked} />
+                      <p>{likeCounts[event.identity] ?? 0}</p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="mt-2 event-details">
-                  <div className="d-flex justify-content-between">
-                    <span>
+                  <div className="mt-2 event-details">
+                    <div className="d-flex justify-content-between">
                       <span>
-                        {LOCATION_ICON}{" "}
-                        {event.location?.city ||
-                          event.org?.city ||
-                          (event.mode === "ONLINE" ? "Online Event" : "N/A")}
+                        <span>
+                          {LOCATION_ICON}{" "}
+                          {event.location?.city ||
+                            event.org?.city ||
+                            (event.mode === "ONLINE" ? "Online Event" : "N/A")}
+                        </span>
                       </span>
-                    </span>
 
-                    <span>
-                      {TICKET_ICON}{" "}
-                      {lowestPrice === null
-                        ? "N/A"
-                        : lowestPrice === 0
-                          ? "Free"
-                          : `₹${lowestPrice}`}
-                    </span>
+                      <span>
+                        {TICKET_ICON}{" "}
+                        {lowestPrice === null
+                          ? "N/A"
+                          : lowestPrice === 0
+                            ? "Free"
+                            : `₹${lowestPrice}`}
+                      </span>
+                    </div>
+
+                    <div className="mt-2 d-flex justify-content-between align-items-center">
+                      <span>
+                        {DATEICON} {formatDate(calendar?.startDate)}
+                      </span>
+
+                      <span className={`mode-text ${getModeClass(event.mode)}`}>
+                        <span className="mode-dot"></span>
+                        {event.mode || "ONLINE"}
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="mt-2 d-flex justify-content-between align-items-center">
-                    <span>
-                      {DATEICON} {formatDate(calendar?.startDate)}
+                  <div className="d-flex justify-content-between align-items-center mt-3">
+                    <span className="view-badge">
+                      {VIEW_ICON} {event.viewCount || 0}
                     </span>
 
-                    <span className={`mode-text ${getModeClass(event.mode)}`}>
-                      <span className="mode-dot"></span>
-                      {event.mode || "ONLINE"}
+                    <span className="badge-paid">
+                      {event.categoryName || "No category"}
                     </span>
                   </div>
-                </div>
-
-                <div className="d-flex justify-content-between align-items-center mt-3">
-                  <span className="view-badge">
-                    {VIEW_ICON} {event.viewCount || 0}
-                  </span>
-
-                  <span className="badge-paid">
-                    {event.categoryName || "No category"}
-                  </span>
                 </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
-    </section>
+            );
+          })}
+        </div>
+      </section>
+      <ConfirmModal
+        open={showLoginModal}
+        image="/images/logo.png"
+        title="Login Required"
+        description={
+          pendingAction === "like"
+            ? "You need to login to like this event."
+            : "You need to login to save this event."
+        }
+        onCancel={() => {
+          setShowLoginModal(false);
+          setPendingAction(null);
+        }}
+        onConfirm={() => {
+          setShowLoginModal(false);
+          setPendingAction(null);
+          router.push("/auth/user/login");
+        }}
+      />
+    </>
   );
 }

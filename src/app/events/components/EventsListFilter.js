@@ -15,14 +15,14 @@ import { useLoading } from "../../../context/LoadingContext";
 import { likeEventApi, saveEventApi } from "../../../lib/api/event.api";
 
 // 🔐 SESSION AUTH
-import {
-  getAuthFromSession,
-  isUserLoggedIn,
-} from "../../../lib/auth";
+import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
+import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
 
 export default function EventsListFilter({ events = [] }) {
   const router = useRouter();
   const { setLoading } = useLoading();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null); // "like" | "save"
 
   /* ================= AUTH (SESSION) ================= */
   const [auth, setAuth] = useState(null);
@@ -62,7 +62,8 @@ export default function EventsListFilter({ events = [] }) {
   /* ================= LIKE HANDLER ================= */
   const handleLike = async (e) => {
     if (!loggedIn || !auth?.identity) {
-      toast("Please login to like events", { icon: "⚠️" });
+      setPendingAction("like");
+      setShowLoginModal(true);
       return;
     }
 
@@ -77,9 +78,7 @@ export default function EventsListFilter({ events = [] }) {
 
     setLikeCounts((prev) => ({
       ...prev,
-      [eventId]: wasLiked
-        ? (prev[eventId] || 1) - 1
-        : (prev[eventId] || 0) + 1,
+      [eventId]: wasLiked ? (prev[eventId] || 1) - 1 : (prev[eventId] || 0) + 1,
     }));
 
     const res = await likeEventApi({
@@ -106,7 +105,8 @@ export default function EventsListFilter({ events = [] }) {
   /* ================= SAVE HANDLER ================= */
   const handleSave = async (e) => {
     if (!loggedIn || !auth?.identity) {
-      toast("Please login to save events", { icon: "⚠️" });
+      setPendingAction("save");
+      setShowLoginModal(true);
       return;
     }
 
@@ -121,7 +121,7 @@ export default function EventsListFilter({ events = [] }) {
 
     const res = await saveEventApi({
       eventIdentity: eventId,
-       userIdentity: auth?.identity,
+      userIdentity: auth?.identity,
     });
 
     if (!res?.status) {
@@ -154,79 +154,100 @@ export default function EventsListFilter({ events = [] }) {
 
   /* ================= UI (UNCHANGED) ================= */
   return (
-    <div className="events-list">
-      {events.map((e) => {
-        const startDate = e.calendars?.[0]?.startDate || e.createdAt;
+    <>
+      <div className="events-list">
+        {events.map((e) => {
+          const startDate = e.calendars?.[0]?.startDate || e.createdAt;
 
-        return (
-          <div key={e.identity} className="event-row-card floating-card">
-            {/* IMAGE */}
-            <div
-              className="floating-image"
-              onClick={() => handleClick(e.slug)}
-            >
-              <img
-                src={e.bannerImages?.[0] || "/images/no-image.png"}
-                alt={e.title}
-              />
-            </div>
+          return (
+            <div key={e.identity} className="event-row-card floating-card">
+              {/* IMAGE */}
+              <div
+                className="floating-image"
+                onClick={() => handleClick(e.slug)}
+              >
+                <img
+                  src={e.bannerImages?.[0] || "/images/no-image.png"}
+                  alt={e.title}
+                />
+              </div>
 
-            {/* CONTENT */}
-            <div className="event-content">
-              <div className="event-title-row">
-                <h6 className="event-title">{e.title}</h6>
+              {/* CONTENT */}
+              <div className="event-content">
+                <div className="event-title-row">
+                  <h6 className="event-title">{e.title}</h6>
 
-                <div className="d-flex gap-3 like-save-section">
-                  {/* LIKE */}
-                  <span
-                    onClick={() => handleLike(e)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <div className="text-center">
-                      <HEART_ICON active={likedCards[e.identity]} />
-                      <div>{likeCounts[e.identity] ?? 0}</div>
-                    </div>
+                  <div className="d-flex gap-3 like-save-section">
+                    {/* LIKE */}
+                    <span
+                      onClick={() => handleLike(e)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <div className="text-center">
+                        <HEART_ICON active={likedCards[e.identity]} />
+                        <div>{likeCounts[e.identity] ?? 0}</div>
+                      </div>
+                    </span>
+
+                    {/* SAVE */}
+                    <span
+                      onClick={() => handleSave(e)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <SAVEICON active={savedCards[e.identity]} />
+                    </span>
+                  </div>
+                </div>
+
+                <span className="tag networking">
+                  {e.categoryName || "Networking"}
+                </span>
+
+                <div className="event-meta-sub">
+                  <span>
+                    {DATEICON}{" "}
+                    {new Date(startDate).toLocaleDateString("en-IN", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </span>
+                </div>
+
+                <div className="event-meta">
+                  <span>
+                    {LOCATION_ICON} {e.location?.city || "N/A"}
                   </span>
 
-                  {/* SAVE */}
-                  <span
-                    onClick={() => handleSave(e)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <SAVEICON active={savedCards[e.identity]} />
+                  <span className={`mode-text ${e.mode?.toLowerCase()}`}>
+                    <span className="mode-dot" />
+                    {e.mode || "Offline"}
                   </span>
                 </div>
               </div>
-
-              <span className="tag networking">
-                {e.categoryName || "Networking"}
-              </span>
-
-              <div className="event-meta-sub">
-                <span>
-                  {DATEICON}{" "}
-                  {new Date(startDate).toLocaleDateString("en-IN", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </span>
-              </div>
-
-              <div className="event-meta">
-                <span>
-                  {LOCATION_ICON} {e.location?.city || "N/A"}
-                </span>
-
-                <span className={`mode-text ${e.mode?.toLowerCase()}`}>
-                  <span className="mode-dot" />
-                  {e.mode || "Offline"}
-                </span>
-              </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+      <ConfirmModal
+        open={showLoginModal}
+        image="/images/logo.png"
+        title="Login Required"
+        description={
+          pendingAction === "like"
+            ? "You need to login to like this event."
+            : "You need to login to save this event."
+        }
+        onCancel={() => {
+          setShowLoginModal(false);
+          setPendingAction(null);
+        }}
+        onConfirm={() => {
+          setShowLoginModal(false);
+          setPendingAction(null);
+          router.push("/auth/user/login");
+        }}
+      />
+    </>
   );
 }
