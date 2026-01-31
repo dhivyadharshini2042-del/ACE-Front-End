@@ -21,6 +21,7 @@ import { likeEventApi, saveEventApi } from "../../../lib/api/event.api";
 /* 🔐 SESSION AUTH */
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import ConfirmModal from "../../ui/Modal/ConfirmModal";
+import { NO_IMAGE_FOUND_IMAGE } from "../../../const-value/config-message/page";
 
 /* ================= HELPER ================= */
 const getLowestTicketPrice = (tickets = []) => {
@@ -266,7 +267,7 @@ export default function EventSlider({
             return (
               <div key={event.identity} className="card event-card">
                 <img
-                  src={event.bannerImages?.[0] || "/images/event.png"}
+                  src={event.bannerImages?.[0] || NO_IMAGE_FOUND_IMAGE}
                   className="event-img"
                   alt={event.title}
                   onClick={() => handleClick(event.slug)}

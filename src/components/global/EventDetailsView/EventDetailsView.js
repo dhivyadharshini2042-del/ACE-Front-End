@@ -39,10 +39,6 @@ export default function EventDetailsView({ event = {}, onBack }) {
     mins: "00",
     secs: "00",
   });
-  const images =
-    event?.bannerImages?.length > 0
-      ? event?.bannerImages
-      : NO_IMAGE_FOUND_IMAGE;
 
   const MAX_LENGTH = 120;
   const description = event?.description || "";
@@ -52,7 +48,7 @@ export default function EventDetailsView({ event = {}, onBack }) {
 
   const calendar = event?.calendars?.[0];
   const location = event?.location;
-  const [bannerImages, setBannerImages] = useState(images);
+
   const [selectedTicket, setSelectedTicket] = useState(null);
   // ================= LIKE STATE =================
   const [isLiked, setIsLiked] = useState(false);
@@ -63,6 +59,66 @@ export default function EventDetailsView({ event = {}, onBack }) {
       setAuth(getAuthFromSession());
     }
   }, []);
+
+  const images =
+    Array.isArray(event?.bannerImages) && event.bannerImages.length > 0
+      ? event.bannerImages
+      : [NO_IMAGE_FOUND_IMAGE];
+
+  useEffect(() => {
+    // calendar data illa na stop
+    if (!calendar?.startDate || !calendar?.startTime) return;
+
+    const interval = setInterval(() => {
+      // 1️⃣ Event start date + time
+      const eventDateTime = new Date(
+        `${calendar.startDate} ${calendar.startTime}`,
+      );
+
+      // 2️⃣ Current time
+      const now = new Date();
+
+      // 3️⃣ Difference (milliseconds)
+      const diff = eventDateTime - now;
+
+      // 4️⃣ Event start aagidicha?
+      if (diff <= 0) {
+        clearInterval(interval);
+        setCountdown({
+          days: "00",
+          hours: "00",
+          mins: "00",
+          secs: "00",
+        });
+        return;
+      }
+
+      // 5️⃣ Days calculate
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+      // 6️⃣ Hours calculate
+      const hours = Math.floor(
+        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+      );
+
+      // 7️⃣ Minutes calculate
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+      // 8️⃣ Seconds calculate
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+      // 9️⃣ UI update
+      setCountdown({
+        days: String(days).padStart(2, "0"),
+        hours: String(hours).padStart(2, "0"),
+        mins: String(mins).padStart(2, "0"),
+        secs: String(secs).padStart(2, "0"),
+      });
+    }, 1000);
+
+    // 10️⃣ Cleanup
+    return () => clearInterval(interval);
+  }, [calendar]);
 
   const [ticketForm, setTicketForm] = useState({
     name: "",
@@ -104,11 +160,23 @@ export default function EventDetailsView({ event = {}, onBack }) {
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setCurrentIndex((prev) => {
+      if (prev === 0) {
+        return images.length - 1;
+      } else {
+        return prev - 1;
+      }
+    });
   };
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) => {
+      if (prev === images.length - 1) {
+        return 0;
+      } else {
+        return prev + 1;
+      }
+    });
   };
 
   const goToSlide = (index) => {
@@ -138,8 +206,6 @@ export default function EventDetailsView({ event = {}, onBack }) {
         amount: selectedTicket.price || "",
         total: selectedTicket.total || "1000",
       });
-
-      setTicketType(selectedTicket.isPaid ? "PAID" : "FREE");
     }
   }, [selectedTicket]);
 
@@ -156,6 +222,8 @@ export default function EventDetailsView({ event = {}, onBack }) {
   useEffect(() => {
     setLoading(false);
   }, []);
+
+  console.log("dddddddddd", event);
 
   return (
     <>
@@ -182,35 +250,35 @@ export default function EventDetailsView({ event = {}, onBack }) {
           />
 
           {/* CLEAR CENTER IMAGE */}
-          <img
-            className="event-img"
-            alt="event"
-            src={bannerImages[currentIndex]}
-          />
+          <img className="event-img" src={images[currentIndex]} alt="event" />
           <span className="badge-upcoming">
             {event?.status || "Upcoming Event"}
           </span>
           {/* SLIDER CONTROLS – BELOW IMAGE */}
         </div>
-        <span onClick={prevSlide} className="arrow-side">
-          {LEFTSIDEARROW_ICON}
-        </span>
-        {images.length > 1 && (
-          <div className="slider-controls">
-            <div className="slider-dots">
-              {images.map((_, index) => (
-                <span
-                  key={index}
-                  className={index === currentIndex ? "active" : ""}
-                  onClick={() => goToSlide(index)}
-                />
-              ))}
-            </div>
 
-            <span onClick={nextSlide} className="arrow-side">
-              {RIGHTSIDEARROW_ICON}
+        {images.length > 1 && (
+          <>
+            <span onClick={prevSlide} className="arrow-side">
+              {LEFTSIDEARROW_ICON}
             </span>
-          </div>
+
+            <div className="slider-controls">
+              <div className="slider-dots">
+                {images.map((_, index) => (
+                  <span
+                    key={index}
+                    className={index === currentIndex ? "active" : ""}
+                    onClick={() => goToSlide(index)}
+                  />
+                ))}
+              </div>
+
+              <span onClick={nextSlide} className="arrow-side">
+                {RIGHTSIDEARROW_ICON}
+              </span>
+            </div>
+          </>
         )}
 
         {/* ================= 2. TITLE + REGISTER ================= */}
@@ -338,7 +406,7 @@ export default function EventDetailsView({ event = {}, onBack }) {
               <h4 className="section-title mb-4">Ticket Availability</h4>
 
               <div className="row g-4">
-                {(event?.tickets && event?.tickets?.length) || 0 > 0 ? (
+                {event?.tickets && event.tickets.length > 0 ? (
                   event.tickets.map((ticket) => {
                     const now = new Date();
                     const startDate = new Date(ticket.sellingFrom);
