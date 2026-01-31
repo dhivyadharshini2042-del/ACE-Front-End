@@ -4,16 +4,22 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import DeleteConfirmModal from "../../../../components/ui/DeleteConfirmModal/DeleteConfirmModal";
 import EmptyState from "../../../../components/global/EmptyState/EmptyState";
+import PaginationBar from "../../../events/components/PaginationBar";
 import "./MyEvents.css";
+
 import {
   DATEICON,
   LOCATION_ICON,
   TIMEICON,
 } from "../../../../const-value/config-icons/page";
+import { NO_IMAGE_FOUND_IMAGE } from "../../../../const-value/config-message/page";
+
+const PAGE_SIZE = 12; // number of cards per page
 
 export default function MyEventsGrid({ events = [], loading }) {
   const [deleteId, setDeleteId] = useState(null);
   const [openMenuId, setOpenMenuId] = useState(null);
+  const [page, setPage] = useState(1);
   const router = useRouter();
 
   const handleClick = (event) => {
@@ -34,11 +40,19 @@ export default function MyEventsGrid({ events = [], loading }) {
     );
   }
 
+  /* ================= PAGINATION LOGIC ================= */
+  const totalPages = Math.ceil(events.length / PAGE_SIZE);
+  const startIndex = (page - 1) * PAGE_SIZE;
+  const paginatedEvents = events.slice(
+    startIndex,
+    startIndex + PAGE_SIZE
+  );
+
   return (
     <>
-      {/* ✅ CSS GRID */}
+      {/* EVENTS GRID */}
       <div className="events-grid">
-        {events.map((e) => {
+        {paginatedEvents.map((e) => {
           const calendar = e.calendars?.[0];
           const location = e.location;
 
@@ -51,7 +65,7 @@ export default function MyEventsGrid({ events = [], loading }) {
               {/* IMAGE */}
               <div className="event-img-wrapper">
                 <img
-                  src={e.bannerImages?.[0] || "/images/event.png"}
+                  src={e.bannerImages?.[0] || NO_IMAGE_FOUND_IMAGE}
                   alt={e.title}
                 />
                 <div className={`event-status ${e.status?.toLowerCase()}`}>
@@ -141,6 +155,15 @@ export default function MyEventsGrid({ events = [], loading }) {
           );
         })}
       </div>
+
+      {/* PAGINATION */}
+      {totalPages > 1 && (
+        <PaginationBar
+          page={page}
+          total={totalPages}
+          onChange={setPage}
+        />
+      )}
 
       <DeleteConfirmModal
         open={!!deleteId}

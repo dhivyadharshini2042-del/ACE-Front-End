@@ -17,6 +17,7 @@ import { likeEventApi, saveEventApi } from "../../../lib/api/event.api";
 // 🔐 SESSION AUTH
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
+import { NO_IMAGE_FOUND_IMAGE } from "../../../const-value/config-message/page";
 
 export default function EventsListFilter({ events = [] }) {
   const router = useRouter();
@@ -167,7 +168,7 @@ export default function EventsListFilter({ events = [] }) {
                 onClick={() => handleClick(e.slug)}
               >
                 <img
-                  src={e.bannerImages?.[0] || "/images/no-image.png"}
+                  src={e.bannerImages?.[0] || NO_IMAGE_FOUND_IMAGE}
                   alt={e.title}
                 />
               </div>
@@ -198,10 +199,12 @@ export default function EventsListFilter({ events = [] }) {
                     </span>
                   </div>
                 </div>
-
-                <span className="tag networking">
-                  {e.categoryName || "Networking"}
-                </span>
+                <div className="d-flex gap-4">
+                  <span className="tag networking">
+                    {e.categoryName || "Networking"}
+                  </span>
+                  <span className="tag mode">{e.mode || "Offline"}</span>
+                </div>
 
                 <div className="event-meta-sub">
                   <span>
@@ -214,15 +217,8 @@ export default function EventsListFilter({ events = [] }) {
                   </span>
                 </div>
 
-                <div className="event-meta">
-                  <span>
-                    {LOCATION_ICON} {e.location?.city || "N/A"}
-                  </span>
-
-                  <span className={`mode-text ${e.mode?.toLowerCase()}`}>
-                    <span className="mode-dot" />
-                    {e.mode || "Offline"}
-                  </span>
+                <div className="event-meta mt-2">
+                  <span>500 OnWards</span>
                 </div>
               </div>
             </div>

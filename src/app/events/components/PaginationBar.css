@@ -1,0 +1,105 @@
+/* Wrapper */
+.pagination-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 12px;
+  margin: 24px 0;
+  flex-wrap: wrap;
+  padding-top: 25px;
+}
+
+/* Prev / Next buttons */
+.pg-btn {
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pg-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.pg-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Pages wrapper */
+.pg-pages {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Page button */
+.pg-page {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  color: #374151; /* normal text */
+  transition: all 0.2s ease;
+}
+
+/* Hover (only for non-active) */
+.pg-page:hover:not(.active) {
+  background: #f3f4f6;
+}
+
+/* Active page */
+.pg-page.active {
+  background: #6E6CDF29;   /* blue */
+  color: #ffffff;        /* white text */
+  border: 2px solid #0d09f629;
+  font-weight: 600;
+  cursor: default;
+}
+.pg-dots {
+  padding: 0 6px;
+  font-size: 16px;
+  color: #9ca3af;
+  user-select: none;
+}
+/* --------------------
+   Responsive (Mobile)
+-------------------- */
+@media (max-width: 640px) {
+  .pagination-wrap {
+    gap: 8px;
+  }
+
+  .pg-btn {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  .pg-page {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+}
+
+/* --------------------
+   Extra small screens
+-------------------- */
+@media (max-width: 420px) {
+  .pg-pages {
+    max-width: 220px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .pg-pages::-webkit-scrollbar {
+    display: none;
+  }
+}

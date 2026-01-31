@@ -201,7 +201,15 @@
 /* ================= TAG ================= */
 .tag.networking {
   display: inline-block;
-  background: #e6f7fb;
+  background: #E9D4FF;
+  border-radius: 999px;
+  padding: 8px 19px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.tag.mode {
+  display: inline-block;
+  background: #FDF2C9;
   border-radius: 999px;
   padding: 8px 19px;
   font-size: 13px;

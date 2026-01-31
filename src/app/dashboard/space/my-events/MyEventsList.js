@@ -1,17 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import DeleteConfirmModal from "../../../../components/ui/DeleteConfirmModal/DeleteConfirmModal";
 import EmptyState from "../../../../components/global/EmptyState/EmptyState";
+import PaginationBar from "../../../events/components/PaginationBar";
+
 import {
   DATEICON,
   LOCATION_ICON,
   TIMEICON,
 } from "../../../../const-value/config-icons/page";
-import { useRouter } from "next/navigation";
+
+const PAGE_SIZE = 5; // list view – nice readable count
 
 export default function MyEventsList({ events = [], loading }) {
   const [deleteId, setDeleteId] = useState(null);
+  const [page, setPage] = useState(1);
   const router = useRouter();
 
   if (loading) {
@@ -28,6 +33,14 @@ export default function MyEventsList({ events = [], loading }) {
     );
   }
 
+  /* ================= PAGINATION LOGIC ================= */
+  const totalPages = Math.ceil(events.length / PAGE_SIZE);
+  const startIndex = (page - 1) * PAGE_SIZE;
+  const paginatedEvents = events.slice(
+    startIndex,
+    startIndex + PAGE_SIZE
+  );
+
   const handleClick = (event) => {
     router.push(`/dashboard/space/dashboard-chart/${event.slug}`);
   };
@@ -40,7 +53,7 @@ export default function MyEventsList({ events = [], loading }) {
   return (
     <>
       <div className="list-group list-group-flush p-5">
-        {events.map((e) => {
+        {paginatedEvents.map((e) => {
           const createdDate = new Date(e.createdAt);
 
           const date = createdDate.toLocaleDateString("en-IN", {
@@ -95,7 +108,8 @@ export default function MyEventsList({ events = [], loading }) {
                     >
                       {e.title || "Untitled Event"}
                     </h6>
-                    <div className="event-meta d-flex justify-content-between mt-3">
+
+                    <div className="event-meta d-flex gap-4 mt-3">
                       <div className="text-muted">
                         {DATEICON} {date}
                       </div>
@@ -110,10 +124,9 @@ export default function MyEventsList({ events = [], loading }) {
                     >
                       {e.status}
                     </div>
-                    <div>
-                      <div className="text-muted mt-1">
-                        {LOCATION_ICON} {location || "Location not set"}
-                      </div>
+
+                    <div className="text-muted mt-1">
+                      {LOCATION_ICON} {location || "Location not set"}
                     </div>
                   </div>
                 </div>
@@ -121,7 +134,10 @@ export default function MyEventsList({ events = [], loading }) {
                 {/* ACTION */}
                 <button
                   className="btn btn-outline-danger btn-sm"
-                  onClick={() => setDeleteId(e.id)}
+                  onClick={(ev) => {
+                    ev.stopPropagation();
+                    setDeleteId(e.id);
+                  }}
                 >
                   Delete
                 </button>
@@ -130,6 +146,15 @@ export default function MyEventsList({ events = [], loading }) {
           );
         })}
       </div>
+
+      {/* ✅ PAGINATION */}
+      {totalPages > 1 && (
+        <PaginationBar
+          page={page}
+          total={totalPages}
+          onChange={setPage}
+        />
+      )}
 
       <DeleteConfirmModal
         open={!!deleteId}
