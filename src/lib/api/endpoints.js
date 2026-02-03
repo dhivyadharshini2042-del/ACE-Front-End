@@ -62,5 +62,6 @@ export const API_ENDPOINTS = {
     CERTIFICATIONS: "/v1/master/certifications",
     PERKS: "/v1/master/perks",
     ELIGIBLE_DEPARTMENTS: "/v1/master/eligible-departments",
+    DEPARTMENTS: "/v1/master/departments",
   },
 };

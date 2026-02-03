@@ -11,15 +11,18 @@ export default function OrganizerDetails({
   onNext,
 }) {
   const [orgCategories, setOrgCategories] = useState([]);
+
   const organizations = data.organizations || [
     {
       hostBy: "",
       orgName: "",
       location: "",
-      organizerName: "",
-      organizerNumber: "",
       department: "",
     },
+  ];
+
+  const contacts = data.contacts || [
+    { name: "", number: "", email: "" },
   ];
 
   /* ================= FETCH ORG CATEGORIES ================= */
@@ -27,7 +30,6 @@ export default function OrganizerDetails({
     async function loadCategories() {
       try {
         const res = await getOrgCategoriesApi();
-        console.log("check cat",res)
         if (res?.status) {
           setOrgCategories(res.data);
         }
@@ -35,32 +37,25 @@ export default function OrganizerDetails({
         console.error("Org category fetch failed", err);
       }
     }
-
     loadCategories();
   }, []);
 
+  /* ================= ORGANIZATION ================= */
   const addOrganization = () => {
-    if (organizations.length >= 3) {
-      console.warn("Maximum 3 collaborators allowed");
-      console.log("CURRENT COLLABORATORS →", organizations);
-      return;
-    }
+    if (organizations.length >= 3) return;
 
-    const updated = [
-      ...organizations,
-      {
-        hostBy: "",
-        orgName: "",
-        location: "",
-        organizerName: "",
-        organizerNumber: "",
-        department: "",
-      },
-    ];
-
-    console.log("AFTER ADD COLLABORATOR →", updated);
-
-    setData({ ...data, organizations: updated });
+    setData({
+      ...data,
+      organizations: [
+        ...organizations,
+        {
+          hostBy: "",
+          orgName: "",
+          location: "",
+          department: "",
+        },
+      ],
+    });
   };
 
   const updateOrg = (index, key, value) => {
@@ -71,32 +66,48 @@ export default function OrganizerDetails({
       updated[index].department = "";
     }
 
-    console.log("UPDATED ORGANIZATIONS →", updated);
-
     setData({ ...data, organizations: updated });
   };
 
   const deleteOrganization = (index) => {
-    const updated = organizations.filter((_, i) => i !== index);
-
-    console.log("AFTER DELETE →", updated);
-
-    setData({ ...data, organizations: updated });
+    setData({
+      ...data,
+      organizations: organizations.filter((_, i) => i !== index),
+    });
   };
 
   const showDepartment = (hostBy) => {
-    const selectedCategory = orgCategories.find((c) => c.identity === hostBy);
-
-    if (!selectedCategory) return false;
-
-    const name = selectedCategory.categoryName;
+    const selected = orgCategories.find((c) => c.identity === hostBy);
+    if (!selected) return false;
 
     return (
-      name === "College / University" ||
-      name === "Training & Coaching Institute"
+      selected.categoryName === "College / University" ||
+      selected.categoryName === "Training & Coaching Institute"
     );
   };
 
+  /* ================= CONTACT ================= */
+  const addContact = () => {
+    setData({
+      ...data,
+      contacts: [...contacts, { name: "", number: "", email: "" }],
+    });
+  };
+
+  const updateContact = (index, key, value) => {
+    const updated = [...contacts];
+    updated[index][key] = value;
+    setData({ ...data, contacts: updated });
+  };
+
+  const deleteContact = (index) => {
+    setData({
+      ...data,
+      contacts: contacts.filter((_, i) => i !== index),
+    });
+  };
+
+  /* ================= RESET ================= */
   useEffect(() => {
     if (!resetSignal) return;
 
@@ -106,17 +117,16 @@ export default function OrganizerDetails({
           hostBy: "",
           orgName: "",
           location: "",
-          organizerName: "",
-          organizerNumber: "",
           department: "",
         },
       ],
+      contacts: [{ name: "", number: "", email: "" }],
     });
   }, [resetSignal]);
 
-
   return (
     <>
+      {/* ================= ORGANIZATION ================= */}
       <div className={styles.card}>
         <h3 className={styles.cardTitle}>Hosting Information</h3>
 
@@ -124,7 +134,6 @@ export default function OrganizerDetails({
           <div key={index} className={styles.orgBlock}>
             <div className={styles.orgHeader}>
               <span>Organization {index + 1}</span>
-
               {index !== 0 && (
                 <button
                   className={styles.deleteBtn}
@@ -136,20 +145,18 @@ export default function OrganizerDetails({
             </div>
 
             <div className={styles.field}>
-              <label>
-                Event Host By <span>*</span>
-              </label>
-
+              <label>Event Host By <span>*</span></label>
               <select
                 className={styles.input}
                 value={org.hostBy}
-                onChange={(e) => updateOrg(index, "hostBy", e.target.value)}
+                onChange={(e) =>
+                  updateOrg(index, "hostBy", e.target.value)
+                }
               >
                 <option value="">Select Category</option>
-
-                {orgCategories.map((category) => (
-                  <option key={category.identity} value={category.identity}>
-                    {category.categoryName}
+                {orgCategories.map((cat) => (
+                  <option key={cat.identity} value={cat.identity}>
+                    {cat.categoryName}
                   </option>
                 ))}
               </select>
@@ -157,72 +164,31 @@ export default function OrganizerDetails({
 
             <div className={styles.grid2}>
               <div className={styles.field}>
-                <label>
-                  Organization Name <span>*</span>
-                </label>
+                <label>Organization Name <span>*</span></label>
                 <input
                   className={styles.input}
                   value={org.orgName}
-                  onChange={(e) => updateOrg(index, "orgName", e.target.value)}
-                  placeholder="Enter organization name"
-                />
-              </div>
-
-              <div className={styles.field}>
-                <label>
-                  Location <span>*</span>
-                </label>
-                <input
-                  className={styles.input}
-                  value={org.location}
-                  onChange={(e) => updateOrg(index, "location", e.target.value)}
-                  placeholder="Enter a location "
-                />
-              </div>
-
-              <div className={styles.field}>
-                <label>
-                  Organizer Name <span>*</span>
-                </label>
-                <input
-                  className={styles.input}
-                  value={org.organizerName}
-                  placeholder="Enter organizer name"
                   onChange={(e) =>
-                    updateOrg(index, "organizerName", e.target.value)
+                    updateOrg(index, "orgName", e.target.value)
                   }
                 />
               </div>
 
               <div className={styles.field}>
-                <label>
-                  Organizer Number <span>*</span>
-                </label>
+                <label>Location <span>*</span></label>
                 <input
-                  type="text"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  maxLength={10}
                   className={styles.input}
-                  value={org.organizerNumber}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, "");
-
-                    if (value.length <= 10) {
-                      updateOrg(index, "organizerNumber", value);
-                    }
-                  }}
-                  placeholder="(000-000-0000)"
+                  value={org.location}
+                  onChange={(e) =>
+                    updateOrg(index, "location", e.target.value)
+                  }
                 />
               </div>
             </div>
 
             {showDepartment(org.hostBy) && (
               <div className={styles.field}>
-                <label>
-                  Department <span>*</span>
-                </label>
-
+                <label>Department <span>*</span></label>
                 <select
                   className={styles.input}
                   value={org.department}
@@ -234,12 +200,6 @@ export default function OrganizerDetails({
                   <option value="CSE">CSE</option>
                   <option value="ECE">ECE</option>
                   <option value="IT">IT</option>
-                  <option value="Computer Science">Computer Science</option>
-                  <option value="School of Management">
-                    School of Management
-                  </option>
-                  <option value="Science">Science</option>
-                  <option value="Economics">Economics</option>
                 </select>
               </div>
             )}
@@ -253,17 +213,76 @@ export default function OrganizerDetails({
         </div>
       </div>
 
+      {/* ================= CONTACT DETAILS ================= */}
+      <div className={styles.card}>
+        <h3 className={styles.cardTitle}>Contact Details</h3>
+
+        {contacts.map((contact, index) => (
+          <div key={index} className={styles.orgBlock}>
+            <div className={styles.orgHeader}>
+              <span>Contact {index + 1}</span>
+              {index !== 0 && (
+                <button
+                  className={styles.deleteBtn}
+                  onClick={() => deleteContact(index)}
+                >
+                  Delete
+                </button>
+              )}
+            </div>
+
+            <div className={styles.grid2}>
+              <div className={styles.field}>
+                <label>Name <span>*</span></label>
+                <input
+                  className={styles.input}
+                  value={contact.name}
+                  onChange={(e) =>
+                    updateContact(index, "name", e.target.value)
+                  }
+                />
+              </div>
+
+              <div className={styles.field}>
+                <label>Phone Number <span>*</span></label>
+                <input
+                  className={styles.input}
+                  maxLength={10}
+                  value={contact.number}
+                  onChange={(e) =>
+                    updateContact(
+                      index,
+                      "number",
+                      e.target.value.replace(/\D/g, "")
+                    )
+                  }
+                />
+              </div>
+            </div>
+
+            <div className={styles.field}>
+              <label>Email <span>*</span></label>
+              <input
+                type="email"
+                className={styles.input}
+                value={contact.email}
+                onChange={(e) =>
+                  updateContact(index, "email", e.target.value)
+                }
+              />
+            </div>
+          </div>
+        ))}
+
+        <div className={styles.addWrap}>
+          <button className={styles.addBtn} onClick={addContact}>
+            + Add Contact
+          </button>
+        </div>
+      </div>
+
       <div className={styles.actionEnd}>
-        <button
-          className={styles.nextBtn}
-          onClick={() => {
-            console.log(
-              "FINAL COLLABORATORS BEFORE NEXT →",
-              data.organizations
-            );
-            onNext();
-          }}
-        >
+        <button className={styles.nextBtn} onClick={onNext}>
           Next
         </button>
       </div>
