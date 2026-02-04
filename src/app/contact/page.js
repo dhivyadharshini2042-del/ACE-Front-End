@@ -7,7 +7,7 @@ export default function ContactPage() {
   return (
     <>
     <section className={styles.container}>
-      {/* HEADER */}
+      {/* HEAD */}
       <div className={styles.header}>
         <h1>
           We’re Here for <span>You</span>
