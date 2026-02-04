@@ -29,7 +29,7 @@ export default function OrganizersCarousel({ data = [] }) {
           <h2 className={styles.title}>Our Top Organizers</h2>
           <p className={styles.sub}>
             Find the Organizations you're looking for quickly.
-            <span className={styles.more}> You can see more.</span>
+            <span className={styles.more} onClick={handleLeaderboardClick}> You can see more.</span>
           </p>
         </div>
 

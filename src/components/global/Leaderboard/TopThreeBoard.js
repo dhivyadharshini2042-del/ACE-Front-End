@@ -1,84 +1,39 @@
 "use client";
 
 import styles from "./TopThreeBoard.module.css";
+import { useRouter } from "next/navigation";
 
-export default function TopThreeBoard({ data = [] }) {
-  if (!Array.isArray(data) || data.length === 0) return null;
-
-  const sorted = [...data].sort((a, b) => a.rank - b.rank);
-
-  const first = sorted.find((o) => o.rank === 1);
-  const second = sorted.find((o) => o.rank === 2);
-  const third = sorted.find((o) => o.rank === 3);
-
-  const getEventsCount = (org) => org?.eventCount ?? org?._count?.events ?? 0;
-
-  const Avatar = ({ org }) => {
-    if (org?.profileImage) {
-      return (
-        <img
-          src={org.profileImage}
-          alt={org.organizationName}
-          className={styles.avatarImg}
-        />
-      );
-    }
-
-    return (
-      <div className={styles.avatarFallbackSection}>
-        <div className={styles.avatarFallback}>
-          {org?.organizationName?.charAt(0).toUpperCase()}
-        </div>
-      </div>
-    );
-  };
-
+export default function TopThreeBoard() {
+  const router = useRouter();
   return (
     <section className={styles.wrapper}>
-      {/* 🥈 SECOND */}
-      {second && (
-        <div className={`${styles.card} ${styles.second}`}>
-          <Avatar org={second} />
-          <h4 className="text-uppercase">{second.organizationName}</h4>
-          <div className={styles.stars}>★★★★★</div>
-          <p>
-            Events created <b>{getEventsCount(second)}</b>
-          </p>
-          <p>
-            Rank <b>#{second.rank}</b>
-          </p>
-        </div>
-      )}
+      <div className={styles.ticket}>
+        {/* LEFT SIDE */}
+        <div className={styles.left}>
+          <h3>
+            Get Started <span>✨</span>
+          </h3>
 
-      {/* 🥇 FIRST */}
-      {first && (
-        <div className={`${styles.card} ${styles.first}`}>
-          <Avatar org={first} />
-          <h4 className="text-uppercase">{first.organizationName}</h4>
-          <div className={styles.stars}>★★★★★</div>
           <p>
-            Events created <b>{getEventsCount(first)}</b>
+            Join All College Event for free and experience the easiest way to
+            explore, create, and manage events with your peers. Build meaningful
+            connections, host exciting programs, and make your college community
+            more active and engaged — all in one place.
           </p>
-          <p>
-            Rank <b>#{first.rank}</b>
-          </p>
-        </div>
-      )}
 
-      {/* 🥉 THIRD */}
-      {third && (
-        <div className={`${styles.card} ${styles.third}`}>
-          <Avatar org={third} />
-          <h4 className="text-uppercase">{third.organizationName}</h4>
-          <div className={styles.stars}>★★★★★</div>
-          <p>
-            Events created <b>{getEventsCount(third)}</b>
-          </p>
-          <p>
-            Rank <b>#{third.rank}</b>
-          </p>
+          <button
+            className={styles.cta}
+            onClick={() => router.push("/auth/organization/login")}
+          >
+            Become an Organizer
+          </button>
         </div>
-      )}
+
+        {/* RIGHT SIDE */}
+        <div className={styles.right}>
+          <img src="/images/getstarted.png" alt="Get Started" />
+        </div>
+      </div>
     </section>
   );
 }

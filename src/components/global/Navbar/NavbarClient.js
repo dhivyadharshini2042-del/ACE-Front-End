@@ -2,190 +2,121 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
-import { getUserProfileApi } from "../../../lib/api/user.api";
-import { getOrganizationProfileApi } from "../../../lib/api/organizer.api";
-import { usePathname, useSearchParams } from "next/navigation";
-
-// 🔐 SESSION AUTH (NO REDUX)
-import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
-
-import "./Navbar.css";
 import {
-  EXPLORE_ICON,
-  LOCATION_ICON,
-} from "../../../const-value/config-icons/page";
+  Navbar,
+  Nav,
+  Container,
+  Button,
+  Form,
+  Dropdown,
+} from "react-bootstrap";
 
-export default function Navbar() {
+import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
+import "./Navbar.css";
+
+export default function NavbarClient() {
   const router = useRouter();
 
-  /* ================= SESSION AUTH STATE ================= */
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [auth, setAuth] = useState(null);
-
-  const [mounted, setMounted] = useState(false);
   const [initial, setInitial] = useState("U");
-  const [profileImage, setProfileImage] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
 
-  const hideNavbarSearch =
-    pathname === "/events" && searchParams.get("focusSearch") === "1";
-
-  /* ================= INITIAL MOUNT ================= */
   useEffect(() => {
-    setMounted(true);
+    const logged = isUserLoggedIn();
+    setIsLoggedIn(logged);
 
-    const loggedIn = isUserLoggedIn();
-    setIsLoggedIn(loggedIn);
-
-    if (loggedIn) {
-      const sessionAuth = getAuthFromSession();
-      setAuth(sessionAuth);
-
-      if (sessionAuth?.email) {
-        setInitial(sessionAuth.email.charAt(0).toUpperCase());
+    if (logged) {
+      const session = getAuthFromSession();
+      if (session?.email) {
+        setInitial(session.email[0].toUpperCase());
       }
     }
   }, []);
 
-  /* ================= LOAD PROFILE IMAGE ================= */
-  useEffect(() => {
-    async function loadProfile() {
-      if (!isLoggedIn || !auth?.identity || !auth?.type) return;
-
-      try {
-        let res;
-
-        if (auth.type === "org") {
-          res = await getOrganizationProfileApi(auth.identity);
-        } else {
-          res = await getUserProfileApi(auth.identity);
-        }
-
-        if (res?.status && res.data) {
-          const image =
-            res.data.profileImage ||
-            res.data.logo ||
-            res.data.bannerImages?.[0] ||
-            null;
-
-          if (image) {
-            setProfileImage(image);
-          }
-        }
-      } catch {
-        // silent fail (navbar shouldn't break app)
-      }
-    }
-
-    loadProfile();
-  }, [isLoggedIn, auth]);
-
-  if (!mounted) return null;
-
-  /* ================= HANDLERS ================= */
-  const handleCreateEventClick = () => {
-    // not logged in
-    if (!isLoggedIn) {
-      router.push("/auth/organization/login");
-      return;
-    }
-
-    // logged in but USER
-    if (auth?.type === "user") {
-      router.push("/auth/organization/login");
-      return;
-    }
-
-    // logged in & ORGANIZER
-    if (auth?.type === "org") {
-      router.push("/dashboard/space/create");
-      return;
-    }
-
-    // fallback
-    router.push("/auth/organization/login");
-  };
-
-  const handleSignup = () => {
-    setMenuOpen(false);
-    router.push("/auth/user/login");
-  };
-
-  const handleProfileClick = () => {
-    setMenuOpen(false);
-    router.push("/dashboard");
-  };
-
-  /* ================= UI (UNCHANGED) ================= */
   return (
-    <nav className="nav-container">
-      {/* LEFT */}
-      <div className="nav-left">
-        <img
-          src="/images/logo.png"
-          alt="logo"
-          className="nav-logo"
-          onClick={() => router.push("/")}
-        />
-        <button className="nav-explore">Explore {EXPLORE_ICON}</button>
-      </div>
+    <Navbar expand="lg" sticky="top" className="ace-navbar">
+      <Container fluid>
+        {/* LEFT */}
+        <Navbar.Brand onClick={() => router.push("/")}>
+          <img src="/images/logo.png" height="36" alt="logo" />
+        </Navbar.Brand>
 
-      {/* CENTER */}
-      <div className="nav-center">
-        {!hideNavbarSearch && (
-          <div className="nav-search-box">
-            <input
-              type="text"
-              placeholder="Search anything"
-              className="search-input"
-              onFocus={() => router.push("/events?focusSearch=1")}
-            />
-          </div>
-        )}
+        {/* TOGGLER */}
+        <Navbar.Toggle aria-controls="main-navbar" />
 
-        <button className="nav-location-btn">{LOCATION_ICON}</button>
+        {/* COLLAPSE */}
+        <Navbar.Collapse id="main-navbar">
+          {/* CENTER */}
+          <Nav className="mx-auto nav-end">
+            <Nav.Link onClick={() => router.push("/events")}>
+              All Events
+            </Nav.Link>
 
-        <button className="nav-create" onClick={handleCreateEventClick}>
-          + Create Event
-        </button>
+            <Nav.Link onClick={() => router.push("/leaderboard")}>
+              Top Organizers
+            </Nav.Link>
 
-        {!isLoggedIn && (
-          <button className="nav-sinup" onClick={handleSignup}>
-            Sign In
-          </button>
-        )}
-      </div>
-
-      {/* RIGHT */}
-      {isLoggedIn && (
-        <div className={`nav-right ${menuOpen ? "open" : ""}`}>
-          <button className="nav-avatar-btn" onClick={handleProfileClick}>
-            {profileImage ? (
-              <img
-                src={profileImage}
-                alt="profile"
-                className="nav-profile-image"
-                onError={() => setProfileImage(null)}
+            {/* Search – desktop only */}
+            <Form className="d-none d-lg-block">
+              <Form.Control
+                className="search-input"
+                placeholder="Search anything"
               />
-            ) : (
-              <div className="nav-letter-avatar">{initial}</div>
-            )}
-          </button>
-        </div>
-      )}
+            </Form>
+          </Nav>
 
-      {/* HAMBURGER */}
-      <button
-        className={`nav-hamburger ${menuOpen ? "is-open" : ""}`}
-        onClick={() => setMenuOpen(!menuOpen)}
-      >
-        <span className="bar"></span>
-        <span className="bar"></span>
-        <span className="bar"></span>
-      </button>
-    </nav>
+          {/* RIGHT */}
+          <Nav className="nav-right">
+            {!isLoggedIn && (
+              <Button
+                className="btn-primary-pill"
+                onClick={() => router.push("/auth/user/login")}
+              >
+                Sign In
+              </Button>
+            )}
+
+            {isLoggedIn && (
+              <>
+                <Button
+                  className="btn-primary-pill"
+                  onClick={() => router.push("/dashboard/space/create")}
+                >
+                  Create Event +
+                </Button>
+
+                {/* Notification */}
+                <Dropdown align="end">
+                  <Dropdown.Toggle className="icon-btn">
+                    🔔 <span className="dot" />
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu className="notification-dropdown">
+                    <h6 className="px-3 mb-2">Notifications</h6>
+
+                    {[1, 2, 3].map((i) => (
+                      <Dropdown.Item key={i} className="notif-item">
+                        <img src="/images/user.png" alt="user" />
+                        <div>
+                          <strong>Event Rejected</strong>
+                          <p>Missing description</p>
+                        </div>
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
+
+                {/* Profile */}
+                <div
+                  className="profile-avatar"
+                  onClick={() => router.push("/dashboard")}
+                >
+                  {initial}
+                </div>
+              </>
+            )}
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 }
