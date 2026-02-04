@@ -35,7 +35,7 @@ export default function NavbarClient() {
     <Navbar expand="lg" sticky="top" className="ace-navbar">
       <Container fluid className="nav-wrapper">
         {/* LOGO */}
-        <Navbar.Brand onClick={() => router.push("/")}>
+        <Navbar.Brand onClick={() => router.push("/")} className="logo-pointer">
           <img src="/images/logo.png" height="38" alt="ACE" />
         </Navbar.Brand>
 

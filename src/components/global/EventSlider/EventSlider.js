@@ -266,43 +266,52 @@ export default function EventSlider({
 
             return (
               <div key={event.identity} className="card event-card">
-                <img
-                  src={event.bannerImages?.[0] || NO_IMAGE_FOUND_IMAGE}
-                  className="event-img"
-                  alt={event.title}
-                  onClick={() => handleClick(event.slug)}
-                />
+                {/* IMAGE */}
+                <div className="event-img-wrapper">
+                  <img
+                    src={event.bannerImages?.[0] || NO_IMAGE_FOUND_IMAGE}
+                    className="event-img"
+                    alt={event.title}
+                    onClick={() => handleClick(event.slug)}
+                  />
 
+                  {/* SAVE ICON – image top right */}
+                  <span
+                    className="save-on-image"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSave(event);
+                    }}
+                  >
+                    <SAVEICON active={isSaved} />
+                  </span>
+                </div>
+
+                {/* BODY */}
                 <div className="card-body p-3">
-                  <div className="d-flex justify-content-between align-items-start mt-2">
+                  {/* TITLE + LIKE */}
+                  <div className="title-like-row">
                     <span className="fw-semibold card-titel">
                       {event.title}
                     </span>
 
-                    {/* SAVE */}
-                    <span onClick={() => handleSave(event)}>
-                      <SAVEICON active={isSaved} />
-                    </span>
-
-                    {/* LIKE */}
                     <div
+                      className="like-inline"
                       onClick={() => handleLike(event)}
-                      className="text-center"
                     >
                       <HEART_ICON active={isLiked} />
-                      <p>{likeCounts[event.identity] ?? 0}</p>
+                      <span>{likeCounts[event.identity] ?? 0}</span>
                     </div>
                   </div>
 
+                  {/* DETAILS */}
                   <div className="mt-2 event-details">
                     <div className="d-flex justify-content-between">
                       <span>
-                        <span>
-                          {LOCATION_ICON}{" "}
-                          {event.location?.city ||
-                            event.org?.city ||
-                            (event.mode === "ONLINE" ? "Online Event" : "N/A")}
-                        </span>
+                        {LOCATION_ICON}{" "}
+                        {event.location?.city ||
+                          event.org?.city ||
+                          (event.mode === "ONLINE" ? "Online Event" : "N/A")}
                       </span>
 
                       <span>

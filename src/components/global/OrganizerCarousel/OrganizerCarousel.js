@@ -29,14 +29,14 @@ export default function OrganizersCarousel({ data = [] }) {
           <h2 className={styles.title}>Our Top Organizers</h2>
           <p className={styles.sub}>
             Find the Organizations you're looking for quickly.
-            <span className={styles.more} onClick={handleLeaderboardClick}> You can see more.</span>
+            <span className={styles.more} onClick={handleLeaderboardClick}>
+              {" "}
+              You can see more.
+            </span>
           </p>
         </div>
 
-        <button
-          className={styles.seeAllBtn}
-          onClick={handleLeaderboardClick}
-        >
+        <button className={styles.seeAllBtn} onClick={handleLeaderboardClick}>
           See all
         </button>
       </div>
@@ -49,6 +49,21 @@ export default function OrganizersCarousel({ data = [] }) {
             className={styles.card}
             onClick={() => handleOrgClick(org.slug)}
           >
+            {/* RANK BADGE */}
+            {index < 3 && (
+              <div className={styles.rankBadge}>
+                <img
+                  src={
+                    index === 0
+                      ? "/images/FirstOr.png"
+                      : index === 1
+                        ? "/images/SecondOr.png"
+                        : "/images/ThreedOr.png"
+                  }
+                  className={styles.rankImg}
+                />
+              </div>
+            )}
             <div className={styles.cardContent}>
               <div className={styles.avatarWrap}>
                 {org.profileImage ? (
@@ -64,9 +79,7 @@ export default function OrganizersCarousel({ data = [] }) {
                 )}
               </div>
 
-              <div className={styles.name}>
-                {org.organizationName}
-              </div>
+              <div className={styles.name}>{org.organizationName}</div>
 
               <div className={styles.events}>
                 {org._count?.events || 0} Events

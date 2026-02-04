@@ -6,7 +6,9 @@
   border: 0.802px solid #ffffff54;
   box-shadow: 0 4px 6px #0000001a;
 }
-
+.logo-pointer {
+  cursor: pointer;
+}
 .nav-wrapper {
   padding: 10px 24px;
   background: transparent;

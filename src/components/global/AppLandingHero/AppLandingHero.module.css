@@ -26,8 +26,21 @@
   color: #1c1c1c;
   font-family: "BL Melody", sans-serif;
 }
+.subtitle {
+  position: absolute;
+  top: 35%;
+  left: 6%;
+  max-width: 520px;
 
-.title span {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-decoration: none;
+  color: #1c1c1c;
+  font-family: "BL Melody", sans-serif;
+}
+
+.title span , .subtitle span{
   color: #7f00ff;
 }
 
