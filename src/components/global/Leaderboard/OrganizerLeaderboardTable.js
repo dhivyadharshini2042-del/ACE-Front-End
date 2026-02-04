@@ -8,7 +8,7 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
       <h3>List of Top Organizers</h3>
       <p>You don’t just host events; you shape experiences. Keep shining!</p>
 
-      {/* TABLE HEADER */}
+      {/* HEADER */}
       <div className={`${styles.row} ${styles.header}`}>
         <span>Organizer Name</span>
         <span>Events Created</span>
@@ -25,14 +25,9 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
           key={org.identity}
           className={`${styles.row} ${styles[`bg${idx % 5}`]}`}
         >
-          {/* ORGANIZER */}
           <div className={styles.org}>
             {org.profileImage ? (
-              <img
-                src={org.profileImage}
-                alt={org.organizationName}
-                className={styles.avatar}
-              />
+              <img src={org.profileImage} className={styles.avatar} />
             ) : (
               <div className={styles.avatarFallback}>
                 {org.organizationName?.charAt(0).toUpperCase()}
@@ -43,23 +38,18 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
               <div className={styles.name}>
                 {org.organizationName}
               </div>
-              <div className={styles.rating}>
-                4.7 ★★★★★
-              </div>
+              <div className={styles.rating}>4.7 ★★★★★</div>
             </div>
           </div>
 
-          {/* EVENTS */}
           <span className={styles.number}>
             {org.eventCount ?? org._count?.events ?? 0}
           </span>
 
-          {/* VIEWS */}
           <span className={styles.number}>
             {org.totalViews ?? 1900}
           </span>
 
-          {/* RANK */}
           <span className={styles.rank}>{org.rank}</span>
         </div>
       ))}

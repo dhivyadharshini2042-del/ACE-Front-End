@@ -91,7 +91,8 @@
 
 .tagRow {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
 }
 
 .tagList {

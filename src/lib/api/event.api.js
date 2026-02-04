@@ -103,6 +103,10 @@ export const getPerksApi = async () =>
 export const getEligibleDepartmentsApi = async () =>
   handleApi(apiPublic.get(API_ENDPOINTS.MASTER.ELIGIBLE_DEPARTMENTS));
 
+
+export const getDepartmentsApi = async () =>
+  handleApi(apiPublic.get(API_ENDPOINTS.MASTER.DEPARTMENTS));
+
 /* =======================
    FILTER EVENTS
 ======================= */
