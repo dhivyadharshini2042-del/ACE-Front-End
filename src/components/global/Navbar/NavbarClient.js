@@ -10,13 +10,12 @@ import {
   Form,
   Dropdown,
 } from "react-bootstrap";
+import "./Navbar.css";
 
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
-import "./Navbar.css";
 
 export default function NavbarClient() {
   const router = useRouter();
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [initial, setInitial] = useState("U");
 
@@ -34,87 +33,111 @@ export default function NavbarClient() {
 
   return (
     <Navbar expand="lg" sticky="top" className="ace-navbar">
-      <Container fluid>
-        {/* LEFT */}
+      <Container fluid className="nav-wrapper">
+        {/* LOGO */}
         <Navbar.Brand onClick={() => router.push("/")}>
-          <img src="/images/logo.png" height="36" alt="logo" />
+          <img src="/images/logo.png" height="38" alt="ACE" />
         </Navbar.Brand>
 
-        {/* TOGGLER */}
-        <Navbar.Toggle aria-controls="main-navbar" />
+        <Navbar.Toggle />
 
-        {/* COLLAPSE */}
-        <Navbar.Collapse id="main-navbar">
-          {/* CENTER */}
-          <Nav className="mx-auto nav-end">
-            <Nav.Link onClick={() => router.push("/events")}>
-              All Events
-            </Nav.Link>
+        <Navbar.Collapse>
+          <div className="nav-content">
+            {/* CENTER */}
+            <div className="nav-center">
+              <Nav className="gap-5">
+                <Nav.Link onClick={() => router.push("/events")}>
+                  All Events
+                </Nav.Link>
+                <Nav.Link onClick={() => router.push("/leaderboard")}>
+                  Top Organizations
+                </Nav.Link>
+              </Nav>
 
-            <Nav.Link onClick={() => router.push("/leaderboard")}>
-              Top Organizers
-            </Nav.Link>
+              {/* SEARCH */}
+              <div className="search-box">
+                <input type="text" placeholder="Search anything" />
+                <span className="search-icon">🔍</span>
+              </div>
 
-            {/* Search – desktop only */}
-            <Form className="d-none d-lg-block">
-              <Form.Control
-                className="search-input"
-                placeholder="Search anything"
-              />
-            </Form>
-          </Nav>
+              {isLoggedIn && (
+                <button className="icon-circle outline">📍</button>
+              )}
 
-          {/* RIGHT */}
-          <Nav className="nav-right">
-            {!isLoggedIn && (
-              <Button
-                className="btn-primary-pill"
-                onClick={() => router.push("/auth/user/login")}
-              >
-                Sign In
-              </Button>
-            )}
-
-            {isLoggedIn && (
-              <>
-                <Button
-                  className="btn-primary-pill"
+              {!isLoggedIn ? (
+                <>
+                  <button
+                    className="btn-primary non-pill"
+                    onClick={() => router.push("/dashboard/space/create")}
+                  >
+                    Create Event
+                  </button>
+                  <button
+                    className="btn-primary pill"
+                    onClick={() => router.push("/auth/user/login")}
+                  >
+                    Sign In
+                  </button>
+                </>
+              ) : (
+                <button
+                  className="btn-primary pill"
                   onClick={() => router.push("/dashboard/space/create")}
                 >
-                  Create Event +
-                </Button>
+                  Create Event
+                </button>
+              )}
+            </div>
 
-                {/* Notification */}
+            {/* RIGHT */}
+            <div className="nav-right">
+              {/* NOTIFICATION */}
+              {isLoggedIn && (
                 <Dropdown align="end">
-                  <Dropdown.Toggle className="icon-btn">
-                    🔔 <span className="dot" />
+                  <Dropdown.Toggle as="div" className="icon-circle ">
+                    🔔
+                    {/* <span className="dot" /> */}
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu className="notification-dropdown">
-                    <h6 className="px-3 mb-2">Notifications</h6>
+                  <Dropdown.Menu className="notification-panel">
+                    <div className="notification-header">
+                      <h6>Notifications (45)</h6>
+                      <span className="view-all">View All</span>
+                    </div>
 
-                    {[1, 2, 3].map((i) => (
-                      <Dropdown.Item key={i} className="notif-item">
-                        <img src="/images/user.png" alt="user" />
-                        <div>
-                          <strong>Event Rejected</strong>
-                          <p>Missing description</p>
+                    <div className="notification-list">
+                      {[1, 2, 3, 4].map((i) => (
+                        <div className="notification-item" key={i}>
+                          <img
+                            src="/images/user.png"
+                            alt="user"
+                            className="notif-avatar"
+                          />
+
+                          <div className="notif-text">
+                            <strong>Event 'Hackathon X' Rejected</strong>
+                            <p>Reason: Description missing objectives.</p>
+                          </div>
+
+                          <span className="notif-time">14h</span>
                         </div>
-                      </Dropdown.Item>
-                    ))}
+                      ))}
+                    </div>
                   </Dropdown.Menu>
                 </Dropdown>
+              )}
 
-                {/* Profile */}
-                <div
-                  className="profile-avatar"
+              {/* PROFILE */}
+              {isLoggedIn && (
+                <img
+                  src="/images/user.png"
+                  className="profile-img"
+                  alt="profile"
                   onClick={() => router.push("/dashboard")}
-                >
-                  {initial}
-                </div>
-              </>
-            )}
-          </Nav>
+                />
+              )}
+            </div>
+          </div>
         </Navbar.Collapse>
       </Container>
     </Navbar>
