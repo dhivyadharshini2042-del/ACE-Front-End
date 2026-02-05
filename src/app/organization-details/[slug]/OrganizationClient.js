@@ -1,5 +1,5 @@
 "use client";
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
 import "./organization.css";
 import { useEffect, useState } from "react";
@@ -31,6 +31,7 @@ import toast from "react-hot-toast";
 import { NO_IMAGE_FOUND_IMAGE } from "../../../const-value/config-message/page";
 import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
 import ShareModal from "../../../components/ui/ShareModal/ShareModal";
+import PaginationBar from "../../events/components/PaginationBar";
 
 export default function OrganizationClient({ slug }) {
   const router = useRouter();
@@ -44,6 +45,11 @@ export default function OrganizationClient({ slug }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [pendingAction, setPendingAction] = useState(null); // "like" | "save"
   const [openShare, setOpenShare] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [pastIndex, setPastIndex] = useState(0);
+  const PAST_PER_PAGE = 5;
+  const [page, setPage] = useState(1);
+  const PER_PAGE = 15;
 
   /* ================= INIT AUTH ================= */
   useEffect(() => {
@@ -56,18 +62,15 @@ export default function OrganizationClient({ slug }) {
   useEffect(() => {
     if (!slug) return;
 
-    console.log("Slug received:", slug);
-
     const fetchData = async () => {
+      setLoading(true);
       try {
         const res = await getOrganizationByEventsApi(slug);
-        console.log("API response:", res);
-
         setData(res?.data || []);
       } catch (err) {
-        console.error("API error:", err);
         setData([]);
       } finally {
+        setLoading(false);
       }
     };
 
@@ -172,22 +175,46 @@ export default function OrganizationClient({ slug }) {
     (e) => new Date(e.calendars?.[0]?.startDate) >= now,
   );
 
+  const paginatedUpcoming = upcomingEvents.slice(
+    (page - 1) * PER_PAGE,
+    page * PER_PAGE,
+  );
+
+  const totalPages = Math.ceil(upcomingEvents.length / PER_PAGE);
+
   const pastEvents = events.filter(
     (e) => new Date(e.calendars?.[0]?.startDate) < now,
   );
 
+  const visiblePastEvents = pastEvents.slice(
+    pastIndex,
+    pastIndex + PAST_PER_PAGE,
+  );
+
+  const handlePastPrev = () => {
+    setPastIndex((prev) => Math.max(prev - PAST_PER_PAGE, 0));
+  };
+
+  const handlePastNext = () => {
+    setPastIndex((prev) =>
+      prev + PAST_PER_PAGE < pastEvents.length ? prev + PAST_PER_PAGE : prev,
+    );
+  };
+
+  console.log("paginatedUpcoming:", paginatedUpcoming);
+
   return (
     <>
       <div className="container-fuiled px-5 py-5 org-page">
-        <button
+        {/* <button
           className="btn btn-light rounded-pill mb-3"
           onClick={() => router.back()}
         >
           Back
-        </button>
+        </button> */}
 
         {/* ===== HERO ===== */}
-        <div className="org-hero position-relative rounded-4 overflow-hidden">
+        <div className="org-hero position-relative overflow-hidden">
           <img
             src={bannerImages[currentBanner]}
             className="w-100 org-hero-img"
@@ -205,30 +232,89 @@ export default function OrganizationClient({ slug }) {
           </div>
         </div>
 
-        {/* ===== ORG INFO ===== */}
-        <div className="org-info-card shadow-sm rounded-4 p-4 mt-4 d-flex justify-content-between">
-          <div>
-            <h1 className="org-name">{org?.organizationName}</h1>
-            <div className="org-meta">
-              <h4>
-                {TICKET_COLOR_ICON} {events.length} Events
-              </h4>
-              <span>{/* {START_ICON} {org?.rank || "0.0"} */}</span>
+        {/* ================= ORG INFO ================= */}
+        <div className="org-info-card rounded-4 p-4 mt-4">
+          {/* ===== HEADER ===== */}
+          <div className="org-header-row">
+            <div>
+              <h1 className="org-name d-flex align-items-center gap-2">
+                {org?.organizationName}
+                {org?.isVerified && (
+                  <span className="verified-badge">✔ Verified</span>
+                )}
+              </h1>
+
+              <p className="org-subtext">
+                {org?.organizationCategory?.toUpperCase()} Organization
+              </p>
+            </div>
+
+            <div className="org-header-actions">
+              {org?.website && (
+                <a
+                  href={org.website}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="org-action-btn"
+                >
+                  Visit Website
+                </a>
+              )}
+              <div onClick={() => setOpenShare(true)}>{SHAREICON}</div>
             </div>
           </div>
 
-          <div className="d-flex gap-3 align-items-center">
-            {INSTAGRAMICON}
-            {LINKEDINICON}
-            {YOUTUBEICON}
-            {FACEBOOKICON}
-            {TELEGRAMICON}
-            {XICON}
-            <span className="share-icon" onClick={() => setOpenShare(true)}>
-              {SHAREICON}
-            </span>
+          {/* ===== META DETAILS ===== */}
+          <div className="org-meta-grid">
+            <div className="meta-chip">
+              {org?.city}, {org?.state}
+            </div>
+            <div className="meta-chip">{org?.country}</div>
+            <div className="meta-chip">{events.length} Events</div>
+            <div className="meta-chip">
+              Since {new Date(org?.createdAt).getFullYear()}
+            </div>
+          </div>
+
+          {/* ===== STATS ===== */}
+          <div className="org-stats-grid">
+            <div className="stat-card primary">
+              <strong>{events.length}</strong>
+              <span>Total Events</span>
+            </div>
+
+            <div className="stat-card sec">
+              <strong>{upcomingEvents.length}</strong>
+              <span>Upcoming Events</span>
+            </div>
+
+            <div className="stat-card th">
+              <strong>{pastEvents.length}</strong>
+              <span>Past Events</span>
+            </div>
+
+            <div
+              className={`stat-card ${org?.isActive ? "active" : "inactive"}`}
+            >
+              <strong>{org?.isActive ? "Active" : "Inactive"}</strong>
+              <span>Status</span>
+            </div>
+          </div>
+
+          {/* ===== SOCIAL ===== */}
+          <div className="org-social-full">
+            <span className="social-label">Follow us</span>
+            <div className="social-icons">
+              {INSTAGRAMICON}
+              {FACEBOOKICON}
+              {LINKEDINICON}
+              {YOUTUBEICON}
+              {TELEGRAMICON}
+              {XICON}
+            </div>
           </div>
         </div>
+
         {/* ================= UPCOMING EVENTS ================= */}
         <section className="mt-5">
           <h3 className="event-heading">Upcoming Events</h3>
@@ -238,7 +324,7 @@ export default function OrganizationClient({ slug }) {
           </p>
 
           <div className="upcoming-grid">
-            {upcomingEvents.map((e, index) => (
+            {paginatedUpcoming.map((e, index) => (
               <div
                 key={e._id ?? `upcoming-${index}`}
                 className="event-card-new"
@@ -276,10 +362,32 @@ export default function OrganizationClient({ slug }) {
                   </div>
 
                   <p className="event-meta location-text">
-                    {LOCATION_ICON}{" "}
-                    {[e.location?.venue, e.location?.country]
-                      .filter(Boolean)
-                      .join(", ")}
+                    {LOCATION_ICON}
+
+                    {e.mode === "ONLINE" ? (
+                      e.location?.onlineMeetLink ? (
+                        <a
+                          href={e.location.onlineMeetLink}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="online-link"
+                        >
+                          Online Event – Join Link
+                        </a>
+                      ) : (
+                        <span>Online Event</span>
+                      )
+                    ) : (
+                      <span>
+                        {[
+                          e.location?.venue,
+                          e.location?.city,
+                          e.location?.state,
+                        ]
+                          .filter(Boolean)
+                          .join(", ")}
+                      </span>
+                    )}
                   </p>
                   <div className="d-flex justify-content-between align-items-center">
                     <p className="event-meta">
@@ -301,34 +409,60 @@ export default function OrganizationClient({ slug }) {
             ))}
           </div>
         </section>
+        <PaginationBar page={page} total={totalPages} onChange={setPage} />
 
         {/* ================= PAST EVENTS ================= */}
         <section className="mt-5">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h3 className="event-heading">Past Events</h3>
 
-            <div className="d-flex gap-2">
-              <button className="btn btn-light rounded-circle">‹</button>
-              <button className="btn btn-light rounded-circle">›</button>
+            <div className="d-flex justify-content-end gap-4 mb-3">
+              <button
+                className="scroll-rounded-circle"
+                onClick={handlePastPrev}
+                disabled={pastIndex === 0}
+              >
+                ❮
+              </button>
+              <button
+                className="scroll-rounded-circle"
+                onClick={handlePastNext}
+                disabled={pastIndex + PAST_PER_PAGE >= pastEvents.length}
+              >
+                ❯
+              </button>
             </div>
           </div>
 
           <div className="past-grid">
-            {upcomingEvents.map((e, index) => (
-              <div key={e._id ?? `past-${index}`} className="past-card">
+            {pastEvents.length === 0 ? (
+              <div className="text-center py-5">
                 <img
-                  src={e.bannerImages?.[0] || NO_IMAGE_FOUND_IMAGE}
-                  alt={e.title}
+                  src="/images/no-data-image.png"
+                  alt="No past events"
+                  style={{ width: "180px", opacity: 0.8 }}
                 />
-
-                <div className="past-overlay">
-                  <h6 className="past-title">{e.title}</h6>
-                  <span className="past-date">
-                    {new Date(e.calendars?.[0]?.startDate).toDateString()}
-                  </span>
-                </div>
+                <p className="mt-3 text-muted">No past events yet</p>
               </div>
-            ))}
+            ) : (
+              <div className="past-grid">
+                {visiblePastEvents.map((e, index) => (
+                  <div key={e._id ?? `past-${index}`} className="past-card">
+                    <img
+                      src={e.bannerImages?.[0] || NO_IMAGE_FOUND_IMAGE}
+                      alt={e.title}
+                    />
+
+                    <div className="past-overlay">
+                      <h6 className="past-title">{e.title}</h6>
+                      <span className="past-date">
+                        {new Date(e.calendars?.[0]?.startDate).toDateString()}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 

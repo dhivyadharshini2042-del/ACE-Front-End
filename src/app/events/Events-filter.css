@@ -46,6 +46,10 @@
   color: #7f00ff;
   font-weight: 600;
   cursor: pointer;
+   transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.reset-btn:hover {
+  transform: scale(1.05);
 }
 
 /* ================= FILTER BLOCK ================= */
@@ -71,6 +75,16 @@
   font-weight: 600;
   margin-bottom: 10px;
   color: #333;
+   line-height: 1.2; 
+   text-transform: capitalize;
+}
+.filter-check input:checked + span,
+.filter-check input:checked {
+  accent-color: #7f00ff;
+}
+
+.filter-check input:checked ~ * {
+  color: #5b21b6;
 }
 
 .filter-check input {
@@ -473,6 +487,20 @@
 .filters-sidebar,
 .filter-block {
   overflow: visible !important;
+}
+.filters-header button {
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ================= EVENT IMAGE RESPONSIVE FIX ================= */

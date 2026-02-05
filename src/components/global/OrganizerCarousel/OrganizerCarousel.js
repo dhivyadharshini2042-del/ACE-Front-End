@@ -2,22 +2,18 @@
 
 import styles from "./OrganizerCarousel.module.css";
 import { useRouter } from "next/navigation";
-import { useLoading } from "../../../context/LoadingContext";
 
 export default function OrganizersCarousel({ data = [] }) {
   const router = useRouter();
-  const { setLoading } = useLoading();
 
   if (!Array.isArray(data) || data.length === 0) return null;
 
   const handleOrgClick = (slug) => {
     if (!slug) return;
-    setLoading(true);
     router.push(`/organization-details/${slug}`);
   };
 
   const handleLeaderboardClick = () => {
-    setLoading(true);
     router.push("/leaderboard");
   };
 
@@ -85,8 +81,9 @@ export default function OrganizersCarousel({ data = [] }) {
                 {org._count?.events || 0} Events
               </div>
             </div>
-
-            <button className={styles.followBtn}>Follow</button>
+            <div style={{textAlign:"center"}}>
+              <button className={styles.followBtn}>Follow</button>
+            </div>
           </div>
         ))}
       </div>
