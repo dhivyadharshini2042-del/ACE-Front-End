@@ -394,3 +394,28 @@
   border: 1px solid #7f00ff;
   color: #1c1c1c;
 }
+/* media Query */
+@media (max-width: 950px) {
+  .org-shell {
+    flex-direction: column;
+  }
+  .org-left {
+    flex-shrink: 0;
+    min-height: 500px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    order: 1;
+  }
+  .org-left-img {
+    width: 80%;
+    max-width: 500px;
+    height: auto;
+  }
+  .org-right {
+    order: 2;
+    width: 100%;
+    padding: 20px;
+  }
+}
