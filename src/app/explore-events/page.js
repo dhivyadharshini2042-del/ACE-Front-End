@@ -14,7 +14,6 @@ import { useLoading } from "../../context/LoadingContext";
 export default function ExploreEventsPage() {
   const [events, setEvents] = useState([]);
   const { setLoading } = useLoading();
-
   const loadEvents = async () => {
     try {
       setLoading(true);

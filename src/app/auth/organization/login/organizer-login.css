@@ -127,3 +127,17 @@ button {
   transform: translateY(-1px);
   box-shadow: 0 8px 20px rgba(127, 0, 255, 0.25);
 }
+@media (max-width: 900px) {
+  .org-login-shell {
+    flex-direction: column;
+  }
+
+  .org-login-right {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .org-login-card {
+    max-width: 100%;
+  }
+}
