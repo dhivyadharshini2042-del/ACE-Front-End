@@ -451,7 +451,7 @@ export default function MediaTickets({
           className={styles.primaryBtn}
           onClick={() => setOpenSuccessModal(true)}
         >
-          Next
+          Submit
         </button>
       </div>
       <TicketModal

@@ -98,8 +98,6 @@ export default function SpotlightCarousel({ data = [] }) {
 
   const goto = (i) => setCurrent((i + total) % total);
 
-  console.log("kkkkkkkk", data);
-
   return (
     <section className={styles.root}>
       <h2 className={styles.title}>Top Spotlights</h2>

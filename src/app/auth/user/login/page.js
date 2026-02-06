@@ -93,8 +93,6 @@ export default function UserLoginPage() {
 
       const res = await googleAuthLoginApi({ googleToken });
 
-      console.log("============res",res)
-
       if (!res?.status) {
         toast.error(MSG_GOOGLE_LOGIN_FAILED);
         return;

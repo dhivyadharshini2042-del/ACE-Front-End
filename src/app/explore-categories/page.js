@@ -58,7 +58,7 @@ export default function ExploreCategoriesPage() {
       setLoading(false);
     }
   };
-  console.log("categories", categories);
+  
   /* ================= UI ================= */
   return (
     <div className="explore-page">

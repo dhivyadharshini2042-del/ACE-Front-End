@@ -23,7 +23,6 @@ export default function ProfileHeader() {
   /* ================= LOAD PROFILE ================= */
   const loadProfile = async () => {
     try {
-      console.log("ProfileHeader: loadProfile called");
 
       if (!isUserLoggedIn()) {
         console.log("User not logged in");
@@ -31,7 +30,6 @@ export default function ProfileHeader() {
       }
 
       const auth = getAuthFromSession();
-      console.log("Session auth:", auth);
 
       if (!auth?.identity || !auth?.type) {
         console.log(" Invalid auth data");
@@ -42,14 +40,11 @@ export default function ProfileHeader() {
 
       let res;
       if (auth.type === "org") {
-        console.log("Calling organization profile API");
         res = await getOrganizationProfileApi(auth.identity);
       } else {
-        console.log("Calling user profile API");
         res = await getUserProfileApi(auth.identity);
       }
 
-      console.log("Profile API response:", res);
 
       if (res?.status && res.data) {
         setProfile(res.data);

@@ -201,8 +201,6 @@ export default function OrganizationClient({ slug }) {
     );
   };
 
-  console.log("paginatedUpcoming:", paginatedUpcoming);
-
   return (
     <>
       <div className="container-fuiled px-5 py-5 org-page">

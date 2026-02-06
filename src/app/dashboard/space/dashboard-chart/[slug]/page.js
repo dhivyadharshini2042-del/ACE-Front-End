@@ -22,12 +22,8 @@ export default function DashboardChartPage() {
       try {
         setLoading(true);
 
-        console.log(" Fetching event by slug:", slug);
-
         //  FIX: await + res
         const res = await getEventBySlugApi(slug);
-
-        console.log(" Event API response:", res);
 
         if (res?.status && res.data) {
           setEvent(res.data);

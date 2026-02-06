@@ -223,7 +223,6 @@ export default function EventDetailsView({ event = {}, onBack }) {
     setLoading(false);
   }, []);
 
-  console.log("dddddddddd", event);
 
   return (
     <>
