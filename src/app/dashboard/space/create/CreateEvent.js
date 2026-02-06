@@ -18,8 +18,7 @@ import {
 import { createEventApi } from "../../../../lib/api/event.api";
 import { useLoading } from "../../../../context/LoadingContext";
 
-// 🔐 SESSION AUTH
-import { getAuthFromSession, isUserLoggedIn } from "../../../../lib/auth";
+import { getAuth, isUserLoggedIn } from "../../../../lib/auth";
 
 /* ================= INITIAL STATE ================= */
 
@@ -109,7 +108,10 @@ export default function CreateEvent() {
     setLoggedIn(ok);
 
     if (ok) {
-      setAuth(getAuthFromSession());
+      const authData = getAuth(); 
+      setAuth(authData);
+    } else {
+      setAuth(null);
     }
   }, []);
 

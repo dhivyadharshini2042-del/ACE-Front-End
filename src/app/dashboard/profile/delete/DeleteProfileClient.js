@@ -21,11 +21,7 @@ import { deleteOrganizationApi } from "../../../../lib/api/organizer.api";
 import { deleteUserApi } from "../../../../lib/api/user.api";
 
 // 🔐 SESSION AUTH
-import {
-  getAuthFromSession,
-  isUserLoggedIn,
-  clearAuthSession,
-} from "../../../../lib/auth";
+import { getAuth, isUserLoggedIn, clearAuth } from "../../../../lib/auth";
 
 export default function DeleteProfilePage() {
   const [open, setOpen] = useState(false);
@@ -35,13 +31,15 @@ export default function DeleteProfilePage() {
   const [auth, setAuth] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
 
-  /* ================= INIT AUTH ================= */
   useEffect(() => {
     const ok = isUserLoggedIn();
     setLoggedIn(ok);
 
     if (ok) {
-      setAuth(getAuthFromSession());
+      const authData = getAuth();
+      setAuth(authData);
+    } else {
+      setAuth(null);
     }
   }, []);
 
@@ -66,8 +64,7 @@ export default function DeleteProfilePage() {
         setDeleted(true);
         setOpen(false);
 
-        // 🔐 CLEAR SESSION + COOKIE
-        await clearAuthSession();
+        clearAuth();
 
         // redirect home
         window.location.href = "/";
@@ -75,9 +72,7 @@ export default function DeleteProfilePage() {
         toast.error(res?.message || "Delete failed");
       }
     } catch (err) {
-      toast.error(
-        err?.response?.data?.message || "Delete failed"
-      );
+      toast.error(err?.response?.data?.message || "Delete failed");
     }
   };
 
@@ -101,17 +96,11 @@ export default function DeleteProfilePage() {
           </p>
 
           <div className={styles.btnRow}>
-            <button
-              className={styles.cancelBtn}
-              onClick={() => setOpen(false)}
-            >
+            <button className={styles.cancelBtn} onClick={() => setOpen(false)}>
               {BTN_CANCEL}
             </button>
 
-            <button
-              className={styles.deleteBtn}
-              onClick={() => setOpen(true)}
-            >
+            <button className={styles.deleteBtn} onClick={() => setOpen(true)}>
               {BTN_DELETE_ACCOUNT}
             </button>
           </div>
@@ -126,9 +115,7 @@ export default function DeleteProfilePage() {
       />
 
       {deleted && (
-        <div className={styles.successBox}>
-          {MSG_DELETED_YOUR_ACCOUNT}
-        </div>
+        <div className={styles.successBox}>{MSG_DELETED_YOUR_ACCOUNT}</div>
       )}
     </div>
   );

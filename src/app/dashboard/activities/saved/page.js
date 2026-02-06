@@ -17,17 +17,14 @@ import {
 import { useLoading } from "../../../../context/LoadingContext";
 
 // 🔐 SESSION AUTH
-import {
-  getAuthFromSession,
-  isUserLoggedIn,
-} from "../../../../lib/auth";
+import { getAuth, isUserLoggedIn } from "../../../../lib/auth";
 
 const PAGE_SIZE = 6;
 
 export default function SavedEventsPage() {
   const [events, setEvents] = useState([]);
   const [page, setPage] = useState(1);
-  const [localLoading, setLocalLoading] = useState(true); 
+  const [localLoading, setLocalLoading] = useState(true);
 
   const { setLoading } = useLoading();
   const router = useRouter();
@@ -41,7 +38,10 @@ export default function SavedEventsPage() {
     setLoggedIn(ok);
 
     if (ok) {
-      setAuth(getAuthFromSession());
+      const authData = getAuth();
+      setAuth(authData);
+    } else {
+      setAuth(null);
     }
   }, []);
 
@@ -68,7 +68,7 @@ export default function SavedEventsPage() {
       toast.error("Something went wrong");
       setEvents([]);
     } finally {
-      setLocalLoading(false); 
+      setLocalLoading(false);
       setLoading(false);
     }
   };
@@ -94,9 +94,7 @@ export default function SavedEventsPage() {
           <img src="/images/no-event-image.png" alt="No Events" />
           <h3>No Saved Events</h3>
           <p>Save events to see them here</p>
-          <button onClick={() => router.push("/events")}>
-            Explore Events
-          </button>
+          <button onClick={() => router.push("/events")}>Explore Events</button>
         </div>
       </div>
     );
@@ -124,9 +122,7 @@ export default function SavedEventsPage() {
                 src={e.bannerImages?.[0] || "/images/event.png"}
                 alt={e.title}
               />
-              {e.offers && (
-                <span className={styles.offer}>Offers</span>
-              )}
+              {e.offers && <span className={styles.offer}>Offers</span>}
             </div>
 
             <div className={styles.content}>
@@ -148,7 +144,7 @@ export default function SavedEventsPage() {
                 <span>
                   {DATEICON}{" "}
                   {new Date(
-                    e.calendars?.[0]?.startDate || e.createdAt
+                    e.calendars?.[0]?.startDate || e.createdAt,
                   ).toLocaleDateString("en-IN", {
                     day: "2-digit",
                     month: "short",
@@ -168,10 +164,7 @@ export default function SavedEventsPage() {
 
       {totalPages > 1 && (
         <div className={styles.pagination}>
-          <button
-            disabled={page === 1}
-            onClick={() => setPage((p) => p - 1)}
-          >
+          <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
             Prev
           </button>
 

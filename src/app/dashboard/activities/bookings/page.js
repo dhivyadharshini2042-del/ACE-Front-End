@@ -17,10 +17,7 @@ import {
 import { getSavedEventsApi } from "../../../../lib/api/auth.api";
 
 // 🔐 SESSION AUTH
-import {
-  getAuthFromSession,
-  isUserLoggedIn,
-} from "../../../../lib/auth";
+import { getAuth, isUserLoggedIn } from "../../../../lib/auth";
 
 const PAGE_SIZE = 6;
 
@@ -44,7 +41,10 @@ export default function BookingEventsPage() {
     setIsLoggedIn(loggedIn);
 
     if (loggedIn) {
-      setAuth(getAuthFromSession());
+      const authData = getAuth();
+      setAuth(authData);
+    } else {
+      setAuth(null);
     }
   }, []);
 
@@ -100,9 +100,7 @@ export default function BookingEventsPage() {
           <img src="/images/no-event-image.png" alt="No Events" />
           <h3>No Booked Events</h3>
           <p>You haven’t booked any events yet</p>
-          <button onClick={() => router.push("/events")}>
-            Explore Events
-          </button>
+          <button onClick={() => router.push("/events")}>Explore Events</button>
         </div>
       </div>
     );
@@ -125,9 +123,7 @@ export default function BookingEventsPage() {
                 src={e.bannerImages?.[0] || "/images/event.png"}
                 alt={e.title}
               />
-              {e.offers && (
-                <span className={styles.offer}>Offers</span>
-              )}
+              {e.offers && <span className={styles.offer}>Offers</span>}
             </div>
 
             <div className={styles.content}>
@@ -149,7 +145,7 @@ export default function BookingEventsPage() {
                 <span>
                   {DATEICON}{" "}
                   {new Date(
-                    e.calendars?.[0]?.startDate || e.createdAt
+                    e.calendars?.[0]?.startDate || e.createdAt,
                   ).toLocaleDateString("en-IN", {
                     day: "2-digit",
                     month: "short",
@@ -170,10 +166,7 @@ export default function BookingEventsPage() {
       {/* ================= PAGINATION ================= */}
       {totalPages > 1 && (
         <div className={styles.pagination}>
-          <button
-            disabled={page === 1}
-            onClick={() => setPage((p) => p - 1)}
-          >
+          <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
             Prev
           </button>
 

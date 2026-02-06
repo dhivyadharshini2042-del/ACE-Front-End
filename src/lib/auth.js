@@ -1,27 +1,16 @@
 import { jwtDecode } from "jwt-decode";
 import CryptoJS from "crypto-js";
 
-/* ======================================================
-   CONFIG
-   ====================================================== */
-
-// ⚠️ Frontend secret (obfuscation only, not real security)
 const SECRET_KEY = "ACE_FRONTEND_SESSION_KEY_v1";
 
-/* ======================================================
-   ENCRYPT / DECRYPT HELPERS
-   ====================================================== */
+/* encrypt */
+const encrypt = (data) =>
+  CryptoJS.AES.encrypt(JSON.stringify(data), SECRET_KEY).toString();
 
-const encrypt = (data) => {
-  return CryptoJS.AES.encrypt(
-    JSON.stringify(data),
-    SECRET_KEY
-  ).toString();
-};
-
-const decrypt = (cipherText) => {
+/* decrypt */
+const decrypt = (cipher) => {
   try {
-    const bytes = CryptoJS.AES.decrypt(cipherText, SECRET_KEY);
+    const bytes = CryptoJS.AES.decrypt(cipher, SECRET_KEY);
     const decoded = bytes.toString(CryptoJS.enc.Utf8);
     return decoded ? JSON.parse(decoded) : null;
   } catch {
@@ -29,111 +18,60 @@ const decrypt = (cipherText) => {
   }
 };
 
-/* ======================================================
-   AUTH SESSION (SECURE)
-   ====================================================== */
-
-/**
- * ✅ Save auth session (ENCRYPTED)
- * MUST be called after login success
- */
-export const setAuthSession = (token) => {
+/* COOKIE → LOCALSTORAGE */
+export const saveAuthFromCookie = () => {
   if (typeof window === "undefined") return null;
 
-  try {
-    const decoded = jwtDecode(token);
+  const cookie = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("authToken="));
 
-    const authPayload = {
-      token, // 🔥 VERY IMPORTANT (Bearer token)
-      identity: decoded?.data?.identity || null,
-      email: decoded?.data?.email || null,
-      type: decoded?.data?.type || null, // "user" | "org"
-      roleId: decoded?.data?.roleId || null,
-      exp: decoded?.exp || null,
-    };
+  if (!cookie) return null;
 
-    const encrypted = encrypt(authPayload);
+  const token = decodeURIComponent(cookie.split("=")[1]);
+  const decoded = jwtDecode(token);
 
-    sessionStorage.setItem("auth", encrypted);
-    return authPayload;
-  } catch (err) {
-    console.error("Auth session save failed", err);
-    return null;
-  }
+  const authData = {
+    token,
+    identity: decoded?.data?.identity,
+    email: decoded?.data?.email,
+    roleId: decoded?.data?.roleId,
+    type: decoded?.data?.type,
+    exp: decoded?.exp,
+  };
+
+  const encrypted = encrypt(authData);
+  localStorage.setItem("auth", encrypted);
+
+  return authData;
 };
 
-/**
- * ✅ Get auth session (DECRYPTED)
- */
-export const getAuthFromSession = () => {
+/* GET (decrypt) */
+export const getAuth = () => {
   if (typeof window === "undefined") return null;
 
-  const cipher = sessionStorage.getItem("auth");
-  if (!cipher) return null;
+  const cipher = localStorage.getItem("auth");
+  if (!cipher) return saveAuthFromCookie();
 
   return decrypt(cipher);
 };
 
-/**
- * ✅ Get RAW JWT token (for Bearer header)
- */
+/* GET TOKEN (for API) */
 export const getAuthToken = () => {
-  if (typeof window === "undefined") return null;
-
-  const auth = getAuthFromSession();
+  const auth = getAuth();
   return auth?.token || null;
 };
 
-/**
- * ✅ Check login status
- * Used for PUBLIC / PRIVATE API switch
- */
+/* LOGIN CHECK */
 export const isUserLoggedIn = () => {
-  if (typeof window === "undefined") return false;
-
-  const auth = getAuthFromSession();
+  const auth = getAuth();
   if (!auth) return false;
 
-  if (auth?.exp) {
-    const now = Math.floor(Date.now() / 1000);
-    return auth.exp > now;
-  }
-
-  return true;
+  const now = Math.floor(Date.now() / 1000);
+  return auth.exp ? auth.exp > now : true;
 };
 
-/**
- * ✅ Clear auth session (logout / 401)
- */
-export const clearAuthSession = async () => {
-  if (typeof window === "undefined") return;
-
-  sessionStorage.removeItem("auth");
-
-  // backend logout (cookie clear if any)
-  await fetch("/api/logout", {
-    method: "POST",
-    credentials: "include",
-  });
-};
-
-/* ======================================================
-   EMAIL (OTP FLOW) – SESSION SAFE
-   ====================================================== */
-
-export const saveEmail = (email) => {
-  if (typeof window === "undefined") return;
-  sessionStorage.setItem("userEmail", encrypt(email));
-};
-
-export const getEmail = () => {
-  if (typeof window === "undefined") return null;
-
-  const cipher = sessionStorage.getItem("userEmail");
-  return cipher ? decrypt(cipher) : null;
-};
-
-export const clearEmail = () => {
-  if (typeof window === "undefined") return;
-  sessionStorage.removeItem("userEmail");
+/* LOGOUT */
+export const clearAuth = () => {
+  localStorage.removeItem("auth");
 };

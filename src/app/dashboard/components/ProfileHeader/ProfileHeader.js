@@ -12,7 +12,7 @@ import { getOrganizationProfileApi } from "../../../../lib/api/organizer.api";
 import { getUserProfileApi } from "../../../../lib/api/user.api";
 
 // AUTH
-import { getAuthFromSession, isUserLoggedIn } from "../../../../lib/auth";
+import { getAuth, isUserLoggedIn } from "../../../../lib/auth";
 
 export default function ProfileHeader() {
   const router = useRouter();
@@ -23,16 +23,15 @@ export default function ProfileHeader() {
   /* ================= LOAD PROFILE ================= */
   const loadProfile = async () => {
     try {
-
       if (!isUserLoggedIn()) {
         console.log("User not logged in");
         return;
       }
 
-      const auth = getAuthFromSession();
+      const auth = getAuth();
 
       if (!auth?.identity || !auth?.type) {
-        console.log(" Invalid auth data");
+        console.log("Invalid auth data");
         return;
       }
 
@@ -44,7 +43,6 @@ export default function ProfileHeader() {
       } else {
         res = await getUserProfileApi(auth.identity);
       }
-
 
       if (res?.status && res.data) {
         setProfile(res.data);
@@ -71,13 +69,12 @@ export default function ProfileHeader() {
   /* ================= IMPORTANT GUARD ================= */
   if (!profile) {
     console.log("Profile not loaded yet:", profile);
-    return null; 
+    return null;
   }
 
   /* ================= SAFE ACCESS ================= */
 
-  const displayName =
-    profile.organizationName || profile.name || "User";
+  const displayName = profile.organizationName || profile.name || "User";
 
   const firstLetter = displayName.charAt(0).toUpperCase();
 
@@ -98,27 +95,17 @@ export default function ProfileHeader() {
             className={styles.avatar}
           />
         ) : (
-          <div className={styles.avatarFallback}>
-            {firstLetter}
-          </div>
+          <div className={styles.avatarFallback}>{firstLetter}</div>
         )}
 
         <div className={styles.info}>
           <h2 className={styles.name}>{displayName}</h2>
 
           <div className={styles.followInfo}>
-            <span
-              onClick={() =>
-                router.push("/dashboard/profile/followers")
-              }
-            >
+            <span onClick={() => router.push("/dashboard/profile/followers")}>
               {followersCount} Followers
             </span>
-            <span
-              onClick={() =>
-                router.push("/dashboard/profile/following")
-              }
-            >
+            <span onClick={() => router.push("/dashboard/profile/following")}>
               {followingCount} Following
             </span>
           </div>
