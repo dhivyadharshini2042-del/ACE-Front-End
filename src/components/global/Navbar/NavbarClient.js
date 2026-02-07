@@ -2,10 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Navbar, Nav, Container, Dropdown } from "react-bootstrap";
+import {
+  Navbar,
+  Nav,
+  Container,
+  Dropdown,
+} from "react-bootstrap";
 import "./Navbar.css";
 
-import { getAuth, isUserLoggedIn } from "../../../lib/auth";
+import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import { getUserProfileApi } from "../../../lib/api/user.api";
 import { getOrganizationProfileApi } from "../../../lib/api/organizer.api";
 
@@ -23,15 +28,12 @@ export default function NavbarClient() {
     setIsLoggedIn(logged);
 
     if (logged) {
-      const authData = getAuth(); 
-      setAuth(authData);
+      const session = getAuthFromSession();
+      setAuth(session);
 
-      if (authData?.email) {
-        setInitial(authData.email.charAt(0).toUpperCase());
+      if (session?.email) {
+        setInitial(session.email.charAt(0).toUpperCase());
       }
-    } else {
-      setAuth(null);
-      setInitial("U");
     }
   }, []);
 
@@ -67,11 +69,6 @@ export default function NavbarClient() {
 
     loadProfile();
   }, [isLoggedIn, auth]);
-
-  const handleProfileClick = () => {
-    setMenuOpen(false);
-    router.push("/dashboard");
-  };
 
   return (
     <Navbar expand="lg" sticky="top" className="ace-navbar">
@@ -147,25 +144,24 @@ export default function NavbarClient() {
               )}
 
               {/* PROFILE IMAGE / LETTER */}
-              <div onClick={handleProfileClick}>
-                {isLoggedIn &&
-                  (profileImage ? (
-                    <img
-                      src={profileImage}
-                      className="profile-img"
-                      alt="profile"
-                      onClick={() => router.push("/dashboard")}
-                      onError={() => setProfileImage(null)}
-                    />
-                  ) : (
-                    <div
-                      className="profile-img letter-avatar"
-                      onClick={() => router.push("/dashboard")}
-                    >
-                      {initial}
-                    </div>
-                  ))}
-              </div>
+              {isLoggedIn && (
+                profileImage ? (
+                  <img
+                    src={profileImage}
+                    className="profile-img"
+                    alt="profile"
+                    onClick={() => router.push("/dashboard")}
+                    onError={() => setProfileImage(null)}
+                  />
+                ) : (
+                  <div
+                    className="profile-img letter-avatar"
+                    onClick={() => router.push("/dashboard")}
+                  >
+                    {initial}
+                  </div>
+                )
+              )}
             </div>
           </div>
         </Navbar.Collapse>

@@ -10,7 +10,11 @@ import { getUserProfileApi } from "../../../../lib/api/user.api";
 import ConfirmModal from "../../../../components/ui/Modal/ConfirmModal";
 
 // 🔐 SESSION AUTH
-import { getAuth, isUserLoggedIn, clearAuth } from "../../../../lib/auth";
+import {
+  getAuthFromSession,
+  isUserLoggedIn,
+  clearAuthSession,
+} from "../../../../lib/auth";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -34,10 +38,7 @@ export default function Sidebar() {
     setIsLoggedIn(loggedIn);
 
     if (loggedIn) {
-      const authData = getAuth();
-      setAuth(authData);
-    } else {
-      setAuth(null);
+      setAuth(getAuthFromSession());
     }
   }, []);
 
@@ -78,9 +79,9 @@ export default function Sidebar() {
     setShowLogoutConfirm(true);
   };
 
-  const confirmLogout = () => {
+  const confirmLogout = async () => {
     setShowLogoutConfirm(false);
-    clearAuth(); 
+    await clearAuthSession();
     window.location.href = "/";
   };
 
@@ -88,8 +89,10 @@ export default function Sidebar() {
     setShowLogoutConfirm(false);
   };
 
-  const displayName = profile?.organizationName || profile?.name || "User";
-  const displayEmail = profile?.domainEmail || profile?.email || "User";
+  const displayName =
+    profile?.organizationName || profile?.name || "User";
+  const displayEmail =
+    profile?.domainEmail || profile?.email || "User";
   const firstLetter = displayName.charAt(0).toUpperCase();
 
   return (
@@ -129,7 +132,9 @@ export default function Sidebar() {
             <Link
               href="/dashboard/profile/manage"
               className={
-                isActive("/dashboard/profile/manage") ? styles.activeLink : ""
+                isActive("/dashboard/profile/manage")
+                  ? styles.activeLink
+                  : ""
               }
             >
               Manage
@@ -139,7 +144,9 @@ export default function Sidebar() {
           <Link
             href="/dashboard/profile/delete"
             className={
-              isActive("/dashboard/profile/delete") ? styles.activeLink : ""
+              isActive("/dashboard/profile/delete")
+                ? styles.activeLink
+                : ""
             }
           >
             Delete
@@ -150,7 +157,9 @@ export default function Sidebar() {
       {/* ACTIVITIES */}
       <div
         className={`${styles.menu} ${
-          isActivePrefix("/dashboard/activities") ? styles.activeMenu : ""
+          isActivePrefix("/dashboard/activities")
+            ? styles.activeMenu
+            : ""
         }`}
         onClick={() => toggleMenu("activities")}
       >
@@ -167,7 +176,9 @@ export default function Sidebar() {
           <Link
             href="/dashboard/activities/saved"
             className={
-              isActive("/dashboard/activities/saved") ? styles.activeLink : ""
+              isActive("/dashboard/activities/saved")
+                ? styles.activeLink
+                : ""
             }
           >
             Saved
@@ -176,7 +187,7 @@ export default function Sidebar() {
           {auth?.type === "org" && (
             <Link
               href="/dashboard/activities/bookings"
-              style={{ display: "none" }}
+              style={{display:"none"}}
               className={
                 isActive("/dashboard/activities/bookings")
                   ? styles.activeLink
@@ -194,7 +205,9 @@ export default function Sidebar() {
         <>
           <div
             className={`${styles.menu} ${
-              isActivePrefix("/dashboard/space") ? styles.activeMenu : ""
+              isActivePrefix("/dashboard/space")
+                ? styles.activeMenu
+                : ""
             }`}
             onClick={() => toggleMenu("space")}
           >
@@ -211,7 +224,9 @@ export default function Sidebar() {
               <Link
                 href="/dashboard/space/create"
                 className={
-                  isActive("/dashboard/space/create") ? styles.activeLink : ""
+                  isActive("/dashboard/space/create")
+                    ? styles.activeLink
+                    : ""
                 }
               >
                 Create Event
@@ -246,7 +261,9 @@ export default function Sidebar() {
       {/* SETTINGS */}
       <div
         className={`${styles.menu} ${
-          isActivePrefix("/dashboard/settings") ? styles.activeMenu : ""
+          isActivePrefix("/dashboard/settings")
+            ? styles.activeMenu
+            : ""
         }`}
         onClick={() => toggleMenu("settings")}
       >
@@ -275,7 +292,9 @@ export default function Sidebar() {
             <Link
               href="/dashboard/settings/email"
               className={
-                isActive("/dashboard/settings/email") ? styles.activeLink : ""
+                isActive("/dashboard/settings/email")
+                  ? styles.activeLink
+                  : ""
               }
             >
               Email
@@ -300,7 +319,9 @@ export default function Sidebar() {
           <div onClick={handleLogoutClick}>
             <div className={styles.profileText}>{displayName}</div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <div className={styles.profileTextEmail}>{displayEmail}</div>
+              <div className={styles.profileTextEmail}>
+                {displayEmail}
+              </div>
               <img
                 src="/images/exit.png"
                 alt="logout"

@@ -14,8 +14,8 @@ import {
 import { useLoading } from "../../../context/LoadingContext";
 import { likeEventApi, saveEventApi } from "../../../lib/api/event.api";
 
-import { getAuth, isUserLoggedIn } from "../../../lib/auth";
-
+// 🔐 SESSION AUTH
+import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
 import { NO_IMAGE_FOUND_IMAGE } from "../../../const-value/config-message/page";
 
@@ -34,10 +34,7 @@ export default function EventsListFilter({ events = [] }) {
     setLoggedIn(ok);
 
     if (ok) {
-      const authData = getAuth();
-      setAuth(authData);
-    } else {
-      setAuth(null);
+      setAuth(getAuthFromSession());
     }
   }, []);
 

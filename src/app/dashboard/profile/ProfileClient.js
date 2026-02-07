@@ -15,7 +15,10 @@ import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
 import { useLoading } from "../../../context/LoadingContext";
 
 // 🔐 SESSION AUTH
-import { getAuth, isUserLoggedIn } from "../../../lib/auth";
+import {
+  getAuthFromSession,
+  isUserLoggedIn,
+} from "../../../lib/auth";
 
 export default function ProfilePage() {
   const fileRef = useRef(null);
@@ -44,10 +47,7 @@ export default function ProfilePage() {
     setLoggedIn(ok);
 
     if (ok) {
-      const authData = getAuth(); 
-      setAuth(authData);
-    } else {
-      setAuth(null);
+      setAuth(getAuthFromSession());
     }
   }, []);
 
@@ -70,8 +70,13 @@ export default function ProfilePage() {
           setProfile(res.data);
           setForm({
             name:
-              auth.type === "org" ? res.data.organizationName : res.data.name,
-            email: auth.type === "org" ? res.data.domainEmail : res.data.email,
+              auth.type === "org"
+                ? res.data.organizationName
+                : res.data.name,
+            email:
+              auth.type === "org"
+                ? res.data.domainEmail
+                : res.data.email,
             image: null,
           });
         }
@@ -160,7 +165,9 @@ export default function ProfilePage() {
             <label>Full Name</label>
             <input
               value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, name: e.target.value })
+              }
             />
 
             <label>Email</label>
@@ -210,7 +217,10 @@ export default function ProfilePage() {
               >
                 Cancel
               </button>
-              <button className={styles.saveBtn} onClick={saveProfile}>
+              <button
+                className={styles.saveBtn}
+                onClick={saveProfile}
+              >
                 Save Changes
               </button>
             </div>

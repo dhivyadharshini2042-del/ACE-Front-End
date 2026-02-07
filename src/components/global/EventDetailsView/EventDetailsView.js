@@ -21,8 +21,7 @@ import ConfirmModal from "../../ui/Modal/ConfirmModal";
 import { addEventViewApi, likeEventApi } from "../../../lib/api/event.api";
 import { useLoading } from "../../../context/LoadingContext";
 import ShareModal from "../../ui/ShareModal/ShareModal";
-import { getAuth, isUserLoggedIn } from "../../../lib/auth";
-
+import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import { toast } from "react-hot-toast";
 import { NO_IMAGE_FOUND_IMAGE } from "../../../const-value/config-message/page";
 
@@ -54,14 +53,10 @@ export default function EventDetailsView({ event = {}, onBack }) {
   // ================= LIKE STATE =================
   const [isLiked, setIsLiked] = useState(false);
   const [auth, setAuth] = useState(null);
-
   /* ================= INIT AUTH ================= */
   useEffect(() => {
     if (isUserLoggedIn()) {
-      const authData = getAuth();
-      setAuth(authData);
-    } else {
-      setAuth(null);
+      setAuth(getAuthFromSession());
     }
   }, []);
 
@@ -143,7 +138,7 @@ export default function EventDetailsView({ event = {}, onBack }) {
 
   /* ================= LIKE HANDLER ================= */
   const handleLike = async () => {
-    if (!isUserLoggedIn() || !auth?.identity) {
+    if (!isUserLoggedIn()) {
       toast("Please login to like this event", { icon: "⚠️" });
       return;
     }
@@ -159,7 +154,8 @@ export default function EventDetailsView({ event = {}, onBack }) {
     });
 
     if (!res?.status) {
-      setIsLiked(prevLiked); // rollback
+      // rollback
+      setIsLiked(prevLiked);
     }
   };
 
@@ -226,6 +222,7 @@ export default function EventDetailsView({ event = {}, onBack }) {
   useEffect(() => {
     setLoading(false);
   }, []);
+
 
   return (
     <>

@@ -26,8 +26,7 @@ import {
 import Footer from "../../../components/global/Footer/Footer";
 import { HEART_ICON, SAVEICON } from "../../../const-value/config-icons/page";
 import { likeEventApi, saveEventApi } from "../../../lib/api/event.api";
-import { getAuth, isUserLoggedIn } from "../../../lib/auth";
-
+import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import toast from "react-hot-toast";
 import { NO_IMAGE_FOUND_IMAGE } from "../../../const-value/config-message/page";
 import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
@@ -55,10 +54,7 @@ export default function OrganizationClient({ slug }) {
   /* ================= INIT AUTH ================= */
   useEffect(() => {
     if (isUserLoggedIn()) {
-      const authData = getAuth(); 
-      setAuth(authData);
-    } else {
-      setAuth(null);
+      setAuth(getAuthFromSession());
     }
   }, []);
 

@@ -10,7 +10,11 @@ import {
   getOrganizationProfileApi,
 } from "../../../../lib/api/organizer.api";
 
-import { getAuth, isUserLoggedIn } from "../../../../lib/auth";
+// 🔐 SESSION AUTH
+import {
+  getAuthFromSession,
+  isUserLoggedIn,
+} from "../../../../lib/auth";
 
 export default function OverviewDashboardPage() {
   const { setLoading } = useLoading();
@@ -26,10 +30,7 @@ export default function OverviewDashboardPage() {
     setLoggedIn(ok);
 
     if (ok) {
-      const authData = getAuth(); 
-      setAuth(authData);
-    } else {
-      setAuth(null);
+      setAuth(getAuthFromSession());
     }
   }, []);
 

@@ -12,7 +12,7 @@ import {
   getOrganizerEventsApi,
 } from "../../../../lib/api/event.api";
 
-import { getAuth, isUserLoggedIn } from "../../../../lib/auth";
+import { getAuthFromSession, isUserLoggedIn } from "../../../../lib/auth";
 
 export default function MyEventPage() {
   const [events, setEvents] = useState([]);
@@ -30,13 +30,7 @@ export default function MyEventPage() {
   useEffect(() => {
     const ok = isUserLoggedIn();
     setLoggedIn(ok);
-
-    if (ok) {
-      const authData = getAuth(); 
-      setAuth(authData);
-    } else {
-      setAuth(null);
-    }
+    if (ok) setAuth(getAuthFromSession());
   }, []);
 
   useEffect(() => {
