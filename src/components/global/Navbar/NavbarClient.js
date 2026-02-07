@@ -2,12 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Navbar,
-  Nav,
-  Container,
-  Dropdown,
-} from "react-bootstrap";
+import { Navbar, Nav, Container, Dropdown } from "react-bootstrap";
 import "./Navbar.css";
 
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
@@ -31,6 +26,12 @@ export default function NavbarClient() {
       const session = getAuthFromSession();
       setAuth(session);
 
+      const email = session?.identity?.email || session?.identity?.domainEmail;
+
+      if (email) {
+        setInitial(email.charAt(0).toUpperCase());
+      }
+
       if (session?.email) {
         setInitial(session.email.charAt(0).toUpperCase());
       }
@@ -45,10 +46,12 @@ export default function NavbarClient() {
       try {
         let res;
 
+        const identityId = auth.identity.identity;
+
         if (auth.type === "org") {
-          res = await getOrganizationProfileApi(auth.identity);
+          res = await getOrganizationProfileApi(identityId);
         } else {
-          res = await getUserProfileApi(auth.identity);
+          res = await getUserProfileApi(identityId);
         }
 
         if (res?.status && res.data) {
@@ -144,8 +147,8 @@ export default function NavbarClient() {
               )}
 
               {/* PROFILE IMAGE / LETTER */}
-              {isLoggedIn && (
-                profileImage ? (
+              {isLoggedIn &&
+                (profileImage ? (
                   <img
                     src={profileImage}
                     className="profile-img"
@@ -160,8 +163,7 @@ export default function NavbarClient() {
                   >
                     {initial}
                   </div>
-                )
-              )}
+                ))}
             </div>
           </div>
         </Navbar.Collapse>

@@ -16,7 +16,7 @@ import {
 import { loginApi } from "../../../../lib/api/auth.api";
 
 /* ✅ AUTH (SESSION) */
-import { setAuthSession } from "../../../../lib/auth";
+import { setAuthCookie } from "../../../../lib/auth";
 
 /* VALIDATION */
 import { organizerLoginSchema } from "../../../../components/validation";
@@ -59,7 +59,7 @@ export default function OrganizerLoginPage() {
     try {
       await organizerLoginSchema.validate(
         { email, password },
-        { abortEarly: false }
+        { abortEarly: false },
       );
     } catch (err) {
       toast.error(err.errors[0]);
@@ -75,7 +75,7 @@ export default function OrganizerLoginPage() {
         password,
         type: ROLE_ORGANIZER,
       });
-
+      console.log("res", res);
       // 3️⃣ failure
       if (!res?.status || !res?.token) {
         toast.error(res?.message || MSG_INVALID_CREDENTIALS);
@@ -83,7 +83,7 @@ export default function OrganizerLoginPage() {
       }
 
       // 4️⃣ ✅ SAVE AUTH TO SESSION (IMPORTANT)
-      setAuthSession(res.token);
+      setAuthCookie(res.token, res.data, ROLE_ORGANIZER);
 
       // 5️⃣ success
       toast.success(MSG_LOGIN_SUCCESS_ORGANIZER);
@@ -160,9 +160,7 @@ export default function OrganizerLoginPage() {
 
             <p className="org-foot">
               {TEXT_NO_ACCOUNT}{" "}
-              <a href="/auth/organization/signup/category">
-                {TEXT_SIGNUP}
-              </a>
+              <a href="/auth/organization/signup/category">{TEXT_SIGNUP}</a>
             </p>
           </form>
         </div>

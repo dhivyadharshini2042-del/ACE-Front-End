@@ -15,10 +15,7 @@ import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
 import { useLoading } from "../../../context/LoadingContext";
 
 // 🔐 SESSION AUTH
-import {
-  getAuthFromSession,
-  isUserLoggedIn,
-} from "../../../lib/auth";
+import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 
 export default function ProfilePage() {
   const fileRef = useRef(null);
@@ -61,22 +58,17 @@ export default function ProfilePage() {
 
         let res;
         if (auth.type === "org") {
-          res = await getOrganizationProfileApi(auth.identity);
+          res = await getOrganizationProfileApi(auth.identity.identity);
         } else {
-          res = await getUserProfileApi(auth.identity);
+          res = await getUserProfileApi(auth.identity.identity);
         }
 
         if (res?.status) {
           setProfile(res.data);
           setForm({
             name:
-              auth.type === "org"
-                ? res.data.organizationName
-                : res.data.name,
-            email:
-              auth.type === "org"
-                ? res.data.domainEmail
-                : res.data.email,
+              auth.type === "org" ? res.data.organizationName : res.data.name,
+            email: auth.type === "org" ? res.data.domainEmail : res.data.email,
             image: null,
           });
         }
@@ -98,7 +90,7 @@ export default function ProfilePage() {
       setLoading(true);
 
       const payload = new FormData();
-      payload.append("identity", auth.identity);
+      payload.append("identity", auth.identity.identity);
       payload.append("type", auth.type);
 
       if (auth.type === "org") {
@@ -165,9 +157,7 @@ export default function ProfilePage() {
             <label>Full Name</label>
             <input
               value={form.name}
-              onChange={(e) =>
-                setForm({ ...form, name: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
             />
 
             <label>Email</label>
@@ -217,10 +207,7 @@ export default function ProfilePage() {
               >
                 Cancel
               </button>
-              <button
-                className={styles.saveBtn}
-                onClick={saveProfile}
-              >
+              <button className={styles.saveBtn} onClick={saveProfile}>
                 Save Changes
               </button>
             </div>

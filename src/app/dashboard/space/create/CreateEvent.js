@@ -157,7 +157,7 @@ export default function CreateEvent() {
         abortEarly: false,
       });
 
-      const orgId = auth.identity;
+      const orgId = auth.identity.identity;
 
       if (!orgId) {
         toast.error("Organization not found");

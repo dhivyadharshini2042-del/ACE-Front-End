@@ -50,9 +50,9 @@ export default function Sidebar() {
       try {
         let res;
         if (auth.type === "org") {
-          res = await getOrganizationProfileApi(auth.identity);
+          res = await getOrganizationProfileApi(auth.identity.identity);
         } else {
-          res = await getUserProfileApi(auth.identity);
+          res = await getUserProfileApi(auth.identity.identity);
         }
 
         if (res?.status) {

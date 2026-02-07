@@ -134,7 +134,7 @@ export default function OrganizationClient({ slug }) {
 
     const res = await likeEventApi({
       eventIdentity: eventId,
-      userIdentity: auth.identity,
+      userIdentity: auth.identity.identity,
     });
 
     if (!res?.status) {
@@ -159,7 +159,7 @@ export default function OrganizationClient({ slug }) {
 
     const res = await saveEventApi({
       eventIdentity: eventId,
-      userIdentity: auth.identity,
+      userIdentity: auth.identity.identity,
     });
 
     if (!res?.status) {
