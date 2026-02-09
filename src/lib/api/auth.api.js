@@ -43,6 +43,11 @@ export const updateAuthProfile = (data) =>
 export const getSavedEventsApi = (userId) =>
   handleApi(apiPrivate.get(API_ENDPOINTS.AUTH.SAVED_EVENTS(userId)));
 
+export const saveUserRoleApi = async (data) => {
+  return apiHelper.post("/auth/save-role", data);
+};
+
+
 // VERIFY ORGANIZER EMAIL
 export const verifyEmailApi = (token) =>
   handleApi(

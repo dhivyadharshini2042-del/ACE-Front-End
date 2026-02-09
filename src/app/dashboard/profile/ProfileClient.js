@@ -65,6 +65,7 @@ export default function ProfilePage() {
 
         if (res?.status) {
           setProfile(res.data);
+          console.log("asdfasdfasdf",res)
           setForm({
             name:
               auth.type === "org" ? res.data.organizationName : res.data.name,
@@ -126,6 +127,8 @@ export default function ProfilePage() {
   };
 
   if (!profile) return null;
+
+  console.log("form",form)
 
   /* ================= UI (UNCHANGED) ================= */
   return (

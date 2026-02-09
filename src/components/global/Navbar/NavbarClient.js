@@ -16,6 +16,27 @@ export default function NavbarClient() {
   const [auth, setAuth] = useState(null);
   const [initial, setInitial] = useState("U");
   const [profileImage, setProfileImage] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    const handler = (event) => {
+      const payload = event.detail;
+
+      const newNotification = {
+        title: payload.notification?.title,
+        body: payload.notification?.body,
+        time: new Date().toLocaleTimeString(),
+      };
+
+      setNotifications((prev) => [newNotification, ...prev]);
+    };
+
+    window.addEventListener("ace-notification", handler);
+
+    return () => {
+      window.removeEventListener("ace-notification", handler);
+    };
+  }, []);
 
   /* ================= SESSION INIT ================= */
   useEffect(() => {
@@ -31,10 +52,6 @@ export default function NavbarClient() {
       if (email) {
         setInitial(email.charAt(0).toUpperCase());
       }
-
-      if (session?.email) {
-        setInitial(session.email.charAt(0).toUpperCase());
-      }
     }
   }, []);
 
@@ -45,7 +62,6 @@ export default function NavbarClient() {
 
       try {
         let res;
-
         const identityId = auth.identity.identity;
 
         if (auth.type === "org") {
@@ -66,7 +82,7 @@ export default function NavbarClient() {
           }
         }
       } catch {
-        // silent fail – navbar should not break
+        // silent fail
       }
     }
 
@@ -104,27 +120,31 @@ export default function NavbarClient() {
                 <button className="icon-circle outline">📍</button>
               )}
 
-              {!isLoggedIn ? (
-                <>
-                  <button
-                    className="btn-primary non-pill"
-                    onClick={() => router.push("/dashboard/space/create")}
-                  >
-                    Create Event
-                  </button>
-                  <button
-                    className="btn-primary pill"
-                    onClick={() => router.push("/auth/user/login")}
-                  >
-                    Sign In
-                  </button>
-                </>
-              ) : (
+              {/* ---------- CREATE EVENT LOGIC FIX ---------- */}
+              {!isLoggedIn && (
+                <button
+                  className="btn-primary non-pill"
+                  onClick={() => router.push("/auth/organization/login")}
+                >
+                  Create Event
+                </button>
+              )}
+
+              {isLoggedIn && auth?.type === "org" && (
                 <button
                   className="btn-primary pill"
                   onClick={() => router.push("/dashboard/space/create")}
                 >
                   Create Event
+                </button>
+              )}
+
+              {!isLoggedIn && (
+                <button
+                  className="btn-primary pill"
+                  onClick={() => router.push("/auth/user/login")}
+                >
+                  Sign In
                 </button>
               )}
             </div>
@@ -140,8 +160,27 @@ export default function NavbarClient() {
                   <Dropdown.Menu className="notification-panel">
                     <div className="notification-header">
                       <h6>Notifications</h6>
-                      <span className="view-all">View All</span>
+                      <span
+                        className="view-all"
+                        onClick={() =>
+                          router.push("/dashboard/settings/notification")
+                        }
+                      >
+                        View All
+                      </span>
                     </div>
+
+                    {notifications.length === 0 ? (
+                      <div className="notification-empty">No notifications</div>
+                    ) : (
+                      notifications.slice(0, 5).map((n, i) => (
+                        <div key={i} className="notification-item">
+                          <strong>{n.title}</strong>
+                          <p>{n.body}</p>
+                          <small>{n.time}</small>
+                        </div>
+                      ))
+                    )}
                   </Dropdown.Menu>
                 </Dropdown>
               )}

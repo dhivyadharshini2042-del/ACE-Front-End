@@ -55,7 +55,7 @@ export default function OrganizerLoginPage() {
   async function onSubmit(e) {
     e.preventDefault();
 
-    // 1️⃣ validation
+    //  validation
     try {
       await organizerLoginSchema.validate(
         { email, password },
@@ -69,25 +69,26 @@ export default function OrganizerLoginPage() {
     try {
       setLoading(true);
 
-      // 2️⃣ login API
+      //  login API
       const res = await loginApi({
         email,
         password,
         type: ROLE_ORGANIZER,
       });
       console.log("res", res);
-      // 3️⃣ failure
+      // failure
       if (!res?.status || !res?.token) {
         toast.error(res?.message || MSG_INVALID_CREDENTIALS);
         return;
       }
 
-      // 4️⃣ ✅ SAVE AUTH TO SESSION (IMPORTANT)
+      //  SAVE AUTH TO SESSION (IMPORTANT)
       setAuthCookie(res.token, res.data, ROLE_ORGANIZER);
 
-      // 5️⃣ success
+      // success
       toast.success(MSG_LOGIN_SUCCESS_ORGANIZER);
       router.push("/dashboard");
+      // router.push("/auth/role-select");
     } catch (err) {
       toast.error(MSG_LOGIN_FAILED);
     } finally {

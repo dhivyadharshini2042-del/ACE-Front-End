@@ -1,0 +1,125 @@
+/* ===== PAGE ===== */
+.vibe-shell {
+  min-height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== HEADER ===== */
+.vibe-header {
+  text-align: center;
+  margin-top: 60px;
+}
+
+.vibe-title {
+  font-size: 38px;
+  font-weight: 700;
+}
+
+.vibe-title span {
+  color: #8b5cf6;
+}
+
+.vibe-sub {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #8a8a8a;
+}
+
+/* ===== BODY ===== */
+.vibe-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 🔥 key */
+  padding: 0 100px;
+}
+
+/* ===== LEFT ===== */
+.vibe-left {
+  flex: 1.1;
+  display: flex;
+  justify-content: center;
+}
+
+.vibe-left img {
+  width: 100%;
+  max-width: 520px;
+}
+
+/* ===== RIGHT ===== */
+.vibe-right {
+  flex: 0.9;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: flex-start;
+  margin-left: -40px; /* 🔥 alignment fix */
+}
+
+/* ===== BUTTON ===== */
+.vibe-btn {
+  width: 420px;
+  height: 78px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 28px;
+  border-radius: 999px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.vibe-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ICON */
+.icon {
+  width: 44px;
+  height: 44px;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== COLORS ===== */
+.student {
+  background: #e6f8ff;
+}
+
+.faculty {
+  background: #fff3dc;
+}
+
+.professional {
+  background: #efe8ff;
+}
+
+.general {
+  background: #ffe5ec;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .vibe-body {
+    flex-direction: column;
+    padding: 40px 20px;
+  }
+
+  .vibe-right {
+    margin-left: 0;
+    align-items: center;
+  }
+
+  .vibe-btn {
+    width: 100%;
+    max-width: 380px;
+  }
+}
