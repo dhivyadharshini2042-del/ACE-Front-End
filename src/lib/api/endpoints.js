@@ -30,13 +30,10 @@ export const API_ENDPOINTS = {
     SAVED_EVENTS: (userId) => `/v1/user/saved/${userId}`,
   },
   /* ================= LOCATIONS ================= */
-  USER: {
-    ALL: "/v1/users",
-    // countries
+  LOCATIONS: {
     ALL_COUNTRIES:  "/v1/location/countries",
-    ALL_STATES : (statesId) => `/v1/user/${userId}`,
-    UPDATE: (userId) => `/v1/user/${userId}`,
-    DELETE: (userId) => `/v1/user/${userId}`,
+    COUNTRIES_STATES : (statesId) => `/v1/location/countries/${statesId}/states`,
+    STATES_CITIES: (citiesId) => `/v1/location/states/${citiesId}/cities`,
   },
   /* ================= USERS ================= */
   USER: {

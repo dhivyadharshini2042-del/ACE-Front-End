@@ -1,27 +1,48 @@
-const BASE = process.env.NEXT_PUBLIC_LOCATION_API_BASE;
+// src/lib/location.api.js
 
+import apiPublic from "./axiosPublic";
+import { API_ENDPOINTS } from "./api/endpoints";
+import { handleApi } from "./api/apiHelper";
+
+/* =======================
+   COUNTRIES
+======================= */
 export const getCountries = async () => {
-  const res = await fetch(`${BASE}/countries/iso`);
-  const json = await res.json();
-  return json.data.map((c) => ({ code: c.Iso2, name: c.name }));
+  const res = await handleApi(
+    apiPublic.get(API_ENDPOINTS.LOCATIONS.ALL_COUNTRIES)
+  );
+
+  // expected backend response:
+  // [{ identity, name }]
+  return res?.status ? res.data : [];
 };
 
-export const getStates = async (country) => {
-  const res = await fetch(`${BASE}/countries/states`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ country }),
-  });
-  const json = await res.json();
-  return json.data.states.map((s) => ({ code: s.name, name: s.name }));
+/* =======================
+   STATES (by countryId)
+======================= */
+export const getStates = async (countryId) => {
+  if (!countryId) return [];
+
+  const res = await handleApi(
+    apiPublic.get(API_ENDPOINTS.LOCATIONS.COUNTRIES_STATES(countryId))
+  );
+
+  // expected:
+  // [{ identity, name }]
+  return res?.status ? res.data : [];
 };
 
-export const getCities = async (country, state) => {
-  const res = await fetch(`${BASE}/countries/state/cities`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ country, state }),
-  });
-  const json = await res.json();
-  return json.data.map((c) => ({ code: c, name: c }));
+/* =======================
+   CITIES (by stateId)
+======================= */
+export const getCities = async (stateId) => {
+  if (!stateId) return [];
+
+  const res = await handleApi(
+    apiPublic.get(API_ENDPOINTS.LOCATIONS.STATES_CITIES(stateId))
+  );
+
+  // expected:
+  // [{ identity, name }]
+  return res?.status ? res.data : [];
 };
