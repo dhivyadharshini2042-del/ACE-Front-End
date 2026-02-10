@@ -127,30 +127,6 @@ export default function Sidebar() {
           >
             My Profile
           </Link>
-
-          {auth?.type === "org" && (
-            <Link
-              href="/dashboard/profile/manage"
-              className={
-                isActive("/dashboard/profile/manage")
-                  ? styles.activeLink
-                  : ""
-              }
-            >
-              Manage
-            </Link>
-          )}
-
-          <Link
-            href="/dashboard/profile/delete"
-            className={
-              isActive("/dashboard/profile/delete")
-                ? styles.activeLink
-                : ""
-            }
-          >
-            Delete
-          </Link>
         </div>
       )}
 

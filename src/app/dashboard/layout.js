@@ -8,20 +8,20 @@ import ProfileHeader from "./components/ProfileHeader/ProfileHeader";
 export default function DashboardLayout({ children }) {
   const pathname = usePathname();
 
-  // space/create pages la ProfileHeader hide
-  const hideProfileHeader = pathname.startsWith("/dashboard/space");
+  // Hide ProfileHeader on space/* and profile page
+  const hideProfileHeader =
+    pathname.startsWith("/dashboard/space") ||
+    pathname.startsWith("/dashboard/profile");
 
   return (
     <div className={styles.container}>
-      {/* SIDEBAR – ALWAYS VISIBLE */}
+      {/* SIDEBAR */}
       <Sidebar />
 
-      {/* MAIN CONTENT */}
+      {/* MAIN */}
       <div className={styles.main}>
-        {/* PROFILE HEADER – CONDITIONAL */}
         {!hideProfileHeader && <ProfileHeader />}
 
-        {/* PAGE CONTENT */}
         <div className={styles.page}>{children}</div>
       </div>
     </div>

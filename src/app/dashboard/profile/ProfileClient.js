@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./Profile.module.css";
-import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 /* APIs */
 import { getOrganizationProfileApi } from "../../../lib/api/organizer.api";
@@ -14,19 +14,26 @@ import { updateAuthProfile } from "../../../lib/api/auth.api";
 import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
 import { useLoading } from "../../../context/LoadingContext";
 
-// 🔐 SESSION AUTH
+/* AUTH */
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
+import {
+  FACEBOOKICON,
+  INSTAGRAMICON,
+  LINKEDINICON,
+  TELEGRAMICON,
+  WEBSITEICON,
+  XICON,
+  YOUTUBEICON,
+} from "../../../const-value/config-icons/page";
 
-export default function ProfilePage() {
-  const fileRef = useRef(null);
+export default function ProfileClient() {
   const router = useRouter();
+  const fileRef = useRef(null);
   const { setLoading } = useLoading();
 
-  // 🔐 SESSION STATE
   const [auth, setAuth] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(false);
-
   const [profile, setProfile] = useState(null);
+
   const [mode, setMode] = useState("view");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
@@ -34,43 +41,60 @@ export default function ProfilePage() {
     name: "",
     email: "",
     image: null,
+    socialLinks: {
+      instagram: "",
+      linkedin: "",
+      x: "",
+      website: "",
+    },
   });
 
   const [imagePreview, setImagePreview] = useState(null);
 
-  /* ================= INIT AUTH ================= */
-  useEffect(() => {
-    const ok = isUserLoggedIn();
-    setLoggedIn(ok);
+  const socialWithIcon = [
+    { key: "linkedin", label: "LinkedIn", icon: LINKEDINICON },
+    { key: "telegram", label: "Telegram", icon: TELEGRAMICON },
+    { key: "youtube", label: "YouTube", icon: YOUTUBEICON },
+    { key: "x", label: "X", icon: XICON },
+    { key: "instagram", label: "Instagram", icon: INSTAGRAMICON },
+    { key: "facebook", label: "Facebook", icon: FACEBOOKICON },
+    { key: "website", label: "Website", icon: WEBSITEICON },
+  ];
 
-    if (ok) {
-      setAuth(getAuthFromSession());
-    }
-  }, []);
-
-  /* ================= LOAD PROFILE ================= */
+  /* ================= INIT ================= */
   useEffect(() => {
+    if (!isUserLoggedIn()) return;
+
+    const session = getAuthFromSession();
+    setAuth(session);
+
     async function loadProfile() {
       try {
-        if (!loggedIn || !auth?.identity || !auth?.type) return;
-
         setLoading(true);
 
         let res;
-        if (auth.type === "org") {
-          res = await getOrganizationProfileApi(auth.identity.identity);
+        if (session.type === "org") {
+          res = await getOrganizationProfileApi(session.identity.identity);
         } else {
-          res = await getUserProfileApi(auth.identity.identity);
+          res = await getUserProfileApi(session.identity.identity);
         }
 
         if (res?.status) {
           setProfile(res.data);
-          console.log("asdfasdfasdf",res)
           setForm({
             name:
-              auth.type === "org" ? res.data.organizationName : res.data.name,
-            email: auth.type === "org" ? res.data.domainEmail : res.data.email,
+              session.type === "org"
+                ? res.data.organizationName
+                : res.data.name,
+            email:
+              session.type === "org" ? res.data.domainEmail : res.data.email,
             image: null,
+            socialLinks: res.data.socialLinks || {
+              instagram: "",
+              linkedin: "",
+              x: "",
+              website: "",
+            },
           });
         }
       } catch {
@@ -81,12 +105,12 @@ export default function ProfilePage() {
     }
 
     loadProfile();
-  }, [loggedIn, auth?.identity, auth?.type]);
+  }, []);
 
-  /* ================= SAVE PROFILE ================= */
+  /* ================= SAVE ================= */
   const saveProfile = async () => {
     try {
-      if (!loggedIn || !auth?.identity || !auth?.type) return;
+      if (!auth) return;
 
       setLoading(true);
 
@@ -94,11 +118,12 @@ export default function ProfilePage() {
       payload.append("identity", auth.identity.identity);
       payload.append("type", auth.type);
 
-      if (auth.type === "org") {
-        payload.append("organizationName", form.name);
-      } else {
-        payload.append("name", form.name);
-      }
+      payload.append(
+        auth.type === "org" ? "organizationName" : "name",
+        form.name,
+      );
+
+      payload.append("socialLinks", JSON.stringify(form.socialLinks));
 
       if (form.image) {
         payload.append("profileImage", form.image);
@@ -110,7 +135,6 @@ export default function ProfilePage() {
         toast.success("Profile updated successfully");
         setMode("view");
         setImagePreview(null);
-        setForm((prev) => ({ ...prev, image: null }));
       } else {
         toast.error(res?.message || "Update failed");
       }
@@ -121,101 +145,285 @@ export default function ProfilePage() {
     }
   };
 
-  const handleSendResetMail = () => {
-    setShowConfirmModal(false);
-    router.push("/auth/forgot-password");
-  };
-
   if (!profile) return null;
 
-  console.log("form",form)
-
-  /* ================= UI (UNCHANGED) ================= */
   return (
-    <div className={styles.profileWrapper}>
-      {mode === "view" && (
-        <div className={styles.viewBox}>
-          <div>
-            <label>Full Name</label>
-            <p>{form.name}</p>
-          </div>
-
-          <div>
-            <label>Email</label>
-            <p>{form.email}</p>
-          </div>
-
-          <img
-            src="/images/Pen.png"
-            className={styles.editIcon}
-            onClick={() => setMode("edit")}
-            alt="edit"
-          />
+    <div className={styles.card}>
+      {form.name && <h2 className={styles.name}>{form.name}</h2>}
+      {/* ================= TOP ================= */}
+      <div className={styles.top}>
+        <div className={styles.avatar}>
+          {profile.profileImage ? (
+            <img src={profile.profileImage} alt="profile" />
+          ) : (
+            <div className={styles.noImage}>{form.name?.charAt(0)}</div>
+          )}
         </div>
-      )}
 
-      {mode === "edit" && (
-        <div className={styles.editBox}>
-          <div className={styles.left}>
-            <label>Full Name</label>
-            <input
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-            />
+        <div className={styles.topRight}>
+          <div className={styles.stats}>
+            {profile.organizationCategory && (
+              <div>
+                <span>Organization</span>
+                <b>{profile.organizationCategory}</b>
+              </div>
+            )}
+            <div>
+              <span>Events Organized</span>
+              <b>{profile.eventCount || 0}</b>
+            </div>
+            <div data-tooltip="View followers">
+              <span>Followers</span>
+              <b>{profile.followers || 0}</b>
+            </div>
+            <div data-tooltip="View following">
+              <span>Following</span>
+              <b>{profile.following || 0}</b>
+            </div>
+          </div>
 
-            <label>Email</label>
-            <input value={form.email} disabled />
+          <div className={styles.meta}>
+            {form.email && <span>{form.email}</span>}
+            {profile.isVerified && (
+              <span className={styles.verified}>✔ Verified</span>
+            )}
+          </div>
+        </div>
+      </div>
 
+      {/* ================= SOCIAL VIEW ================= */}
+      <div className={styles.socialRow}>
+        {form.socialLinks.instagram && (
+          <a
+            href={form.socialLinks.instagram}
+            target="_blank"
+            className={`${styles.socialItem} ${styles.instagram}`}
+          >
+            {INSTAGRAMICON} Instagram
+          </a>
+        )}
+        {form.socialLinks.linkedin && (
+          <a
+            href={form.socialLinks.linkedin}
+            target="_blank"
+            className={`${styles.socialItem} ${styles.linkedin}`}
+          >
+            {LINKEDINICON} LinkedIn
+          </a>
+        )}
+        {form.socialLinks.x && (
+          <a
+            href={form.socialLinks.x}
+            target="_blank"
+            className={`${styles.socialItem} ${styles.x}`}
+          >
+            {XICON} Twitter
+          </a>
+        )}
+        {form.socialLinks.website && (
+          <a
+            href={form.socialLinks.website}
+            target="_blank"
+            className={`${styles.socialItem} ${styles.website}`}
+          >
+            {WEBSITEICON} Website
+          </a>
+        )}
+        {/* EXTRA SOCIALS (ADD ONLY) */}
+        {form.socialLinks.facebook && (
+          <a
+            href={form.socialLinks.facebook}
+            target="_blank"
+            className={`${styles.socialItem} ${styles.facebook}`}
+          >
+            {FACEBOOKICON} Facebook
+          </a>
+        )}
+
+        {form.socialLinks.youtube && (
+          <a
+            href={form.socialLinks.youtube}
+            target="_blank"
+            className={`${styles.socialItem} ${styles.youtube}`}
+          >
+            {YOUTUBEICON} YouTube
+          </a>
+        )}
+
+        {form.socialLinks.telegram && (
+          <a
+            href={form.socialLinks.telegram}
+            target="_blank"
+            className={`${styles.socialItem} ${styles.telegram}`}
+          >
+            {TELEGRAMICON} Telegram
+          </a>
+        )}
+      </div>
+
+      <hr />
+
+      {/* ================= VIEW ================= */}
+      {mode === "view" && (
+        <>
+          <div className={styles.details}>
+            {form.name && (
+              <div>
+                <label>Full Name</label>
+                <p>{form.name}</p>
+              </div>
+            )}
+            {form.email && (
+              <div>
+                <label>Email Address</label>
+                <p>{form.email}</p>
+              </div>
+            )}
+            {(profile.country || profile.state || profile.city) && (
+              <div className={styles.addressBlock}>
+                <label>Address</label>
+
+                <p>
+                  {profile.city && <span>{profile.city}</span>}
+                  {profile.city && profile.state && <span>, </span>}
+                  {profile.state && <span>{profile.state}</span>}
+                  {(profile.city || profile.state) && profile.country && (
+                    <span>, </span>
+                  )}
+                  {profile.country && <span>{profile.country}</span>}
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className={styles.actions}>
+            <button className={styles.editBtn} onClick={() => setMode("edit")}>
+              Edit Profile
+            </button>
             <span
-              className={styles.changePassword}
+              className={styles.link}
               onClick={() => setShowConfirmModal(true)}
             >
               Change Password
             </span>
           </div>
+        </>
+      )}
 
-          <div>
-            {!imagePreview ? (
-              <div
-                className={styles.uploadBox}
-                onClick={() => fileRef.current.click()}
-              >
-                Upload Profile picture
-              </div>
-            ) : (
-              <img
-                src={imagePreview}
-                alt="preview"
-                className={styles.imgpreview}
+      {/* ================= EDIT ================= */}
+      {mode === "edit" && (
+        <>
+          <div className={styles.details}>
+            <div>
+              <label>Full Name</label>
+              <input
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
-            )}
+            </div>
 
-            <input
-              ref={fileRef}
-              type="file"
-              hidden
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                setForm({ ...form, image: file });
-                setImagePreview(URL.createObjectURL(file));
-              }}
-            />
+            <div>
+              <label>Email Address</label>
+              <input value={form.email} disabled />
+            </div>
 
-            <div className={styles.btnRow}>
-              <button
-                className={styles.cancelBtn}
-                onClick={() => setMode("view")}
-              >
-                Cancel
-              </button>
-              <button className={styles.saveBtn} onClick={saveProfile}>
-                Save Changes
-              </button>
+            <div>
+              <label>Profile Image</label>
+
+              {/* PREVIEW BOX */}
+              {imagePreview && (
+                <div className={styles.previewBox}>
+                  <img src={imagePreview} alt="preview" />
+                  <button
+                    type="button"
+                    className={styles.removePreview}
+                    onClick={() => {
+                      setImagePreview(null);
+                      setForm({ ...form, image: null });
+                      if (fileRef.current) fileRef.current.value = "";
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+
+              {/* UPLOAD */}
+              {!imagePreview && (
+                <div
+                  className={styles.uploadBox}
+                  onClick={() => fileRef.current.click()}
+                >
+                  Upload Image
+                </div>
+              )}
+
+              <input
+                ref={fileRef}
+                type="file"
+                hidden
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (!file) return;
+
+                  setForm({ ...form, image: file });
+                  setImagePreview(URL.createObjectURL(file));
+                }}
+              />
             </div>
           </div>
-        </div>
+
+          {/* SOCIAL EDIT */}
+          {/* SOCIAL EDIT */}
+          <div className={styles.socialEditSection}>
+            <h4>Social Links</h4>
+
+            {/* SOCIAL EDIT */}
+            <div className={styles.socialEditSection}>
+              <h4>Social Links</h4>
+
+              <div className={styles.socialGrid}>
+                {socialWithIcon.map((item) => (
+                  <div key={item.key} className={styles.socialEditRow}>
+                    <span className={styles.socialIcon}>{item.icon}</span>
+
+                    <input
+                      placeholder={`${item.label} URL`}
+                      value={form.socialLinks[item.key] || ""}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          socialLinks: {
+                            ...form.socialLinks,
+                            [item.key]: e.target.value,
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.actions}>
+            <button
+              onClick={() => {
+                setMode("view");
+                setImagePreview(null);
+                setForm({ ...form, image: null });
+                if (fileRef.current) fileRef.current.value = "";
+              }}
+            >
+              Cancel
+            </button>
+
+            <button className={styles.editBtn} onClick={saveProfile}>
+              Save Changes
+            </button>
+          </div>
+        </>
       )}
 
       <ConfirmModal
@@ -224,8 +432,30 @@ export default function ProfilePage() {
         description="Password reset link will be sent to your email."
         image="/images/logo.png"
         onCancel={() => setShowConfirmModal(false)}
-        onConfirm={handleSendResetMail}
+        onConfirm={() => router.push("/auth/forgot-password")}
       />
+
+      {/* ================= DELETE ACCOUNT ================= */}
+      <div className={styles.dangerZone}>
+        <h4>Danger Zone</h4>
+
+        <div className={styles.deleteBox}>
+          <div>
+            <b>Delete Account</b>
+            <p>
+              Once you delete your account, all your data will be permanently
+              removed. This action cannot be undone.
+            </p>
+          </div>
+
+          <button
+            className={styles.deleteBtn}
+            onClick={() => setShowConfirmModal(true)}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

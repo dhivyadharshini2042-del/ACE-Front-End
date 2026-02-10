@@ -238,6 +238,7 @@
 /* ================= PAST EVENTS ================= */
 .past-grid {
   display: flex;
+  justify-content: center;
   gap: 22px;
   overflow: hidden;
 }
