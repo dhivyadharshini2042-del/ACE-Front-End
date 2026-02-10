@@ -3,8 +3,8 @@ export const API_ENDPOINTS = {
   EVENTS: {
     ALL_PUBLIC: "/v1/events",
     ALL_PRIVATE: "/v1/events_protec",
-    LIKE_EVENT : "/v1/events/like",
-    SAVE_EVENT : "/v1/events/save",
+    LIKE_EVENT: "/v1/events/like",
+    SAVE_EVENT: "/v1/events/save",
     SINGLE_PUBLIC: (slug) => `/v1/events/${slug}`,
     SINGLE_PRIVATE: (slug) => `/v1/events_protec/${slug}`,
 
@@ -29,7 +29,15 @@ export const API_ENDPOINTS = {
     UPDATEPROFILE: "/v1/auth/update-profile",
     SAVED_EVENTS: (userId) => `/v1/user/saved/${userId}`,
   },
-
+  /* ================= LOCATIONS ================= */
+  USER: {
+    ALL: "/v1/users",
+    // countries
+    ALL_COUNTRIES:  "/v1/location/countries",
+    ALL_STATES : (statesId) => `/v1/user/${userId}`,
+    UPDATE: (userId) => `/v1/user/${userId}`,
+    DELETE: (userId) => `/v1/user/${userId}`,
+  },
   /* ================= USERS ================= */
   USER: {
     ALL: "/v1/users",
