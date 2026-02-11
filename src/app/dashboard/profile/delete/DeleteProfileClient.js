@@ -45,10 +45,10 @@ export default function DeleteProfilePage() {
     }
   }, []);
 
-  if (!loggedIn || !auth?.identity || !auth?.type) return null;
+  if (!loggedIn || !auth?.identity?.identity || !auth?.type) return null;
 
-  const identity = auth.identity;
-  const email = auth.email;
+  const identityId = auth.identity.identity;
+  const email = auth.identity.domainEmail || auth.identity.email;
 
   /* ================= DELETE ACCOUNT ================= */
   const handleDelete = async () => {
@@ -56,9 +56,9 @@ export default function DeleteProfilePage() {
       let res;
 
       if (auth.type === "org") {
-        res = await deleteOrganizationApi(identity);
+        res = await deleteOrganizationApi(identityId);
       } else {
-        res = await deleteUserApi(identity);
+        res = await deleteUserApi(identityId);
       }
 
       if (res?.status) {
@@ -75,9 +75,7 @@ export default function DeleteProfilePage() {
         toast.error(res?.message || "Delete failed");
       }
     } catch (err) {
-      toast.error(
-        err?.response?.data?.message || "Delete failed"
-      );
+      toast.error(err?.response?.data?.message || "Delete failed");
     }
   };
 
@@ -101,17 +99,11 @@ export default function DeleteProfilePage() {
           </p>
 
           <div className={styles.btnRow}>
-            <button
-              className={styles.cancelBtn}
-              onClick={() => setOpen(false)}
-            >
+            <button className={styles.cancelBtn} onClick={() => setOpen(false)}>
               {BTN_CANCEL}
             </button>
 
-            <button
-              className={styles.deleteBtn}
-              onClick={() => setOpen(true)}
-            >
+            <button className={styles.deleteBtn} onClick={() => setOpen(true)}>
               {BTN_DELETE_ACCOUNT}
             </button>
           </div>
@@ -126,9 +118,7 @@ export default function DeleteProfilePage() {
       />
 
       {deleted && (
-        <div className={styles.successBox}>
-          {MSG_DELETED_YOUR_ACCOUNT}
-        </div>
+        <div className={styles.successBox}>{MSG_DELETED_YOUR_ACCOUNT}</div>
       )}
     </div>
   );

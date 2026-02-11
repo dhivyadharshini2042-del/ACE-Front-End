@@ -15,7 +15,7 @@ const PUBLIC_PREFIX = [
   "/explore-events",
   "/explore-categories",
   "/organization-details",
-  "/auth",
+  "/auth",              
 ];
 
 const PROTECTED_PREFIX = ["/dashboard"];
@@ -28,11 +28,11 @@ export function middleware(request) {
   const { pathname } = request.nextUrl;
 
   /* --------------------------------
-     Ignore static & API completely
+     Ignore static & API
   --------------------------------- */
   if (
     pathname.startsWith("/_next") ||
-    pathname.startsWith("/api/proxy") || // 🔥 IMPORTANT
+    pathname.startsWith("/api/proxy") ||
     pathname.startsWith("/images") ||
     pathname.match(/\.(png|jpg|jpeg|svg|css|js|ico)$/)
   ) {
@@ -40,31 +40,31 @@ export function middleware(request) {
   }
 
   /* --------------------------------
-     Always allow unauthorized
+     Allow unauthorized page
   --------------------------------- */
   if (pathname === "/unauthorized") {
     return NextResponse.next();
   }
 
   /* --------------------------------
-     Public exact
+     Public exact routes
   --------------------------------- */
   if (PUBLIC_EXACT.includes(pathname)) {
     return NextResponse.next();
   }
 
   /* --------------------------------
-     Public prefix
+     Public prefix routes (IMPORTANT)
   --------------------------------- */
   if (PUBLIC_PREFIX.some((route) => pathname.startsWith(route))) {
     return NextResponse.next();
   }
 
   /* --------------------------------
-     Protected pages
+     Protected routes
   --------------------------------- */
   if (PROTECTED_PREFIX.some((route) => pathname.startsWith(route))) {
-    const token = request.cookies.get("authToken")?.value;
+    const token = request.cookies.get("auth_token")?.value;
 
     if (!token) {
       return NextResponse.redirect(
@@ -77,7 +77,7 @@ export function middleware(request) {
 }
 
 /* ===============================
-   MATCHER (PAGES ONLY)
+   MATCHER
 ================================ */
 
 export const config = {

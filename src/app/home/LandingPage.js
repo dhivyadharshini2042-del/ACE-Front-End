@@ -62,7 +62,6 @@ export default function LandingPage() {
     const loadCategories = async () => {
       try {
         const res = await getExploreEventTypes();
-        console.log("iiiiiiiiiii",res)
         if (res?.status && Array.isArray(res.data)) {
           const apiCategories = res.data.slice(0, 7).map((item) => ({
             name: item.name,
@@ -116,7 +115,6 @@ export default function LandingPage() {
     loadLandingData();
   }, []);
 
-  console.log("============categories",categories)
   /* ================= UI ================= */
   return (
     <div className="dashboard-root">

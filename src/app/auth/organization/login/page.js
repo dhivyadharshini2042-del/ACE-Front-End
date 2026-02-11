@@ -16,7 +16,7 @@ import {
 import { loginApi } from "../../../../lib/api/auth.api";
 
 /* ✅ AUTH (SESSION) */
-import { setAuthSession } from "../../../../lib/auth";
+import { setAuthCookie } from "../../../../lib/auth";
 
 /* VALIDATION */
 import { organizerLoginSchema } from "../../../../components/validation";
@@ -55,11 +55,11 @@ export default function OrganizerLoginPage() {
   async function onSubmit(e) {
     e.preventDefault();
 
-    // 1️⃣ validation
+    //  validation
     try {
       await organizerLoginSchema.validate(
         { email, password },
-        { abortEarly: false }
+        { abortEarly: false },
       );
     } catch (err) {
       toast.error(err.errors[0]);
@@ -69,25 +69,26 @@ export default function OrganizerLoginPage() {
     try {
       setLoading(true);
 
-      // 2️⃣ login API
+      //  login API
       const res = await loginApi({
         email,
         password,
         type: ROLE_ORGANIZER,
       });
-
-      // 3️⃣ failure
+      console.log("res", res);
+      // failure
       if (!res?.status || !res?.token) {
         toast.error(res?.message || MSG_INVALID_CREDENTIALS);
         return;
       }
 
-      // 4️⃣ ✅ SAVE AUTH TO SESSION (IMPORTANT)
-      setAuthSession(res.token);
+      //  SAVE AUTH TO SESSION (IMPORTANT)
+      setAuthCookie(res.token, res.data, ROLE_ORGANIZER);
 
-      // 5️⃣ success
+      // success
       toast.success(MSG_LOGIN_SUCCESS_ORGANIZER);
       router.push("/dashboard");
+      // router.push("/auth/role-select");
     } catch (err) {
       toast.error(MSG_LOGIN_FAILED);
     } finally {
@@ -160,9 +161,7 @@ export default function OrganizerLoginPage() {
 
             <p className="org-foot">
               {TEXT_NO_ACCOUNT}{" "}
-              <a href="/auth/organization/signup/category">
-                {TEXT_SIGNUP}
-              </a>
+              <a href="/auth/organization/signup/category">{TEXT_SIGNUP}</a>
             </p>
           </form>
         </div>

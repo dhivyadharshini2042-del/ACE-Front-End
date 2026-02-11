@@ -32,12 +32,12 @@ import {
   getCities,
 } from "../../../../../lib/location.api";
 
-import { useLoading } from "../../../../../context/LoadingContext"; 
+import { useLoading } from "../../../../../context/LoadingContext";
 
 export default function Page() {
   const router = useRouter();
   const params = useSearchParams();
-  const { setLoading } = useLoading(); 
+  const { setLoading } = useLoading();
 
   const category = params.get("cat");
 
@@ -105,7 +105,7 @@ export default function Page() {
     async function load() {
       setLoadingCity(true);
       try {
-        const data = await getCities(country, stateName);
+        const data = await getCities(stateName);
         setCities(data || []);
       } catch (error) {
         console.error("Error loading cities:", error);
@@ -115,7 +115,7 @@ export default function Page() {
       }
     }
     load();
-  }, [stateName, country]);
+  }, [stateName]);
 
   /* CONTINUE */
   function onContinue(e) {
@@ -126,15 +126,15 @@ export default function Page() {
     }
 
     try {
-      setLoading(true); 
+      setLoading(true);
 
       router.push(
-        `/auth/organization/signup/account?cat=${category}&country=${country}&state=${stateName}&city=${city}&orgName=${orgName}`
+        `/auth/organization/signup/account?cat=${category}&country=${country}&state=${stateName}&city=${city}&orgName=${orgName}`,
       );
     } catch (err) {
       console.error("Navigation error", err);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   }
 
@@ -193,7 +193,7 @@ export default function Page() {
                   {loadingCountry ? LABEL_LOADING : LABEL_ORG_SELECT_COUNTRY}
                 </option>
                 {countries.map((c) => (
-                  <option key={c.name} value={c.name}>
+                  <option key={c.identity} value={c.identity}>
                     {c.name}
                   </option>
                 ))}
@@ -206,17 +206,20 @@ export default function Page() {
               <select
                 className="form-control"
                 value={stateName}
-                onChange={(e) => setStateName(e.target.value)}
+                onChange={(e) => {
+                  setStateName(e.target.value);
+                  setCity("");
+                }}
               >
                 <option value="">
                   {!country
                     ? MSG_ORG_SELECT_COUNTRY
                     : loadingState
-                    ? LABEL_LOADING_STATES
-                    : LABEL_ORG_SELECT_STATE}
+                      ? LABEL_LOADING_STATES
+                      : LABEL_ORG_SELECT_STATE}
                 </option>
                 {states.map((s) => (
-                  <option key={s.name} value={s.name}>
+                  <option key={s.identity} value={s.identity}>
                     {s.name}
                   </option>
                 ))}
@@ -235,11 +238,11 @@ export default function Page() {
                   {!stateName
                     ? MSG_ORG_SELECT_STATE
                     : loadingCity
-                    ? LABEL_LOADING_CITIES
-                    : LABEL_ORG_SELECT_CITY}
+                      ? LABEL_LOADING_CITIES
+                      : LABEL_ORG_SELECT_CITY}
                 </option>
                 {cities.map((ct) => (
-                  <option key={ct.name} value={ct.name}>
+                  <option key={ct.identity} value={ct.identity}>
                     {ct.name}
                   </option>
                 ))}

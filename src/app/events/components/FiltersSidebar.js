@@ -36,6 +36,12 @@ export default function FiltersSidebar({
     label: d.name,
   }));
 
+  const modeLabels = {
+    ONLINE: "Online",
+    OFFLINE: "Offline",
+    HYBRID: "Hybrid",
+  };
+
   return (
     <aside className="filters-sidebar">
       {/* ================= HEADER ================= */}
@@ -106,14 +112,9 @@ export default function FiltersSidebar({
             <input
               type="checkbox"
               checked={filters.modes.includes(mode)}
-              onChange={() =>
-                setFilters((prev) => ({
-                  ...prev,
-                  modes: [mode],
-                }))
-              }
+              onChange={() => setFilters((p) => ({ ...p, modes: [mode] }))}
             />
-            {mode}
+            {modeLabels[mode]}
           </label>
         ))}
       </div>

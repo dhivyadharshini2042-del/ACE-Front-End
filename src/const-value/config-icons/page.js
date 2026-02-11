@@ -684,8 +684,8 @@ export const WHATSAPPICON = (
 export const INSTAGRAMICON = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
+    width="20"
+    height="20"
     viewBox="0 0 18 18"
     fill="none"
   >
@@ -732,8 +732,8 @@ export const INSTAGRAMICON = (
 export const FACEBOOKICON = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="33"
-    height="39"
+    width="29"
+    height="29"
     viewBox="0 0 24 24"
     fill="none"
   >
@@ -859,8 +859,8 @@ export const FOOTER_WHATSAPP = (
 export const XICON = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
+    width="20"
+    height="20"
     viewBox="0 0 18 16"
     fill="none"
   >
@@ -881,8 +881,8 @@ export const XICON = (
 export const YOUTUBEICON = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="34"
-    height="24"
+    width="28"
+    height="28"
     viewBox="0 0 26 18"
     fill="none"
   >
@@ -911,8 +911,8 @@ export const YOUTUBEICON = (
 export const TELEGRAMICON = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="30"
-    height="34"
+    width="28"
+    height="28"
     viewBox="0 0 24 24"
     fill="none"
   >
@@ -949,8 +949,8 @@ export const TELEGRAMICON = (
 export const LINKEDINICON = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
+    width="20"
+    height="20"
     viewBox="0 0 28 28"
     fill="none"
   >
@@ -1007,8 +1007,8 @@ export const VIDEOICON = (
 export const WEBSITEICON = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
+    width="20"
+    height="20"
     viewBox="0 0 24 24"
     fill="none"
   >

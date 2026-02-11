@@ -101,30 +101,30 @@ export default function EventDetails({
     }
 
     async function loadCities() {
-      const res = await getCities(data.country, data.state);
+      const res = await getCities(data.state);
       setCities(res || []);
     }
     loadCities();
-  }, [data.state, data.country]);
+  }, [data.state]);
 
- const addTag = () => {
-  if (!tagInput) return;
+  const addTag = () => {
+    if (!tagInput) return;
 
-  const finalTag = `#${tagInput}`;
+    const finalTag = `#${tagInput}`;
 
-  // duplicate check
-  if ((data.tags || []).includes(finalTag)) {
+    // duplicate check
+    if ((data.tags || []).includes(finalTag)) {
+      setTagInput("");
+      return;
+    }
+
+    setData({
+      ...data,
+      tags: [...(data.tags || []), finalTag],
+    });
+
     setTagInput("");
-    return;
-  }
-
-  setData({
-    ...data,
-    tags: [...(data.tags || []), finalTag],
-  });
-
-  setTagInput("");
-};
+  };
   const removeTag = (tag) => {
     setData({
       ...data,
@@ -340,8 +340,9 @@ export default function EventDetails({
           {["online", "offline", "hybrid"].map((m) => (
             <button
               key={m}
-              className={`${styles.modeBtn} ${data.mode === m ? styles.active : ""
-                }`}
+              className={`${styles.modeBtn} ${
+                data.mode === m ? styles.active : ""
+              }`}
               onClick={() =>
                 setData({
                   ...data,
@@ -387,7 +388,7 @@ export default function EventDetails({
                 >
                   <option value="">Select Country</option>
                   {countries.map((c) => (
-                    <option key={c.name} value={c.name}>
+                    <option key={c.identity} value={c.identity}>
                       {c.name}
                     </option>
                   ))}
@@ -405,7 +406,7 @@ export default function EventDetails({
                 >
                   <option value="">Select State</option>
                   {states.map((s) => (
-                    <option key={s.name} value={s.name}>
+                    <option key={s.identity} value={s.identity}>
                       {s.name}
                     </option>
                   ))}
@@ -421,7 +422,7 @@ export default function EventDetails({
                 >
                   <option value="">Select City</option>
                   {cities.map((ct) => (
-                    <option key={ct.name} value={ct.name}>
+                    <option key={ct.identity} value={ct.identity}>
                       {ct.name}
                     </option>
                   ))}

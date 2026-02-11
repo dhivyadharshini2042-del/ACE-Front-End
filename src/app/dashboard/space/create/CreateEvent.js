@@ -30,9 +30,14 @@ const INITIAL_FORM_DATA = {
         hostBy: "",
         orgName: "",
         location: "",
-        organizerName: "",
-        organizerNumber: "",
         department: "",
+      },
+    ],
+    contacts: [
+      {
+        name: "",
+        number: "",
+        email: "",
       },
     ],
   },
@@ -111,6 +116,7 @@ export default function CreateEvent() {
   /* ================= STEP 1 ================= */
   const handleStep1Next = async () => {
     try {
+      console.log("👉 STEP 1 NEXT CLICK - ORGANIZER DATA:", formData.organizer);
       setLoading(true);
       await createEventStep1Schema.validate(formData.organizer, {
         abortEarly: false,
@@ -151,7 +157,7 @@ export default function CreateEvent() {
         abortEarly: false,
       });
 
-      const orgId = auth.identity;
+      const orgId = auth.identity.identity;
 
       if (!orgId) {
         toast.error("Organization not found");
@@ -162,12 +168,16 @@ export default function CreateEvent() {
         (org) => ({
           hostIdentity: org.hostBy,
           organizationName: org.orgName,
-          organizerNumber: org.organizerNumber,
           orgDept: org.department || "",
-          organizerName: org.organizerName,
           location: org.location,
         }),
       );
+
+      const contactsPayload = (formData.organizer.contacts || []).map((c) => ({
+        name: c.name,
+        phone: c.number,
+        email: c.email,
+      }));
 
       const event = formData.event;
       const media = formData.media;
@@ -191,6 +201,8 @@ export default function CreateEvent() {
       fd.append("eligibleDeptIdentities", JSON.stringify(deptList));
       fd.append("tags", JSON.stringify(event.tags || []));
       fd.append("collaborators", JSON.stringify(collaboratorsPayload));
+
+      fd.append("contacts", JSON.stringify(contactsPayload));
 
       fd.append(
         "calendars",
@@ -260,6 +272,20 @@ export default function CreateEvent() {
           fd.append("bannerImages", file);
         });
       }
+
+      //FINAL API PAYLOAD LOG
+      console.log("===== FINAL CREATE EVENT PAYLOAD =====");
+      for (let item of fd.entries()) {
+        const key = item[0];
+        const value = item[1];
+
+        if (value instanceof File) {
+          console.log(key, "=> FILE :", value.name);
+        } else {
+          console.log(key, "=>", value);
+        }
+      }
+      console.log("===== END PAYLOAD =====");
 
       const res = await createEventApi(orgId, fd);
 

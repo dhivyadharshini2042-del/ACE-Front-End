@@ -50,9 +50,9 @@ export default function Sidebar() {
       try {
         let res;
         if (auth.type === "org") {
-          res = await getOrganizationProfileApi(auth.identity);
+          res = await getOrganizationProfileApi(auth.identity.identity);
         } else {
-          res = await getUserProfileApi(auth.identity);
+          res = await getUserProfileApi(auth.identity.identity);
         }
 
         if (res?.status) {
@@ -126,30 +126,6 @@ export default function Sidebar() {
             className={isActive("/dashboard/profile") ? styles.activeLink : ""}
           >
             My Profile
-          </Link>
-
-          {auth?.type === "org" && (
-            <Link
-              href="/dashboard/profile/manage"
-              className={
-                isActive("/dashboard/profile/manage")
-                  ? styles.activeLink
-                  : ""
-              }
-            >
-              Manage
-            </Link>
-          )}
-
-          <Link
-            href="/dashboard/profile/delete"
-            className={
-              isActive("/dashboard/profile/delete")
-                ? styles.activeLink
-                : ""
-            }
-          >
-            Delete
           </Link>
         </div>
       )}
