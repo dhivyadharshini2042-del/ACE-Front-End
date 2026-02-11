@@ -111,6 +111,12 @@
   font-weight: 600;
   color: #222;
 }
+.flagImage {
+  width: 55px;
+  height: 55px;
+  object-fit: cover;
+  border-radius: 50%;
+}
 
 .events {
   margin-top: 4px;

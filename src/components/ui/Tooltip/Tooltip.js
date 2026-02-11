@@ -2,7 +2,7 @@
 import { useState } from "react";
 import styles from "./Tooltip.module.css";
 
-export default function Tooltip({ text, children }) {
+export default function Tooltip({ text, children, className = "" }) {
   const [show, setShow] = useState(false);
 
   return (
@@ -12,7 +12,11 @@ export default function Tooltip({ text, children }) {
       onMouseLeave={() => setShow(false)}
     >
       {children}
-      {show && <div className={styles.tooltipBox}>{text}</div>}
+      {show && (
+        <div className={`${styles.tooltipBox} ${className}`}>
+          {text}
+        </div>
+      )}
     </div>
   );
 }
