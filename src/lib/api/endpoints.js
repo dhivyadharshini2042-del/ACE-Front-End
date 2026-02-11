@@ -31,10 +31,15 @@ export const API_ENDPOINTS = {
   },
   /* ================= LOCATIONS ================= */
   LOCATIONS: {
-    ALL_COUNTRIES:  "/v1/location/countries",
-    COUNTRIES_STATES : (statesId) => `/v1/location/countries/${statesId}/states`,
+    ALL_COUNTRIES: "/v1/location/countries",
+    COUNTRIES_STATES: (statesId) => `/v1/location/countries/${statesId}/states`,
     STATES_CITIES: (citiesId) => `/v1/location/states/${citiesId}/cities`,
   },
+  ANALYTICS: {
+    LOCATION_COUNTS: "/v1/analytics/location-counts",
+    LOCATION_EVENTS: "/v1/analytics/location",
+  },
+
   /* ================= USERS ================= */
   USER: {
     ALL: "/v1/users",
@@ -61,7 +66,8 @@ export const API_ENDPOINTS = {
     ORG_CATEGORIES: "/v1/master/org-categories",
     EXPLORE_EVENT_TYPE: "/v1/master/event-types",
     ACCOMMODATIONS: "/v1/master/accommodations",
-    EVENT_TYPES: (categoryId) => `/v1/master/event-types/category/${categoryId}`,
+    EVENT_TYPES: (categoryId) =>
+      `/v1/master/event-types/category/${categoryId}`,
     ALL_EVENT_TYPES: `/v1/master/event-types`,
     CATEGORIES: "/v1/master/categories",
     CERTIFICATIONS: "/v1/master/certifications",
