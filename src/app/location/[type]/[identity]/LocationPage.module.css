@@ -28,8 +28,16 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  align-items: start;
 }
+
+.alignStart {
+  align-items: flex-start;
+}
+
+.alignCenter {
+  align-items: center;
+}
+
 /* LEFT */
 
 .heroLeft {

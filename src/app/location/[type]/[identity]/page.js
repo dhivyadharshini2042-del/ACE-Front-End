@@ -107,9 +107,11 @@ export default function LocationPage() {
 
         const cityArray = Object.values(cityMap);
 
-        console.log("🔥 Generated City Counts:", cityArray);
-
         setCityCounts(cityArray);
+      }
+
+      if (type === "city") {
+        setLocationInfo(res.city);
       }
 
       const liked = {};
@@ -191,7 +193,11 @@ export default function LocationPage() {
         <section className={styles.hero}>
           {/* <div className={styles.overlay}></div> */}
 
-          <div className={styles.heroContainer}>
+          <div
+            className={`${styles.heroContainer} ${
+              type === "city" ? styles.alignCenter : styles.alignStart
+            }`}
+          >
             {/* LEFT SIDE */}
             <div className={styles.heroLeft}>
               {type === "country" && (
