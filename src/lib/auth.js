@@ -33,7 +33,21 @@ export function isUserLoggedIn() {
   return !!Cookies.get("auth_token");
 }
 
-/* 👇 THIS FIXES AXIOS ERROR */
+/* THIS FIXES AXIOS ERROR */
 export function getAuthToken() {
   return Cookies.get("auth_token");
+}
+
+/* EMAIL TEMP STORAGE FOR FORGOT PASSWORD FLOW */
+
+export function saveEmail(email) {
+  Cookies.set("reset_email", email, { expires: 1 }); // 1 day
+}
+
+export function getEmail() {
+  return Cookies.get("reset_email");
+}
+
+export function clearEmail() {
+  Cookies.remove("reset_email");
 }
