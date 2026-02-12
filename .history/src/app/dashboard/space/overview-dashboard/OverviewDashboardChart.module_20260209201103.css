@@ -1,0 +1,161 @@
+/* /* 🔒 GLOBAL SAFETY */
+* {
+  box-sizing: border-box;
+}
+
+/* ================= ROOT ================= */
+.wrapper {
+  background: #fff;
+  padding: 24px;
+  border-radius: 20px;
+  width: 100%;
+  overflow: hidden; /* ❌ no scroll ever */
+}
+
+/* ================= TOP CONTROLS ================= */
+.chartTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.selectBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+}
+
+.selectBox span {
+  font-size: 14px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.selectBox select {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ================= CHART BOX ================= */
+.chartBox {
+  width: 100%;
+  padding: 12px;
+  border-radius: 20px;
+  overflow: hidden; /* 🔑 critical */
+}
+
+/* ================= CHART AREA ================= */
+.chartArea {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+  aspect-ratio: 16 / 5;
+  padding-left: 32px; /* reserve Y-axis space */
+  overflow: hidden; /* 🔑 critical */
+}
+
+/* ================= Y AXIS ================= */
+.yAxis {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 24px;
+  width: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  text-align: right;
+  padding-right: 6px;
+}
+
+/* ================= GRID ================= */
+.chartArea::before {
+  content: "";
+  position: absolute;
+  left: 32px;
+  right: 0;
+  top: 0;
+  bottom: 24px;
+  background: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 12%,
+    rgba(0, 0, 0, 0.04) 12.5%
+  );
+  pointer-events: none;
+}
+
+/* ================= SVG ================= */
+.chartArea svg {
+  position: absolute;
+  left: 32px;
+  top: 0;
+  right: 0;
+  bottom: 24px;
+  width: calc(100% - 32px);
+  height: calc(100% - 24px);
+  overflow: hidden;
+}
+
+/* ================= X AXIS ================= */
+.xAxis {
+  position: absolute;
+  left: 32px;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1024px) {
+  .chartArea {
+    aspect-ratio: 16 / 6;
+  }
+}
+
+@media (max-width: 768px) {
+  .chartTop {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .selectBox {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .chartArea {
+    aspect-ratio: 16 / 7;
+  }
+}
+
+@media (max-width: 480px) {
+  .chartArea {
+    min-height: 180px;
+  }
+
+  .xAxis span:nth-child(even) {
+    display: none; /* reduce clutter */
+  }
+}

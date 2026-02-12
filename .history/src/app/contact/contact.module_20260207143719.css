@@ -1,0 +1,150 @@
+.container {
+  padding: 4rem 1rem 6rem;
+  background: #ffffff;
+}
+
+/* HEADER */
+.header {
+  text-align: center;
+  margin-bottom: 2.2rem;
+}
+
+.header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #7c3aed;
+}
+
+.header span {
+  color: #7c3aed;
+}
+
+.header p {
+  margin-top: 0.4rem;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+/* CARD */
+.card {
+  max-width: 1080px;
+  margin: auto;
+  background: #fff;
+  border-radius: 22px;
+  padding: 3rem;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 3rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+}
+
+/* FORM */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.form input,
+.form textarea {
+  width: 100%;
+  padding: 0.85rem 1.1rem;
+  border-radius: 10px;
+  border: 1.4px solid #d0d0d0;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.form textarea {
+  resize: none;
+  height: 110px;
+}
+
+/* SUBMIT BUTTON — EXACT */
+.form button {
+  margin-top: 0.6rem;
+  width: 160px;
+  align-self: center;
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 0;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* RIGHT */
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.right img {
+  width: 340px;
+}
+
+/* FOLLOW BOX */
+/* .followBox {
+  margin-top: 1rem;
+  padding: 0.8rem 1.3rem;
+  text-align: center;
+  border-radius: 14px;
+  border: 1px solid #7c3aed;
+  background: rgba(236, 218, 253, 0.35);
+} */
+.followBox {
+  margin-top: 1rem;
+  padding: 0.9rem 1.4rem;
+  text-align: center;
+  border-radius: 14px;
+
+  /* GLASS EFFECT */
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(124, 58, 237, 0.35);
+  box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
+}
+
+
+.followBox p {
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.socials {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+}
+
+.socials span {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ICON COLORS */
+.linkedin { color: #0a66c2; }
+.facebook { color: #1877f2; }
+.whatsapp { color: #25d366; }
+.instagram { color: #e1306c; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .card {
+    grid-template-columns: 1fr;
+    padding: 2rem;
+  }
+
+  .right img {
+    width: 220px;
+  }
+}

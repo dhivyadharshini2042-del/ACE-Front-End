@@ -1,0 +1,203 @@
+.wrapper {
+  padding: 24px;
+  background: #fff;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.left h2 {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.backBtn {
+  background: #7a12ff;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.previewBtn {
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* CARDS */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  margin: 28px 0;
+}
+
+.card {
+  padding: 22px;
+  border-radius: 20px;
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  padding: 0px 10px;
+}
+
+.card p {
+  color: #8b8b8b;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  text-align: end;
+  padding-top: 10px;
+}
+
+.card h3 {
+  margin-top: 18px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #222;
+  font-family: "BL Melody", sans-serif;
+  margin: 0px;
+}
+
+.click {
+  background: linear-gradient(135deg, #f3e9ff, #faf6ff);
+}
+
+.view {
+  background: linear-gradient(135deg, #eaf6ff, #f6fbff);
+}
+
+.like {
+  background: linear-gradient(135deg, #fff6e5, #fffdf6);
+}
+
+/* CHART */
+.chartBox {
+  border: 1px solid #eee;
+  border-radius: 26px;
+  padding: 22px;
+}
+
+.chartTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.selectBox {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.selectBox span {
+  font-size: 14px;
+  color: #555;
+}
+
+.selectBox select {
+  padding: 8px 18px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+
+.calendar {
+  font-size: 20px;
+}
+
+/* CHART AREA */
+.chartArea {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+}
+
+.yAxis {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "BL Melody", sans-serif;
+  color: #222;
+}
+
+/* GRID */
+.chartArea::before {
+  content: "";
+  position: absolute;
+  left: 40px;
+  right: 0;
+  top: 0;
+  bottom: 40px;
+  background: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 9%,
+    rgba(0, 0, 0, 0.08) 10%
+  );
+}
+
+/* SVG */
+.chartArea svg {
+  position: absolute;
+  left: 40px;
+  top: 0;
+  width: calc(100% - 40px);
+  height: calc(100% - 40px);
+}
+
+/* X AXIS */
+.xAxis {
+  position: absolute;
+  left: 40px;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "BL Melody", sans-serif;
+  color: #222;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .chartArea {
+    height: 240px;
+  }
+}

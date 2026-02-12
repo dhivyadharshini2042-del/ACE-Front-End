@@ -1,0 +1,186 @@
+.container {
+  position: relative;
+  padding: 5rem 1rem 7rem;
+  background: linear-gradient(to right, #f8f9ff, #ffffff);
+  overflow: hidden;
+}
+
+/* BLURS */
+.blurOne,
+.blurTwo {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: rgba(124, 58, 237, 0.25);
+  filter: blur(120px);
+  z-index: 0;
+}
+
+.blurOne {
+  top: 10%;
+  left: -100px;
+}
+
+.blurTwo {
+  bottom: 10%;
+  right: -100px;
+}
+
+/* HEADER */
+.header {
+  text-align: center;
+  margin-bottom: 3.2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+}
+
+.header span {
+  color: #7c3aed;
+}
+
+.header p {
+  margin-top: 0.7rem;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+/* CARD */
+.card {
+  max-width: 1100px;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 26px;
+  padding: 3.5rem;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 3.5rem;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 1;
+}
+
+/* FORM */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form input,
+.form textarea {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  font-size: 0.95rem;
+  background: #f9fafb;
+  transition: all 0.2s ease;
+}
+
+.form input:focus,
+.form textarea:focus {
+  outline: none;
+  border-color: #7c3aed;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15);
+}
+
+.form textarea {
+  min-height: 130px;
+  resize: none;
+}
+
+/* BUTTON */
+.form button {
+  margin-top: 0.5rem;
+  width: 220px;
+  background: linear-gradient(135deg, #7c3aed, #9333ea);
+  color: #ffffff;
+  border: none;
+  padding: 1rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.form button:hover {
+  opacity: 0.9;
+}
+
+/* RIGHT */
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.right img {
+  width: 360px;
+  margin-bottom: 2rem;
+}
+
+/* FOLLOW US – NEW UI */
+.followBox {
+  padding: 1.2rem 1.8rem;
+  border-radius: 20px;
+  background: linear-gradient(
+    135deg,
+    rgba(124, 58, 237, 0.15),
+    rgba(147, 51, 234, 0.15)
+  );
+  backdrop-filter: blur(10px);
+  text-align: center;
+}
+
+.followBox p {
+  font-size: 0.85rem;
+  margin-bottom: 0.9rem;
+  color: #4b5563;
+}
+
+.socials {
+  display: flex;
+  gap: 1rem;
+}
+
+.icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #7c3aed;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.icon:hover {
+  transform: translateY(-3px);
+  background: #6d28d9;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .card {
+    grid-template-columns: 1fr;
+    padding: 2rem;
+  }
+
+  .form button {
+    width: 100%;
+  }
+
+  .right img {
+    width: 220px;
+  }
+}

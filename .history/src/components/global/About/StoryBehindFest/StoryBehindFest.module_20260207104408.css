@@ -1,0 +1,367 @@
+.section {
+  padding: 4rem 0 0 0;
+  text-align: center;
+  background: #fff;
+  overflow: hidden;
+  position: relative;
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  margin-bottom: 3.5rem;
+  font-family: "BL Melody", sans-serif;
+  padding: 0 1rem;
+}
+
+.orange {
+  color: #ff9800;
+}
+
+.purple {
+  color: #7c3aed;
+}
+
+/* ================= STAGE ================= */
+
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  height: 520px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+/* IMAGE WRAPPER */
+.imageWrapper {
+  position: absolute;
+  bottom: 0;
+  transition: transform 0.3s ease;
+}
+
+.imageWrapper:hover {
+  transform: translateY(-10px);
+  z-index: 10 !important;
+}
+
+/* IMAGE COMMON */
+.img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* INDIVIDUAL IMAGE WRAPPER POSITIONING & SIZING */
+.wrapper0 {
+  left: 2%;
+  width: 200px;
+  height: 520px;
+  z-index: 7;
+}
+
+.wrapper1 {
+  left: 15%;
+  width: 200px;
+  height: 460px;
+  z-index: 6;
+}
+
+.wrapper2 {
+  left: 28%;
+  width: 200px;
+  height: 400px;
+  z-index: 5;
+}
+
+.wrapper3 {
+  left: 41%;
+  width: 200px;
+  height: 300px;
+  z-index: 4;
+}
+
+.wrapper4 {
+  left: 54%;
+  width: 200px;
+  height: 400px;
+  z-index: 5;
+}
+
+.wrapper5 {
+  left: 67%;
+  width: 200px;
+  height: 460px;
+  z-index: 6;
+}
+
+.wrapper6 {
+  left: 80%;
+  width: 200px;
+  height: 520px;
+  z-index: 7;
+}
+
+/* ================= CURVED BACKGROUND ================= */
+
+.curveBg {
+  position: absolute;
+  bottom: -140px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120%;
+  height: 200px;
+  background: #fff;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  z-index: 8;
+  pointer-events: none;
+}
+
+/* ================= RESPONSIVE DESIGN ================= */
+
+/* Large Desktops */
+@media (max-width: 1400px) {
+  .wrapper0 { left: 3%; width: 180px; }
+  .wrapper1 { left: 16%; width: 180px; }
+  .wrapper2 { left: 29%; width: 180px; }
+  .wrapper3 { left: 42%; width: 180px; }
+  .wrapper4 { left: 55%; width: 180px; }
+  .wrapper5 { left: 68%; width: 180px; }
+  .wrapper6 { left: 81%; width: 180px; }
+}
+
+/* Tablets & Medium Screens */
+@media (max-width: 1024px) {
+  .stage {
+    height: 450px;
+  }
+
+  .wrapper0 {
+    left: 2%;
+    width: 150px;
+    height: 450px;
+  }
+
+  .wrapper1 {
+    left: 15%;
+    width: 150px;
+    height: 400px;
+  }
+
+  .wrapper2 {
+    left: 28%;
+    width: 150px;
+    height: 350px;
+  }
+
+  .wrapper3 {
+    left: 41%;
+    width: 150px;
+    height: 260px;
+  }
+
+  .wrapper4 {
+    left: 54%;
+    width: 150px;
+    height: 350px;
+  }
+
+  .wrapper5 {
+    left: 67%;
+    width: 150px;
+    height: 400px;
+  }
+
+  .wrapper6 {
+    left: 80%;
+    width: 150px;
+    height: 450px;
+  }
+
+  .curveBg {
+    width: 130%;
+  }
+}
+
+/* Small Tablets */
+@media (max-width: 768px) {
+  .stage {
+    height: 380px;
+  }
+
+  .wrapper0 {
+    left: 1%;
+    width: 120px;
+    height: 380px;
+  }
+
+  .wrapper1 {
+    left: 14%;
+    width: 120px;
+    height: 340px;
+  }
+
+  .wrapper2 {
+    left: 27%;
+    width: 120px;
+    height: 300px;
+  }
+
+  .wrapper3 {
+    left: 40%;
+    width: 120px;
+    height: 220px;
+  }
+
+  .wrapper4 {
+    left: 53%;
+    width: 120px;
+    height: 300px;
+  }
+
+  .wrapper5 {
+    left: 66%;
+    width: 120px;
+    height: 340px;
+  }
+
+  .wrapper6 {
+    left: 79%;
+    width: 120px;
+    height: 380px;
+  }
+
+  .curveBg {
+    width: 150%;
+    bottom: -120px;
+  }
+}
+
+/* Mobile Landscape & Small Devices */
+@media (max-width: 640px) {
+  .title {
+    font-size: clamp(1.75rem, 6vw, 2.5rem);
+    margin-bottom: 2.5rem;
+  }
+
+  .stage {
+    height: 320px;
+  }
+
+  .wrapper0 {
+    left: 0%;
+    width: 100px;
+    height: 320px;
+  }
+
+  .wrapper1 {
+    left: 13%;
+    width: 100px;
+    height: 280px;
+  }
+
+  .wrapper2 {
+    left: 26%;
+    width: 100px;
+    height: 250px;
+  }
+
+  .wrapper3 {
+    left: 39%;
+    width: 100px;
+    height: 180px;
+  }
+
+  .wrapper4 {
+    left: 52%;
+    width: 100px;
+    height: 250px;
+  }
+
+  .wrapper5 {
+    left: 65%;
+    width: 100px;
+    height: 280px;
+  }
+
+  .wrapper6 {
+    left: 78%;
+    width: 100px;
+    height: 320px;
+  }
+
+  .curveBg {
+    width: 180%;
+    bottom: -100px;
+  }
+
+  .img {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+  }
+}
+
+/* Mobile Portrait - Horizontal Scroll */
+@media (max-width: 480px) {
+  .section {
+    padding-top: 3rem;
+  }
+
+  .title {
+    margin-bottom: 2rem;
+  }
+
+  .stage {
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 1rem;
+    padding: 2rem 1rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .imageWrapper {
+    position: static !important;
+    flex-shrink: 0;
+    width: 160px !important;
+    height: 280px !important;
+    scroll-snap-align: center;
+  }
+
+  .imageWrapper:hover {
+    transform: none;
+  }
+
+  .img {
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .curveBg {
+    display: none;
+  }
+}
+
+/* Extra Small Devices */
+@media (max-width: 360px) {
+  .imageWrapper {
+    width: 140px !important;
+    height: 250px !important;
+  }
+
+  .stage {
+    gap: 0.75rem;
+    padding: 1.5rem 0.75rem;
+  }
+}

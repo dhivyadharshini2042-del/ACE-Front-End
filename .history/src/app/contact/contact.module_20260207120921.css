@@ -1,0 +1,161 @@
+/* .container {
+  padding: 5rem 1rem 7rem;
+  background: linear-gradient(to right, #f8f9ff, #ffffff);
+}
+
+/* HEADER */
+.header {
+  text-align: center;
+  margin-bottom: 3.2rem;
+}
+
+.header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.header span {
+  color: #7c3aed;
+}
+
+.header p {
+  margin-top: 0.7rem;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+/* CARD */
+.card {
+  max-width: 1100px;
+  margin: auto;
+  background: #ffffff;
+  border-radius: 26px;
+  padding: 3.5rem;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3.5rem;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.08);
+}
+
+/* FORM */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.form input,
+.form textarea {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  border: 1.5px solid #d1d5db;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.form textarea {
+  min-height: 120px;
+  resize: none;
+}
+
+/* ATTACHMENT */
+.attachment {
+  position: relative;
+}
+
+.attachment input {
+  background: #f9fafb;
+  cursor: not-allowed;
+}
+
+.attachment span {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  opacity: 0.5;
+}
+
+/* BUTTON */
+.form button {
+  margin-top: 1rem;
+  width: 260px;
+  align-self: flex-start;
+  background: #7c3aed;
+  color: #ffffff;
+  border: none;
+  padding: 1rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.form button:hover {
+  background: #6d28d9;
+}
+
+/* RIGHT SIDE */
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.right img {
+  width: 380px;
+  margin-bottom: 1.8rem;
+}
+
+/* FOLLOW BOX */
+.followBox {
+  padding: 1rem 1.6rem;
+  text-align: center;
+  border-radius: 16px;
+  border: 1px solid #7c3aed;
+  background: rgba(124, 58, 237, 0.08);
+}
+
+.followBox p {
+  font-size: 0.85rem;
+  margin-bottom: 0.7rem;
+  color: #374151;
+}
+
+.socials {
+  display: flex;
+  gap: 0.9rem;
+  justify-content: center;
+}
+
+.socials span {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: #ffffff;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .card {
+    grid-template-columns: 1fr;
+    padding: 2rem;
+  }
+
+  .form button {
+    width: 100%;
+  }
+
+  .right img {
+    width: 220px;
+  }
+}
