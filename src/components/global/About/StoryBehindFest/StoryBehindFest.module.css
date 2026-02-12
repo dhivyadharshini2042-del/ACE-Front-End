@@ -1,105 +1,154 @@
-.section {
-  padding-top: 4rem;
+.container {
+  padding: 80px 0;
+  position: relative;
   text-align: center;
-  background: #fff;
-  overflow: hidden;
+  background: #f7f7f7;
 }
 
 .title {
-  font-size: clamp(2.2rem, 4vw, 3rem);
-  font-weight: 700;
-  margin-bottom: 3.5rem;
-  font-family: "BL Melody", sans-serif;
+  font-size: 64px;
+  font-weight: 800;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 60px;
 }
 
-.orange {
-  color: #ff9800;
-}
-.purple {
-  color: #7c3aed;
+.the,
+.behind {
+  color: #000;
 }
 
-/* ================= STAGE ================= */
-.stage {
+.story {
+  color: #f9a826;
+}
+
+.fest {
+  color: #7b2cff;
+}
+
+/* -------------------- CIRCLE AREA -------------------- */
+
+.circleWrapper {
   position: relative;
   width: 100%;
-  height: 520px;
-  display: flex;         
-  justify-content: center;
-  align-items: flex-end;     
-  overflow: hidden;
+  height: 600px;
 }
 
-/* IMAGE COMMON */
-.img {
-  object-fit: cover;
-  z-index: 2;
-  flex: 1;                  
-  max-width: 200px;         
-  height: auto;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-}
-
-/* HEIGHT LOGIC — MATCH IMAGE */
-.img0 { height: 520px; }
-.img1 { height: 460px; }
-.img2 { height: 400px; }
-.img3 { height: 300px; } 
-.img4 { height: 400px; }
-.img5 { height: 460px; }
-.img6 { height: 520px; }
-
-/* ================= BACKGROUND CURVE ================= */
-.curveBg {
-  z-index: 3;
-  background: #fff;
-  border-radius: 52%;
-  width: 100%;
-  height: 259px;
+.circle {
   position: absolute;
-  bottom: -167px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.circle:hover {
+  transform: scale(1.08);
+}
+
+.image,
+.avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar {
+  background: #222;
+  color: white;
+  font-size: 48px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* -------------------- PLUS BUTTON -------------------- */
+
+.followBtn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7b2cff, #9d4edd);
+  color: white;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(123, 44, 255, 0.4);
+}
+
+/* -------------------- HOVER CARD -------------------- */
+
+.hoverCard {
+  position: absolute;
+  bottom: -60px;
   left: 50%;
   transform: translateX(-50%);
+  background: white;
+  padding: 12px 18px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  white-space: nowrap;
+  animation: fadeIn 0.3s ease;
+
 }
 
-/* ================= RESPONSIVE ================= */
-@media (max-width: 1024px) {
-  .img {
-    max-width: 140px;
+.hoverCard h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.hoverCard p {
+  margin: 0;
+  font-size: 13px;
+  color: #7b2cff;
+  font-weight: 500;
+}
+
+/* Animation */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
   }
 }
+
+/* -------------------- POSITIONS -------------------- */
+
+.pos0 { top: 40px; left: 10%; }
+.pos1 { top: 200px; left: 18%; }
+.pos2 { top: 380px; left: 12%; }
+.pos3 { top: 100px; right: 15%; }
+.pos4 { top: 320px; right: 8%; }
+.pos5 { top: 430px; right: 25%; }
+.pos6 { top: 150px; left: 45%; }
+.pos7 { top: 350px; left: 55%; }
+
+/* Responsive */
 
 @media (max-width: 768px) {
-  .stage {
-    height: 420px;
-  }
-  .img {
-    max-width: 110px;
-  }
-  .curveBg {
-    width: 200%;
-  }
-}
-
-@media (max-width: 600px) {
-  .stage {
-    height: auto;
-    display: flex;
-    gap: 0;                 
-    padding: 2rem 1rem;
-    overflow-x: auto;
+  .title {
+    font-size: 40px;
   }
 
-  .img {
-    position: static;
-    height: 260px !important;
-    width: 180px;
-    clip-path: none;
-    flex: 0 0 auto;         
+  .image,
+  .avatar {
+    width: 100px;
+    height: 100px;
   }
 
-  .curveBg {
-    display: none;
+  .circleWrapper {
+    height: 500px;
   }
 }
