@@ -1,29 +1,32 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Footer from "../../components/global/Footer/Footer";
 import LeaderboardHero from "../../components/global/Leaderboard/LeaderboardHero";
 import OrganizerLeaderboardTable from "../../components/global/Leaderboard/OrganizerLeaderboardTable";
-import TopThreeBoard from "../../components/global/Leaderboard/TopThreeBoard";
+import PaginationBar from "../events/components/PaginationBar";
 import { getAllOrganizationsApi } from "../../lib/api/organizer.api";
 import toast from "react-hot-toast";
 import { useLoading } from "../../context/LoadingContext";
+import TopThreeBoard from "../../components/global/Leaderboard/TopThreeBoard";
+
+const PAGE_SIZE = 10;
 
 export default function LeaderboardPage() {
   const [organizations, setOrganizations] = useState([]);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [rankingType, setRankingType] = useState("monthly");
   const { setLoading } = useLoading();
 
-    useEffect(() => {
+  useEffect(() => {
     setLoading(false);
   }, []);
 
-  /* ================= FETCH DATA ================= */
   useEffect(() => {
     const loadLeaderboard = async () => {
       try {
         const res = await getAllOrganizationsApi();
-
         if (res?.status) {
           setOrganizations(res.data || []);
         } else {
@@ -33,32 +36,34 @@ export default function LeaderboardPage() {
         toast.error("Something went wrong");
       }
     };
-
     loadLeaderboard();
   }, []);
 
-  /* ================= FILTER ================= */
-  const filteredOrganizations = organizations.filter((org) =>
-    org.organizationName
-      ?.toLowerCase()
-      .includes(search.toLowerCase())
-  );
+  const filtered = useMemo(() => {
+    return organizations.filter((org) =>
+      org.organizationName?.toLowerCase().includes(search.toLowerCase()),
+    );
+  }, [organizations, search]);
 
-  /* ================= TOP 3 ================= */
-  const topThree = [...organizations]
-    .sort((a, b) => a.rank - b.rank)
-    .slice(0, 3);
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+
+  const paginatedData = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return filtered.slice(start, start + PAGE_SIZE);
+  }, [filtered, page]);
 
   return (
     <>
       <LeaderboardHero
         search={search}
         onSearchChange={setSearch}
+        rankingType={rankingType}
+        onRankingChange={setRankingType}
       />
+      <OrganizerLeaderboardTable data={paginatedData} />
+      <TopThreeBoard />
 
-      <TopThreeBoard data={topThree} />
-
-      <OrganizerLeaderboardTable data={filteredOrganizations} />
+      <PaginationBar page={page} total={totalPages} onChange={setPage} />
 
       <Footer />
     </>

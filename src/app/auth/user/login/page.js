@@ -38,7 +38,7 @@ import {
 import { loginApi, googleAuthLoginApi } from "../../../../lib/api/auth.api";
 
 import { useLoading } from "../../../../context/LoadingContext";
-import { setAuthSession } from "../../../../lib/auth";
+import { setAuthCookie } from "../../../../lib/auth";
 
 export default function UserLoginPage() {
   const router = useRouter();
@@ -73,7 +73,11 @@ export default function UserLoginPage() {
       }
 
       // ✅ CALL AUTH FUNCTION
-      setAuthSession(res.token);
+      setAuthCookie(
+        res.token,
+        res.data, // identity
+        ROLE_USER,
+      );
 
       toast.success(MSG_LOGIN_SUCCESS_USER);
       router.push("/");
@@ -93,15 +97,16 @@ export default function UserLoginPage() {
 
       const res = await googleAuthLoginApi({ googleToken });
 
-      console.log("============res", res)
-
       if (!res?.status) {
         toast.error(MSG_GOOGLE_LOGIN_FAILED);
         return;
       }
 
-
-      setAuthSession(res.token);
+      setAuthCookie(
+        res.token,
+        res.data, // identity
+        ROLE_USER,
+      );
 
       toast.success(MSG_GOOGLE_LOGIN_SUCCESS_USER);
       router.push("/");

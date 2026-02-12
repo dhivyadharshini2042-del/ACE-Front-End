@@ -37,15 +37,15 @@ export default function ExploreCategoriesPage() {
   }, []);
 
   /* ================= NAVIGATION ================= */
-  const handleBack = () => {
-    try {
-      setLoading(true);
-      router.push("/");
-    } catch (err) {
-      console.error(err);
-      setLoading(false);
-    }
-  };
+  // const handleBack = () => {
+  //   try {
+  //     setLoading(true);
+  //     router.push("/");
+  //   } catch (err) {
+  //     console.error(err);
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleCardClick = (category) => {
     if (!category) return;
@@ -58,13 +58,13 @@ export default function ExploreCategoriesPage() {
       setLoading(false);
     }
   };
-
+  
   /* ================= UI ================= */
   return (
     <div className="explore-page">
-      <div className="text-start m-4" style={{ cursor: "pointer" }}>
+      {/* <div className="text-start m-4" style={{ cursor: "pointer" }}>
         <p onClick={handleBack}> 🔙 Back</p>
-      </div>
+      </div> */}
 
       {/* HEADER */}
       <div className="explore-header mt-5">
@@ -79,19 +79,21 @@ export default function ExploreCategoriesPage() {
       {/* GRID */}
       {categories.length > 0 && (
         <div className="explore-grid">
-          {categories.map((item) => (
-            <div
-              key={item.identity}
-              className="explore-card"
-              style={{ "--card-color": item.color || "#F5F5F5" }}
-              onClick={() => handleCardClick(item)}
-            >
-              <div className="icon-box">
-                <img src={item.imageUrl || ""} alt={item.name} />
+          {categories
+            .filter((item) => item.name !== "Explore More")
+            .map((item) => (
+              <div
+                key={item.identity}
+                className="explore-card"
+                style={{ "--card-color": item.color || "#F5F5F5" }}
+                onClick={() => handleCardClick(item)}
+              >
+                <div className="icon-box">
+                  <img src={item.imageUrl || ""} alt={item.name} />
+                </div>
+                <p>{item.name}</p>
               </div>
-              <p>{item.name}</p>
-            </div>
-          ))}
+            ))}
         </div>
       )}
     </div>

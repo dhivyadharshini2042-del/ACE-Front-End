@@ -1,73 +1,128 @@
 .wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 40px;
-  padding: 60px 20px;
-  flex-wrap: wrap;
+  padding: 70px 20px 90px;
 }
 
-/* CARD */
-.card {
-  width: 240px;
-  padding: 22px 18px;
-  border-radius: 18px;
-  text-align: center;
-  color: #fff;
-}
-.avatarFallbackSection{
-  display: flex;
-  justify-content: center;
-}
-/* PROFILE IMAGE */
-.avatarImg {
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
-/* FALLBACK LETTER AVATAR */
-.avatarFallback {
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #7f00ff, #e100ff);
-  color: #fff;
-  font-size: 40px;
-  font-weight: 700;
-  display: flex;
+/* MAIN TICKET CARD */
+.ticket {
+  max-width: 1200px;
+  margin: auto;
+  background: linear-gradient(135deg, #ffe9df, #f7e8ff);
+  border-radius: 26px;
+  padding: 50px 60px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
   align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* LEFT CUT (ticket style) */
+.ticket::before,
+.ticket::after {
+  content: "";
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  background: #fff;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ticket::before {
+  left: -23px;
+}
+
+.ticket::after {
+  right: -23px;
+}
+
+/* DOTTED LINE */
+.ticket::marker {
+  display: none;
+}
+
+.ticket::selection {
+  background: transparent;
+}
+
+.ticket::after {
+  box-shadow: none;
+}
+
+.ticket {
+  background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.6) 50%,
+      transparent 50%
+    ),
+    linear-gradient(135deg, #ffe9df, #f7e8ff);
+  background-size: 3px 19px, cover;
+  background-repeat: repeat-y, no-repeat;
+  background-position: 100px 0, center;
+}
+.left{
+  padding-left: 20%;
+}
+
+/* LEFT CONTENT */
+.left h3 {
+  font-size: 30px;
+  font-weight: 800;
+  margin-bottom: 14px;
+  font-family: "BL Melody", sans-serif;
+}
+
+.left h3 span {
+  margin-left: 6px;
+}
+
+.left p {
+  font-size: 14.5px;
+  color: #555;
+  line-height: 1.7;
+  max-width: 520px;
+  margin-bottom: 22px;
+  font-family: var(--font-poppins), sans-serif;
+}
+
+/* BUTTON */
+.cta {
+  background:  #7b2cff;
+  color: #fff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 26px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* RIGHT IMAGE */
+.right {
+  display: flex;
   justify-content: center;
-  margin-bottom: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
-/* ⭐ STARS */
-.stars {
-  color: gold;
-  margin-bottom: 10px;
-}
-
-/* RANK COLORS */
-.first {
-  background: linear-gradient(180deg, #6a00ff, #4b00b5);
-  transform: translateY(-40px);
-}
-
-.second {
-  background: linear-gradient(180deg, #0b3c8a, #062e6f);
-}
-
-.third {
-  background: linear-gradient(180deg, #8a0022, #630017);
+.right img {
+  max-width: 100%;
+  height: auto;
 }
 
 /* RESPONSIVE */
-@media (max-width: 768px) {
-  .first {
-    transform: translateY(0);
+@media (max-width: 900px) {
+  .ticket {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 40px 30px;
+    background-position: 30px 0, center;
+  }
+
+  .left p {
+    margin: 0 auto 22px;
+  }
+
+  .cta {
+    margin: auto;
   }
 }

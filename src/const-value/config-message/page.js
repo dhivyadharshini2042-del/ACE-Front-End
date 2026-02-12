@@ -1,7 +1,8 @@
 // META TITEL
 
-export const METADATA_TITEL = "AllCollegeEvent"
-export const METADATA_DESCRIPTION = "All college events — user & organizer platform"
+export const METADATA_TITEL = "AllCollegeEvent";
+export const METADATA_DESCRIPTION =
+  "All college events — user & organizer platform";
 
 // ---------------------------------------------------------
 // UI LABELS
@@ -80,7 +81,6 @@ export const MSG_GOOGLE_LOGIN_SUCCESS_USER = "Google Login Successful!";
 export const MSG_LOGIN_FAILED = "Login Failed";
 export const MSG_GOOGLE_LOGIN_FAILED = "Google Login Failed";
 
-
 // ---------------------------------------------------------
 // EVENT LABELS
 // ---------------------------------------------------------
@@ -90,7 +90,6 @@ export const LABEL_EVENT_PRICE = "Price";
 export const LABEL_EVENT_VENUE = "Venue";
 export const LABEL_EVENT_MODE = "Mode";
 export const LABEL_EVENT_DESCRIPTION = "Event Description";
-
 
 // ---------------------------------------------------------
 // USER ROLES
@@ -152,7 +151,6 @@ export const LABEL_ORG_CITY = "City";
 export const LABEL_ORG_NAME = "Organization Name";
 export const LABEL_SET_NEW_PASSWORD = "Set new password";
 
-
 export const PH_ORG_EMAIL = "Enter your domain mail id";
 export const PH_PASSWORD = "Enter your password";
 export const PH_USER_EMAIL = "Enter your email";
@@ -184,7 +182,6 @@ export const CAT_SPORTS = "Sports Club / Fitness Association";
 export const CAT_CORPORATE = "Corporate / Company";
 export const CAT_GOVERNMENT = "Government Organization";
 export const CAT_NGO = "NGO / Non-Profit Organization";
-
 
 // ---------------------------------------------------------
 // AUTH STORAGE KEYS
@@ -243,9 +240,7 @@ export const MSG_DELETED_YOUR_ACCOUNT = "Your account was deleted";
 
 export const MSG_PASSWORD_CHANGED_SUCCESS = "Password Successfully Changed!!";
 
-
 //----------------------------------------------------------
-
 
 // EMAIL VERIFY
 
@@ -291,15 +286,15 @@ export const TITLE_RATINGS_REVIEWS = "Ratings and Reviews";
 export const TITLE_CHANGE_YOUR_PASSWORD = "Change Your Password";
 export const TITLE_SET_YOUR_PASSWORD = "Set Your Password";
 
-
 //----------------------------------------------------------
-
 
 // EMAIL VERIFY
 
 export const SUB_TITLE_EMAIL_VERIFY = "Please wait while we verify your email…";
-export const SUB_TITLE_EMAIL_VERIFY_SUCCESS = "Your account has been successfully verified.You can now login to continue.";
-export const SUB_TITLE_EMAIL_VERIFY_FAILED = "The verification link is invalid or has expired.Please request a new verification email.";
+export const SUB_TITLE_EMAIL_VERIFY_SUCCESS =
+  "Your account has been successfully verified.You can now login to continue.";
+export const SUB_TITLE_EMAIL_VERIFY_FAILED =
+  "The verification link is invalid or has expired.Please request a new verification email.";
 
 // ENTER OTP
 
@@ -316,8 +311,10 @@ export const SUB_TITLE_SET_NEW_PASSWORD = "Must be at least 8 characters";
 
 //SUCCESS PAGE
 
-export const SUB_TITLE_DOMAIN_MAIL_VERIFY = "Link has been sent to your domain mail. Please verify your account.";
-export const SUB_TITLE_PASSWORD_UPDATE_SUCCESS = "Your password has been updated successfully";
+export const SUB_TITLE_DOMAIN_MAIL_VERIFY =
+  "Link has been sent to your domain mail. Please verify your account.";
+export const SUB_TITLE_PASSWORD_UPDATE_SUCCESS =
+  "Your password has been updated successfully";
 
 // BOOKING EVENT
 
@@ -326,19 +323,22 @@ export const SUB_TITLE_PAID = "Paid";
 
 // DELETE PROFILE
 
-export const SUB_TITLE_DELETE_ACCOUNT = "This will permanently delete your account and all data.";
-export const SUB_TITLE_DELETE_ACCOUNT_SUB_TEXT = "This action cannot be undone.";
+export const SUB_TITLE_DELETE_ACCOUNT =
+  "This will permanently delete your account and all data.";
+export const SUB_TITLE_DELETE_ACCOUNT_SUB_TEXT =
+  "This action cannot be undone.";
 
 // PROFILE PAGE
 
-export const SUB_TITLE_UPLOAD_PROFILE = "Upload Profile picture (1:1) in PNG or JPEG Format";
-export const SUB_TITLE_OTP_SENT_YOUR_GMAIL = "Please enter the code sent to your gmail account";
+export const SUB_TITLE_UPLOAD_PROFILE =
+  "Upload Profile picture (1:1) in PNG or JPEG Format";
+export const SUB_TITLE_OTP_SENT_YOUR_GMAIL =
+  "Please enter the code sent to your gmail account";
 export const SUB_TITLE_EMAIL_NOT_RECEIVE = "Didn’t receive the email?";
-export const SUB_TITLE_SET_PASSWORD = "It must contain at least 8 characters, including numbers and symbols.";
-
+export const SUB_TITLE_SET_PASSWORD =
+  "It must contain at least 8 characters, including numbers and symbols.";
 
 //----------------------------------------------------------
-
 
 // EMAIL VERIFY
 
@@ -368,9 +368,7 @@ export const BTN_SAVE_CHANGES = "Save Changes";
 export const BTN_CHANGE_PASSWORD = "Change Password";
 export const BTN_OTP_RESEND = "Resend Code";
 
-
 //----------------------------------------------------------
-
 
 // ENTER OTP
 
@@ -378,14 +376,11 @@ export const CONDITION_OTP_VERIFY = "Verifying...";
 export const CONDITION_OTP_SEND = "Sending...";
 export const CONDITION_OTP_RESEND = "Resend Code";
 
-
 //----------------------------------------------------------
-
 
 // PROFILE PAGE
 
 export const LABEL_FULL_NAME = "Full Name";
 export const LABEL_DOMAIN_MAIL_ID = "Domain Mail ID";
 
-
-export const NO_IMAGE_FOUND_IMAGE = "/images/no-image-found.jpeg";
+export const NO_IMAGE_FOUND_IMAGE = "/images/no-image-found.png";

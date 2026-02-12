@@ -27,7 +27,7 @@
   .floating-explore-btn {
     bottom: 18px;
     right: 18px;
-    padding: 12px 20px;
+    /* padding: 12px 20px; */
     font-size: 13px;
   }
 }

@@ -1,69 +1,141 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./LocationHighlights.module.css";
+import { getLocationCounts } from "../../../lib/location.api";
+import Tooltip from "../../ui/Tooltip/Tooltip";
+import LocationModal from "../../ui/LocationModal/LocationModal";
 
 export default function PopularLocations() {
-  const [activeTab, setActiveTab] = useState("cities");
+  const [activeTab, setActiveTab] = useState("countries");
+  const [countries, setCountries] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
-  const cities = [
-    { img: "/images/coimbatore.png", name: "Coimbatore", events: "1725 Events" },
-    { img: "/images/chennai.png", name: "Chennai", events: "1710 Events" },
-    { img: "/images/bangalore.png", name: "Bangalore", events: "500 Events" },
-    { img: "/images/cochin.png", name: "Cochin", events: "475 Events" },
-    { img: "/images/delhi.png", name: "Delhi", events: "450 Events" },
-    { img: "/images/salem.png", name: "Salem", events: "400 Events" },
-  ];
+  const router = useRouter();
 
-  const countries = [
-    { img: "/images/india.png", name: "India", events: "1725 Events" },
-    { img: "/images/australia.png", name: "Australia", events: "1710 Events" },
-    { img: "/images/usa.png", name: "USA", events: "500 Events" },
-    { img: "/images/uk.png", name: "UK", events: "200 Events" },
-    { img: "/images/uae.png", name: "UAE", events: "300 Events" },
-    { img: "/images/singapore.png", name: "Singapore", events: "400 Events" },
-  ];
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    const res = await getLocationCounts();
+    if (!res) return;
+
+    setCountries(res.countries || []);
+    setCities(res.cities || []);
+  };
 
   const list = activeTab === "cities" ? cities : countries;
+
+  const visibleItems = list.slice(0, 12);
+  const hasMore = list.length > 12;
+
+  const handleClick = (item) => {
+    if (activeTab === "cities") {
+      const encoded = btoa(item.cityIdentity);
+      router.push(`/location/city/${encoded}`);
+    } else {
+      const encoded = btoa(item.countryIdentity);
+      router.push(`/location/country/${encoded}`);
+    }
+  };
+
+  const renderCard = (item) => {
+    const name = activeTab === "cities" ? item.cityName : item.countryName;
+
+    const identity =
+      activeTab === "cities" ? item.cityIdentity : item.countryIdentity;
+
+    return (
+      <Tooltip key={identity} text={`View ${name} - ${item.count} Events`}>
+        <div className={styles.card} onClick={() => handleClick(item)}>
+          <div className={styles.fallback}>
+            {activeTab === "countries" && item.flagImageUrl ? (
+              <img
+                src={item.flagImageUrl}
+                alt={name}
+                className={styles.flagImage}
+              />
+            ) : (
+              name?.charAt(0)
+            )}
+          </div>
+
+          <div className={styles.textWrapper}>
+            <h3 className={styles.name}>{name}</h3>
+            <p className={styles.events}>{item.count} Events</p>
+          </div>
+        </div>
+      </Tooltip>
+    );
+  };
 
   return (
     <section className={styles.popularlocationroot}>
       {/* Tabs */}
       <div className={styles.tabs}>
         <button
-          className={`${styles.tab} ${activeTab === "cities" ? styles.active : ""}`}
-          onClick={() => setActiveTab("cities")}
-        >
-          Popular Cities
-        </button>
-
-        <button
-          className={`${styles.tab} ${activeTab === "countries" ? styles.active : ""}`}
+          className={`${styles.tab} ${
+            activeTab === "countries" ? styles.active : ""
+          }`}
           onClick={() => setActiveTab("countries")}
         >
           Popular Countries
         </button>
+
+        <button
+          className={`${styles.tab} ${
+            activeTab === "cities" ? styles.active : ""
+          }`}
+          onClick={() => setActiveTab("cities")}
+        >
+          Popular Cities
+        </button>
       </div>
 
-      {/* Subtitle */}
       <p className={styles.sub}>
         {activeTab === "cities"
           ? "Cities That Never Stop Celebrating"
           : "Where Every Continent Comes Alive with Events"}
       </p>
 
-      {/* Grid */}
+      {/* MAIN GRID (15 only) */}
       <div className={styles.grid}>
-        {list.map((item, i) => (
-          <div key={i} className={styles.card}>
-            <img src={item.img} className={styles.img} alt={item.name} />
-            <div className={styles.text}>
-              <h3 className={styles.name}>{item.name}</h3>
-              <p className={styles.events}>{item.events}</p>
-            </div>
-          </div>
-        ))}
+        {visibleItems.map((item) => renderCard(item))}
       </div>
+
+      {/* SEE MORE */}
+      {hasMore && (
+        <div className={styles.seeMoreWrapper}>
+          <Tooltip
+            text={`Explore all ${list.length} ${
+              activeTab === "cities" ? "Cities" : "Countries"
+            }`}
+          >
+            <button
+              className={styles.seeMore}
+              onClick={() => setShowModal(true)}
+            >
+              See All
+            </button>
+          </Tooltip>
+        </div>
+      )}
+
+      {/* MODAL */}
+      {showModal && (
+        <LocationModal
+          open={showModal}
+          title={`All ${activeTab === "cities" ? "Cities" : "Countries"}`}
+          onClose={() => setShowModal(false)}
+        >
+          <div className={styles.modalGrid}>
+            {list.map((item) => renderCard(item))}
+          </div>
+        </LocationModal>
+      )}
     </section>
   );
 }

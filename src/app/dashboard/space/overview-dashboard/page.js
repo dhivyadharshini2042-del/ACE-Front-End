@@ -46,7 +46,8 @@ export default function OverviewDashboardPage() {
           return;
         }
 
-        const orgId = auth.identity;
+        const orgId = auth.identity.identity;
+
         if (!orgId) {
           setEvents([]);
           return;

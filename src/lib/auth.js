@@ -1,139 +1,53 @@
-import { jwtDecode } from "jwt-decode";
-import CryptoJS from "crypto-js";
+import Cookies from "js-cookie";
 
-/* ======================================================
-   CONFIG
-   ====================================================== */
+export function setAuthCookie(token, identity, type) {
+  Cookies.set("auth_token", token, { expires: 7 });
+  Cookies.set("auth_identity", JSON.stringify(identity), { expires: 7 });
+  Cookies.set("auth_type", type, { expires: 7 });
+}
 
-// ⚠️ Frontend secret (obfuscation only, not real security)
-const SECRET_KEY = "ACE_FRONTEND_SESSION_KEY_v1";
+export function getAuthSession() {
+  const token = Cookies.get("auth_token");
+  const identity = Cookies.get("auth_identity");
+  const type = Cookies.get("auth_type");
 
-/* ======================================================
-   ENCRYPT / DECRYPT HELPERS
-   ====================================================== */
+  return {
+    token,
+    identity: identity ? JSON.parse(identity) : null,
+    type,
+  };
+}
 
-const encrypt = (data) => {
-  return CryptoJS.AES.encrypt(
-    JSON.stringify(data),
-    SECRET_KEY
-  ).toString();
-};
+export function clearAuthSession() {
+  Cookies.remove("auth_token");
+  Cookies.remove("auth_identity");
+  Cookies.remove("auth_type");
+}
 
-const decrypt = (cipherText) => {
-  try {
-    const bytes = CryptoJS.AES.decrypt(cipherText, SECRET_KEY);
-    const decoded = bytes.toString(CryptoJS.enc.Utf8);
-    return decoded ? JSON.parse(decoded) : null;
-  } catch {
-    return null;
-  }
-};
+/* 👇 OLD + REQUIRED EXPORTS */
+export function getAuthFromSession() {
+  return getAuthSession();
+}
 
-/* ======================================================
-   AUTH SESSION (SECURE)
-   ====================================================== */
+export function isUserLoggedIn() {
+  return !!Cookies.get("auth_token");
+}
 
-/**
- * ✅ Save auth session (ENCRYPTED)
- * MUST be called after login success
- */
-export const setAuthSession = (token) => {
-  if (typeof window === "undefined") return null;
+/* THIS FIXES AXIOS ERROR */
+export function getAuthToken() {
+  return Cookies.get("auth_token");
+}
 
-  try {
-    const decoded = jwtDecode(token);
+/* EMAIL TEMP STORAGE FOR FORGOT PASSWORD FLOW */
 
-    const authPayload = {
-      token, // 🔥 VERY IMPORTANT (Bearer token)
-      identity: decoded?.data?.identity || null,
-      email: decoded?.data?.email || null,
-      type: decoded?.data?.type || null, // "user" | "org"
-      roleId: decoded?.data?.roleId || null,
-      exp: decoded?.exp || null,
-    };
+export function saveEmail(email) {
+  Cookies.set("reset_email", email, { expires: 1 }); // 1 day
+}
 
-    const encrypted = encrypt(authPayload);
+export function getEmail() {
+  return Cookies.get("reset_email");
+}
 
-    sessionStorage.setItem("auth", encrypted);
-    return authPayload;
-  } catch (err) {
-    console.error("Auth session save failed", err);
-    return null;
-  }
-};
-
-/**
- * ✅ Get auth session (DECRYPTED)
- */
-export const getAuthFromSession = () => {
-  if (typeof window === "undefined") return null;
-
-  const cipher = sessionStorage.getItem("auth");
-  if (!cipher) return null;
-
-  return decrypt(cipher);
-};
-
-/**
- * ✅ Get RAW JWT token (for Bearer header)
- */
-export const getAuthToken = () => {
-  if (typeof window === "undefined") return null;
-
-  const auth = getAuthFromSession();
-  return auth?.token || null;
-};
-
-/**
- * ✅ Check login status
- * Used for PUBLIC / PRIVATE API switch
- */
-export const isUserLoggedIn = () => {
-  if (typeof window === "undefined") return false;
-
-  const auth = getAuthFromSession();
-  if (!auth) return false;
-
-  if (auth?.exp) {
-    const now = Math.floor(Date.now() / 1000);
-    return auth.exp > now;
-  }
-
-  return true;
-};
-
-/**
- * ✅ Clear auth session (logout / 401)
- */
-export const clearAuthSession = async () => {
-  if (typeof window === "undefined") return;
-
-  sessionStorage.removeItem("auth");
-
-  // backend logout (cookie clear if any)
-  await fetch("/api/logout", {
-    method: "POST",
-    credentials: "include",
-  });
-};
-
-/* ======================================================
-   EMAIL (OTP FLOW) – SESSION SAFE
-   ====================================================== */
-
-export const saveEmail = (email) => {
-  if (typeof window === "undefined") return;
-  sessionStorage.setItem("userEmail", encrypt(email));
-};
-
-export const getEmail = () => {
-  if (typeof window === "undefined") return null;
-
-  const cipher = sessionStorage.getItem("userEmail");
-  return cipher ? decrypt(cipher) : null;
-};
-
-export const clearEmail = () => {
-  if (typeof window === "undefined") return;
-  sessionStorage.removeItem("userEmail");
-};
+export function clearEmail() {
+  Cookies.remove("reset_email");
+}

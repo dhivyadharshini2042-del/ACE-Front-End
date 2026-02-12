@@ -11,10 +11,12 @@
   width: 82%;
   max-width: 980px;
   padding: 20px;
-  border: 1px solid var(--Primary, #7f00ff);
   border-radius: 16px;
   border: 1px solid var(--Primary, #7f00ff);
-  background: rgba(238, 240, 244, 0.5);
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
+  background: #ffffff2e;
+  box-shadow: 0 4px 6px #0000001a;
   /* backdrop-filter: blur(15.649999618530273px); */
 }
 
@@ -36,7 +38,7 @@
 .icon {
   font-size: 22px;
 }
-.icon div{
+.icon div {
   text-align: start;
 }
 

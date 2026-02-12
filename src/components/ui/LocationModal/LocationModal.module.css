@@ -1,0 +1,128 @@
+/* ========================
+   OVERLAY
+======================== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  /* backdrop-filter: blur(6px); */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 3000;
+}
+
+/* ========================
+   MODAL
+======================== */
+.modal {
+  width: 100%;
+  max-width: 1100px;
+  max-height: 90vh;
+  background: #ffffff;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: scaleIn 0.25s ease;
+}
+
+/* ========================
+   HEADER
+======================== */
+.header {
+  padding: 22px 28px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* ========================
+   CLOSE BUTTON
+======================== */
+.closeBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #f3f3f3;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.2s ease;
+}
+
+.closeBtn:hover {
+  background: #7f00ff;
+  color: white;
+}
+
+/* ========================
+   BODY
+======================== */
+.body {
+  padding: 24px 28px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Scrollbar */
+.body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.body::-webkit-scrollbar-thumb {
+  background: #7f00ff;
+  border-radius: 10px;
+}
+
+/* ========================
+   ANIMATION
+======================== */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ========================
+   RESPONSIVE
+======================== */
+@media (max-width: 1024px) {
+  .modal {
+    max-width: 900px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal {
+    max-width: 100%;
+    border-radius: 14px;
+  }
+
+  .header {
+    padding: 18px;
+  }
+
+  .body {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    height: 95vh;
+  }
+}

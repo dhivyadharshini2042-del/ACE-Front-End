@@ -38,13 +38,13 @@ export default function MyEventPage() {
       try {
         setLoading(true);
 
-        if (!loggedIn || auth?.type !== "org") {
+        if (!loggedIn || auth?.type !== "org" || !auth?.identity?.id) {
           setEvents([]);
           return;
         }
 
         const [eventsRes, statusRes] = await Promise.all([
-          getOrganizerEventsApi(auth.identity),
+          getOrganizerEventsApi(auth.identity.identity),
           getEventStatusesApi(),
         ]);
 

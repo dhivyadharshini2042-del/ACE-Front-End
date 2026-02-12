@@ -1,7 +1,7 @@
 /* =========================
    ROOT
 ========================= */
-.topOrganizersroot {
+.root {
   padding: 28px 50px;
 }
 
@@ -12,81 +12,112 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
   margin-bottom: 32px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
 .title {
   font-size: 20px;
   font-weight: 700;
-  color: #1c1c1c;
-  margin: 0;
   font-family: "BL Melody", sans-serif;
+  margin: 0;
 }
 
 .sub {
   margin-top: 6px;
   font-size: 12px;
-  color: #666666;
+  color: #666;
   font-family: var(--font-poppins), sans-serif;
 }
 
 .more {
   color: #7f00ff;
   font-weight: 600;
+  cursor: pointer;
 }
 
 /* =========================
-   BUTTON
+   SEE ALL BUTTON
 ========================= */
-.leaderboardBtn {
+.seeAllBtn {
   background: linear-gradient(90deg, #7f00ff, #5d00c7);
-  color: #ffffff;
-  padding: 12px 24px;
+  color: #fff;
+  padding: 12px 26px;
   border-radius: 28px;
   border: none;
   font-weight: 700;
   cursor: pointer;
-  white-space: nowrap;
   font-family: "BL Melody", sans-serif;
 }
 
 /* =========================
-   LIST GRID (KEY FIX)
+   GRID
 ========================= */
 .list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 24px;
-  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 26px;
 }
 
 /* =========================
-   CARD
+   CARD (FIXED SIZE)
+========================= */
+/* =========================
+   RANK BADGE (IMAGE)
 ========================= */
 .card {
-  text-align: center;
+  position: relative; /* important */
   cursor: pointer;
-  transition: transform 0.25s ease;
+  background: rgb(255, 255, 255);
+  border-radius: 28px;
+  padding: 20px 22px;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 14px 36px;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
+}
+
+.rankBadge {
+  z-index: 3;
+  position: absolute;
+  top: 13px;
+  right: 5px;
+}
+
+.rankImg {
+  width: 52px;
+  height: 48px;
+  object-fit: contain;
 }
 
 .card:hover {
   transform: translateY(-6px);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.12);
+}
+
+/* =========================
+   CONTENT
+========================= */
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* =========================
    AVATAR
 ========================= */
 .avatarWrap {
-  width: 72px;
-  height: 72px;
-  margin: 0 auto;
+  position: relative; /* IMPORTANT */
+  width: 96px;
+  height: 96px;
+  margin-bottom: 16px;
   border-radius: 50%;
+  background: #f4f4f4;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #eef2ff;
 }
 
 .avatar {
@@ -94,82 +125,80 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 .avatarFallback {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: #1c1c1c;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+  color: #4331e8;
+  font-size: 36px;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  font-size: 28px;
-  font-weight: 800;
-  color: #ffffff;
-  text-transform: uppercase;
 }
 
 /* =========================
-   TEXT
+   TITLE (2 LINES + ...)
 ========================= */
 .name {
-  margin-top: 8px;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 700;
   color: #1c1c1c;
   text-align: center;
-  word-break: break-word;
   font-family: "BL Melody", sans-serif;
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  width: 100%;
+  margin-top: 10px;
 }
 
+/* =========================
+   EVENTS
+========================= */
 .events {
-  font-size: 15px;
-  color: #7b2cff;
-  margin-top: 2px;
-  text-align: center;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 700;
+  color: #777;
   font-family: var(--font-poppins), sans-serif;
 }
 
 /* =========================
-   RESPONSIVE
+   FOLLOW BUTTON
 ========================= */
+.followBtn {
+  background: linear-gradient(90deg, #7f00ff, #5d00c7);
+  color: #ffffff;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: "BL Melody", sans-serif;
+  margin-top: 20px;
+}
 
-/* Tablets */
+/* =========================
+   RESPONSIVE (HEIGHT FIXED)
+========================= */
 @media (max-width: 992px) {
-  .topOrganizersroot {
-    padding: 24px 24px;
-  }
-
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
+  .root {
+    padding: 24px;
   }
 }
 
-/* Mobile */
 @media (max-width: 576px) {
-  .topOrganizersroot {
-    padding: 20px 16px;
-  }
-
-  .title {
-    font-size: 18px;
-  }
-
-  .list {
-    gap: 16px;
-  }
-
-  .avatarWrap {
-    width: 64px;
-    height: 64px;
+  .root {
+    padding: 18px 14px;
   }
 
   .name {
-    font-size: 13px;
+    font-size: 16px;
   }
 }

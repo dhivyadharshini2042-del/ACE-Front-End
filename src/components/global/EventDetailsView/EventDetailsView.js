@@ -158,7 +158,7 @@ export default function EventDetailsView({ event = {}, onBack }) {
 
     const res = await likeEventApi({
       eventIdentity: event.identity,
-      userIdentity: auth.identity,
+      userIdentity: auth.identity.identity, 
     });
 
     if (res?.status) {
@@ -252,8 +252,6 @@ export default function EventDetailsView({ event = {}, onBack }) {
   useEffect(() => {
     setLoading(false);
   }, []);
-
-  console.log("dddddddddd", event);
 
   return (
     <>

@@ -6,14 +6,14 @@ import styles from "./contact.module.css";
 export default function ContactPage() {
   return (
     <>
-      <section className={styles.container}>
-        {/* HEADER */}
-        <div className={styles.header}>
-          <h1>
-            We’re Here for <span>You</span>
-          </h1>
-          <p>Let’s connect – we are here to answer your queries</p>
-        </div>
+    <section className={styles.container}>
+      {/* HEAD */}
+      <div className={styles.header}>
+        <h1>
+          We’re Here for <span>You</span>
+        </h1>
+        <p>Let’s connect – we are here to answer your queries</p>
+      </div>
 
         {/* CARD */}
         <div className={styles.card}>

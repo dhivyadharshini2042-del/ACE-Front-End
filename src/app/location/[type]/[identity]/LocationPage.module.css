@@ -1,0 +1,368 @@
+/* ================= WRAPPER ================= */
+
+.wrapper {
+  background: #f8f8f8;
+  min-height: 100vh;
+}
+
+/* ================= HERO ================= */
+
+.hero {
+  position: relative;
+  padding: 44px 40px;
+  color: white;
+  background: url("/images/earth-bg.jpg") center center no-repeat;
+  background-size: cover;
+  overflow: hidden;
+}
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.95) 40%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+}
+.heroContainer {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+
+.alignStart {
+  align-items: flex-start;
+}
+
+.alignCenter {
+  align-items: center;
+}
+
+/* LEFT */
+
+.heroLeft {
+  max-width: 600px;
+  z-index: 2;
+}
+.tag {
+  display: inline-block;
+  background: linear-gradient(90deg, #8e2de2, #4a00e0);
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.smallTitle {
+  margin-top: 40px;
+  font-size: 30px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.bigTitle {
+  font-size: 120px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  margin-top: 20px;
+  line-height: 1;
+}
+
+.desc {
+  margin-top: 35px;
+  font-size: 16px;
+  color: #dcdcdc;
+  line-height: 1.9;
+  max-width: 520px;
+}
+
+.flag {
+  width: 40px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.heroRight {
+  position: relative;
+  z-index: 1;
+}
+.globe {
+  width: 650px;
+  max-width: 100%;
+  animation: float 6s ease-in-out infinite;
+}
+.cityName {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #7f00ff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bullet {
+  width: 8px;
+  height: 8px;
+  background-color: #7f00ff;
+  border-radius: 50%;
+}
+.cityList{
+  padding: 10px;
+}
+.whiteTooltip {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.whiteTooltip::after {
+  border-color: #ffffff transparent transparent transparent !important;
+}
+
+.imageCard {
+  width: 220px;
+  height: 220px;
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  transition: 0.4s ease;
+}
+.imageCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.imageCard:hover {
+  transform: translateY(-10px) scale(1.03);
+}
+.imageBox {
+  width: 150px;
+  height: 150px;
+  background: #2c2c54;
+  border-radius: 20px;
+}
+
+/* ================= EVENTS SECTION ================= */
+
+.eventsSection {
+  padding: 60px;
+}
+
+.eventsSection h2 {
+  margin-bottom: 30px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* ================= GRID ================= */
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(315px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+}
+
+/* ================= CARD ================= */
+
+.eventCard {
+  border-radius: 14px;
+  border: 1.5px solid #e9e9e9;
+  background: #ffffff;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.eventCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* ================= IMAGE ================= */
+
+.eventImgWrapper {
+  position: relative;
+}
+
+.eventImg {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  padding: 7px;
+  border-radius: 17px;
+}
+
+.saveOnImage {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+}
+
+.saveOnImage:hover {
+  transform: scale(1.05);
+}
+
+/* ================= BODY ================= */
+
+.cardBody {
+  padding: 16px;
+}
+
+/* TITLE + LIKE */
+
+.titleLikeRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.cardTitle {
+  font-weight: 600;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 220px;
+}
+
+.likeInline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #333;
+}
+
+.likeInline svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ================= EVENT DETAILS ================= */
+
+.eventDetails {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #121111;
+}
+
+.rowBetween {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+/* ================= MODE ================= */
+
+.modeText {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
+.modeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* Mode Colors */
+
+.online {
+  color: #16a34a;
+}
+
+.online .modeDot {
+  background: #22c55e;
+}
+
+.offline {
+  color: #dc2626;
+}
+
+.offline .modeDot {
+  background: #ef4444;
+}
+
+.hybrid {
+  color: #7c3aed;
+}
+
+.hybrid .modeDot {
+  background: linear-gradient(135deg, #22c55e 50%, #ef4444 50%);
+}
+
+/* ================= FOOTER ================= */
+
+.footerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.viewBadge {
+  background: #f3f3f3;
+  padding: 5px 14px;
+  border-radius: 18px;
+  font-size: 12px;
+}
+
+.badgePaid {
+  color: #1c1c1c;
+  background-color: #e9d4ff;
+  border: 1px solid #7f00ff;
+  border-radius: 20px;
+  padding: 4px 16px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1024px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .heroRight {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .eventsSection {
+    padding: 40px 20px;
+  }
+
+  .eventImg {
+    height: 170px;
+  }
+
+  .big {
+    font-size: 42px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+}

@@ -3,7 +3,12 @@
 import { SEARCH_ICON } from "../../../const-value/config-icons/page";
 import styles from "./LeaderboardHero.module.css";
 
-export default function LeaderboardHero({ search, onSearchChange }) {
+export default function LeaderboardHero({
+  search,
+  onSearchChange,
+  rankingType,
+  onRankingChange,
+}) {
   return (
     <section className={styles.hero}>
       <p className={styles.topLine}>
@@ -14,9 +19,9 @@ export default function LeaderboardHero({ search, onSearchChange }) {
         <span className={styles.discover}>Discover</span>
 
         <span className={styles.avatarGroup}>
-          <img src="/images/meetUpsCategories.png" alt="" />
-          <img src="/images/culturaleventsCategories.png" alt="" />
-          <img src="/images/concertsCategories.png" alt="" />
+          <img src="/images/meetUpsCategories.png" />
+          <img src="/images/culturaleventsCategories.png" />
+          <img src="/images/concertsCategories.png" />
         </span>
 
         <span className={styles.amazing}>Amazing</span>
@@ -24,33 +29,39 @@ export default function LeaderboardHero({ search, onSearchChange }) {
 
       <h2 className={styles.subHeading}>
         Event Organizers
-        <div className={styles.subImg}>
-          <img src="/images/sparkles.png" alt="no" />
-        </div>
+        <span className={styles.subImg}>
+          <img src="/images/sparkles.png" />
+        </span>
       </h2>
 
-      {/* 🔥 SEARCH */}
       <div className={styles.searchWrapper}>
         <span className={styles.searchIcon}>{SEARCH_ICON}</span>
         <input
-          type="text"
           placeholder="Search event organizers name"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
         />
       </div>
 
-      <h3 className={styles.boardTitle}>
-        <span className={styles.boardimg}>
-          <img src="/images/sparkles_s.png" alt="no" />
-        </span>
-        Star Organizers Board{" "}
-      </h3>
+      <div className={styles.toggleWrap}>
+        <button
+          className={`${styles.toggleBtn} ${
+            rankingType === "monthly" ? styles.active : ""
+          }`}
+          onClick={() => onRankingChange("monthly")}
+        >
+          Monthly Ranking
+        </button>
 
-      <p className={styles.boardSub}>
-        Where brilliant organizers rise — your dedication builds the stage for
-        every success!
-      </p>
+        <button
+          className={`${styles.toggleBtn} ${
+            rankingType === "overall" ? styles.active : ""
+          }`}
+          onClick={() => onRankingChange("overall")}
+        >
+          Overall Ranking
+        </button>
+      </div>
     </section>
   );
 }

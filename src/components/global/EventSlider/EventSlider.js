@@ -22,6 +22,7 @@ import { likeEventApi, saveEventApi } from "../../../lib/api/event.api";
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import ConfirmModal from "../../ui/Modal/ConfirmModal";
 import { NO_IMAGE_FOUND_IMAGE } from "../../../const-value/config-message/page";
+import Tooltip from "../../ui/Tooltip/Tooltip";
 
 /* ================= HELPER ================= */
 const getLowestTicketPrice = (tickets = []) => {
@@ -105,7 +106,7 @@ export default function EventSlider({
 
     const res = await likeEventApi({
       eventIdentity: eventId,
-      userIdentity: auth.identity,
+      userIdentity: auth.identity.identity,
     });
 
     if (!res?.status) {
@@ -143,7 +144,7 @@ export default function EventSlider({
 
     const res = await saveEventApi({
       eventIdentity: eventId,
-      userIdentity: auth.identity,
+      userIdentity: auth.identity.identity,
     });
 
     if (!res?.status) {
@@ -235,21 +236,28 @@ export default function EventSlider({
             <h5 className="fw-bold mb-0 land-title">{title}</h5>
             {des && <p className="mt-2">{des}</p>}
           </div>
-          <button className="see-all-btn" onClick={handleCardClick}>
-            See all
-          </button>
+          <Tooltip text="View All Events">
+            <button className="see-all-btn" onClick={handleCardClick}>
+              See all
+            </button>
+          </Tooltip>
         </div>
 
         <hr />
 
         {/* NAV */}
         <div className="d-flex justify-content-end gap-4 mb-3">
-          <button className="scroll-rounded-circle" onClick={slideLeft}>
-            ❮
-          </button>
-          <button className="scroll-rounded-circle" onClick={slideRight}>
-            ❯
-          </button>
+          <Tooltip text="Scroll Left">
+            <button className="scroll-rounded-circle" onClick={slideLeft}>
+              ❮
+            </button>
+          </Tooltip>
+
+          <Tooltip text="Scroll Right">
+            <button className="scroll-rounded-circle" onClick={slideRight}>
+              ❯
+            </button>
+          </Tooltip>
         </div>
 
         {/* SLIDER */}
@@ -266,43 +274,53 @@ export default function EventSlider({
 
             return (
               <div key={event.identity} className="card event-card">
-                <img
-                  src={event.bannerImages?.[0] || NO_IMAGE_FOUND_IMAGE}
-                  className="event-img"
-                  alt={event.title}
-                  onClick={() => handleClick(event.slug)}
-                />
+                {/* IMAGE */}
+                <div className="event-img-wrapper">
+                  <img
+                    src={event.bannerImages?.[0] || NO_IMAGE_FOUND_IMAGE}
+                    className="event-img"
+                    alt={event.title}
+                    onClick={() => handleClick(event.slug)}
+                  />
 
+                  {/* SAVE ICON – image top right */}
+                  <span
+                    className="save-on-image"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSave(event);
+                    }}
+                  >
+                    <SAVEICON active={isSaved} />
+                  </span>
+                </div>
+
+                {/* BODY */}
                 <div className="card-body p-3">
-                  <div className="d-flex justify-content-between align-items-start mt-2">
+                  {/* TITLE + LIKE */}
+                  <div className="title-like-row">
                     <span className="fw-semibold card-titel">
                       {event.title}
                     </span>
-
-                    {/* SAVE */}
-                    <span onClick={() => handleSave(event)}>
-                      <SAVEICON active={isSaved} />
-                    </span>
-
-                    {/* LIKE */}
-                    <div
-                      onClick={() => handleLike(event)}
-                      className="text-center"
-                    >
-                      <HEART_ICON active={isLiked} />
-                      <p>{likeCounts[event.identity] ?? 0}</p>
-                    </div>
+                    <Tooltip text={isLiked ? "Unlike Event" : "Like Event"}>
+                      <div
+                        className="like-inline"
+                        onClick={() => handleLike(event)}
+                      >
+                        <HEART_ICON active={isLiked} />
+                        <span>{likeCounts[event.identity] ?? 0}</span>
+                      </div>
+                    </Tooltip>
                   </div>
 
+                  {/* DETAILS */}
                   <div className="mt-2 event-details">
                     <div className="d-flex justify-content-between">
                       <span>
-                        <span>
-                          {LOCATION_ICON}{" "}
-                          {event.location?.city ||
-                            event.org?.city ||
-                            (event.mode === "ONLINE" ? "Online Event" : "N/A")}
-                        </span>
+                        {LOCATION_ICON}{" "}
+                        {event.location?.city ||
+                          event.org?.city ||
+                          (event.mode === "ONLINE" ? "Online Event" : "N/A")}
                       </span>
 
                       <span>
@@ -328,9 +346,11 @@ export default function EventSlider({
                   </div>
 
                   <div className="d-flex justify-content-between align-items-center mt-3">
-                    <span className="view-badge">
-                      {VIEW_ICON} {event.viewCount || 0}
-                    </span>
+                    <Tooltip text="Total Views">
+                      <span className="view-badge">
+                        {VIEW_ICON} {event.viewCount || 0}
+                      </span>
+                    </Tooltip>
 
                     <span className="badge-paid">
                       {event.categoryName || "No category"}

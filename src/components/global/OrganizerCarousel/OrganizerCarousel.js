@@ -2,70 +2,65 @@
 
 import styles from "./OrganizerCarousel.module.css";
 import { useRouter } from "next/navigation";
-import { useLoading } from "../../../context/LoadingContext";
 
 export default function OrganizersCarousel({ data = [] }) {
   const router = useRouter();
-  const { setLoading } = useLoading();
 
   if (!Array.isArray(data) || data.length === 0) return null;
 
-  /* ================= ORGANIZER CLICK ================= */
   const handleOrgClick = (slug) => {
-    console.log(",,,,,,,,,,,,,",slug)
     if (!slug) return;
-
-    try {
-      setLoading(true);
-      router.push(`/organization-details/${slug}`);
-    } catch (error) {
-      console.error("Navigation failed", error);
-      setLoading(false);
-    }
+    router.push(`/organization-details/${slug}`);
   };
 
-  /* ================= LEADERBOARD CLICK ================= */
   const handleLeaderboardClick = () => {
-    try {
-      setLoading(true);
-      router.push("/leaderboard");
-    } catch (error) {
-      console.error("Leaderboard navigation failed", error);
-      setLoading(false);
-    }
+    router.push("/leaderboard");
   };
 
   return (
-    <section className={styles.topOrganizersroot}>
+    <section className={styles.root}>
       {/* HEADER */}
       <div className={styles.header}>
         <div>
           <h2 className={styles.title}>Our Top Organizers</h2>
           <p className={styles.sub}>
             Find the Organizations you're looking for quickly.
-            <span className={styles.more}> You can see more.</span>
+            <span className={styles.more} onClick={handleLeaderboardClick}>
+              {" "}
+              You can see more.
+            </span>
           </p>
         </div>
 
-        {/*ROUTE TO LEADERBOARD PAGE */}
-        <button
-          className={styles.leaderboardBtn}
-          onClick={handleLeaderboardClick}
-        >
-          View Leaderboard &gt;&gt;&gt;
+        <button className={styles.seeAllBtn} onClick={handleLeaderboardClick}>
+          See all
         </button>
       </div>
 
-      {/* ORGANIZER CARDS */}
-      <div className={styles.row}>
-        <div className={styles.list}>
-          {data.map((org, index) => (
-            <div
-              key={org.identity || index}
-              className={styles.card}
-              onClick={() => handleOrgClick(org.slug)}
-              style={{ cursor: "pointer" }}
-            >
+      {/* CARD GRID */}
+      <div className={styles.list}>
+        {data.slice(0, 5).map((org, index) => (
+          <div
+            key={org.identity || index}
+            className={styles.card}
+            onClick={() => handleOrgClick(org.slug)}
+          >
+            {/* RANK BADGE */}
+            {index < 3 && (
+              <div className={styles.rankBadge}>
+                <img
+                  src={
+                    index === 0
+                      ? "/images/FirstOr.png"
+                      : index === 1
+                        ? "/images/SecondOr.png"
+                        : "/images/ThreedOr.png"
+                  }
+                  className={styles.rankImg}
+                />
+              </div>
+            )}
+            <div className={styles.cardContent}>
               <div className={styles.avatarWrap}>
                 {org.profileImage ? (
                   <img
@@ -80,16 +75,17 @@ export default function OrganizersCarousel({ data = [] }) {
                 )}
               </div>
 
-              <div className={styles.name}>
-                {org.organizationName}
-              </div>
+              <div className={styles.name}>{org.organizationName}</div>
 
               <div className={styles.events}>
-                {org._count?.events || 0} events
+                {org._count?.events || 0} Events
               </div>
             </div>
-          ))}
-        </div>
+            <div style={{textAlign:"center"}}>
+              <button className={styles.followBtn}>Follow</button>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );

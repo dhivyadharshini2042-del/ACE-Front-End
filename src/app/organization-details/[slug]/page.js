@@ -19,7 +19,7 @@ export async function generateMetadata({ params }) {
 
     const org = events[0].org;
 
-    const title = `${org.organizationName} | Events on AllCollegeEvent`;
+    const title = `${org.organizationName}`;
     const description = `Explore ${events.length} events organized by ${org.organizationName} in ${org.city}, ${org.state}.`;
 
     return {
