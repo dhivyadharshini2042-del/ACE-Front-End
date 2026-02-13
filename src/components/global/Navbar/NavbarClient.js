@@ -118,9 +118,9 @@ export default function NavbarClient() {
                 <span className="search-icon">🔍</span>
               </div>
 
-              {isLoggedIn && (
+              {/* {isLoggedIn && (
                 <button className="icon-circle outline">📍</button>
-              )}
+              )} */}
 
               {/* ---------- CREATE EVENT LOGIC FIX ---------- */}
               {!isLoggedIn && (

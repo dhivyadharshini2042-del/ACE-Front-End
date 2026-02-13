@@ -9,7 +9,10 @@
   color: #888;
   margin-bottom: 20px;
 }
-
+.subHeading img {
+  width: 80px;
+  height: 86px;
+}
 .heading {
   font-size: 52px;
   font-weight: 800;

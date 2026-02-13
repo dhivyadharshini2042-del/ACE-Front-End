@@ -51,7 +51,7 @@ export default function MyEventsGrid({ events = [], loading }) {
   return (
     <>
       {/* EVENTS GRID */}
-      <div className="events-grid">
+      <div className="events-grid p-5">
         {paginatedEvents.map((e) => {
           const calendar = e.calendars?.[0];
           const location = e.location;

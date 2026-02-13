@@ -19,21 +19,19 @@ export default function LeaderboardHero({
         <span className={styles.discover}>Discover</span>
 
         <span className={styles.avatarGroup}>
-          <img src="/images/meetUpsCategories.png" />
-          <img src="/images/culturaleventsCategories.png" />
-          <img src="/images/concertsCategories.png" />
+          <img src="/images/meetUpsCategories.png" alt="" />
+          <img src="/images/culturaleventsCategories.png" alt="" />
+          <img src="/images/concertsCategories.png" alt="" />
         </span>
 
         <span className={styles.amazing}>Amazing</span>
       </h1>
 
       <h2 className={styles.subHeading}>
-        Event Organizers
-        <span className={styles.subImg}>
-          <img src="/images/sparkles.png" />
-        </span>
+        Event Organizers <img src="/images/sparkles.png" alt="no image" />
       </h2>
 
+      {/* SEARCH */}
       <div className={styles.searchWrapper}>
         <span className={styles.searchIcon}>{SEARCH_ICON}</span>
         <input
@@ -43,6 +41,7 @@ export default function LeaderboardHero({
         />
       </div>
 
+      {/* TOGGLE */}
       <div className={styles.toggleWrap}>
         <button
           className={`${styles.toggleBtn} ${

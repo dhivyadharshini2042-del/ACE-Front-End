@@ -5,52 +5,62 @@ import Footer from "../../components/global/Footer/Footer";
 import LeaderboardHero from "../../components/global/Leaderboard/LeaderboardHero";
 import OrganizerLeaderboardTable from "../../components/global/Leaderboard/OrganizerLeaderboardTable";
 import PaginationBar from "../events/components/PaginationBar";
-import { getAllOrganizationsApi } from "../../lib/api/organizer.api";
+import { getOrganizerRankingApi } from "../../lib/api/organizer.api";
 import toast from "react-hot-toast";
 import { useLoading } from "../../context/LoadingContext";
 import TopThreeBoard from "../../components/global/Leaderboard/TopThreeBoard";
 
-const PAGE_SIZE = 10;
-
 export default function LeaderboardPage() {
-  const [organizations, setOrganizations] = useState([]);
+  const [rankingType, setRankingType] = useState("monthly");
+  const [rankingData, setRankingData] = useState([]);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [rankingType, setRankingType] = useState("monthly");
+  const [pagination, setPagination] = useState(null);
+
   const { setLoading } = useLoading();
 
+  /* ================= LOAD RANKING ================= */
   useEffect(() => {
-    setLoading(false);
-  }, []);
+    loadRanking();
+  }, [rankingType, page]);
 
-  useEffect(() => {
-    const loadLeaderboard = async () => {
-      try {
-        const res = await getAllOrganizationsApi();
-        if (res?.status) {
-          setOrganizations(res.data || []);
-        } else {
-          toast.error("Failed to load leaderboard");
-        }
-      } catch {
-        toast.error("Something went wrong");
+  const loadRanking = async () => {
+    try {
+      setLoading(true);
+
+      const res = await getOrganizerRankingApi(page);
+
+      if (res?.success) {
+        const data =
+          rankingType === "monthly"
+            ? res.data.monthly
+            : res.data.overall;
+
+        setRankingData(data || []);
+        setPagination(res.data.pagination);
+      } else {
+        toast.error("Failed to load leaderboard");
       }
-    };
-    loadLeaderboard();
-  }, []);
+    } catch {
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const filtered = useMemo(() => {
-    return organizations.filter((org) =>
-      org.organizationName?.toLowerCase().includes(search.toLowerCase()),
+  /* ================= SEARCH FILTER ================= */
+  const filteredData = useMemo(() => {
+    return rankingData.filter((org) =>
+      org.organizationName
+        ?.toLowerCase()
+        .includes(search.toLowerCase())
     );
-  }, [organizations, search]);
+  }, [rankingData, search]);
 
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-
-  const paginatedData = useMemo(() => {
-    const start = (page - 1) * PAGE_SIZE;
-    return filtered.slice(start, start + PAGE_SIZE);
-  }, [filtered, page]);
+  const totalPages =
+    rankingType === "monthly"
+      ? pagination?.totalPagesMonthly
+      : pagination?.totalPagesOverall;
 
   return (
     <>
@@ -58,12 +68,21 @@ export default function LeaderboardPage() {
         search={search}
         onSearchChange={setSearch}
         rankingType={rankingType}
-        onRankingChange={setRankingType}
+        onRankingChange={(type) => {
+          setRankingType(type);
+          setPage(1);
+        }}
       />
-      <OrganizerLeaderboardTable data={paginatedData} />
+
+      <OrganizerLeaderboardTable data={filteredData} />
+
       <TopThreeBoard />
 
-      <PaginationBar page={page} total={totalPages} onChange={setPage} />
+      <PaginationBar
+        page={page}
+        total={totalPages}
+        onChange={setPage}
+      />
 
       <Footer />
     </>

@@ -136,7 +136,7 @@ export default function MyEventPage() {
       </div>
 
       {/* CONTENT */}
-      <div className="mt-5">
+      <div className="">
         {view === "grid" ? (
           <MyEventsGrid events={filteredEvents} loading={loading} />
         ) : (

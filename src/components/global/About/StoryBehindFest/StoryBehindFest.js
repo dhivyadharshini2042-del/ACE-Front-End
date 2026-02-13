@@ -16,7 +16,7 @@ export default function StoryBehindFest() {
   const fetchOrganizations = async () => {
     try {
       const res = await getAllOrganizationsApi();
-      setOrganizations(res?.data || []);
+      setOrganizations(res?.data?.slice(0, 12) || []);
     } catch (err) {
       console.log(err);
     }
@@ -28,42 +28,52 @@ export default function StoryBehindFest() {
         <span className={styles.the}>The</span>
         <span className={styles.story}>Story</span>
         <span className={styles.behind}>Behind</span>
-        <span className={styles.the}>the</span>
+        <span className={styles.the}>The</span>
         <span className={styles.fest}>Fest</span>
       </h2>
 
       <div className={styles.circleWrapper}>
-        {organizations?.slice(0, 8).map((org, index) => (
-          <div
-            key={org.id}
-            className={`${styles.circle} ${styles[`pos${index}`]}`}
-            onMouseEnter={() => setHoveredId(org.id)}
-            onMouseLeave={() => setHoveredId(null)}
-          >
-            {org.profileImage ? (
-              <img
-                src={org.profileImage}
-                alt={org.organizationName}
-                className={styles.image}
-              />
-            ) : (
-              <div className={styles.avatar}>
-                {org.organizationName?.charAt(0).toUpperCase()}
-              </div>
-            )}
+        {organizations.map((org, index) => {
+          const sizeClass =
+            index === 0
+              ? styles.big
+              : index % 3 === 0
+                ? styles.medium
+                : styles.small;
 
-            {/* Hover Card */}
-            {hoveredId === org.id && (
-              <div className={styles.hoverCard}>
-                <h4>{org.organizationName}</h4>
-                <p>{org.eventCount || 0} Events</p>
-              </div>
-            )}
-            <Tooltip text="Follow">
-              <div className={styles.followBtn}>+</div>
-            </Tooltip>
-          </div>
-        ))}
+          return (
+            <div
+              key={org.id}
+              className={`${styles.circle} ${styles[`pos${index}`]} ${sizeClass}`}
+              onMouseEnter={() => setHoveredId(org.id)}
+              onMouseLeave={() => setHoveredId(null)}
+            >
+              {org.profileImage ? (
+                <img
+                  src={org.profileImage}
+                  alt={org.organizationName}
+                  className={styles.image}
+                />
+              ) : (
+                <div className={styles.avatar}>
+                  {org.organizationName?.charAt(0).toUpperCase()}
+                </div>
+              )}
+
+              {/* Hover Card */}
+              {hoveredId === org.id && (
+                <div className={styles.hoverCard}>
+                  <h4>{org.organizationName}</h4>
+                  <p>{org.eventCount || 0} Events</p>
+                </div>
+              )}
+
+              <Tooltip text="Follow" >
+                <div className={styles.followBtn}>+</div>
+              </Tooltip>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
