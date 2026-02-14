@@ -1,0 +1,56 @@
+.wrapper {
+  background: #f7f7f7;
+  min-height: 100vh;
+}
+
+.title {
+  font-size: 38px;
+  font-weight: 700;
+  color: #222;
+}
+
+.title span {
+  color: #6c2bd9;
+}
+
+.subtitle {
+  color: #555;
+  max-width: 650px;
+  margin: auto;
+}
+
+.sidebar {
+  padding-top: 10px;
+}
+
+.sidebarItem {
+  padding: 8px 0;
+  font-size: 15px;
+  color: #333;
+  cursor: pointer;
+}
+
+.sidebarItem:hover {
+  color: #6c2bd9;
+}
+
+.divider {
+  width: 3px;
+  background: #6c2bd9;
+  height: 100%;
+}
+
+.sectionTitle {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.content {
+  color: #444;
+  line-height: 1.7;
+}
+
+.activeItem {
+  color: #6c2bd9;
+  font-weight: 600;
+}
