@@ -1,20 +1,12 @@
-"use client";
+import { Suspense } from "react";
+import ProfilePageClient from "./ProfilePageClient";
 
-import { useSearchParams } from "next/navigation";
-import ProfileClient from "./ProfileClient";
-import FollowersList from "./FollowersList";
-import FollowingList from "./FollowingList";
+export const dynamic = "force-dynamic";
 
 export default function Page() {
-  const searchParams = useSearchParams();
-  const activeTab = searchParams.get("tab") || "profile";
-
   return (
-    <>
-
-      {activeTab === "profile" && <ProfileClient />}
-      {activeTab === "followers" && <FollowersList />}
-      {activeTab === "following" && <FollowingList />}
-    </>
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProfilePageClient />
+    </Suspense>
   );
 }

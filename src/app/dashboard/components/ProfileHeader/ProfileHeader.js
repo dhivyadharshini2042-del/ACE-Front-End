@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./ProfileHeader.module.css";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 import { getOrganizationProfileApi } from "../../../../lib/api/organizer.api";
@@ -20,10 +20,10 @@ import {
   YOUTUBEICON,
 } from "../../../../const-value/config-icons/page";
 
-export default function ProfileHeader() {
+export default function ProfileHeader({ activeTab = "profile" }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const activeTab = searchParams.get("tab") || "profile";
+  // const searchParams = useSearchParams();
+  // const activeTab = searchParams.get("tab") || "profile";
 
   const fileRef = useRef(null);
   const { setLoading } = useLoading();
