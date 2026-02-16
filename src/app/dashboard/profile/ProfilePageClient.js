@@ -12,7 +12,6 @@ export default function ProfilePageClient() {
 
   return (
     <>
-      <ProfileHeader activeTab={activeTab} />
 
       {activeTab === "profile" && <ProfileClient />}
       {activeTab === "followers" && <FollowersList />}
