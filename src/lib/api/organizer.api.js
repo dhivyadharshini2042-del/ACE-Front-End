@@ -38,3 +38,22 @@ export const getOrganizationByEventsApi = async (slug) => {
     apiPrivate.get(API_ENDPOINTS.ORGANIZER.ORG_EVENTS_PRIVATE(slug)),
   );
 };
+
+/* ================= FOLLOW ORGANIZER ================= */
+
+export const followOrganizerApi = (orgIdentity) =>
+  handleApi(
+    apiPrivate.post(API_ENDPOINTS.ORGANIZER.FOLLOW, {
+      orgIdentity,
+    }),
+  );
+/* ================= FOLLOWERS / FOLLOWING ================= */
+
+export const getFollowersFollowingApi = () =>
+  handleApi(apiPrivate.get(API_ENDPOINTS.ORGANIZER.FOLLOWERS_FOLLOWING));
+
+/* ================= ORGANIZER RANKING ================= */
+
+export const getOrganizerRankingApi = (page = 1) =>
+  handleApi(apiPublic.get(API_ENDPOINTS.ORGANIZER.RANKING(page)));
+

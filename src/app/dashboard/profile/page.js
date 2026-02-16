@@ -1,10 +1,12 @@
 import { Suspense } from "react";
-import ProfileClient from "./ProfileClient";
+import ProfilePageClient from "./ProfilePageClient";
+
+export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <Suspense fallback={<div>Loading profile...</div>}>
-      <ProfileClient />
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProfilePageClient />
     </Suspense>
   );
 }

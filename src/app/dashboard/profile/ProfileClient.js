@@ -25,17 +25,28 @@ import {
   XICON,
   YOUTUBEICON,
 } from "../../../const-value/config-icons/page";
+import { getCountries, getStates, getCities } from "../../../lib/location.api";
+import DeleteConfirmModal from "../../../components/ui/DeleteConfirmModal/DeleteConfirmModal";
 
 export default function ProfileClient() {
   const router = useRouter();
   const fileRef = useRef(null);
   const { setLoading } = useLoading();
 
-  const [auth, setAuth] = useState(null);
+  // const [auth, setAuth] = useState(null);
   const [profile, setProfile] = useState(null);
-
+  const [auth, setAuth] = useState(null);
   const [mode, setMode] = useState("view");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
 
   const [form, setForm] = useState({
     name: "",
@@ -62,55 +73,76 @@ export default function ProfileClient() {
   ];
 
   /* ================= INIT ================= */
+
+  const fetchProfile = async (session) => {
+    try {
+      setLoading(true);
+
+      let res;
+      if (session.type === "org") {
+        res = await getOrganizationProfileApi(session.identity.identity);
+      } else {
+        res = await getUserProfileApi(session.identity.identity);
+      }
+
+      if (res?.status) {
+        setProfile(res.data);
+
+        setForm({
+          name:
+            session.type === "org" ? res.data.organizationName : res.data.name,
+          email: session.type === "org" ? res.data.domainEmail : res.data.email,
+          image: null,
+          socialLinks: res.data.socialLinks || {},
+        });
+      }
+    } catch {
+      toast.error("Failed to reload profile");
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     if (!isUserLoggedIn()) return;
 
     const session = getAuthFromSession();
     setAuth(session);
+    fetchProfile(session);
+  }, []);
 
-    async function loadProfile() {
-      try {
-        setLoading(true);
-
-        let res;
-        if (session.type === "org") {
-          res = await getOrganizationProfileApi(session.identity.identity);
-        } else {
-          res = await getUserProfileApi(session.identity.identity);
-        }
-
-        if (res?.status) {
-          setProfile(res.data);
-          setForm({
-            name:
-              session.type === "org"
-                ? res.data.organizationName
-                : res.data.name,
-            email:
-              session.type === "org" ? res.data.domainEmail : res.data.email,
-            image: null,
-            socialLinks: res.data.socialLinks || {
-              instagram: "",
-              linkedin: "",
-              x: "",
-              website: "",
-            },
-          });
-        }
-      } catch {
-        toast.error("Failed to load profile");
-      } finally {
-        setLoading(false);
-      }
+  useEffect(() => {
+    async function loadCountries() {
+      const data = await getCountries();
+      setCountries(data || []);
     }
 
-    loadProfile();
+    loadCountries();
   }, []);
+
+  const handleCountryChange = async (countryId) => {
+    setSelectedCountry(countryId);
+    setSelectedState("");
+    setSelectedCity("");
+
+    const data = await getStates(countryId);
+    setStates(data || []);
+  };
+
+  const handleStateChange = async (stateId) => {
+    setSelectedState(stateId);
+    setSelectedCity("");
+
+    const data = await getCities(stateId);
+    setCities(data || []);
+  };
 
   /* ================= SAVE ================= */
   const saveProfile = async () => {
     try {
-      if (!auth) return;
+      if (!auth) {
+        toast.error("Auth missing");
+        return;
+      }
 
       setLoading(true);
 
@@ -131,15 +163,34 @@ export default function ProfileClient() {
 
       const res = await updateAuthProfile(payload);
 
-      if (res?.success) {
+      if (res?.status) {
+        await fetchProfile(auth);
         toast.success("Profile updated successfully");
         setMode("view");
         setImagePreview(null);
       } else {
         toast.error(res?.message || "Update failed");
       }
-    } catch {
-      toast.error("Profile update failed");
+    } catch (err) {
+      console.log("UPDATE ERROR:", err);
+      toast.error(err?.response?.data?.message || "Profile update failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      setLoading(true);
+
+      console.log("Deleting account...");
+      toast.success("Account deleted successfully");
+
+      setShowDeleteModal(false);
+
+      router.push("/");
+    } catch (err) {
+      toast.error("Failed to delete account");
     } finally {
       setLoading(false);
     }
@@ -149,120 +200,6 @@ export default function ProfileClient() {
 
   return (
     <div className={styles.card}>
-      {form.name && <h2 className={styles.name}>{form.name}</h2>}
-      {/* ================= TOP ================= */}
-      <div className={styles.top}>
-        <div className={styles.avatar}>
-          {profile.profileImage ? (
-            <img src={profile.profileImage} alt="profile" />
-          ) : (
-            <div className={styles.noImage}>{form.name?.charAt(0)}</div>
-          )}
-        </div>
-
-        <div className={styles.topRight}>
-          <div className={styles.stats}>
-            {profile.organizationCategory && (
-              <div>
-                <span>Organization</span>
-                <b>{profile.organizationCategory}</b>
-              </div>
-            )}
-            <div>
-              <span>Events Organized</span>
-              <b>{profile.eventCount || 0}</b>
-            </div>
-            <div data-tooltip="View followers">
-              <span>Followers</span>
-              <b>{profile.followers || 0}</b>
-            </div>
-            <div data-tooltip="View following">
-              <span>Following</span>
-              <b>{profile.following || 0}</b>
-            </div>
-          </div>
-
-          <div className={styles.meta}>
-            {form.email && <span>{form.email}</span>}
-            {profile.isVerified && (
-              <span className={styles.verified}>✔ Verified</span>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* ================= SOCIAL VIEW ================= */}
-      <div className={styles.socialRow}>
-        {form.socialLinks.instagram && (
-          <a
-            href={form.socialLinks.instagram}
-            target="_blank"
-            className={`${styles.socialItem} ${styles.instagram}`}
-          >
-            {INSTAGRAMICON} Instagram
-          </a>
-        )}
-        {form.socialLinks.linkedin && (
-          <a
-            href={form.socialLinks.linkedin}
-            target="_blank"
-            className={`${styles.socialItem} ${styles.linkedin}`}
-          >
-            {LINKEDINICON} LinkedIn
-          </a>
-        )}
-        {form.socialLinks.x && (
-          <a
-            href={form.socialLinks.x}
-            target="_blank"
-            className={`${styles.socialItem} ${styles.x}`}
-          >
-            {XICON} Twitter
-          </a>
-        )}
-        {form.socialLinks.website && (
-          <a
-            href={form.socialLinks.website}
-            target="_blank"
-            className={`${styles.socialItem} ${styles.website}`}
-          >
-            {WEBSITEICON} Website
-          </a>
-        )}
-        {/* EXTRA SOCIALS (ADD ONLY) */}
-        {form.socialLinks.facebook && (
-          <a
-            href={form.socialLinks.facebook}
-            target="_blank"
-            className={`${styles.socialItem} ${styles.facebook}`}
-          >
-            {FACEBOOKICON} Facebook
-          </a>
-        )}
-
-        {form.socialLinks.youtube && (
-          <a
-            href={form.socialLinks.youtube}
-            target="_blank"
-            className={`${styles.socialItem} ${styles.youtube}`}
-          >
-            {YOUTUBEICON} YouTube
-          </a>
-        )}
-
-        {form.socialLinks.telegram && (
-          <a
-            href={form.socialLinks.telegram}
-            target="_blank"
-            className={`${styles.socialItem} ${styles.telegram}`}
-          >
-            {TELEGRAMICON} Telegram
-          </a>
-        )}
-      </div>
-
-      <hr />
-
       {/* ================= VIEW ================= */}
       {mode === "view" && (
         <>
@@ -279,18 +216,18 @@ export default function ProfileClient() {
                 <p>{form.email}</p>
               </div>
             )}
-            {(profile.country || profile.state || profile.city) && (
+            {(profile?.country || profile?.state || profile?.city) && (
               <div className={styles.addressBlock}>
                 <label>Address</label>
 
                 <p>
-                  {profile.city && <span>{profile.city}</span>}
-                  {profile.city && profile.state && <span>, </span>}
-                  {profile.state && <span>{profile.state}</span>}
-                  {(profile.city || profile.state) && profile.country && (
+                  {profile?.city && <span>{profile.city}</span>}
+                  {profile?.city && profile?.state && <span>, </span>}
+                  {profile?.state && <span>{profile.state}</span>}
+                  {(profile?.city || profile?.state) && profile?.country && (
                     <span>, </span>
                   )}
-                  {profile.country && <span>{profile.country}</span>}
+                  {profile?.country && <span>{profile.country}</span>}
                 </p>
               </div>
             )}
@@ -374,12 +311,8 @@ export default function ProfileClient() {
             </div>
           </div>
 
-          {/* SOCIAL EDIT */}
-          {/* SOCIAL EDIT */}
-          <div className={styles.socialEditSection}>
-            <h4>Social Links</h4>
-
-            {/* SOCIAL EDIT */}
+          {/* SOCIAL EDIT → ONLY FOR ORG */}
+          {auth?.type === "org" && (
             <div className={styles.socialEditSection}>
               <h4>Social Links</h4>
 
@@ -405,7 +338,57 @@ export default function ProfileClient() {
                 ))}
               </div>
             </div>
-          </div>
+          )}
+
+          {/* USER → LOCATION EDIT */}
+          {auth?.type !== "org" && (
+            <div className={styles.locationSection}>
+              <h4>Location</h4>
+
+              <div className={styles.locationGrid}>
+                {/* Country */}
+                <select
+                  value={selectedCountry}
+                  onChange={(e) => handleCountryChange(e.target.value)}
+                >
+                  <option value="">Select Country</option>
+                  {countries.map((c) => (
+                    <option key={c.identity} value={c.identity}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+
+                {/* State */}
+                <select
+                  value={selectedState}
+                  onChange={(e) => handleStateChange(e.target.value)}
+                  disabled={!selectedCountry}
+                >
+                  <option value="">Select State</option>
+                  {states.map((s) => (
+                    <option key={s.identity} value={s.identity}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+
+                {/* City */}
+                <select
+                  value={selectedCity}
+                  onChange={(e) => setSelectedCity(e.target.value)}
+                  disabled={!selectedState}
+                >
+                  <option value="">Select City</option>
+                  {cities.map((c) => (
+                    <option key={c.identity} value={c.identity}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
 
           <div className={styles.actions}>
             <button
@@ -426,15 +409,6 @@ export default function ProfileClient() {
         </>
       )}
 
-      <ConfirmModal
-        open={showConfirmModal}
-        title="Reset Password"
-        description="Password reset link will be sent to your email."
-        image="/images/logo.png"
-        onCancel={() => setShowConfirmModal(false)}
-        onConfirm={() => router.push("/auth/forgot-password")}
-      />
-
       {/* ================= DELETE ACCOUNT ================= */}
       <div className={styles.dangerZone}>
         <h4>Danger Zone</h4>
@@ -450,12 +424,28 @@ export default function ProfileClient() {
 
           <button
             className={styles.deleteBtn}
-            onClick={() => setShowConfirmModal(true)}
+            onClick={() => setShowDeleteModal(true)}
           >
             Delete
           </button>
         </div>
       </div>
+
+      <ConfirmModal
+        open={showConfirmModal}
+        title="Reset Password"
+        description="Password reset link will be sent to your email."
+        image="/images/logo.png"
+        onCancel={() => setShowConfirmModal(false)}
+        onConfirm={() => router.push("/auth/forgot-password")}
+      />
+
+      <DeleteConfirmModal
+        open={showDeleteModal}
+        userEmail={form.email}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDeleteAccount}
+      />
     </div>
   );
 }

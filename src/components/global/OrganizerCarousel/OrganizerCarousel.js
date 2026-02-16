@@ -2,9 +2,40 @@
 
 import styles from "./OrganizerCarousel.module.css";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import ConfirmModal from "../../ui/Modal/ConfirmModal";
+import { followOrganizerApi } from "../../../lib/api/organizer.api";
+import { isUserLoggedIn } from "../../../lib/auth";
+import { useEffect, useState } from "react";
 
 export default function OrganizersCarousel({ data = [] }) {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [pendingOrg, setPendingOrg] = useState(null);
+
   const router = useRouter();
+
+  useEffect(() => {
+    setLoggedIn(isUserLoggedIn());
+  }, []);
+
+  const handleFollow = async (e, orgIdentity) => {
+    e.stopPropagation(); // prevent card click
+
+    if (!loggedIn) {
+      setPendingOrg(orgIdentity);
+      setShowLoginModal(true);
+      return;
+    }
+
+    const res = await followOrganizerApi(orgIdentity);
+
+    if (res?.status) {
+      toast.success("Followed successfully");
+    } else {
+      toast.error(res?.message || "Failed to follow");
+    }
+  };
 
   if (!Array.isArray(data) || data.length === 0) return null;
 
@@ -81,12 +112,32 @@ export default function OrganizersCarousel({ data = [] }) {
                 {org._count?.events || 0} Events
               </div>
             </div>
-            <div style={{textAlign:"center"}}>
-              <button className={styles.followBtn}>Follow</button>
+            <div style={{ textAlign: "center" }}>
+              <button
+                className={styles.followBtn}
+                onClick={(e) => handleFollow(e, org.identity)}
+              >
+                Follow
+              </button>
             </div>
           </div>
         ))}
       </div>
+      <ConfirmModal
+        open={showLoginModal}
+        image="/images/logo.png"
+        title="Login Required"
+        description="You need to login to follow this organization."
+        onCancel={() => {
+          setShowLoginModal(false);
+          setPendingOrg(null);
+        }}
+        onConfirm={() => {
+          setShowLoginModal(false);
+          setPendingOrg(null);
+          router.push("/auth/user/login");
+        }}
+      />
     </section>
   );
 }

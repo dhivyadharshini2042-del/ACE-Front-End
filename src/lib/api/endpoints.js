@@ -59,6 +59,10 @@ export const API_ENDPOINTS = {
     APPROVEDEVENTS: (orgId) => `/v1/organizations/${orgId}/events`,
     ORG_EVENTS_PUBLIC: (slug) => `/v1/organizations/${slug}/events`,
     ORG_EVENTS_PRIVATE: (slug) => `/v1/organizations/${slug}/events_protec`,
+    FOLLOW: "/v1/organizations/follow-org",
+    FOLLOWERS_FOLLOWING: "/v1/organizations/followers-following",
+    RANKING: (page = 1) => `/v1/organizations/Ranking?page=${page}`,
+
   },
 
   /* ================= MASTER DATA ================= */

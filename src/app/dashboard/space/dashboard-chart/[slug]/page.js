@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -22,7 +22,6 @@ export default function DashboardChartPage() {
       try {
         setLoading(true);
 
-        //  FIX: await + res
         const res = await getEventBySlugApi(slug);
 
         if (res?.status && res.data) {
@@ -32,7 +31,7 @@ export default function DashboardChartPage() {
           router.back();
         }
       } catch (err) {
-        console.error(" DashboardChartPage error:", err);
+        console.error("DashboardChartPage error:", err);
         toast.error("Something went wrong");
       } finally {
         setLoading(false);
@@ -42,13 +41,14 @@ export default function DashboardChartPage() {
     loadEvent();
   }, [slug]);
 
-  /* ================= SAFE GUARD ================= */
   if (!event) return null;
 
   return (
-    <DashboardChart
-      event={event}
-      onBack={() => router.back()}
-    />
+    <Suspense fallback={null}>
+      <DashboardChart
+        event={event}
+        onBack={() => router.back()}
+      />
+    </Suspense>
   );
 }

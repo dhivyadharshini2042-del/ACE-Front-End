@@ -1,52 +1,79 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import styles from "./StoryBehindFest.module.css";
+import { getAllOrganizationsApi } from "../../../../lib/api/organizer.api";
+import Tooltip from "../../../ui/Tooltip/Tooltip";
 
 export default function StoryBehindFest() {
-  const images = [
-    "/images/aboutImageOne.png",
-    "/images/aboutImageTwo.png",
-    "/images/aboutImageThree.png",
-    "/images/aboutImageFour.png",
-    "/images/aboutImageFive.png",
-    "/images/aboutImageSix.png",
-    "/images/aboutImageSev.png",
-  ];
+  const [organizations, setOrganizations] = useState([]);
+  const [hoveredId, setHoveredId] = useState(null);
+
+  useEffect(() => {
+    fetchOrganizations();
+  }, []);
+
+  const fetchOrganizations = async () => {
+    try {
+      const res = await getAllOrganizationsApi();
+      setOrganizations(res?.data?.slice(0, 12) || []);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
-    <section className={styles.section}>
-      <h1 className={styles.title}>
-        The <span className={styles.orange}>Story</span> Behind the{" "}
-        <span className={styles.purple}>Fest</span>
-      </h1>
+    <section className={styles.container}>
+      <h2 className={styles.title}>
+        <span className={styles.the}>The</span>
+        <span className={styles.story}>Story</span>
+        <span className={styles.behind}>Behind</span>
+        <span className={styles.the}>The</span>
+        <span className={styles.fest}>Fest</span>
+      </h2>
 
-      {/* SVG CLIP MASK */}
-      <svg width="0" height="0">
-        <defs>
-          <clipPath id="bottomCurve" clipPathUnits="objectBoundingBox">
-            {/* smooth professional curve */}
-            <path d="
-              M 0 0
-              L 1 0
-              L 1 0.75
-              C 0.75 0.9, 0.25 0.9, 0 0.75
-              Z
-            " />
-          </clipPath>
-        </defs>
-      </svg>
+      <div className={styles.circleWrapper}>
+        {organizations.map((org, index) => {
+          const sizeClass =
+            index === 0
+              ? styles.big
+              : index % 3 === 0
+                ? styles.medium
+                : styles.small;
 
-      <div className={styles.stage}>
-        {images.map((src, i) => (
-          <img
-            key={i}
-            src={src}
-            alt="story"
-            className={`${styles.img} ${styles[`img${i}`]}`}
-          />
-        ))}
+          return (
+            <div
+              key={org.id}
+              className={`${styles.circle} ${styles[`pos${index}`]} ${sizeClass}`}
+              onMouseEnter={() => setHoveredId(org.id)}
+              onMouseLeave={() => setHoveredId(null)}
+            >
+              {org.profileImage ? (
+                <img
+                  src={org.profileImage}
+                  alt={org.organizationName}
+                  className={styles.image}
+                />
+              ) : (
+                <div className={styles.avatar}>
+                  {org.organizationName?.charAt(0).toUpperCase()}
+                </div>
+              )}
 
-        {/* pink curve background */}
-        <div className={styles.curveBg}></div>
+              {/* Hover Card */}
+              {hoveredId === org.id && (
+                <div className={styles.hoverCard}>
+                  <h4>{org.organizationName}</h4>
+                  <p>{org.eventCount || 0} Events</p>
+                </div>
+              )}
+
+              <Tooltip text="Follow" >
+                <div className={styles.followBtn}>+</div>
+              </Tooltip>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

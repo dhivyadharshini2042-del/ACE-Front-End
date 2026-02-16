@@ -68,9 +68,6 @@ export default function OverviewDashboardChart({ events }) {
 
   return (
     <div className={styles.pageWrapper}>
-      {/* HEADER */}
-      <ProfileHeader />
-
       {/* CHART CARD ONLY */}
       <div className={styles.chartCard}>
         {/* TOP CONTROLS */}
