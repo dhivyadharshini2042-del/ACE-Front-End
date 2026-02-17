@@ -58,6 +58,26 @@
   align-items: center;
   flex-wrap: wrap;
 }
+.org-follow-btn {
+  height: 44px;
+  padding: 0 22px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #7f00ff, #9b4dff);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.org-follow-btn:hover {
+  transform: translateY(-2px);
+}
+
+.org-follow-btn.following {
+  background: #e5e7eb;
+  color: #111;
+}
 
 /* ACTION BUTTONS */
 .org-action-btn {
@@ -114,7 +134,7 @@
   font-weight: 600;
   text-decoration: underline;
 }
-.social-label{
+.social-label {
   font-size: 20px;
   font-weight: 700;
 }
@@ -123,7 +143,7 @@
   color: #5b21b6;
   padding: 15px 14px;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   text-align: center;
 }
@@ -132,7 +152,7 @@
 .org-stats-grid {
   margin-top: 24px;
   display: grid;
-  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
 }
 
@@ -164,8 +184,8 @@
 }
 
 .stat-card strong {
-  font-size: 26px;
-  font-weight: 800;
+  font-size: 24px;
+  font-weight: 700;
   padding: 10px;
   display: block;
 }
@@ -173,7 +193,7 @@
 .stat-card span {
   font-size: 18px;
   font-weight: 700;
-  color: #333232;
+  color: #696969;
 }
 
 /* ================= SOCIAL ================= */
@@ -186,6 +206,7 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  gap: 16px;
 }
 
 .social-icons {
@@ -286,19 +307,32 @@
 }
 
 /* ================= RESPONSIVE ================= */
-@media (max-width: 768px) {
-  .org-header-row {
-    flex-direction: column;
-    align-items: flex-start;
+@media (max-width: 992px) {
+  .org-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
+}
+
+@media (max-width: 768px) {
 
   .org-social-full {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+  }
+
+  .social-icons {
+    gap: 20px;
+    flex-wrap: wrap;
   }
 
   .org-hero-img {
     height: 240px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .org-stats-grid {
+    grid-template-columns: 1fr;
   }
 }

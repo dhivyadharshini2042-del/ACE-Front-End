@@ -74,7 +74,10 @@ export default function OrganizersCarousel({ data = [] }) {
           <div
             key={org.identity || index}
             className={styles.card}
-            onClick={() => handleOrgClick(org.slug)}
+            onClick={() => {
+              document.cookie = `orgIdentity=${org.identity}; path=/`;
+              handleOrgClick(org.slug);
+            }}
           >
             {/* RANK BADGE */}
             {index < 3 && (

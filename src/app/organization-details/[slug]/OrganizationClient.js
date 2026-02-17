@@ -34,6 +34,7 @@ import {
   getUpcomingEventsApi,
   getPastEventsApi,
 } from "../../../lib/api/organizer.api";
+import { followOrganizerApi } from "../../../lib/api/organizer.api";
 
 export default function OrganizationClient({ slug }) {
   const router = useRouter();
@@ -50,11 +51,18 @@ export default function OrganizationClient({ slug }) {
   const [org, setOrg] = useState(null);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [pastEvents, setPastEvents] = useState([]);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const [pastIndex, setPastIndex] = useState(0);
   const PAST_PER_PAGE = 5;
   const [page, setPage] = useState(1);
   const PER_PAGE = 15;
+
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  };
 
   /* ================= INIT AUTH ================= */
   useEffect(() => {
@@ -65,25 +73,29 @@ export default function OrganizationClient({ slug }) {
 
   /* ================= FETCH EVENTS ================= */
   useEffect(() => {
-    if (!slug) return;
+    const identity = getCookie("orgIdentity");
+
+    if (!identity) return;
 
     const fetchOrg = async () => {
-      const res = await getOrganizationDetailsApi(slug);
-      console.log("organization details",res)
+      const res = await getOrganizationDetailsApi(identity);
+      console.log("organization details", res);
+
       if (res?.status) {
         setOrg(res.data);
+        setIsFollowing(!!res.data.isFollowing); // backend should send this
       }
     };
 
     fetchOrg();
-  }, [slug]);
+  }, []);
 
   useEffect(() => {
     if (!slug) return;
-console.log("slug",slug)
+    console.log("slug", slug);
     const fetchUpcoming = async () => {
       const res = await getUpcomingEventsApi(slug, page);
-      console.log("upcoimg event",res)
+      console.log("upcoimg event", res);
       if (res?.status) {
         setUpcomingEvents(res.data || []);
       }
@@ -97,7 +109,7 @@ console.log("slug",slug)
 
     const fetchPast = async () => {
       const res = await getPastEventsApi(slug, pastIndex, PAST_PER_PAGE);
-      console.log("past event",res)
+      console.log("past event", res);
       if (res?.status) {
         setPastEvents(res.data || []);
       }
@@ -168,6 +180,26 @@ console.log("slug",slug)
       setLikedMap((p) => ({ ...p, [eventId]: wasLiked }));
       setLikeCountMap((p) => ({ ...p, [eventId]: p[eventId] }));
       toast.error("Failed to like event");
+    }
+  };
+
+  const handleFollowToggle = async () => {
+    if (!auth?.identity) {
+      setPendingAction("follow");
+      setShowLoginModal(true);
+      return;
+    }
+
+    const wasFollowing = isFollowing;
+
+    // optimistic UI
+    setIsFollowing(!wasFollowing);
+
+    const res = await followOrganizerApi(org.identity);
+
+    if (!res?.status) {
+      setIsFollowing(wasFollowing);
+      toast.error("Failed to update follow status");
     }
   };
 
@@ -266,6 +298,13 @@ console.log("slug",slug)
             </div>
 
             <div className="org-header-actions">
+              <button
+                className={`org-follow-btn ${isFollowing ? "following" : ""}`}
+                onClick={handleFollowToggle}
+              >
+                {isFollowing ? "Following" : "Follow"}
+              </button>
+
               {org?.website && (
                 <a
                   href={org.website}
@@ -276,6 +315,7 @@ console.log("slug",slug)
                   Visit Website
                 </a>
               )}
+
               <div onClick={() => setOpenShare(true)}>{SHAREICON}</div>
             </div>
           </div>
@@ -287,10 +327,6 @@ console.log("slug",slug)
             </div>
             <div className="meta-chip">{org?.country}</div>
             <div className="meta-chip">
-              {org?.totalEvents || upcomingEvents.length + pastEvents.length}
-              Events
-            </div>
-            <div className="meta-chip">
               Since {new Date(org?.createdAt).getFullYear()}
             </div>
           </div>
@@ -298,20 +334,20 @@ console.log("slug",slug)
           {/* ===== STATS ===== */}
           <div className="org-stats-grid">
             <div className="stat-card primary">
+              <span>Total Events</span>
               <strong>
                 {org?.totalEvents || upcomingEvents.length + pastEvents.length}
               </strong>
-              <span>Total Events</span>
             </div>
 
             <div className="stat-card sec">
-              <strong>{upcomingEvents.length}</strong>
               <span>Upcoming Events</span>
+              <strong>{upcomingEvents.length}</strong>
             </div>
 
             <div className="stat-card th">
-              <strong>{pastEvents.length}</strong>
               <span>Past Events</span>
+              <strong>{pastEvents.length}</strong>
             </div>
 
             <div
@@ -400,13 +436,7 @@ console.log("slug",slug)
                       )
                     ) : (
                       <span>
-                        {[
-                          e.location?.venue,
-                          e.location?.city,
-                          e.location?.state,
-                        ]
-                          .filter(Boolean)
-                          .join(", ")}
+                        {[e.location?.venue].filter(Boolean).join(", ")}
                       </span>
                     )}
                   </p>
@@ -486,9 +516,8 @@ console.log("slug",slug)
             )}
           </div>
         </section>
-
-        <Footer />
       </div>
+      <Footer />
       <ConfirmModal
         open={showLoginModal}
         image="/images/logo.png"

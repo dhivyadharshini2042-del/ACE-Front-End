@@ -448,8 +448,8 @@ export const TIMEICON = (
 export const SHAREICON = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="78"
-    height="78"
+    width="58"
+    height="58"
     viewBox="0 0 78 78"
     fill="none"
   >

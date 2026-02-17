@@ -31,7 +31,7 @@ export async function generateMetadata({ params }) {
 
 /* ================= PAGE ================= */
 export default async function Page({ params }) {
-  const { slug } = await params;   // ✅ MUST await
+  const { slug } = await params;  
 
   return <OrganizationClient slug={slug} />;
 }
