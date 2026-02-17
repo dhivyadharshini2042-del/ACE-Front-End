@@ -3,9 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./landing.css";
 
-// ICONS
 import {
-  DATEICON,
   HOME_PAGE_DATE_ICON,
   HOME_PAGE_LOCATION_ICON,
   WHATICON,
@@ -14,14 +12,12 @@ import {
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-// API
 import {
   getAllEventsApi,
   getExploreEventTypes,
 } from "../../lib/api/event.api.js";
 import { getAllOrganizationsApi } from "../../lib/api/organizer.api.js";
 
-// COMPONENTS
 import ChooseEventCategory from "../../components/global/ChooseEventCategory/ChooseEventCategory";
 import EventSearchBar from "../../components/global/EventSearchBar/EventSearchBar";
 import EventSlider from "../../components/global/EventSlider/EventSlider";
@@ -32,14 +28,16 @@ import SpotlightCarousel from "../../components/global/SpotlightCarousel/Spotlig
 import LocationHighlights from "../../components/global/LocationHighlights/LocationHighlights";
 import OrganizersCarousel from "../../components/global/OrganizerCarousel/OrganizerCarousel.js";
 import FloatingExploreButton from "../../components/global/FloatingExploreButton/FloatingExploreButton.js";
+import AppLandingHero from "../../components/global/AppLandingHero/AppLandingHero.js";
 
 import { useLoading } from "../../context/LoadingContext.js";
-import AppLandingHero from "../../components/global/AppLandingHero/AppLandingHero.js";
 
 export default function LandingPage() {
   const { setLoading } = useLoading();
 
   const [events, setEvents] = useState([]);
+  const [offset, setOffset] = useState(0);
+  const [hasNext, setHasNext] = useState(true);
   const [organization, setOrganization] = useState([]);
   const [categories, setCategories] = useState([]);
 
@@ -58,6 +56,7 @@ export default function LandingPage() {
     "/images/bannerImageSev.png",
   ];
 
+  /* ================= LOAD CATEGORIES ================= */
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -87,32 +86,45 @@ export default function LandingPage() {
     loadCategories();
   }, []);
 
-  /* ================= LOAD DATA ================= */
-  const loadLandingData = async () => {
+  /* ================= LOAD EVENTS + ORGANIZERS ================= */
+  const loadMoreEvents = async () => {
     try {
       setLoading(true);
 
       const [eventsRes, orgRes] = await Promise.all([
-        getAllEventsApi(),
+        getAllEventsApi({ offset, limit: 5 }),
         getAllOrganizationsApi(),
       ]);
 
+      // Events
       if (eventsRes?.status) {
-        setEvents(eventsRes.data);
+        setEvents((prev) => {
+          const newEvents = eventsRes.data.filter(
+            (newEvent) =>
+              !prev.some((existing) => existing.identity === newEvent.identity),
+          );
+
+          return [...prev, ...newEvents];
+        });
+
+        setHasNext(eventsRes.meta?.hasNext ?? false);
+        setOffset((prev) => prev + 5);
       }
 
+      // Organizations
       if (orgRes?.status) {
         setOrganization(orgRes.data);
       }
-    } catch {
-      toast.error("Something went wrong");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to load events");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadLandingData();
+    loadMoreEvents();
   }, []);
 
   /* ================= UI ================= */
@@ -144,19 +156,30 @@ export default function LandingPage() {
 
       <ChooseEventCategory categories={categories} />
 
+      <EventSlider
+        title="Trending Events"
+        data={events}
+        onReachEnd={loadMoreEvents}
+      />
 
-      <EventSlider title="Trending Events" data={events} />
-      <EventSlider title="Virtual Events" data={events} />
+      <EventSlider
+        title="Virtual Events"
+        data={events}
+        onReachEnd={loadMoreEvents}
+      />
 
       <SpotlightCarousel data={events} />
 
-      {/*  View Leaderboard navigates to /leaderboard */}
       <OrganizersCarousel data={organization} />
 
-      <EventSlider title="Upcoming Events" data={events} />
+      <EventSlider
+        title="Upcoming Events"
+        data={events}
+        onReachEnd={loadMoreEvents}
+      />
 
       <LocationHighlights />
-      <AppLandingHero/>
+      <AppLandingHero />
       <FloatingExploreButton targetRef={exploreRef} />
       <Footer />
     </div>

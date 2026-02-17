@@ -130,10 +130,15 @@ export default function ProfileHeader({ activeTab = "profile" }) {
                 style={{ cursor: "pointer" }}
               >
                 <span>Followers</span>
-                <b>{profile.followersCount || 0}</b>
+                <b>
+                  {profile.followersCount > 0
+                    ? profile.followersCount
+                    : "No Followers Yet"}
+                </b>
               </div>
             )}
 
+            {/* FOLLOWING → ORG + USER */}
             {/* FOLLOWING → ORG + USER */}
             <div
               className={activeTab === "following" ? styles.active : ""}
@@ -141,7 +146,13 @@ export default function ProfileHeader({ activeTab = "profile" }) {
               style={{ cursor: "pointer" }}
             >
               <span>Following</span>
-              <b>{profile.followingCount || 0}</b>
+              <b>
+                {profile.followingCount > 0
+                  ? profile.followingCount
+                  : auth?.type === "org"
+                    ? "Not Following Anyone"
+                    : "No Connections"}
+              </b>
             </div>
 
             {/* ACTIVE STATUS → ONLY USER */}

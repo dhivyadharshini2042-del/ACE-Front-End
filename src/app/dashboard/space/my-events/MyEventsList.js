@@ -36,10 +36,7 @@ export default function MyEventsList({ events = [], loading }) {
   /* ================= PAGINATION LOGIC ================= */
   const totalPages = Math.ceil(events.length / PAGE_SIZE);
   const startIndex = (page - 1) * PAGE_SIZE;
-  const paginatedEvents = events.slice(
-    startIndex,
-    startIndex + PAGE_SIZE
-  );
+  const paginatedEvents = events.slice(startIndex, startIndex + PAGE_SIZE);
 
   const handleClick = (event) => {
     router.push(`/dashboard/space/dashboard-chart/${event.slug}`);
@@ -54,36 +51,33 @@ export default function MyEventsList({ events = [], loading }) {
     <>
       <div className="list-group list-group-flush p-5">
         {paginatedEvents.map((e) => {
-          const createdDate = new Date(e.createdAt);
+          const calendar = e.calendars?.[0];
+          const ticket = e.tickets?.[0];
 
-          const date = createdDate.toLocaleDateString("en-IN", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          });
+          const dateRange =
+            calendar?.startDate && calendar?.endDate
+              ? `${calendar.startDate} - ${calendar.endDate}`
+              : "Date not set";
 
-          const time = createdDate.toLocaleTimeString("en-IN", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          });
+          const timeRange =
+            calendar?.startTime && calendar?.endTime
+              ? `${calendar.startTime} - ${calendar.endTime}`
+              : "Time not set";
 
-          const location = [
-            e.location?.city,
-            e.location?.state,
-            e.location?.country,
-          ]
-            .filter(Boolean)
-            .join(", ");
+          const locationText = e.location?.venue
+            ? `${e.location.venue}, ${e.org?.city || ""}`
+            : "Location not set";
+
+          const priceText = ticket?.isPaid ? `₹${ticket?.price}` : "Free";
 
           return (
             <div
-              key={e.id}
-              className="shadow-sm p-3 mb-5 bg-body-tertiary rounded"
+              key={e.identity}
+              className="shadow-sm p-3 mb-4 bg-body-tertiary rounded event-list-card"
               onClick={() => handleClick(e)}
             >
               <div className="d-flex justify-content-between align-items-start">
-                <div className="d-flex gap-4">
+                <div className="d-flex gap-4 w-100">
                   {/* IMAGE */}
                   <img
                     src={
@@ -91,47 +85,49 @@ export default function MyEventsList({ events = [], loading }) {
                       "https://cloudinary-marketing-res.cloudinary.com/images/w_1000,c_scale/v1679921049/Image_URL_header/Image_URL_header-png?_i=AA"
                     }
                     alt={e.title}
-                    style={{
-                      width: 248,
-                      height: 132,
-                      objectFit: "cover",
-                      cursor: "pointer",
-                    }}
-                    className="rounded"
+                    className="rounded event-list-img"
                   />
 
                   {/* DETAILS */}
-                  <div>
-                    <h6
-                      className="fw-semibold text-uppercase mb-1"
-                      title={e.title}
-                    >
+                  <div className="flex-grow-1">
+                    {/* TITLE */}
+                    <h6 className="event-title" title={e.title}>
                       {e.title || "Untitled Event"}
                     </h6>
 
-                    <div className="event-meta d-flex gap-4 mt-3">
+                    {/* LOCATION */}
+                    <div className="event-location">
+                      {LOCATION_ICON} {locationText} | Mode : {e.mode} | Event Category : {e.categoryName} | Event Type :   {e.eventTypeName}
+                    </div>
+
+                    {/* DATE + TIME */}
+                    <div className="event-meta d-flex gap-4 mt-2">
                       <div className="text-muted">
-                        {DATEICON} {date}
+                        {DATEICON} {dateRange}
                       </div>
 
                       <div className="text-muted">
-                        {TIMEICON} {time}
+                        {TIMEICON} {timeRange}
                       </div>
                     </div>
 
+                    {/* PRICE + STATS */}
+                    <div className="d-flex gap-4 mt-2 small">
+                      <div className="fw-semibold text-success">
+                        {priceText}
+                      </div>
+                    </div>
+
+                    {/* STATUS */}
                     <div
                       className={`event-list-status ${e.status?.toLowerCase()} mt-2`}
                     >
                       {e.status}
                     </div>
-
-                    <div className="text-muted mt-1">
-                      {LOCATION_ICON} {location || "Location not set"}
-                    </div>
                   </div>
                 </div>
 
-                {/* ACTION */}
+                {/* DELETE BUTTON */}
                 <button
                   className="btn btn-outline-danger btn-sm"
                   onClick={(ev) => {
@@ -149,11 +145,7 @@ export default function MyEventsList({ events = [], loading }) {
 
       {/* ✅ PAGINATION */}
       {totalPages > 1 && (
-        <PaginationBar
-          page={page}
-          total={totalPages}
-          onChange={setPage}
-        />
+        <PaginationBar page={page} total={totalPages} onChange={setPage} />
       )}
 
       <DeleteConfirmModal

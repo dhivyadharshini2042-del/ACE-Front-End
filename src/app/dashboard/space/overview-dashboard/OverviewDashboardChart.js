@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
 import styles from "./OverviewDashboardChart.module.css";
 
 export default function OverviewDashboardChart({ events }) {

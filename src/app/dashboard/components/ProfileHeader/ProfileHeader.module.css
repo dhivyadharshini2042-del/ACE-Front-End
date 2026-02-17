@@ -93,6 +93,21 @@
   cursor: pointer;
   transition: 0.2s ease;
 }
+.stats div.active {
+  border: 2px solid #973bff !important;
+  background: #f4edff !important;
+  box-shadow: 0 4px 14px rgba(151, 59, 255, 0.15);
+  transform: translateY(-2px);
+}
+.stats div.active span {
+  color: #973bff;
+  font-weight: 600;
+}
+
+.stats div.active b {
+  color: #973bff;
+}
+
 
 .stats div:hover {
   transform: translateY(-3px);
@@ -109,7 +124,7 @@
 .stats b {
   display: block;
   margin-top: 6px;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
   color: #111827;
   font-family: "BL Melody", sans-serif;

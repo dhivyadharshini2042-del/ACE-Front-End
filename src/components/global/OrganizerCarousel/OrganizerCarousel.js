@@ -19,23 +19,23 @@ export default function OrganizersCarousel({ data = [] }) {
     setLoggedIn(isUserLoggedIn());
   }, []);
 
-  const handleFollow = async (e, orgIdentity) => {
-    e.stopPropagation(); // prevent card click
+  // const handleFollow = async (e, orgIdentity) => {
+  //   e.stopPropagation(); // prevent card click
 
-    if (!loggedIn) {
-      setPendingOrg(orgIdentity);
-      setShowLoginModal(true);
-      return;
-    }
+  //   if (!loggedIn) {
+  //     setPendingOrg(orgIdentity);
+  //     setShowLoginModal(true);
+  //     return;
+  //   }
 
-    const res = await followOrganizerApi(orgIdentity);
+  //   const res = await followOrganizerApi(orgIdentity);
 
-    if (res?.status) {
-      toast.success("Followed successfully");
-    } else {
-      toast.error(res?.message || "Failed to follow");
-    }
-  };
+  //   if (res?.status) {
+  //     toast.success("Followed successfully");
+  //   } else {
+  //     toast.error(res?.message || "Failed to follow");
+  //   }
+  // };
 
   if (!Array.isArray(data) || data.length === 0) return null;
 
@@ -112,14 +112,14 @@ export default function OrganizersCarousel({ data = [] }) {
                 {org._count?.events || 0} Events
               </div>
             </div>
-            <div style={{ textAlign: "center" }}>
+            {/* <div style={{ textAlign: "center" }}>
               <button
                 className={styles.followBtn}
                 onClick={(e) => handleFollow(e, org.identity)}
               >
                 Follow
               </button>
-            </div>
+            </div> */}
           </div>
         ))}
       </div>

@@ -5,9 +5,6 @@ import "./organization.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { getOrganizationByEventsApi } from "../../../lib/api/organizer.api";
-
-import EventSlider from "../../../components/global/EventSlider/EventSlider";
 import {
   DATEICON,
   FACEBOOKICON,
@@ -32,11 +29,15 @@ import { NO_IMAGE_FOUND_IMAGE } from "../../../const-value/config-message/page";
 import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
 import ShareModal from "../../../components/ui/ShareModal/ShareModal";
 import PaginationBar from "../../events/components/PaginationBar";
+import {
+  getOrganizationDetailsApi,
+  getUpcomingEventsApi,
+  getPastEventsApi,
+} from "../../../lib/api/organizer.api";
 
 export default function OrganizationClient({ slug }) {
   const router = useRouter();
 
-  const [data, setData] = useState([]);
   const [currentBanner, setCurrentBanner] = useState(0);
   const [likedMap, setLikedMap] = useState({});
   const [savedMap, setSavedMap] = useState({});
@@ -46,6 +47,10 @@ export default function OrganizationClient({ slug }) {
   const [pendingAction, setPendingAction] = useState(null); // "like" | "save"
   const [openShare, setOpenShare] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [org, setOrg] = useState(null);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [pastEvents, setPastEvents] = useState([]);
+
   const [pastIndex, setPastIndex] = useState(0);
   const PAST_PER_PAGE = 5;
   const [page, setPage] = useState(1);
@@ -62,28 +67,49 @@ export default function OrganizationClient({ slug }) {
   useEffect(() => {
     if (!slug) return;
 
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const res = await getOrganizationByEventsApi(slug);
-        setData(res?.data || []);
-      } catch (err) {
-        setData([]);
-      } finally {
-        setLoading(false);
+    const fetchOrg = async () => {
+      const res = await getOrganizationDetailsApi(slug);
+      console.log("organization details",res)
+      if (res?.status) {
+        setOrg(res.data);
       }
     };
 
-    fetchData();
+    fetchOrg();
   }, [slug]);
 
-  const org = data?.[0]?.org || null;
-  const events = data;
+  useEffect(() => {
+    if (!slug) return;
+console.log("slug",slug)
+    const fetchUpcoming = async () => {
+      const res = await getUpcomingEventsApi(slug, page);
+      console.log("upcoimg event",res)
+      if (res?.status) {
+        setUpcomingEvents(res.data || []);
+      }
+    };
+
+    fetchUpcoming();
+  }, [slug, page]);
+
+  useEffect(() => {
+    if (!slug) return;
+
+    const fetchPast = async () => {
+      const res = await getPastEventsApi(slug, pastIndex, PAST_PER_PAGE);
+      console.log("past event",res)
+      if (res?.status) {
+        setPastEvents(res.data || []);
+      }
+    };
+
+    fetchPast();
+  }, [slug, pastIndex]);
 
   /* ================= BANNER IMAGES ================= */
   const bannerImages =
-    events.flatMap((e) => e.bannerImages || []).length > 0
-      ? events.flatMap((e) => e.bannerImages || [])
+    upcomingEvents.flatMap((e) => e.bannerImages || []).length > 0
+      ? upcomingEvents.flatMap((e) => e.bannerImages || [])
       : ["/images/event.png"];
 
   /* ================= AUTO SLIDE ================= */
@@ -104,7 +130,7 @@ export default function OrganizationClient({ slug }) {
     const saved = {};
     const counts = {};
 
-    data.forEach((e) => {
+    upcomingEvents.forEach((e) => {
       liked[e.identity] = !!e.isLiked;
       saved[e.identity] = !!e.isSaved;
       counts[e.identity] = e.likeCount || 0;
@@ -113,7 +139,7 @@ export default function OrganizationClient({ slug }) {
     setLikedMap(liked);
     setSavedMap(saved);
     setLikeCountMap(counts);
-  }, [data]);
+  }, [upcomingEvents]);
 
   const handleLike = async (event) => {
     if (!auth?.identity) {
@@ -171,20 +197,12 @@ export default function OrganizationClient({ slug }) {
   /* ================= UPCOMING / PAST ================= */
   const now = new Date();
 
-  const upcomingEvents = events.filter(
-    (e) => new Date(e.calendars?.[0]?.startDate) >= now,
-  );
-
   const paginatedUpcoming = upcomingEvents.slice(
     (page - 1) * PER_PAGE,
     page * PER_PAGE,
   );
 
   const totalPages = Math.ceil(upcomingEvents.length / PER_PAGE);
-
-  const pastEvents = events.filter(
-    (e) => new Date(e.calendars?.[0]?.startDate) < now,
-  );
 
   const visiblePastEvents = pastEvents.slice(
     pastIndex,
@@ -268,7 +286,10 @@ export default function OrganizationClient({ slug }) {
               {org?.city}, {org?.state}
             </div>
             <div className="meta-chip">{org?.country}</div>
-            <div className="meta-chip">{events.length} Events</div>
+            <div className="meta-chip">
+              {org?.totalEvents || upcomingEvents.length + pastEvents.length}
+              Events
+            </div>
             <div className="meta-chip">
               Since {new Date(org?.createdAt).getFullYear()}
             </div>
@@ -277,7 +298,9 @@ export default function OrganizationClient({ slug }) {
           {/* ===== STATS ===== */}
           <div className="org-stats-grid">
             <div className="stat-card primary">
-              <strong>{events.length}</strong>
+              <strong>
+                {org?.totalEvents || upcomingEvents.length + pastEvents.length}
+              </strong>
               <span>Total Events</span>
             </div>
 

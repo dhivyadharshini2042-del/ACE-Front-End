@@ -18,6 +18,23 @@ import { likeEventApi, saveEventApi } from "../../../lib/api/event.api";
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
 import { NO_IMAGE_FOUND_IMAGE } from "../../../const-value/config-message/page";
+import "../EventsModernCard.css";
+
+const categoryColorMap = {
+  Education: "#DBEAFE", // Light Blue
+  Sports: "#DCFCE7", // Light Green
+  Entertainment: "#E9D4FF", // Light Purple
+  Networking: "#FEF3C7", // Light Orange
+  Others: "#E5E7EB", // Light Gray
+};
+
+const categoryTextColorMap = {
+  Education: "#1E40AF",
+  Sports: "#166534",
+  Entertainment: "#6B21A8",
+  Networking: "#92400E",
+  Others: "#374151",
+};
 
 export default function EventsListFilter({ events = [] }) {
   const router = useRouter();
@@ -153,78 +170,93 @@ export default function EventsListFilter({ events = [] }) {
     );
   }
 
+  console.log("[[[[[[[[[[[[", events);
+
   /* ================= UI (UNCHANGED) ================= */
   return (
     <>
       <div className="events-list">
         {events.map((e) => {
           const startDate = e.calendars?.[0]?.startDate || e.createdAt;
+          const endDate = e.calendars?.[0]?.endDate;
+
+          const formattedDate = new Date(startDate).toLocaleDateString(
+            "en-IN",
+            {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            },
+          );
 
           return (
-            <div key={e.identity} className="event-row-card floating-card">
-              {/* IMAGE */}
-              <div
-                className="floating-image"
-                onClick={() => handleClick(e.slug)}
-              >
+            <div key={e.identity} className="modern-card">
+              {/* LEFT IMAGE */}
+              <div className="modern-image" onClick={() => handleClick(e.slug)}>
                 <img
                   src={e.bannerImages?.[0] || NO_IMAGE_FOUND_IMAGE}
                   alt={e.title}
                 />
               </div>
 
-              {/* CONTENT */}
-              <div className="event-content">
-                <div className="event-title-row">
-                  <h6 className="event-title">{e.title}</h6>
+              {/* RIGHT CONTENT */}
+              <div className="modern-content">
+                {/* TITLE + LIKE/SAVE */}
+                <div className="modern-title-row">
+                  <h4 className="modern-title">{e.title}</h4>
 
-                  <div className="d-flex gap-3 like-save-section">
-                    {/* LIKE */}
-                    <span
-                      onClick={() => handleLike(e)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <div className="text-center">
-                        <HEART_ICON active={likedCards[e.identity]} />
-                        <div>{likeCounts[e.identity] ?? 0}</div>
-                      </div>
-                    </span>
+                  <div className="modern-actions">
+                    <div onClick={() => handleLike(e)} className="action-box">
+                      <HEART_ICON active={likedCards[e.identity]} />
+                      <span>{likeCounts[e.identity] ?? 0}</span>
+                    </div>
 
-                    {/* SAVE */}
-                    <span
-                      onClick={() => handleSave(e)}
-                      style={{ cursor: "pointer" }}
-                    >
+                    <div onClick={() => handleSave(e)} className="action-box">
                       <SAVEICON active={savedCards[e.identity]} />
-                    </span>
+                    </div>
                   </div>
                 </div>
-                <div className="d-flex gap-4">
-                  <span className="tag networking">
-                    {e.categoryName || "Networking"}
-                  </span>
-                  <span className="tag mode">{e.mode || "Offline"}</span>
+
+                {/* DESCRIPTION */}
+                <div className="modern-desc">
+               {e.description?.slice(0, 180)}...
                 </div>
 
-                <div className="event-meta-sub">
+                {/* LOCATION + DATE */}
+                <div className="modern-meta">
                   <span>
-                    {DATEICON}{" "}
-                    {new Date(startDate).toLocaleDateString("en-IN", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
+                    {" "}
+                    {DATEICON} {e.location?.venue || "Location not specified"} |{" "}
+                    {formattedDate} | Mode - {e.mode}
                   </span>
                 </div>
 
-                <div className="event-meta mt-2">
-                  <span>500 OnWards</span>
+                {/* CATEGORY + PRICE */}
+                <div className="modern-footer">
+                  <span
+                    className="modern-category"
+                    style={{
+                      background: categoryColorMap[e.categoryName] || "#E9D4FF",
+                      color: categoryTextColorMap[e.categoryName] || "#5B21B6",
+                    }}
+                  >
+                    {e.categoryName || "Event"}
+                  </span>
+
+                  <span className="modern-price">
+                    {e.tickets?.[0]?.isPaid
+                      ? `₹ ${e.tickets?.[0]?.price || 0} onwards`
+                      : "Free"}
+                  </span>
+
+                  <span className="modern-status ongoing">Upcoming</span>
                 </div>
               </div>
             </div>
           );
         })}
       </div>
+
       <ConfirmModal
         open={showLoginModal}
         image="/images/logo.png"

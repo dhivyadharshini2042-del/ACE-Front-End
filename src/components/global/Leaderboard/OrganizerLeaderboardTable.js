@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 
 export default function OrganizerLeaderboardTable({ data = [] }) {
   const [localData, setLocalData] = useState([]);
+  const [loadingId, setLoadingId] = useState(null);
 
   useEffect(() => {
     setLocalData(data);
@@ -16,27 +17,31 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
     try {
       const res = await followOrganizerApi(orgIdentity);
 
-      if (res?.success) {
+      if (res?.status) {
         setLocalData((prev) =>
           prev.map((org) =>
             org.orgIdentity === orgIdentity
-              ? { ...org, isFollowingOrg: !org.isFollowingOrg }
-              : org
-          )
+              ? {
+                  ...org,
+                  isFollowingOrg: res?.data?.followed, // ✅ correct field
+                }
+              : org,
+          ),
         );
 
-        toast.success("Updated successfully");
+        toast.success(res?.message || "Updated successfully");
       } else {
         toast.error(res?.message || "Action failed");
       }
-    } catch {
+    } catch (error) {
       toast.error("Something went wrong");
     }
   };
 
+  console.log("localData", localData);
+
   return (
     <section className={styles.container}>
-
       {/* ✅ HEADER ROW */}
       <div className={`${styles.row} ${styles.headerRow}`}>
         <div className={styles.org}>
@@ -48,10 +53,7 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
         <span className={styles.number}>Rate</span>
 
         {/* Invisible button to maintain alignment */}
-        <button
-          className={styles.followBtn}
-          style={{ visibility: "hidden" }}
-        >
+        <button className={styles.followBtn} style={{ visibility: "hidden" }}>
           Follow
         </button>
       </div>
@@ -62,7 +64,7 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
 
         return (
           <div
-            key={org.orgIdentity}  
+            key={org.orgIdentity}
             className={`${styles.row} ${styles[`bg${idx % 5}`]}`}
           >
             <div className={styles.org}>
@@ -70,10 +72,10 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
                 {rank === 1
                   ? "🥇"
                   : rank === 2
-                  ? "🥈"
-                  : rank === 3
-                  ? "🥉"
-                  : rank}
+                    ? "🥈"
+                    : rank === 3
+                      ? "🥉"
+                      : rank}
               </span>
 
               <div className={styles.avatarFallback}>
@@ -81,26 +83,27 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
               </div>
 
               <div>
-                <div className={styles.name}>
-                  {org.organizationName}
-                </div>
+                <div className={styles.name}>{org.organizationName}</div>
                 <div className={styles.rating}>⭐ 4.7</div>
               </div>
             </div>
 
-            <span className={styles.number}>
-              {org.eventCount ?? 0}
-            </span>
+            <span className={styles.number}>{org.eventCount ?? 0}</span>
 
             <span className={styles.number}>4.7</span>
 
             <button
+              disabled={loadingId === org.orgIdentity}
               className={`${styles.followBtn} ${
                 org.isFollowingOrg ? styles.following : ""
               }`}
               onClick={() => handleFollow(org.orgIdentity)}
             >
-              {org.isFollowingOrg ? "Following" : "Follow"}
+              {loadingId === org.orgIdentity
+                ? "..."
+                : org.isFollowingOrg
+                  ? "Following"
+                  : "Follow"}
             </button>
           </div>
         );

@@ -43,7 +43,6 @@
   cursor: pointer;
 }
 
-/* CARDS */
 .cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -52,35 +51,21 @@
 }
 
 .card {
-  padding: 22px 40px;
+  padding: 24px;
   border-radius: 20px;
-}
-
-.cardTop {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-  padding: 0px 10px;
-}
-
-.card p {
-  color: #8b8b8b;
-  font-family: var(--font-poppins), sans-serif;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  text-align: end;
-  padding-top: 10px;
+  text-align: center;
 }
 
 .card h3 {
-  margin-top: 18px;
-  font-size: 30px;
+  font-size: 20px;
   font-weight: 700;
-  color: #222;
-  font-family: "BL Melody", sans-serif;
-  text-align: end;
+  color: #1c1c1c;
+  margin-bottom: 10px;
+}
+
+.card h2 {
+  font-size: 28px;
+  font-weight: 700;
 }
 
 .click {
@@ -135,31 +120,45 @@
 .chartArea {
   position: relative;
   height: 300px;
-  overflow: hidden;
+  padding-left: 40px;
+  padding-bottom: 30px;
 }
 
+/* Y AXIS */
 .yAxis {
   position: absolute;
   left: 0;
   top: 0;
-  bottom: 40px;
+  bottom: 30px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
-  font-family: "BL Melody", sans-serif;
-  color: #222;
+  color: #444;
 }
 
-/* GRID */
+/* X AXIS */
+.xAxis {
+  position: absolute;
+  left: 40px;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  color: #444;
+}
+
+/* GRID LINES */
 .chartArea::before {
   content: "";
   position: absolute;
   left: 40px;
   right: 0;
   top: 0;
-  bottom: 40px;
+  bottom: 30px;
   background: repeating-linear-gradient(
     to right,
     transparent,
@@ -174,7 +173,11 @@
   left: 40px;
   top: 0;
   width: calc(100% - 40px);
-  height: calc(100% - 40px);
+  height: calc(100% - 30px);
+}
+.subText {
+  font-size: 14px;
+  color: #777;
 }
 
 /* X AXIS */

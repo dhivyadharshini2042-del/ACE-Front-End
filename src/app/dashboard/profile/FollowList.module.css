@@ -6,6 +6,7 @@
   overflow-y: auto;
 }
 
+/* Scrollbar */
 .wrapper::-webkit-scrollbar {
   width: 6px;
 }
@@ -25,7 +26,8 @@
   margin-bottom: 25px;
 }
 
-/* GRID */
+/* ================= GRID ================= */
+
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -33,7 +35,8 @@
   padding: 25px 10px;
 }
 
-/* CARD */
+/* ================= CARD ================= */
+
 .card {
   background: #f7f7f7;
   border-radius: 20px;
@@ -41,9 +44,16 @@
   position: relative;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
   min-height: 180px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* AVATAR */
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* ================= AVATAR ================= */
+
 .avatarWrapper {
   position: absolute;
   top: -40px;
@@ -61,7 +71,7 @@
   object-fit: cover;
 }
 
-/* Fallback */
+/* Fallback Avatar */
 .avatarFallback {
   width: 100%;
   height: 100%;
@@ -75,7 +85,8 @@
   font-weight: 700;
 }
 
-/* VIEW PROFILE */
+/* ================= VIEW PROFILE ================= */
+
 .view {
   position: absolute;
   top: 20px;
@@ -86,7 +97,8 @@
   cursor: pointer;
 }
 
-/* NAME */
+/* ================= NAME ================= */
+
 .name {
   font-size: 22px;
   font-weight: 700;
@@ -94,13 +106,14 @@
   line-height: 1.4;
 
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* 🔥 2 lines */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* ROLE */
+/* ================= ROLE + BUTTON ================= */
+
 .bottomRow {
   display: flex;
   justify-content: space-between;
@@ -115,7 +128,8 @@
   margin: 0;
 }
 
-/* BUTTON */
+/* ================= BUTTON ================= */
+
 .actionBtn {
   background: linear-gradient(90deg, #7f00ff, #a100ff);
   border: none;
@@ -125,7 +139,6 @@
   color: white;
   font-size: 14px;
   cursor: pointer;
-  float: right;
   transition: 0.2s ease;
 }
 
@@ -133,21 +146,90 @@
   opacity: 0.9;
 }
 
-/* RESPONSIVE */
+/* ================= RESPONSIVE ================= */
+
+/* Large Tablet */
 @media (max-width: 1200px) {
   .grid {
     grid-template-columns: repeat(3, 1fr);
+    gap: 30px 20px;
   }
 }
 
-@media (max-width: 900px) {
+/* Tablet */
+@media (max-width: 992px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .card {
+    padding: 55px 20px 20px;
+  }
+
+  .avatarWrapper {
+    width: 80px;
+    height: 80px;
+    top: -35px;
+  }
 }
 
-@media (max-width: 600px) {
+/* Small Tablet */
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 20px;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .grid {
+    gap: 25px;
+  }
+
+  .card {
+    padding: 50px 18px 18px;
+  }
+
+  .name {
+    font-size: 18px;
+  }
+
+  .role {
+    font-size: 16px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 45px 16px 16px;
+  }
+
+  .avatarWrapper {
+    width: 70px;
+    height: 70px;
+    top: -30px;
+  }
+
+  .bottomRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .actionBtn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .view {
+    font-size: 14px;
   }
 }

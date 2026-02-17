@@ -1,8 +1,10 @@
 export const API_ENDPOINTS = {
   /* ================= EVENTS ================= */
   EVENTS: {
-    ALL_PUBLIC: "/v1/events",
-    ALL_PRIVATE: "/v1/events_protec",
+    ALL_PUBLIC: (offset = 0, limit = 5) =>
+      `/v1/events?offset=${offset}&limit=${limit}`,
+    ALL_PRIVATE: (offset = 0, limit = 5) =>
+      `/v1/events_protec?offset=${offset}&limit=${limit}`,
     LIKE_EVENT: "/v1/events/like",
     SAVE_EVENT: "/v1/events/save",
     SINGLE_PUBLIC: (slug) => `/v1/events/${slug}`,
@@ -57,12 +59,16 @@ export const API_ENDPOINTS = {
     EVENTS: (orgId) => `/v1/organization/${orgId}/events`,
     CREATEVENTS: (orgId) => `/v1/organizations/${orgId}/events`,
     APPROVEDEVENTS: (orgId) => `/v1/organizations/${orgId}/events`,
-    ORG_EVENTS_PUBLIC: (slug) => `/v1/organizations/${slug}/events`,
-    ORG_EVENTS_PRIVATE: (slug) => `/v1/organizations/${slug}/events_protec`,
     FOLLOW: "/v1/organizations/follow-org",
     FOLLOWERS_FOLLOWING: "/v1/organizations/followers-following",
     RANKING: (page = 1) => `/v1/organizations/Ranking?page=${page}`,
-
+    ORG_DETAILS: (orgId) => `/v1/organizations/${orgId}`,
+    UPCOMING_PUBLIC: (slug, page = 1) =>
+      `/v1/organizations/${slug}/events?page=${page}`,
+    UPCOMING_PRIVATE: (slug, page = 1) =>
+      `/v1/organizations/${slug}/events_protec?page=${page}`,
+    PAST_EVENTS: (slug, offset = 0, limit = 5) =>
+      `/v1/organizations/${slug}/past-events?offset=${offset}&limit=${limit}`,
   },
 
   /* ================= MASTER DATA ================= */

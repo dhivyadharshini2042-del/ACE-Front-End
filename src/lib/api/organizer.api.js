@@ -23,21 +23,43 @@ export const deleteOrganizationApi = (orgId) =>
 export const getApprovedOrganizerEventsApi = (orgId) =>
   handleApi(apiPublic.get(API_ENDPOINTS.ORGANIZER.APPROVEDEVENTS(orgId)));
 
-/* ================= ORGANIZATION EVENTS (PUBLIC / PRIVATE) ================= */
+/* ================= ORGANIZATION DETAILS ================= */
 
-export const getOrganizationByEventsApi = async (slug) => {
-  // 👤 NOT LOGGED IN → PUBLIC
+export const getOrganizationDetailsApi = (slug) => {
   if (!isUserLoggedIn()) {
     return handleApi(
-      apiPublic.get(API_ENDPOINTS.ORGANIZER.ORG_EVENTS_PUBLIC(slug)),
+      apiPublic.get(`/v1/organizations/${slug}`)
     );
   }
 
-  // 🔐 LOGGED IN → PRIVATE
   return handleApi(
-    apiPrivate.get(API_ENDPOINTS.ORGANIZER.ORG_EVENTS_PRIVATE(slug)),
+    apiPrivate.get(`/v1/organizations/${slug}`)
   );
 };
+
+/* ================= UPCOMING EVENTS ================= */
+
+export const getUpcomingEventsApi = (slug, page = 1) => {
+  if (!isUserLoggedIn()) {
+    return handleApi(
+      apiPublic.get(`/v1/organizations/${slug}/events?page=${page}`)
+    );
+  }
+
+  return handleApi(
+    apiPrivate.get(`/v1/organizations/${slug}/events_protec?page=${page}`)
+  );
+};
+
+/* ================= PAST EVENTS ================= */
+
+export const getPastEventsApi = (slug, offset = 0, limit = 5) =>
+  handleApi(
+    apiPublic.get(
+      `/v1/organizations/${slug}/past-events?offset=${offset}&limit=${limit}`
+    )
+  );
+
 
 /* ================= FOLLOW ORGANIZER ================= */
 

@@ -48,13 +48,15 @@ export default function MyEventsGrid({ events = [], loading }) {
     startIndex + PAGE_SIZE
   );
 
+  console.log("ooooooooo",paginatedEvents)
+
   return (
     <>
       {/* EVENTS GRID */}
       <div className="events-grid p-5">
         {paginatedEvents.map((e) => {
           const calendar = e.calendars?.[0];
-          const location = e.location;
+       
 
           return (
             <div
@@ -127,9 +129,7 @@ export default function MyEventsGrid({ events = [], loading }) {
                 {/* LOCATION */}
                 <div className="event-location">
                   {LOCATION_ICON}{" "}
-                  {[location?.city, location?.state]
-                    .filter(Boolean)
-                    .join(", ") || "Location not set"}
+                {e.location.venue || "Location not set"} | Mode : {e.mode}
                 </div>
 
                 {/* META */}

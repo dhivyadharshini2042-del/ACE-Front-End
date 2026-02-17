@@ -67,12 +67,26 @@
 }
 
 .followBtn {
-  background: #8a2be2;
+  background: #8a2be2; /* Follow default color */
   color: #fff;
   border: none;
   padding: 8px 18px;
   border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
 }
+
+/* Follow Button Hover */
+.followBtn:hover {
+  opacity: 0.9;
+}
+
+/* Following State */
+.following {
+  background: #e5e5e5;   /* Light gray */
+  color: #333;
+}
+
 
 .bg0 { background: #efe7fb; }
 .bg1 { background: #fff7dd; }

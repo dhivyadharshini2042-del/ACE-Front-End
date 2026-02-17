@@ -23,6 +23,7 @@ export default function DashboardChartPage() {
         setLoading(true);
 
         const res = await getEventBySlugApi(slug);
+        console.log("xxxxxxxxxxxxxxxxx",res)
 
         if (res?.status && res.data) {
           setEvent(res.data);

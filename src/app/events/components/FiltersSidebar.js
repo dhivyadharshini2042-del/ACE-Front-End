@@ -37,7 +37,6 @@ export default function FiltersSidebar({
   }));
   const capitalizeFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
-
   const modeLabels = {
     ONLINE: "Online",
     OFFLINE: "Offline",
@@ -97,26 +96,31 @@ export default function FiltersSidebar({
               ...p,
               dateRange: e.target.value
                 ? {
-                  startDate: e.target.value,
-                  endDate: e.target.value,
-                }
+                    startDate: e.target.value,
+                    endDate: e.target.value,
+                  }
                 : null,
             }))
           }
         />
       </div>
-
       {/* ================= MODE OF EVENT ================= */}
       <div className="filter-block">
         <h6>Mode of Event</h6>
-        {["Online", "Offline", "Hybrid"].map((mode) => (
-          <label key={mode} className="filter-check">
+
+        {Object.keys(modeLabels).map((modeKey) => (
+          <label key={modeKey} className="filter-check">
             <input
               type="checkbox"
-              checked={filters.modes.includes(mode)}
-              onChange={() => setFilters((p) => ({ ...p, modes: [mode] }))}
+              checked={filters.modes.includes(modeKey)}
+              onChange={() =>
+                setFilters((p) => ({
+                  ...p,
+                  modes: [modeKey], // store as ONLINE / OFFLINE / HYBRID
+                }))
+              }
             />
-            {modeLabels[mode]}
+            {modeLabels[modeKey]}
           </label>
         ))}
       </div>

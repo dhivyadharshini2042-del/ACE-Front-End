@@ -40,6 +40,7 @@ export default function EventSlider({
   data = [],
   des,
   loading = false,
+  onReachEnd,
 }) {
   const router = useRouter();
   const sliderRef = useRef(null);
@@ -49,7 +50,9 @@ export default function EventSlider({
   const [auth, setAuth] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [pendingAction, setPendingAction] = useState(null); // "like" | "save"
+  const [pendingAction, setPendingAction] = useState(null);
+  const [isAtStart, setIsAtStart] = useState(true);
+  const [isAtEnd, setIsAtEnd] = useState(false);
 
   useEffect(() => {
     const ok = isUserLoggedIn();
@@ -59,6 +62,28 @@ export default function EventSlider({
       setAuth(getAuthFromSession());
     }
   }, []);
+
+  useEffect(() => {
+    const container = sliderRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const atStart = container.scrollLeft <= 0;
+      const atEnd =
+        container.scrollLeft + container.clientWidth >=
+        container.scrollWidth - 5;
+
+      setIsAtStart(atStart);
+      setIsAtEnd(atEnd);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    handleScroll(); // initial check
+
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+    };
+  }, [data]);
 
   /* ================= STATE ================= */
   const [likedCards, setLikedCards] = useState({});
@@ -160,6 +185,8 @@ export default function EventSlider({
 
   /* ================= SLIDER ================= */
   const slideLeft = () => {
+    if (isAtStart) return;
+
     sliderRef.current?.scrollBy({
       left: -350,
       behavior: "smooth",
@@ -167,10 +194,17 @@ export default function EventSlider({
   };
 
   const slideRight = () => {
+    if (isAtEnd) return;
+
     sliderRef.current?.scrollBy({
       left: 350,
       behavior: "smooth",
     });
+
+    // optional: call API if needed
+    if (isAtEnd && onReachEnd) {
+      onReachEnd();
+    }
   };
 
   const handleClick = (slug) => {
@@ -248,13 +282,29 @@ export default function EventSlider({
         {/* NAV */}
         <div className="d-flex justify-content-end gap-4 mb-3">
           <Tooltip text="Scroll Left">
-            <button className="scroll-rounded-circle" onClick={slideLeft}>
+            <button
+              className="scroll-rounded-circle"
+              onClick={slideLeft}
+              disabled={isAtStart}
+              style={{
+                opacity: isAtStart ? 0.4 : 1,
+                cursor: isAtStart ? "not-allowed" : "pointer",
+              }}
+            >
               ❮
             </button>
           </Tooltip>
 
           <Tooltip text="Scroll Right">
-            <button className="scroll-rounded-circle" onClick={slideRight}>
+            <button
+              className="scroll-rounded-circle"
+              onClick={slideRight}
+              disabled={isAtEnd}
+              style={{
+                opacity: isAtEnd ? 0.4 : 1,
+                cursor: isAtEnd ? "not-allowed" : "pointer",
+              }}
+            >
               ❯
             </button>
           </Tooltip>

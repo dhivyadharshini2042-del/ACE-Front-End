@@ -4,19 +4,22 @@ import { API_ENDPOINTS } from "./endpoints";
 import { handleApi } from "./apiHelper";
 import { isUserLoggedIn } from "../auth";
 
-
 /* =======================
    EVENTS (PUBLIC / PRIVATE)
    Try PRIVATE → fallback PUBLIC
 ======================= */
 
-export const getAllEventsApi = async () => {
+export const getAllEventsApi = async ({ offset = 0, limit = 5 } = {}) => {
   if (!isUserLoggedIn()) {
-    return handleApi(apiPublic.get(API_ENDPOINTS.EVENTS.ALL_PUBLIC));
+    return handleApi(
+      apiPublic.get(API_ENDPOINTS.EVENTS.ALL_PUBLIC(offset, limit)),
+    );
   }
-  return handleApi(apiPrivate.get(API_ENDPOINTS.EVENTS.ALL_PRIVATE));
-};
 
+  return handleApi(
+    apiPrivate.get(API_ENDPOINTS.EVENTS.ALL_PRIVATE(offset, limit)),
+  );
+};
 
 /* =======================
    SINGLE EVENT
@@ -29,17 +32,16 @@ export const getEventBySlugApi = async (slug) => {
   return handleApi(apiPrivate.get(API_ENDPOINTS.EVENTS.SINGLE_PRIVATE(slug)));
 };
 
-
 /* =======================
    LIKE / SAVE (AUTH ONLY)
 ======================= */
 
 export const likeEventApi = async (payload) => {
-  return handleApi(apiPrivate.post(API_ENDPOINTS.EVENTS.LIKE_EVENT , payload));
+  return handleApi(apiPrivate.post(API_ENDPOINTS.EVENTS.LIKE_EVENT, payload));
 };
 
 export const saveEventApi = async (payload) => {
- return handleApi(apiPrivate.post(API_ENDPOINTS.EVENTS.SAVE_EVENT , payload));
+  return handleApi(apiPrivate.post(API_ENDPOINTS.EVENTS.SAVE_EVENT, payload));
 };
 
 /* =======================
@@ -102,7 +104,6 @@ export const getPerksApi = async () =>
 
 export const getEligibleDepartmentsApi = async () =>
   handleApi(apiPublic.get(API_ENDPOINTS.MASTER.ELIGIBLE_DEPARTMENTS));
-
 
 export const getDepartmentsApi = async () =>
   handleApi(apiPublic.get(API_ENDPOINTS.MASTER.DEPARTMENTS));
