@@ -90,6 +90,7 @@
 
 .org-step.active .dot {
   background: #7f00ff;
+  /* background: #E9D4FF; */
   color: #ffffff;
   box-shadow: 0 6px 18px rgba(127, 0, 255, 0.18);
 }
@@ -104,6 +105,7 @@
 
 .line.active {
   background: #7f00ff;
+  /* background: #E9D4FF; */
 }
 
 /* --------------------------------------------------

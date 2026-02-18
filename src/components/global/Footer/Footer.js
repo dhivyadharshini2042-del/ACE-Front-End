@@ -47,10 +47,8 @@ export default function Footer() {
               <div className={styles.inputWrap}>
                 <span>@</span>
                 <input type="email" placeholder="Enter your email" />
+                <button className={styles.subscribeBtn}>Subscribe</button>
               </div>
-
-              <button className={styles.subscribeBtn}>Subscribe</button>
-
               <div className={styles.whatsapp}>{WHATSAPP}</div>
             </div>
           </div>
@@ -69,7 +67,7 @@ export default function Footer() {
             <div className={styles.query}>
               <h4>Send Your Query</h4>
               <p>
-                <span>@</span> support@allcollegeevent.com
+                support@allcollegeevent.com
               </p>
             </div>
           </div>

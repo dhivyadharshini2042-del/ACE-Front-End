@@ -158,7 +158,7 @@ export default function EventDetailsView({ event = {}, onBack }) {
 
     const res = await likeEventApi({
       eventIdentity: event.identity,
-      userIdentity: auth.identity.identity, 
+      userIdentity: auth.identity.identity,
     });
 
     if (res?.status) {
@@ -411,6 +411,8 @@ export default function EventDetailsView({ event = {}, onBack }) {
               )}
 
               {/* COUNTDOWN */}
+
+
               <div className="countdown">
                 <span className="cd-days">
                   {countdown.days}
@@ -524,40 +526,34 @@ export default function EventDetailsView({ event = {}, onBack }) {
           <div className="col-lg-8">
             <div className="card-box mt-4 edit-wrapper">
               <h3>Event Host Details</h3>
-              {/* ================= CO - ORGANIZATION ================= */}
-              {event.Collaborator && event.Collaborator.length > 0 && (
-                <div className="host-section">
-                  {/* MAP ONLY THE DETAILS */}
-                  {event.Collaborator.map((item, index) => (
-                    <div
-                      key={item.identity || `${item.member?.identity}-${index}`}
-                      className="mb-3 host-section"
-                    >
-                      <div className="host-grid ">
-                        <div>
-                          <label>organization Name</label>
-                          <p>{item.member?.organizationName || "-"}</p>
-                        </div>
-                        <div>
-                          <label>Organizer Name</label>
-                          <p>{item.member?.organizerName || "-"}</p>
-                        </div>
 
-                        <div>
-                          <label>Organizer Contact</label>
-                          <p>{item.member?.organizerNumber || "-"}</p>
-                        </div>
-
-                        <div>
-                          <label>Organizer Department</label>
-                          <p>{item.member?.orgDept || "-"}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+              <div className="host-grid">
+                <div>
+                  <label>Organization Name</label>
+                  <p>{event?.org?.organizationName || "-"}</p>
                 </div>
-              )}
+
+                <div>
+                  <label>Location</label>
+                  <p>
+                    {event?.location?.city}, {event?.location?.state},{" "}
+                    {event?.location?.country}
+                  </p>
+                </div>
+
+                <div>
+                  <label>Email</label>
+                  <p>{event?.org?.domainEmail || "-"}</p>
+                </div>
+
+                <div>
+                  <label>Department</label>
+                  <p>{event?.categoryName || "-"}</p>
+                </div>
+              </div>
             </div>
+
+
           </div>
 
           {/* ================= 7. DISCOUNTS + TAGS ================= */}

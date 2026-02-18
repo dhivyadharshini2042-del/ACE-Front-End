@@ -23,3 +23,6 @@ Thumbs.db
 
 # cache
 .cache/
+
+# history
+.history

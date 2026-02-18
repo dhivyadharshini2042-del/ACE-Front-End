@@ -38,10 +38,11 @@ export default function FiltersSidebar({
   const capitalizeFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
   const modeLabels = {
-    ONLINE: "Online",
-    OFFLINE: "Offline",
-    HYBRID: "Hybrid",
+    Online: "Online",
+    Offline: "Offline",
+    Hybrid: "Hybrid",
   };
+
 
   return (
     <aside className="filters-sidebar">
@@ -55,7 +56,7 @@ export default function FiltersSidebar({
 
       {/* ================= EVENT STATUS ================= */}
       <div className="filter-block">
-        <label className="filter-check">
+        {/* <label className="filter-check">
           <input
             type="checkbox"
             checked={filters.eventTypes.includes("featured")}
@@ -67,9 +68,25 @@ export default function FiltersSidebar({
             }
           />
           Featured Events
+        </label> */}
+        <label className="filter-check">
+          <input
+            type="checkbox"
+            checked={filters.eventTypes.includes("featured")}
+            onChange={() =>
+              setFilters((prev) => ({
+                ...prev,
+                eventTypes: prev.eventTypes.includes("featured")
+                  ? prev.eventTypes.filter((t) => t !== "featured")
+                  : [...prev.eventTypes, "featured"],
+              }))
+            }
+          />
+          Featured Events
         </label>
 
-        <label className="filter-check">
+
+        {/* <label className="filter-check">
           <input
             type="checkbox"
             checked={filters.eventTypes.includes("trending")}
@@ -81,7 +98,23 @@ export default function FiltersSidebar({
             }
           />
           Trending Events
+        </label> */}
+        <label className="filter-check">
+          <input
+            type="checkbox"
+            checked={filters.eventTypes.includes("trending")}
+            onChange={() =>
+              setFilters((prev) => ({
+                ...prev,
+                eventTypes: prev.eventTypes.includes("trending")
+                  ? prev.eventTypes.filter((t) => t !== "trending")
+                  : [...prev.eventTypes, "trending"],
+              }))
+            }
+          />
+          Trending Events
         </label>
+
       </div>
 
       {/* ================= EVENT DATE ================= */}
@@ -192,8 +225,8 @@ export default function FiltersSidebar({
         />
 
         <div className="d-flex justify-content-between">
-          <span>0</span>
-          <span>{filters.priceRange.max}</span>
+          <span>₹0</span>
+          <span>₹{filters.priceRange.max}</span>
         </div>
       </div>
 

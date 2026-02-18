@@ -18,10 +18,8 @@ function formatDate(date, time) {
 }
 
 /* -------- COUNTDOWN -------- */
-function getCountdown(targetDate) {
-  if (!targetDate) {
-    return { days: 0, hours: 0, mins: 0, secs: 0 };
-  }
+function getCountdown(targetIso) {
+  if (!targetIso) return { days: 0, hours: 0, mins: 0, secs: 0 };
 
   const diff = Math.max(new Date(targetDate) - new Date(), 0);
 
@@ -33,7 +31,6 @@ function getCountdown(targetDate) {
   };
 }
 
-/* -------- COMPONENT -------- */
 export default function SpotlightCarousel({ data = [] }) {
   const { setLoading } = useLoading();
   const [current, setCurrent] = useState(0);
@@ -117,7 +114,7 @@ export default function SpotlightCarousel({ data = [] }) {
             const calendar = event.calendars?.[0];
 
             const startTime =
-              calendar?.startTime && calendar.startTime.trim() !== ""
+              calendar?.startTime?.trim() !== ""
                 ? calendar.startTime
                 : "00:00";
 
@@ -154,7 +151,6 @@ export default function SpotlightCarousel({ data = [] }) {
                   />
                 </div>
 
-                {/* RIGHT */}
                 <div className={styles.right}>
                   <div className={styles.header}>
                     <h3>{event.title}</h3>
@@ -189,7 +185,7 @@ export default function SpotlightCarousel({ data = [] }) {
                   {/* META */}
                   <div className={styles.meta}>
                     <p className={styles.location}>
-                      {SPOTLIGHT_LOCATION_ICON}{" "}
+                      {SPOTLIGHT_LOCATION_ICON}
                       {[
                         event?.location?.city,
                         event?.location?.state,
@@ -245,7 +241,6 @@ export default function SpotlightCarousel({ data = [] }) {
         </div>
       </div>
 
-      {/* CONTROLS */}
       <div className={styles.controls}>
         <button onClick={() => goto(current - 1)}>❮</button>
 

@@ -35,6 +35,8 @@ import {
 } from "../../../../const-value/config-message/page";
 
 import { useLoading } from "../../../../context/LoadingContext";
+const NAME_REGEX = /^[\p{L}\s'-]*$/u;
+
 
 export default function UserSignupPage() {
   const router = useRouter();
@@ -135,15 +137,16 @@ export default function UserSignupPage() {
               value={form.name}
               onChange={(e) => {
                 const value = e.target.value;
-                if (value.length <= 250) {
-                  setForm({ ...form, name: value });
-                }
+                if (value.length > 100) return;
+                if (!NAME_REGEX.test(value)) return;
+                setForm((prev) => ({ ...prev, name: value }));
               }}
             />
 
             {/* Reserve space for message */}
             <small className="auth-hint">
-              {form.name.length === 250 && "Maximum 250 characters allowed"}
+              {form.name.length === 100 && "Maximum 100 characters allowed"}
+
             </small>
 
             {/* EMAIL */}

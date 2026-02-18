@@ -1,5 +1,5 @@
 "use client";
-import { VIDEOICON } from "../../../const-value/config-icons/page";
+import { VIDEOICON, SEARCH_ICON } from "../../../const-value/config-icons/page";
 import "./ExploreHero.css";
 
 export default function ExploreHero() {
@@ -21,11 +21,23 @@ export default function ExploreHero() {
             engage, empower, and elevate every participant.
           </p>
 
-          <div className="d-flex gap-3 mt-4 flex-wrap">
+          {/* <div className="d-flex gap-3 mt-4 flex-wrap">
             <button className="btn ace-primary">
               {VIDEOICON} Watch Our Journey
             </button>
+          </div> */}
+          <div className="d-flex gap-3 mt-4 flex-wrap">
+            <button className="ace-create-event">
+              Create event
+            </button>
+
+            <button className="btn ace-primary">
+              <span className="ace-btn-icon">{VIDEOICON}</span>
+              <span>Watch Our Journey</span>
+            </button>
+
           </div>
+
         </div>
 
         {/* RIGHT IMAGE GRID – EXACT 6 IMAGES */}
@@ -63,6 +75,18 @@ export default function ExploreHero() {
             />
           </div>
         </div>
+        <div className="ace-search-wrapper">
+          <span className="ace-search-icon">
+            {SEARCH_ICON}
+          </span>
+
+          <input
+            type="text"
+            placeholder="Search Events"
+            className="ace-search-input"
+          />
+        </div>
+
       </div>
     </section>
   );

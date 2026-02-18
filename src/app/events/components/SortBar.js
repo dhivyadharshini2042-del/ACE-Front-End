@@ -23,7 +23,7 @@ export default function SortBar({ value, onChange, onSearch, autoFocus }) {
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search anything..."
+          placeholder="Search Events"
           onChange={(e) => onSearch(e.target.value)}
         />
       </div>

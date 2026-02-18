@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Navbar, Nav, Container, Dropdown } from "react-bootstrap";
 import "./Navbar.css";
+import { SEARCH_ICON } from "../../../const-value/config-icons/page";
 
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import { getUserProfileApi } from "../../../lib/api/user.api";
@@ -66,10 +67,10 @@ export default function NavbarClient() {
 
         if (auth.type === "org") {
           res = await getOrganizationProfileApi(identityId);
-          console.log("==========res org",res)
+          console.log("==========res org", res)
         } else {
           res = await getUserProfileApi(identityId);
-          console.log("==========res",res)
+          console.log("==========res", res)
         }
 
         if (res?.status && res.data) {
@@ -92,7 +93,7 @@ export default function NavbarClient() {
   }, [isLoggedIn, auth]);
 
   return (
-    <Navbar expand="lg" sticky="top" className="ace-navbar">
+    <Navbar expand="md" sticky="top" className="ace-navbar">
       <Container fluid className="nav-wrapper">
         {/* LOGO */}
         <Navbar.Brand onClick={() => router.push("/")} className="logo-pointer">
@@ -114,8 +115,8 @@ export default function NavbarClient() {
               </Nav>
 
               <div className="search-box">
+                <span className="search-icon">{SEARCH_ICON}</span>
                 <input type="text" placeholder="Search anything" />
-                <span className="search-icon">🔍</span>
               </div>
 
               {/* {isLoggedIn && (

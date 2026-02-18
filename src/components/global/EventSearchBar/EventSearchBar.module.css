@@ -53,6 +53,41 @@
   margin-top: 3px;
   font-family: var(--font-poppins), sans-serif;
 }
+/*  */
+.searchBtn {
+  width: 151px;
+  height: 44px;
+  background: #7F00FF;
+  border-radius: 22px;
+  border: none;
+  opacity: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 10px;
+  cursor: pointer;
+
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.searchIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchBtn:hover {
+  opacity: 0.92;
+}
+
+.row button {
+  flex-shrink: 0;
+}
 
 /* RESPONSIVE */
 
