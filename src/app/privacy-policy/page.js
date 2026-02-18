@@ -109,7 +109,7 @@ export default function PrivacyPolicy() {
         </div>
       </div>
 
-      {/* Fotter Added*/}
+      {/* Fotter Added check*/}
       <Footer />
     </>
   );
