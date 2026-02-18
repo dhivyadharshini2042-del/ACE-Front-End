@@ -70,8 +70,8 @@ export default function EventSlider({
     const handleScroll = () => {
       const atStart = container.scrollLeft <= 0;
       const atEnd =
-        container.scrollLeft + container.clientWidth >=
-        container.scrollWidth - 5;
+        Math.ceil(container.scrollLeft + container.clientWidth) >=
+        container.scrollWidth;
 
       setIsAtStart(atStart);
       setIsAtEnd(atEnd);
@@ -194,17 +194,24 @@ export default function EventSlider({
   };
 
   const slideRight = () => {
-    if (isAtEnd) return;
+    const container = sliderRef.current;
+    if (!container) return;
 
-    sliderRef.current?.scrollBy({
+    container.scrollBy({
       left: 350,
       behavior: "smooth",
     });
 
-    // optional: call API if needed
-    if (isAtEnd && onReachEnd) {
-      onReachEnd();
-    }
+    // After scroll check if reached end
+    setTimeout(() => {
+      const atEnd =
+        Math.ceil(container.scrollLeft + container.clientWidth) >=
+        container.scrollWidth;
+
+      if (atEnd && onReachEnd) {
+        onReachEnd();
+      }
+    }, 400);
   };
 
   const handleClick = (slug) => {

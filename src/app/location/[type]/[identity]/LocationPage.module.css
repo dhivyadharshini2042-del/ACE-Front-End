@@ -28,6 +28,7 @@
   position: relative;
   display: flex;
   justify-content: space-between;
+  gap: 40px;
 }
 
 .alignStart {
@@ -92,16 +93,19 @@
 }
 .globe {
   width: 650px;
-  max-width: 100%;
+  max-width: 85%;
   animation: float 6s ease-in-out infinite;
 }
 .cityName {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #7f00ff;
+  color: #ffffff;
   font-weight: 600;
   cursor: pointer;
+  padding: 6px 12px;
+  background: rgba(127, 0, 255, 0.08);
+  border-radius: 20px;
 }
 
 .bullet {
@@ -110,9 +114,12 @@
   background-color: #7f00ff;
   border-radius: 50%;
 }
-.cityList{
-  padding: 10px;
+.cityList {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px 0;
 }
+
 .whiteTooltip {
   background-color: #ffffff !important;
   color: #000000 !important;
@@ -337,32 +344,70 @@
 }
 
 /* ================= RESPONSIVE ================= */
-
-@media (max-width: 1024px) {
-  .hero {
-    flex-direction: column;
-    text-align: center;
+@media (max-width: 1200px) {
+  .bigTitle {
+    font-size: 80px;
+    letter-spacing: 4px;
   }
 
-  .heroRight {
-    justify-content: center;
+  .globe {
+    width: 450px;
   }
 }
 
-@media (max-width: 768px) {
-  .eventsSection {
-    padding: 40px 20px;
+@media (max-width: 992px) {
+  .heroContainer {
+    flex-direction: column;
+    align-items: center !important;
+    text-align: center;
   }
 
-  .eventImg {
-    height: 170px;
+  .heroLeft {
+    max-width: 100%;
   }
 
-  .big {
-    font-size: 42px;
+  .bigTitle {
+    font-size: 60px;
+    letter-spacing: 3px;
   }
 
-  .title {
-    font-size: 24px;
+  .smallTitle {
+    font-size: 22px;
+    justify-content: center;
+  }
+
+  .desc {
+    max-width: 100%;
+  }
+
+  .globe {
+    width: 350px;
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero {
+    padding: 30px 20px;
+  }
+
+  .bigTitle {
+    font-size: 40px;
+    letter-spacing: 2px;
+  }
+
+  .smallTitle {
+    font-size: 18px;
+  }
+
+  .desc {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .cityList {
+    justify-content: center;
+  }
+  .globe {
+    width: 260px;
   }
 }
