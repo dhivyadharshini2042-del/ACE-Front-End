@@ -21,6 +21,32 @@ export const getAllEventsApi = async ({ offset = 0, limit = 5 } = {}) => {
   );
 };
 
+const fetchEvent = async (endpointFn, offset, limit) => {
+  const url = endpointFn(offset, limit);
+
+  if (!isUserLoggedIn()) {
+    return handleApi(apiPublic.get(url));
+  }
+
+  return handleApi(apiPrivate.get(url));
+};
+
+/* ================= TRENDING ================= */
+export const getTrendingEventsApi = async ({ offset = 0, limit = 5 } = {}) =>
+  fetchEvent(API_ENDPOINTS.EVENTS.TRENDING, offset, limit);
+
+/* ================= UPCOMING ================= */
+export const getUpcomingEventsApi = async ({ offset = 0, limit = 5 } = {}) =>
+  fetchEvent(API_ENDPOINTS.EVENTS.UPCOMING, offset, limit);
+
+/* ================= VIRTUAL ================= */
+export const getVirtualEventsApi = async ({ offset = 0, limit = 5 } = {}) =>
+  fetchEvent(API_ENDPOINTS.EVENTS.VIRTUAL, offset, limit);
+
+/* ================= FEATURED ================= */
+export const getFeaturedEventsApi = async ({ offset = 0, limit = 5 } = {}) =>
+  fetchEvent(API_ENDPOINTS.EVENTS.FEATURED, offset, limit);
+
 /* =======================
    SINGLE EVENT
 ======================= */

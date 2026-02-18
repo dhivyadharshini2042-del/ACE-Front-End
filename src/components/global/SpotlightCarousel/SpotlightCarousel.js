@@ -3,34 +3,27 @@
 import { useEffect, useState } from "react";
 import styles from "./SpotlightCarousel.module.css";
 import {
-  DATEICON,
-  LOCATION_ICON,
   SHAREICON,
   SPOTLIGHT_DATE_ICON,
   SPOTLIGHT_LOCATION_ICON,
 } from "../../../const-value/config-icons/page";
-import { encodeId } from "../../../lib/utils/secureId";
 import { useRouter } from "next/navigation";
 import { useLoading } from "../../../context/LoadingContext";
 
 /* -------- DATE FORMAT -------- */
 function formatDate(date, time) {
   if (!date) return "TBA";
-
-  if (!time || time.trim() === "") {
-    return date; // time illa na date mattum
-  }
-
+  if (!time || time.trim() === "") return date;
   return `${date} ${time}`;
 }
 
 /* -------- COUNTDOWN -------- */
-function getCountdown(targetIso) {
-  if (!targetIso) {
+function getCountdown(targetDate) {
+  if (!targetDate) {
     return { days: 0, hours: 0, mins: 0, secs: 0 };
   }
 
-  const diff = Math.max(new Date(targetIso) - new Date(), 0);
+  const diff = Math.max(new Date(targetDate) - new Date(), 0);
 
   return {
     days: Math.floor(diff / (1000 * 60 * 60 * 24)),
@@ -45,12 +38,10 @@ export default function SpotlightCarousel({ data = [] }) {
   const { setLoading } = useLoading();
   const [current, setCurrent] = useState(0);
   const [, forceUpdate] = useState(0);
-
   const router = useRouter();
 
   const handleClick = (slug) => {
     if (!slug) return;
-
     try {
       setLoading(true);
       router.push(`/events/${slug}`);
@@ -62,31 +53,46 @@ export default function SpotlightCarousel({ data = [] }) {
 
   const now = new Date();
 
+  /* -------- FILTER UPCOMING EVENTS CORRECTLY -------- */
   const upcomingEvents = data.filter((event) => {
     const calendar = event.calendars?.[0];
     if (!calendar?.startDate) return false;
 
+    const startDateObj = new Date(calendar.startDate);
+    const endDateObj = calendar.endDate
+      ? new Date(calendar.endDate)
+      : new Date(calendar.startDate);
+
     const startTime =
       calendar.startTime && calendar.startTime.trim() !== ""
         ? calendar.startTime
-        : "10:00";
+        : "00:00";
 
-    const eventDateTime = new Date(`${calendar.startDate}T${startTime}:00`);
+    const [hours, minutes] = startTime.split(":");
 
-    return eventDateTime >= now; // ❌ past remove
+    startDateObj.setHours(Number(hours));
+    startDateObj.setMinutes(Number(minutes));
+    startDateObj.setSeconds(0);
+
+    endDateObj.setHours(23, 59, 59);
+
+    return endDateObj >= now; // remove finished events
   });
 
   const spotlightEvents = upcomingEvents.slice(0, 10);
   const total = spotlightEvents.length;
 
-  /* Auto slide */
+  /* Auto Slide */
   useEffect(() => {
     if (!total) return;
-    const timer = setInterval(() => setCurrent((p) => (p + 1) % total), 8000);
+    const timer = setInterval(
+      () => setCurrent((p) => (p + 1) % total),
+      8000
+    );
     return () => clearInterval(timer);
   }, [total]);
 
-  /* Countdown refresh */
+  /* Countdown Refresh */
   useEffect(() => {
     const timer = setInterval(() => {
       forceUpdate((n) => n + 1);
@@ -109,21 +115,33 @@ export default function SpotlightCarousel({ data = [] }) {
         >
           {spotlightEvents.map((event) => {
             const calendar = event.calendars?.[0];
+
             const startTime =
               calendar?.startTime && calendar.startTime.trim() !== ""
                 ? calendar.startTime
-                : "10:00"; // DEFAULT TIME
+                : "00:00";
 
-            const eventStartISO = calendar?.startDate
-              ? `${calendar.startDate}T${startTime}:00`
-              : null;
+            let eventStartDate = null;
 
-            const { days, hours, mins, secs } = getCountdown(eventStartISO);
+            if (calendar?.startDate) {
+              eventStartDate = new Date(calendar.startDate);
+              const [h, m] = startTime.split(":");
+              eventStartDate.setHours(Number(h));
+              eventStartDate.setMinutes(Number(m));
+              eventStartDate.setSeconds(0);
+            }
 
-            const banner = event.bannerImages?.[0] || "/images/event.png";
+            const { days, hours, mins, secs } =
+              getCountdown(eventStartDate);
+
+            const banner =
+              event.bannerImages?.[0] || "/images/event.png";
 
             return (
-              <article className={styles.slide} key={event.identity}>
+              <article
+                className={styles.slide}
+                key={event.identity}
+              >
                 {/* LEFT */}
                 <div
                   className={styles.left}
@@ -140,30 +158,35 @@ export default function SpotlightCarousel({ data = [] }) {
                 <div className={styles.right}>
                   <div className={styles.header}>
                     <h3>{event.title}</h3>
-                    <button className={styles.share}>{SHAREICON}</button>
+                    <button className={styles.share}>
+                      {SHAREICON}
+                    </button>
                   </div>
 
-                  {/* Conference / Online / Offline badges */}
+                  {/* BADGES */}
                   <div className={styles.badges}>
                     {event?.eventTypeName && (
-                      <span className={`${styles.badge} ${styles.conference}`}>
+                      <span
+                        className={`${styles.badge} ${styles.conference}`}
+                      >
                         {event.eventTypeName}
                       </span>
                     )}
 
                     {event?.mode && (
                       <span
-                        className={`${styles.badge} ${event.mode.toLowerCase() === "online"
-                          ? styles.online
-                          : styles.offline
-                          }`}
+                        className={`${styles.badge} ${
+                          event.mode.toLowerCase() === "online"
+                            ? styles.online
+                            : styles.offline
+                        }`}
                       >
                         {event.mode}
                       </span>
                     )}
                   </div>
 
-
+                  {/* META */}
                   <div className={styles.meta}>
                     <p className={styles.location}>
                       {SPOTLIGHT_LOCATION_ICON}{" "}
@@ -178,46 +201,42 @@ export default function SpotlightCarousel({ data = [] }) {
 
                     <p>
                       {SPOTLIGHT_DATE_ICON}{" "}
-                      {formatDate(calendar?.startDate, calendar?.startTime)}
+                      {formatDate(
+                        calendar?.startDate,
+                        calendar?.startTime
+                      )}
                     </p>
                   </div>
 
-                  <div className={styles.startsIn}>Event Starts In</div>
+                  <div className={styles.startsIn}>
+                    Event Starts In
+                  </div>
 
+                  {/* COUNTDOWN */}
                   <div className={styles.countdown}>
-                    <span className={`${styles["cd-days"]}`}>
+                    <span>
                       {String(days).padStart(2, "0")}
                       <br />
                       Days
                     </span>
 
-                    <span className={`${styles["cd-hours"]}`}>
+                    <span>
                       {String(hours).padStart(2, "0")}
                       <br />
                       Hours
                     </span>
 
-                    <span className={`${styles["cd-mins"]}`}>
+                    <span>
                       {String(mins).padStart(2, "0")}
                       <br />
                       Mins
                     </span>
 
-                    <span className={`${styles["cd-secs"]}`}>
+                    <span>
                       {String(secs).padStart(2, "0")}
                       <br />
                       Secs
                     </span>
-
-                    <a
-                      href={event.paymentLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ display: "none" }}
-                      className={styles.cta}
-                    >
-                      Register
-                    </a>
                   </div>
                 </div>
               </article>
@@ -234,7 +253,11 @@ export default function SpotlightCarousel({ data = [] }) {
           {spotlightEvents.map((_, i) => (
             <span
               key={i}
-              className={i === current ? styles.activeDot : styles.dot}
+              className={
+                i === current
+                  ? styles.activeDot
+                  : styles.dot
+              }
               onClick={() => goto(i)}
             />
           ))}

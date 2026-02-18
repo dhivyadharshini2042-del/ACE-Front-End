@@ -12,10 +12,8 @@ import {
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-import {
-  getAllEventsApi,
-  getExploreEventTypes,
-} from "../../lib/api/event.api.js";
+import { getExploreEventTypes } from "../../lib/api/event.api.js";
+
 import { getAllOrganizationsApi } from "../../lib/api/organizer.api.js";
 
 import ChooseEventCategory from "../../components/global/ChooseEventCategory/ChooseEventCategory";
@@ -29,17 +27,31 @@ import LocationHighlights from "../../components/global/LocationHighlights/Locat
 import OrganizersCarousel from "../../components/global/OrganizerCarousel/OrganizerCarousel.js";
 import FloatingExploreButton from "../../components/global/FloatingExploreButton/FloatingExploreButton.js";
 import AppLandingHero from "../../components/global/AppLandingHero/AppLandingHero.js";
+import {
+  getTrendingEventsApi,
+  getUpcomingEventsApi,
+  getVirtualEventsApi,
+  getFeaturedEventsApi,
+} from "../../lib/api/event.api.js";
 
 import { useLoading } from "../../context/LoadingContext.js";
 
 export default function LandingPage() {
   const { setLoading } = useLoading();
 
-  const [events, setEvents] = useState([]);
-  const [offset, setOffset] = useState(0);
-  const [hasNext, setHasNext] = useState(true);
   const [organization, setOrganization] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [trendingEvents, setTrendingEvents] = useState([]);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [virtualEvents, setVirtualEvents] = useState([]);
+  const [featuredEvents, setFeaturedEvents] = useState([]);
+
+  const [offsets, setOffsets] = useState({
+    trending: 0,
+    upcoming: 0,
+    virtual: 0,
+    featured: 0,
+  });
 
   const exploreRef = useRef(null);
   const router = useRouter();
@@ -91,37 +103,61 @@ export default function LandingPage() {
     try {
       setLoading(true);
 
-      const [eventsRes, orgRes] = await Promise.all([
-        getAllEventsApi({ offset, limit: 5 }),
-        getAllOrganizationsApi(),
-      ]);
+      const orgRes = await getAllOrganizationsApi();
 
-      // Events
-      if (eventsRes?.status) {
-        setEvents((prev) => {
-          const newEvents = eventsRes.data.filter(
-            (newEvent) =>
-              !prev.some((existing) => existing.identity === newEvent.identity),
-          );
-
-          return [...prev, ...newEvents];
-        });
-
-        setHasNext(eventsRes.meta?.hasNext ?? false);
-        setOffset((prev) => prev + 5);
-      }
-
-      // Organizations
       if (orgRes?.status) {
         setOrganization(orgRes.data);
       }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to load events");
+      toast.error("Failed to load organizers");
     } finally {
       setLoading(false);
     }
   };
+
+  const loadEvents = async (type, setter) => {
+    try {
+      setLoading(true);
+
+      const apiMap = {
+        trending: getTrendingEventsApi,
+        upcoming: getUpcomingEventsApi,
+        virtual: getVirtualEventsApi,
+        featured: getFeaturedEventsApi,
+      };
+
+      const res = await apiMap[type]({
+        offset: offsets[type],
+        limit: 5,
+      });
+
+      if (res?.status) {
+        setter((prev) => [
+          ...prev,
+          ...res.data.filter(
+            (newEvent) => !prev.some((e) => e.identity === newEvent.identity),
+          ),
+        ]);
+
+        setOffsets((prev) => ({
+          ...prev,
+          [type]: prev[type] + 5,
+        }));
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadEvents("trending", setTrendingEvents);
+    loadEvents("upcoming", setUpcomingEvents);
+    loadEvents("virtual", setVirtualEvents);
+    loadEvents("featured", setFeaturedEvents);
+  }, []);
 
   useEffect(() => {
     loadMoreEvents();
@@ -158,24 +194,24 @@ export default function LandingPage() {
 
       <EventSlider
         title="Trending Events"
-        data={events}
-        onReachEnd={loadMoreEvents}
+        data={trendingEvents}
+        onReachEnd={() => loadEvents("trending", setTrendingEvents)}
       />
 
       <EventSlider
         title="Virtual Events"
-        data={events}
-        onReachEnd={loadMoreEvents}
+        data={virtualEvents}
+        onReachEnd={() => loadEvents("virtual", setVirtualEvents)}
       />
 
-      <SpotlightCarousel data={events} />
+      <SpotlightCarousel data={featuredEvents} />
 
       <OrganizersCarousel data={organization} />
 
       <EventSlider
         title="Upcoming Events"
-        data={events}
-        onReachEnd={loadMoreEvents}
+        data={upcomingEvents}
+        onReachEnd={() => loadEvents("upcoming", setUpcomingEvents)}
       />
 
       <LocationHighlights />

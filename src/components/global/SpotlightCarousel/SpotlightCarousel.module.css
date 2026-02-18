@@ -301,13 +301,20 @@
   width: 13px;
   height: 7px;
   border-radius: 10px;
-  background: #b5b5b5;
+  background: #d3d3d3;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
+
 .activeDot {
-  background: #555555;
+  width: 24px;
+  height: 7px;
+  border-radius: 10px;
+  background: #7f00ff;   /* Primary color */
+  transition: all 0.3s ease;
 }
+
 
 /* =========================
    RESPONSIVE

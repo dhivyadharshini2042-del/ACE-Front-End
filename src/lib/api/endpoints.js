@@ -5,6 +5,20 @@ export const API_ENDPOINTS = {
       `/v1/events?offset=${offset}&limit=${limit}`,
     ALL_PRIVATE: (offset = 0, limit = 5) =>
       `/v1/events_protec?offset=${offset}&limit=${limit}`,
+
+    // events api
+
+    TRENDING: (offset = 0, limit = 5) =>
+      `/v1/trending_events?offset=${offset}&limit=${limit}`,
+
+    UPCOMING: (offset = 0, limit = 5) =>
+      `/v1/upcoming_events?offset=${offset}&limit=${limit}`,
+
+    VIRTUAL: (offset = 0, limit = 5) =>
+      `/v1/virtual_events?offset=${offset}&limit=${limit}`,
+
+    FEATURED: (offset = 0, limit = 5) =>
+      `/v1/featured_events?offset=${offset}&limit=${limit}`,
     LIKE_EVENT: "/v1/events/like",
     SAVE_EVENT: "/v1/events/save",
     SINGLE_PUBLIC: (slug) => `/v1/events/${slug}`,
