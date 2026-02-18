@@ -1,68 +1,84 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 import "./explore-event.css";
 
 import EventSlider from "../../components/global/EventSlider/EventSlider";
 import ExploreHero from "../../components/global/ExploreHero/ExploreHero";
-import { getAllEventsApi } from "../../lib/api/event.api";
 import WhyChoose from "../../components/global/WhyChoose/WhyChoose";
 import Footer from "../../components/global/Footer/Footer";
+
+import {
+  getTrendingEventsApi,
+  getUpcomingEventsApi,
+  getVirtualEventsApi,
+  getFeaturedEventsApi,
+} from "../../lib/api/event.api";
+
 import { useLoading } from "../../context/LoadingContext";
 
 export default function ExploreEventsPage() {
   const { setLoading } = useLoading();
 
-  const [events, setEvents] = useState([]);
-  const [offset, setOffset] = useState(0);
-  const [hasNext, setHasNext] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
+  const [trendingEvents, setTrendingEvents] = useState([]);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [virtualEvents, setVirtualEvents] = useState([]);
+  const [featuredEvents, setFeaturedEvents] = useState([]);
 
-  /* ================= INITIAL LOAD ================= */
-  const loadEvents = async () => {
+  const [offsets, setOffsets] = useState({
+    trending: 0,
+    upcoming: 0,
+    virtual: 0,
+    featured: 0,
+  });
+
+  /* ================= GENERIC LOAD EVENTS ================= */
+  const loadEvents = useCallback(async (type, setter) => {
     try {
       setLoading(true);
 
-      const res = await getAllEventsApi({ offset: 0, limit: 5 });
+      const apiMap = {
+        trending: getTrendingEventsApi,
+        upcoming: getUpcomingEventsApi,
+        virtual: getVirtualEventsApi,
+        featured: getFeaturedEventsApi,
+      };
+
+      const res = await apiMap[type]({
+        offset: offsets[type],
+        limit: 5,
+      });
 
       if (res?.status) {
-        setEvents(res.data);
-        setHasNext(res.meta?.hasNext);
-        setOffset(5);
+        setter((prev) => {
+          const newUnique = res.data.filter(
+            (n) => !prev.some((p) => p.identity === n.identity)
+          );
+          return [...prev, ...newUnique];
+        });
+
+        setOffsets((prev) => ({
+          ...prev,
+          [type]: prev[type] + 5,
+        }));
       } else {
         toast.error(res?.message || "Failed to load events");
       }
-    } catch {
+    } catch (err) {
+      console.error(err);
       toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
-  };
+  }, [offsets, setLoading]);
 
-  /* ================= LOAD MORE ================= */
-  const loadMoreEvents = async () => {
-    if (!hasNext || loadingMore) return;
-
-    try {
-      setLoadingMore(true);
-
-      const res = await getAllEventsApi({ offset, limit: 5 });
-
-      if (res?.status) {
-        setEvents((prev) => [...prev, ...res.data]);
-        setHasNext(res.meta?.hasNext);
-        setOffset((prev) => prev + 5);
-      }
-    } catch {
-      toast.error("Failed to load more events");
-    } finally {
-      setLoadingMore(false);
-    }
-  };
-
+  /* ================= INITIAL LOAD ================= */
   useEffect(() => {
-    loadEvents();
+    loadEvents("featured", setFeaturedEvents);
+    loadEvents("trending", setTrendingEvents);
+    loadEvents("virtual", setVirtualEvents);
+    loadEvents("upcoming", setUpcomingEvents);
   }, []);
 
   return (
@@ -71,18 +87,26 @@ export default function ExploreEventsPage() {
 
       <EventSlider
         title="Featured Events"
-        data={events}
-        onReachEnd={loadMoreEvents}
+        data={featuredEvents}
+        onReachEnd={() => loadEvents("featured", setFeaturedEvents)}
       />
+
       <EventSlider
         title="Trending Events"
-        data={events}
-        onReachEnd={loadMoreEvents}
+        data={trendingEvents}
+        onReachEnd={() => loadEvents("trending", setTrendingEvents)}
       />
+
       <EventSlider
         title="Virtual Events"
-        data={events}
-        onReachEnd={loadMoreEvents}
+        data={virtualEvents}
+        onReachEnd={() => loadEvents("virtual", setVirtualEvents)}
+      />
+
+      <EventSlider
+        title="Upcoming Events"
+        data={upcomingEvents}
+        onReachEnd={() => loadEvents("upcoming", setUpcomingEvents)}
       />
 
       <WhyChoose />

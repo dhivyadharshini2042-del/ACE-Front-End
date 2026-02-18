@@ -44,7 +44,9 @@
   position: relative;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
   min-height: 180px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .card:hover {
@@ -56,13 +58,15 @@
 
 .avatarWrapper {
   position: absolute;
-  top: -40px;
+  top: -25px;
   left: 25px;
   width: 90px;
   height: 90px;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  box-shadow:
+    rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
 .avatarWrapper img {
@@ -91,7 +95,7 @@
   position: absolute;
   top: 20px;
   right: 25px;
-  font-size: 16px;
+  font-size: 14px;
   color: #7f00ff;
   font-weight: 600;
   cursor: pointer;
@@ -100,8 +104,8 @@
 /* ================= NAME ================= */
 
 .name {
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 600;
   margin-top: 10px;
   line-height: 1.4;
 
@@ -119,10 +123,11 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 15px;
+  gap: 20px;
 }
 
 .role {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
   color: #555;
   margin: 0;
@@ -133,7 +138,7 @@
 .actionBtn {
   background: linear-gradient(90deg, #7f00ff, #a100ff);
   border: none;
-  padding: 8px 22px;
+  padding: 5px 15px;
   border-radius: 8px;
   font-weight: 600;
   color: white;

@@ -61,7 +61,7 @@
 .org-follow-btn {
   height: 44px;
   padding: 0 22px;
-  border-radius: 999px;
+  border-radius: 8px;
   border: none;
   background: linear-gradient(135deg, #7f00ff, #9b4dff);
   color: white;
@@ -165,17 +165,21 @@
 
 .stat-card.primary {
   background: #eee3f9a8;
+  border: 0.5px solid #b368f9a8;
 }
 .stat-card.sec {
   background: #fff9e185;
+  border: 0.5px solid #f8d33f85;
 }
 .stat-card.th {
   background: #e8f3ffcc;
+  border: 0.5px solid #459bf8cc;
 }
 
 .stat-card.active {
   background: #dcfce7;
   color: #15803d;
+  border: 0.5px solid #24f370;
 }
 
 .stat-card.inactive {
@@ -314,7 +318,6 @@
 }
 
 @media (max-width: 768px) {
-
   .org-social-full {
     flex-direction: column;
     align-items: flex-start;

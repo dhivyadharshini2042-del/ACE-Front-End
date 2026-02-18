@@ -2,12 +2,18 @@
 
 import { useEffect, useState } from "react";
 import styles from "./FollowList.module.css";
-import { getFollowersFollowingApi } from "../../../lib/api/organizer.api";
+import {
+  getFollowersFollowingApi,
+  followOrganizerApi,
+} from "../../../lib/api/organizer.api";
 import { useLoading } from "../../../context/LoadingContext";
 import EmptyState from "../../../components/global/EmptyState/EmptyState";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function FollowingList() {
   const { setLoading } = useLoading();
+  const router = useRouter();
   const [following, setFollowing] = useState([]);
 
   useEffect(() => {
@@ -15,7 +21,6 @@ export default function FollowingList() {
       try {
         setLoading(true);
         const res = await getFollowersFollowingApi();
-
         if (res?.status) {
           setFollowing(res.data.following || []);
         }
@@ -26,6 +31,35 @@ export default function FollowingList() {
 
     loadFollowing();
   }, []);
+
+  const handleUnfollow = async (e, orgIdentity) => {
+    e.stopPropagation();
+
+    try {
+      const res = await followOrganizerApi(orgIdentity);
+
+      if (res?.status) {
+        setFollowing((prev) =>
+          prev.filter(
+            (item) => item.followingOrg?.identity !== orgIdentity
+          )
+        );
+
+        toast.success(res?.message || "Unfollowed successfully");
+      } else {
+        toast.error(res?.message || "Failed");
+      }
+    } catch {
+      toast.error("Something went wrong");
+    }
+  };
+
+  const handleCardClick = (org) => {
+    if (!org?.slug) return;
+
+    document.cookie = `orgIdentity=${org.identity}; path=/`;
+    router.push(`/organization-details/${org.slug}`);
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -40,12 +74,16 @@ export default function FollowingList() {
       ) : (
         <div className={styles.grid}>
           {following.map((item, index) => {
-            const name = item.followingOrg?.name || "Unknown";
-            const image = item.followingOrg?.profileImage;
-            const type = item.followerType === "USER" ? "User" : "Organization";
+            const org = item.followingOrg;
+            const name = org?.name || "Unknown"; // ✅ FIXED
+            const image = org?.profileImage;
 
             return (
-              <div key={index} className={styles.card}>
+              <div
+                key={index}
+                className={styles.card}
+                onClick={() => handleCardClick(org)}
+              >
                 <div className={styles.avatarWrapper}>
                   {image ? (
                     <img src={image} alt="profile" />
@@ -57,14 +95,29 @@ export default function FollowingList() {
                 </div>
 
                 <div className={styles.content}>
-                  <span className={styles.view}>View Profile</span>
+                  <span
+                    className={styles.view}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCardClick(org);
+                    }}
+                  >
+                    View Profile
+                  </span>
 
                   <h4 className={styles.name}>{name}</h4>
 
                   <div className={styles.bottomRow}>
-                    <p className={styles.role}>{type}</p>
+                    <p className={styles.role}>Organization</p>
 
-                    <button className={styles.actionBtn}>Unfollow</button>
+                    <button
+                      className={styles.actionBtn}
+                      onClick={(e) =>
+                        handleUnfollow(e, org.identity)
+                      }
+                    >
+                      Unfollow
+                    </button>
                   </div>
                 </div>
               </div>

@@ -83,7 +83,7 @@ export default function OrganizationClient({ slug }) {
 
       if (res?.status) {
         setOrg(res.data);
-        setIsFollowing(!!res.data.isFollowing); // backend should send this
+        setIsFollowing(!!res.data.isFollowingOrg);
       }
     };
 
@@ -190,16 +190,19 @@ export default function OrganizationClient({ slug }) {
       return;
     }
 
-    const wasFollowing = isFollowing;
+    try {
+      const res = await followOrganizerApi(org.identity);
 
-    // optimistic UI
-    setIsFollowing(!wasFollowing);
+      if (res?.status) {
+        setIsFollowing(res.data?.followed);
 
-    const res = await followOrganizerApi(org.identity);
-
-    if (!res?.status) {
-      setIsFollowing(wasFollowing);
-      toast.error("Failed to update follow status");
+        toast.success(res.message);
+      } else {
+        toast.error(res?.message || "Failed to update follow status");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong");
     }
   };
 

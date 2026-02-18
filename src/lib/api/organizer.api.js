@@ -27,14 +27,10 @@ export const getApprovedOrganizerEventsApi = (orgId) =>
 
 export const getOrganizationDetailsApi = (slug) => {
   if (!isUserLoggedIn()) {
-    return handleApi(
-      apiPublic.get(`/v1/organizations/${slug}`)
-    );
+    return handleApi(apiPublic.get(`/v1/organizations/${slug}`));
   }
 
-  return handleApi(
-    apiPrivate.get(`/v1/organizations/${slug}`)
-  );
+  return handleApi(apiPrivate.get(`/v1/organizations/${slug}`));
 };
 
 /* ================= UPCOMING EVENTS ================= */
@@ -42,12 +38,12 @@ export const getOrganizationDetailsApi = (slug) => {
 export const getUpcomingEventsApi = (slug, page = 1) => {
   if (!isUserLoggedIn()) {
     return handleApi(
-      apiPublic.get(`/v1/organizations/${slug}/events?page=${page}`)
+      apiPublic.get(`/v1/organizations/${slug}/events?page=${page}`),
     );
   }
 
   return handleApi(
-    apiPrivate.get(`/v1/organizations/${slug}/events_protec?page=${page}`)
+    apiPrivate.get(`/v1/organizations/${slug}/events_protec?page=${page}`),
   );
 };
 
@@ -56,10 +52,9 @@ export const getUpcomingEventsApi = (slug, page = 1) => {
 export const getPastEventsApi = (slug, offset = 0, limit = 5) =>
   handleApi(
     apiPublic.get(
-      `/v1/organizations/${slug}/past-events?offset=${offset}&limit=${limit}`
-    )
+      `/v1/organizations/${slug}/past-events?offset=${offset}&limit=${limit}`,
+    ),
   );
-
 
 /* ================= FOLLOW ORGANIZER ================= */
 
@@ -76,6 +71,10 @@ export const getFollowersFollowingApi = () =>
 
 /* ================= ORGANIZER RANKING ================= */
 
-export const getOrganizerRankingApi = (page = 1) =>
-  handleApi(apiPublic.get(API_ENDPOINTS.ORGANIZER.RANKING(page)));
+export const getOrganizerRankingApi = (page = 1) => {
+  if (!isUserLoggedIn()) {
+    return handleApi(apiPublic.get(API_ENDPOINTS.ORGANIZER.RANKING(page)));
+  }
 
+  return handleApi(apiPrivate.get(API_ENDPOINTS.ORGANIZER.RANKING(page)));
+};

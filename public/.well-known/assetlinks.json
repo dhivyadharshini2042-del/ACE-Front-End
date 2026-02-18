@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.all_college_event",
+      "sha256_cert_fingerprints": [
+        "C5:42:00:2A:41:AE:0D:15:D5:88:DF:6F:14:19:5C:E6:0C:47:FA:FB"
+      ]
+    }
+  }
+]

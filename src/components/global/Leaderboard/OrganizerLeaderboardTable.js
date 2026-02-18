@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import styles from "./OrganizerLeaderboardTable.module.css";
 import { followOrganizerApi } from "../../../lib/api/organizer.api";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function OrganizerLeaderboardTable({ data = [] }) {
   const [localData, setLocalData] = useState([]);
   const [loadingId, setLoadingId] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     setLocalData(data);
@@ -23,7 +25,7 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
             org.orgIdentity === orgIdentity
               ? {
                   ...org,
-                  isFollowingOrg: res?.data?.followed, // ✅ correct field
+                  isFollowingOrg: res?.data?.followed,
                 }
               : org,
           ),
@@ -38,14 +40,20 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
     }
   };
 
+  const handleRowClick = (org) => {
+    console.log("lllllllllllll", org);
+    if (!org?.slug) return;
+
+    router.push(`/organization-details/${org.slug}`);
+  };
+
   console.log("localData", localData);
 
   return (
     <section className={styles.container}>
-      {/* ✅ HEADER ROW */}
       <div className={`${styles.row} ${styles.headerRow}`}>
         <div className={styles.org}>
-          <span className={styles.rankBadge}>#</span>
+          <span className={styles.rankBadge}></span>
           <div className={styles.name}>Name</div>
         </div>
 
@@ -58,7 +66,6 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
         </button>
       </div>
 
-      {/* ✅ DATA ROWS */}
       {localData.map((org, idx) => {
         const rank = idx + 1;
 
@@ -66,6 +73,8 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
           <div
             key={org.orgIdentity}
             className={`${styles.row} ${styles[`bg${idx % 5}`]}`}
+            onClick={() => handleRowClick(org)}
+            style={{ cursor: "pointer" }}
           >
             <div className={styles.org}>
               <span className={styles.rankBadge}>
@@ -97,7 +106,10 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
               className={`${styles.followBtn} ${
                 org.isFollowingOrg ? styles.following : ""
               }`}
-              onClick={() => handleFollow(org.orgIdentity)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleFollow(org.orgIdentity);
+              }}
             >
               {loadingId === org.orgIdentity
                 ? "..."
