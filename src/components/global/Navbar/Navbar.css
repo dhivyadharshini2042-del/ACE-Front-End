@@ -15,20 +15,20 @@
 }
 
 /* ===== LAYOUT ===== */
-.nav-content {
+/* .nav-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 1280px; /* ⭐ KEY */
-  margin: 0 auto; /* ⭐ KEY */
+  max-width: 1280px;
+  margin: 0 auto; 
 }
 
 .nav-center {
   display: flex;
   align-items: center;
-  gap: 40px; /* reduced */
-}
+  gap: 40px; 
+} */
 
 /* ===== LINKS ===== */
 .nav-center .nav-link {
@@ -37,7 +37,7 @@
 }
 
 /* ===== SEARCH ===== */
-.search-box {
+/* .search-box {
   display: flex;
   align-items: center;
   background: #fff;
@@ -45,6 +45,16 @@
   padding: 10px 18px;
   border: 1px solid #eee;
   min-width: 300px;
+} */
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 999px;
+  padding: 10px 18px;
+  border: 1px solid #eee;
+  width: 100%;
+  max-width: 420px;
 }
 
 .search-box input {
@@ -59,11 +69,11 @@
 }
 
 /* ===== RIGHT ===== */
-.nav-right {
+/* .nav-right {
   display: flex;
   align-items: center;
   gap: 14px;
-}
+} */
 
 /* ===== BUTTONS ===== */
 .btn-primary {
@@ -103,7 +113,7 @@
 }
 
 /* ===== NOTIFICATION DOT ===== */
-.dot {
+/* .dot {
   width: 8px;
   height: 8px;
   background: red;
@@ -111,7 +121,7 @@
   position: absolute;
   top: 6px;
   right: 6px;
-}
+} */
 
 /* ===== PROFILE ===== */
 .profile-img {
@@ -208,6 +218,42 @@
 .dropdown-toggle:after {
   display: none !important;
 }
+
+/* ===== MAIN FLEX LAYOUT ===== */
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* LEFT */
+.nav-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+/* CENTER */
+.nav-center {
+  flex: 1.4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+/* RIGHT */
+.nav-right {
+  /* flex: 1; */
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 14px;
+}
+
 /* ===== MID DESKTOP (1190px FIX) ===== */
 @media (max-width: 1200px) {
   .nav-center {
@@ -224,14 +270,44 @@
   }
 }
 /* ===== MOBILE ===== */
-@media (max-width: 991px) {
+@media (max-width: 767px) {
+
   .nav-content {
     flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  .nav-left,
+  .nav-center,
+  .nav-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .nav-right {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .search-box {
+    max-width: 100%;
+  }
+
+  .notification-panel {
+    width: 100%;
+  }
+}
+
+
+@media (max-width: 991px) {
+  .nav-content {
+    flex-direction: row;
     gap: 20px;
   }
 
   .nav-center {
-    flex-direction: column;
+    flex-direction: row;
     gap: 14px;
   }
 

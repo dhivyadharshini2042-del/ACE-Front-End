@@ -87,7 +87,11 @@ export default function ProfileHeader({ activeTab = "profile" }) {
     loadProfile();
   }, []);
 
-  if (!profile) return null;
+  /* ================= IMPORTANT GUARD ================= */
+  if (!profile) {
+    console.log("Profile not loaded yet:", profile);
+    return null;
+  }
 
   return (
     <div className={styles.card}>

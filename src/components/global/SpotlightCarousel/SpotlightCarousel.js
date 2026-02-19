@@ -53,7 +53,7 @@ export default function SpotlightCarousel({ data = [] }) {
 
   const now = new Date();
 
-  /* -------- FILTER UPCOMING EVENTS CORRECTLY -------- */
+  /* -------- FILTER UPCOMING EVENTS (ROBUST VERSION) -------- */
   const upcomingEvents = data.filter((event) => {
     const calendar = event.calendars?.[0];
     if (!calendar?.startDate) return false;
@@ -76,13 +76,13 @@ export default function SpotlightCarousel({ data = [] }) {
 
     endDateObj.setHours(23, 59, 59);
 
-    return endDateObj >= now; // remove finished events
+    return endDateObj >= now;
   });
 
   const spotlightEvents = upcomingEvents.slice(0, 10);
   const total = spotlightEvents.length;
 
-  /* Auto Slide */
+  /* -------- AUTO SLIDE -------- */
   useEffect(() => {
     if (!total) return;
     const timer = setInterval(
@@ -92,7 +92,13 @@ export default function SpotlightCarousel({ data = [] }) {
     return () => clearInterval(timer);
   }, [total]);
 
-  /* Countdown Refresh */
+
+  useEffect(() => {
+    console.log("First Event Location:", data?.[0]?.location);
+  }, [data]);
+
+
+  /* -------- COUNTDOWN REFRESH -------- */
   useEffect(() => {
     const timer = setInterval(() => {
       forceUpdate((n) => n + 1);
@@ -175,11 +181,10 @@ export default function SpotlightCarousel({ data = [] }) {
 
                     {event?.mode && (
                       <span
-                        className={`${styles.badge} ${
-                          event.mode.toLowerCase() === "online"
-                            ? styles.online
-                            : styles.offline
-                        }`}
+                        className={`${styles.badge} ${event.mode.toLowerCase() === "online"
+                          ? styles.online
+                          : styles.offline
+                          }`}
                       >
                         {event.mode}
                       </span>
@@ -191,9 +196,10 @@ export default function SpotlightCarousel({ data = [] }) {
                     <p className={styles.location}>
                       {SPOTLIGHT_LOCATION_ICON}{" "}
                       {[
-                        event?.location?.city,
-                        event?.location?.state,
-                        event?.location?.country,
+                        event?.location?.venue,
+                        // event?.location?.city,
+                        // event?.location?.state,
+                        // event?.location?.country,
                       ]
                         .filter(Boolean)
                         .join(", ") || "Location not set"}
@@ -212,31 +218,53 @@ export default function SpotlightCarousel({ data = [] }) {
                     Event Starts In
                   </div>
 
-                  {/* COUNTDOWN */}
+                  {/* CIRCULAR COUNTDOWN */}
                   <div className={styles.countdown}>
-                    <span>
-                      {String(days).padStart(2, "0")}
-                      <br />
-                      Days
-                    </span>
+                    {[
+                      { value: days, label: "Days", max: 30, bg: "#EED2FF", inner: "#DCA0FF", progress: "#830DC8" },
+                      { value: hours, label: "Hours", max: 24, bg: "#D1F8DB", inner: "#95C7A2", progress: "#0B822A" },
+                      { value: mins, label: "Mins", max: 60, bg: "#FFF7D8", inner: "#F5DBA2", progress: "#F2B634" },
+                      { value: secs, label: "Secs", max: 60, bg: "#D4E9FF", inner: "#6CB4F9", progress: "#0052A2" },
+                    ].map((item, index) => {
+                      const safeValue = Math.min(item.value, item.max);
+                      const deg = (safeValue / item.max) * 360;
 
-                    <span>
-                      {String(hours).padStart(2, "0")}
-                      <br />
-                      Hours
-                    </span>
+                      return (
+                        <div
+                          key={index}
+                          className={styles.circle}
+                          style={{
+                            background: `conic-gradient(
+                              ${item.progress} 0deg ${deg}deg,
+                              ${item.inner} ${deg}deg 360deg
+                            )`,
+                          }}
+                        >
+                          <div
+                            className={styles.circleInner}
+                            style={{ background: item.bg }}
+                          >
+                            <span className={styles.num}>
+                              {String(item.value).padStart(2, "0")}
+                            </span>
+                            <span className={styles.text}>
+                              {item.label}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
 
-                    <span>
-                      {String(mins).padStart(2, "0")}
-                      <br />
-                      Mins
-                    </span>
-
-                    <span>
-                      {String(secs).padStart(2, "0")}
-                      <br />
-                      Secs
-                    </span>
+                    {event?.paymentLink && (
+                      <a
+                        href={event.paymentLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.cta}
+                      >
+                        Get Ticket
+                      </a>
+                    )}
                   </div>
                 </div>
               </article>

@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "./EventSearchBar.module.css";
+import { SEARCH_ICON } from "../../../const-value/config-icons/page";
 
 export default function EventSearchBar({
   whatIcon,
@@ -25,8 +26,8 @@ export default function EventSearchBar({
           <div className={styles.col} onClick={onWhereClick}>
             <div className={styles.icon}>{whereIcon}</div>
             <div>
-              <div className={styles.title}>Where</div>
-              <div className={styles.sub}>Location</div>
+              <div className={styles.title}>Event Mode</div>
+              <div className={styles.sub}>Select mode</div>
             </div>
           </div>
 
@@ -37,6 +38,11 @@ export default function EventSearchBar({
               <div className={styles.sub}>Date</div>
             </div>
           </div>
+          <button className={styles.searchBtn}>
+            <span className={styles.searchIcon}>{SEARCH_ICON}</span>
+            <span>Search</span>
+          </button>
+
         </div>
       </div>
     </div>

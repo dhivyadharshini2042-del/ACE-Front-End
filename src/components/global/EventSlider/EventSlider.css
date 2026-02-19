@@ -165,3 +165,8 @@
   background-color: #cce8ff;
   border: none;
 }
+.scroll-rounded-circle:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+

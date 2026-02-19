@@ -90,6 +90,40 @@ export default function EventSlider({
   const [savedCards, setSavedCards] = useState({});
   const [likeCounts, setLikeCounts] = useState({});
 
+  // ===== SCROLL ARROW STATE =====
+
+  // ===== SCROLL ARROW STATE =====
+  const [scrollState, setScrollState] = useState({ left: false, right: true });
+
+  const updateScrollState = () => {
+    const el = sliderRef.current;
+    if (!el) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+
+    setScrollState({
+      left: scrollLeft > 0,
+      right: scrollLeft + clientWidth < scrollWidth - 1,
+    });
+  };
+
+  useEffect(() => {
+    const el = sliderRef.current;
+    if (!el) return;
+
+    updateScrollState();
+
+    el.addEventListener("scroll", updateScrollState);
+    window.addEventListener("resize", updateScrollState);
+
+    return () => {
+      el.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, [data]);
+
+
+
   /* ================= INIT FROM API DATA ================= */
   useEffect(() => {
     const liked = {};
@@ -316,6 +350,8 @@ export default function EventSlider({
             </button>
           </Tooltip>
         </div>
+
+
 
         {/* SLIDER */}
         <div

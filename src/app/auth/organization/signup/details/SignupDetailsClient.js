@@ -29,6 +29,12 @@ import {
   TEXT_SIGNIN,
   TITLE_ALREADY_HAVE_ACCOUNT
 } from "../../../../../const-value/config-message/page";
+import {
+  ORG_CATEGORY,
+  CONTACT_ICON,
+  TICK_ICON,
+} from "../../../../../const-value/config-icons/page";
+
 
 import {
   getCountries,
@@ -162,21 +168,21 @@ export default function Page() {
           {/* STEPPER */}
           <div className="org-stepper">
             <div className="org-step active">
-              <div className="dot">1</div>
+              <div className="dot">{ORG_CATEGORY}</div>
               <small>{LABEL_ORG_STEP_CATEGORY}</small>
             </div>
 
             <div className="line active"></div>
 
             <div className="org-step active">
-              <div className="dot">2</div>
+              <div className="dot">{CONTACT_ICON}</div>
               <small>{LABEL_ORG_STEP_DETAILS}</small>
             </div>
 
             <div className="line"></div>
 
             <div className="org-step">
-              <div className="dot">3</div>
+              <div className="dot">{TICK_ICON}</div>
               <small>{LABEL_ORG_STEP_ACCOUNT}</small>
             </div>
           </div>

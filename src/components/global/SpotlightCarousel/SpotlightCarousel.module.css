@@ -1,6 +1,9 @@
 /* =========================
-   ROOT
+   ROOT SECTION
 ========================= */
+.root {
+  width: 100%;
+}
 
 /* =========================
    TITLE
@@ -8,69 +11,62 @@
 .title {
   font-size: 26px;
   font-weight: 700;
-  margin-top: 25px;
-  margin-bottom: 30px;
+  margin: 25px 0 30px;
   text-align: center;
   color: #1c1c1c;
   font-family: "BL Melody", sans-serif;
 }
 
 /* =========================
-   SLIDER WRAPPER
+   SLIDER
 ========================= */
 .wrapper {
   width: 100%;
   overflow: hidden;
-  position: relative;
 }
 
-/* =========================
-   TRACK
-========================= */
 .track {
   display: flex;
-  width: 100%;
-  transition: transform 2.2s ease;
+  transition: transform 0.8s ease;
 }
 
-/* =========================
-   SLIDE
-========================= */
 .slide {
   min-width: 100%;
   display: flex;
-  gap: 70px;
-  padding: 15px 2%;
+  gap: 40px;
+  padding: 30px 4%;
   background: #fcf9ff;
   box-sizing: border-box;
-  cursor: pointer;
+  align-items: center;
+  border-radius: 18px;
 }
 
 /* =========================
-   LEFT
+   LEFT IMAGE
 ========================= */
 .left {
-  width: 80%;
+  flex: 1;
 }
 
 .image {
   width: 100%;
-  height: 290px;
+  height: 320px;
   border-radius: 16px;
   object-fit: cover;
-  cursor: pointer;
 }
 
 /* =========================
-   RIGHT
+   RIGHT CONTENT
 ========================= */
 .right {
-  width: 60%;
+  flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-/* Header */
+/* =========================
+   HEADER
+========================= */
 .header {
   display: flex;
   justify-content: space-between;
@@ -78,29 +74,76 @@
 }
 
 .header h3 {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
-  color: #1c1c1c;
-  font-family: "BL Melody", sans-serif;
-
+  max-width: 85%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 90%;
 }
 
+/* Share button circle */
 .share {
-  background: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #e9d8ff;
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  font-size: 20px;
+  transition: 0.3s ease;
+}
+
+.share:hover {
+  background: #d6b8ff;
 }
 
 /* =========================
-   META
+   BADGES
+========================= */
+.badges {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* Conference */
+.conference {
+  background: #fff3cd;
+  color: #7a5c00;
+  border: 1px solid #e6c200;
+}
+
+/* Online */
+.online {
+  background: #e6f9ec;
+  color: #1e7e34;
+  border: 1px solid #28a745;
+}
+
+/* Offline */
+.offline {
+  background: #f8f9fa;
+  color: #495057;
+  border: 1px solid #ced4da;
+}
+
+/* =========================
+   META INFO
 ========================= */
 .meta {
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .meta p {
@@ -109,158 +152,76 @@
   gap: 8px;
   margin: 6px 0;
   font-size: 14px;
-  color: #1c1c1c;
-  font-family: var(--font-poppins), sans-serif;
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* =========================
-   BADGES
-========================= */
-.badges {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-  flex-wrap: wrap;
-}
 
-.badge {
-  padding: 6px 14px;
-  font-size: 12px;
+.startsIn {
+  margin-top: 22px;
   font-weight: 600;
-  border-radius: 999px;
-  font-family: var(--font-poppins), sans-serif;
 }
-
-/* Conference */
-.conference {
-  background: #fff3c4;
-  color: #8a6a00;
-  border: 1px solid #f2d27a;
-}
-
-/* Online */
-.online {
-  background: #e7f9ef;
-  color: #0b822a;
-  border: 1px solid #9be0b4;
-}
-
-/* Offline (optional) */
-.offline {
-  background: #eaf3ff;
-  color: #0052a2;
-  border: 1px solid #bcd7ff;
-}
-
 
 /* =========================
    COUNTDOWN
 ========================= */
-.startsIn {
-  margin-top: 20px;
-  font-weight: 600;
-  color: #1c1c1c;
-  font-family: "BL Melody", sans-serif;
-}
-
 .countdown {
   display: flex;
-  gap: 14px;
-  margin-top: 16px;
-  align-items: end;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 18px;
+  align-items: center;
 }
-.location {
+
+/* Circle wrapper */
+.circle {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  padding: 2px;
   display: flex;
   align-items: center;
-  gap: 6px;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
+  justify-content: center;
 }
 
-.countdown span {
-  text-align: center;
-  border-radius: 26%;
-  width: 81px;
-  height: 81px;
-  padding: 20px 12px;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-/* DAYS – BLUE */
-.cd-days {
-  border-radius: 62.185px;
-  border: 2.291px solid #911cd5;
-  background: rgba(238, 210, 255, 0.84);
-}
-
-/* HOURS – GREEN */
-.cd-hours {
-  border-radius: 62.185px;
-  border: 2.291px solid #0b822a;
-  background: #d1f8db;
-}
-
-/* MINS – ORANGE */
-.cd-mins {
-  border-radius: 62.185px;
-  border: 2.291px solid #f5dba2;
-  background: #fff7d8;
-}
-
-/* SECS – RED */
-.cd-secs {
-  border-radius: 62.185px;
-  border: 2.291px solid #0052a2;
-  background: #6cb4f9;
-}
-
-/* Label text */
-.countdown span br + * {
-  font-size: 12px;
-  font-weight: 500;
-}
-
-/* Countdown pill */
-.pill {
-  width: 70px;
-  height: 60px;
+/* Inner circle */
+.circleInner {
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
-  border: 2px solid #888;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
 .num {
   font-size: 18px;
-  font-weight: 700;
-  color: #222;
+  font-weight: 600;
 }
 
-/* CTA */
+.text {
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+/* =========================
+   CTA BUTTON
+========================= */
 .cta {
-  margin-left: 20px;
-  padding: 17px 26px;
-  background: #7f00ff;
+  padding: 14px 28px;
+  background: linear-gradient(90deg, #7f00ff, #a855f7);
   color: #ffffff;
   border-radius: 25px;
-  border: none;
   font-weight: 600;
-  cursor: pointer;
-  height: 60px;
   text-decoration: none;
+  white-space: nowrap;
+  transition: 0.3s ease;
+  margin-left: 10px;
 }
 
 .cta:hover {
-  background: #5d00c7;
+  opacity: 0.9;
 }
 
 /* =========================
@@ -275,87 +236,73 @@
 }
 
 .controls button {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: none;
   background: #cce8ff;
-  font-size: 18px;
   cursor: pointer;
-  transition: background 0.25s ease;
+  transition: 0.3s ease;
 }
 
 .controls button:hover {
-  background: #b5ddff;
+  background: #b3dcff;
 }
 
-/* =========================
-   DOTS
-========================= */
 .dots {
   display: flex;
   gap: 8px;
 }
 
 .dot {
-  width: 13px;
-  height: 7px;
+  width: 12px;
+  height: 6px;
   border-radius: 10px;
   background: #d3d3d3;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-
 .activeDot {
   width: 24px;
   height: 7px;
   border-radius: 10px;
-  background: #7f00ff;   /* Primary color */
+  background: #7f00ff;
   transition: all 0.3s ease;
 }
 
-
 /* =========================
-   RESPONSIVE
+   RESPONSIVE BREAKPOINTS
 ========================= */
 
-/* Tablets */
-@media (max-width: 1000px) {
+/* Large tablets */
+@media (max-width: 1024px) {
   .slide {
-    gap: 40px;
-    padding: 30px 6%;
+    gap: 30px;
   }
 
-  .left {
-    width: 45%;
-  }
-
-  .right {
-    width: 55%;
+  .image {
+    height: 260px;
   }
 }
 
-/* Small tablets / mobiles */
+/* Tablets */
 @media (max-width: 768px) {
   .slide {
     flex-direction: column;
     text-align: center;
-    gap: 24px;
-  }
-
-  .left,
-  .right {
-    width: 100%;
-  }
-
-  .image {
-    height: 220px;
   }
 
   .header {
     justify-content: center;
-    gap: 12px;
+  }
+
+  .header h3 {
+    max-width: 100%;
+  }
+
+  .meta p {
+    justify-content: center;
   }
 
   .countdown {
@@ -364,34 +311,34 @@
 
   .cta {
     margin-left: 0;
-    margin-top: 12px;
-  }
-   .header h3 {
-    max-width: 100%;
-  }
-
-  .meta p,
-  .location {
-    max-width: 100%;
-  }
-}
-
-/* Small mobiles */
-@media (max-width: 480px) {
-  .title {
-    font-size: 22px;
   }
 
   .image {
-    height: 200px;
+    height: 220px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .title {
+    font-size: 20px;
   }
 
-  .pill {
+  .image {
+    height: 180px;
+  }
+
+  .circle {
     width: 60px;
-    height: 52px;
+    height: 60px;
   }
 
   .num {
     font-size: 16px;
+  }
+
+  .cta {
+    width: 100%;
+    text-align: center;
   }
 }
