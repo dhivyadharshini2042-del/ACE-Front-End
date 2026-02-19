@@ -1,4 +1,11 @@
 /* =========================
+   ROOT SECTION
+========================= */
+.root {
+  width: 100%;
+}
+
+/* =========================
    TITLE
 ========================= */
 .title {
@@ -27,9 +34,11 @@
   min-width: 100%;
   display: flex;
   gap: 40px;
-  padding: 20px 4%;
+  padding: 30px 4%;
   background: #fcf9ff;
   box-sizing: border-box;
+  align-items: center;
+  border-radius: 18px;
 }
 
 /* =========================
@@ -55,7 +64,9 @@
   flex-direction: column;
 }
 
-/* Header */
+/* =========================
+   HEADER
+========================= */
 .header {
   display: flex;
   justify-content: space-between;
@@ -71,17 +82,68 @@
   text-overflow: ellipsis;
 }
 
+/* Share button circle */
 .share {
-  background: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #e9d8ff;
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.share:hover {
+  background: #d6b8ff;
 }
 
 /* =========================
-   META
+   BADGES
+========================= */
+.badges {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* Conference */
+.conference {
+  background: #fff3cd;
+  color: #7a5c00;
+  border: 1px solid #e6c200;
+}
+
+/* Online */
+.online {
+  background: #e6f9ec;
+  color: #1e7e34;
+  border: 1px solid #28a745;
+}
+
+/* Offline */
+.offline {
+  background: #f8f9fa;
+  color: #495057;
+  border: 1px solid #ced4da;
+}
+
+/* =========================
+   META INFO
 ========================= */
 .meta {
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .meta p {
@@ -96,7 +158,7 @@
 }
 
 .startsIn {
-  margin-top: 20px;
+  margin-top: 22px;
   font-weight: 600;
 }
 
@@ -106,11 +168,12 @@
 .countdown {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 16px;
+  gap: 16px;
+  margin-top: 18px;
   align-items: center;
 }
 
+/* Circle wrapper */
 .circle {
   width: 65px;
   height: 65px;
@@ -121,6 +184,7 @@
   justify-content: center;
 }
 
+/* Inner circle */
 .circleInner {
   width: 100%;
   height: 100%;
@@ -141,15 +205,23 @@
   margin-top: 2px;
 }
 
-/* CTA */
+/* =========================
+   CTA BUTTON
+========================= */
 .cta {
-  padding: 14px 22px;
-  background: #7f00ff;
+  padding: 14px 28px;
+  background: linear-gradient(90deg, #7f00ff, #a855f7);
   color: #ffffff;
   border-radius: 25px;
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
+  transition: 0.3s ease;
+  margin-left: 10px;
+}
+
+.cta:hover {
+  opacity: 0.9;
 }
 
 /* =========================
@@ -170,6 +242,11 @@
   border: none;
   background: #cce8ff;
   cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.controls button:hover {
+  background: #b3dcff;
 }
 
 .dots {
@@ -186,15 +263,13 @@
   transition: all 0.3s ease;
 }
 
-
 .activeDot {
   width: 24px;
   height: 7px;
   border-radius: 10px;
-  background: #7f00ff;   /* Primary color */
+  background: #7f00ff;
   transition: all 0.3s ease;
 }
-
 
 /* =========================
    RESPONSIVE BREAKPOINTS
@@ -232,6 +307,10 @@
 
   .countdown {
     justify-content: center;
+  }
+
+  .cta {
+    margin-left: 0;
   }
 
   .image {

@@ -45,21 +45,36 @@ export default function EventDetailsView({ event = {}, onBack }) {
   const MAX_LENGTH = 120;
   const description = event?.description || "";
   const isLong = description.length > MAX_LENGTH;
-
   const visibleText = expanded ? description : description.slice(0, MAX_LENGTH);
 
   const calendar = event?.calendars?.[0];
   const location = event?.location;
 
   const [selectedTicket, setSelectedTicket] = useState(null);
-  // ================= LIKE STATE =================
+
+  // ── Like / Save ──
   const [isLiked, setIsLiked] = useState(false);
   const [auth, setAuth] = useState(null);
   const [likeCount, setLikeCount] = useState(0);
   const [isSaved, setIsSaved] = useState(event?.isSaved || false);
+  const [showCollaborators, setShowCollaborators] = useState(false);
 
+  // ── Collaborators ──
+  // const [showAllCollaborators, setShowAllCollaborators] = useState(false);
+  const organizerName = event?.org?.organizationName?.toLowerCase();
+  const filteredCollaborators =
+    event?.Collaborator?.filter(
+      (col) => col?.member?.organizationName?.toLowerCase() !== organizerName
+    ) || [];
+  // const visibleCollaborators = showAllCollaborators
+  //   ? filteredCollaborators
+  //   : filteredCollaborators.slice(0, 1);
 
-  /* ================= INIT AUTH ================= */
+  useEffect(() => {
+    console.log("Event data:", event);
+  }, [event]);
+
+  /* ── Auth ── */
   useEffect(() => {
     if (isUserLoggedIn()) {
       setAuth(getAuthFromSession());
@@ -71,49 +86,26 @@ export default function EventDetailsView({ event = {}, onBack }) {
       ? event.bannerImages
       : [NO_IMAGE_FOUND_IMAGE];
 
+  /* ── Countdown ── */
   useEffect(() => {
-    // calendar data illa na stop
     if (!calendar?.startDate || !calendar?.startTime) return;
 
     const interval = setInterval(() => {
-      // 1️⃣ Event start date + time
-      const eventDateTime = new Date(
-        `${calendar.startDate} ${calendar.startTime}`,
-      );
-
-      // 2️⃣ Current time
+      const eventDateTime = new Date(`${calendar.startDate} ${calendar.startTime}`);
       const now = new Date();
-
-      // 3️⃣ Difference (milliseconds)
       const diff = eventDateTime - now;
 
-      // 4️⃣ Event start aagidicha?
       if (diff <= 0) {
         clearInterval(interval);
-        setCountdown({
-          days: "00",
-          hours: "00",
-          mins: "00",
-          secs: "00",
-        });
+        setCountdown({ days: "00", hours: "00", mins: "00", secs: "00" });
         return;
       }
 
-      // 5️⃣ Days calculate
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-      // 6️⃣ Hours calculate
-      const hours = Math.floor(
-        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-      );
-
-      // 7️⃣ Minutes calculate
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-      // 8️⃣ Seconds calculate
       const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
-      // 9️⃣ UI update
       setCountdown({
         days: String(days).padStart(2, "0"),
         hours: String(hours).padStart(2, "0"),
@@ -122,7 +114,6 @@ export default function EventDetailsView({ event = {}, onBack }) {
       });
     }, 1000);
 
-    // 10️⃣ Cleanup
     return () => clearInterval(interval);
   }, [calendar]);
 
@@ -135,24 +126,19 @@ export default function EventDetailsView({ event = {}, onBack }) {
     total: "1000",
   });
 
-  /* ================= INIT FROM API DATA ================= */
+  /* ── Init from event ── */
   useEffect(() => {
     if (!event || !event.identity) return;
-    console.log("event..>", event);
-
     setIsLiked(Boolean(event.isLiked));
     setLikeCount(event.likeCount || 0);
   }, [event]);
 
-
-
-  /* ================= LIKE HANDLER ================= */
+  /* ── Like ── */
   const handleLike = async () => {
     if (!isUserLoggedIn()) {
       toast("Please login to like this event", { icon: "⚠️" });
       return;
     }
-
     const prevLiked = isLiked;
     setIsLiked(!prevLiked);
 
@@ -167,65 +153,44 @@ export default function EventDetailsView({ event = {}, onBack }) {
       setIsLiked(prevLiked);
     }
   };
+
+  /* ── Save ── */
   const handleSave = async () => {
     if (!isUserLoggedIn()) {
       toast("Please login to save this event", { icon: "⚠️" });
       return;
     }
-
     const prevSaved = isSaved;
     setIsSaved(!prevSaved);
-
     try {
       const res = await saveEventApi({
         eventIdentity: event.identity,
         userIdentity: auth.identity,
       });
-
-      if (!res?.status) {
-        setIsSaved(prevSaved);
-      }
-    } catch (err) {
+      if (!res?.status) setIsSaved(prevSaved);
+    } catch {
       setIsSaved(prevSaved);
     }
   };
-  const prevSlide = () => {
-    setCurrentIndex((prev) => {
-      if (prev === 0) {
-        return images.length - 1;
-      } else {
-        return prev - 1;
-      }
-    });
-  };
 
-  const nextSlide = () => {
-    setCurrentIndex((prev) => {
-      if (prev === images.length - 1) {
-        return 0;
-      } else {
-        return prev + 1;
-      }
-    });
-  };
+  /* ── Carousel ── */
+  const prevSlide = () =>
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
 
-  const goToSlide = (index) => {
-    setCurrentIndex(index);
-  };
+  const nextSlide = () =>
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
 
-  const handleRegisterClick = () => {
-    setOpenConfirm(true);
-  };
+  const goToSlide = (index) => setCurrentIndex(index);
 
+  /* ── Register ── */
+  const handleRegisterClick = () => setOpenConfirm(true);
   const handleConfirm = () => {
     setOpenConfirm(false);
     window.open(event.paymentLink, "_blank", "noopener,noreferrer");
   };
+  const handleCancel = () => setOpenConfirm(false);
 
-  const handleCancel = () => {
-    setOpenConfirm(false);
-  };
-
+  /* ── Ticket form sync ── */
   useEffect(() => {
     if (selectedTicket) {
       setTicketForm({
@@ -239,13 +204,10 @@ export default function EventDetailsView({ event = {}, onBack }) {
     }
   }, [selectedTicket]);
 
+  /* ── View count ── */
   useEffect(() => {
-    if (!event?.slug) return;
-
-    if (viewCalledRef.current) return;
-
+    if (!event?.slug || viewCalledRef.current) return;
     viewCalledRef.current = true;
-
     addEventViewApi(event.slug);
   }, [event?.slug]);
 
@@ -253,95 +215,91 @@ export default function EventDetailsView({ event = {}, onBack }) {
     setLoading(false);
   }, []);
 
+  /* ── Ticket status helper ── */
+  const getTicketStatus = (ticket) => {
+    const now = new Date();
+    const startDate = new Date(ticket.sellingFrom);
+    const endDate = new Date(ticket.sellingTo);
+    if (now < startDate) return { text: "Ticket is not yet started", cls: "not-started" };
+    if (now >= startDate && now <= endDate) return { text: "Ticket is on live", cls: "live" };
+    return { text: "Ticket closed", cls: "expired" };
+  };
+
+  /* ── Organizer contact rows (from event.organizers or fallback) ── */
+  const organizerContacts = event?.organizers || [];
+
   return (
     <>
       <div className="container event-wrapper my-4">
-        <div className="event-details-wrapper">
-          <button
-            className="event-back-btn"
-            onClick={() => {
-              setLoading(true);
-              onBack();
-            }}
-          >
-            Back
-          </button>
 
-          {/* rest of your event details UI */}
-        </div>
         {/* ================= 1. HERO ================= */}
-        <div className="hero-card edit-wrapper">
-          {/* ALWAYS BLURRED BACKGROUND */}
+        <div className="hero-card">
+          {/* Blurred Background */}
           <div
             className="blur-bg"
             style={{ backgroundImage: `url(${images[currentIndex]})` }}
           />
 
-          {/* CLEAR CENTER IMAGE */}
-          <img className="event-img" src={images[currentIndex]} alt="event" />
+          {/* Main Image */}
+          <div
+            className="event-img"
+            style={{ backgroundImage: `url(${images[currentIndex]})` }}
+          />
+
+          {/* Badge */}
           <span className="badge-upcoming">
             {event?.status || "Upcoming Event"}
           </span>
-          {/* SLIDER CONTROLS – BELOW IMAGE */}
         </div>
 
+        {/* Dots row (below hero, with chevron arrows flanking dots) */}
         {images.length > 1 && (
-          <>
-            <span onClick={prevSlide} className="arrow-side">
+          <div className="slider-controls">
+            <button className="dot-arrow" onClick={prevSlide} aria-label="Previous">
               {LEFTSIDEARROW_ICON}
-            </span>
-
-            <div className="slider-controls">
-              <div className="slider-dots">
-                {images.map((_, index) => (
-                  <span
-                    key={index}
-                    className={index === currentIndex ? "active" : ""}
-                    onClick={() => goToSlide(index)}
-                  />
-                ))}
-              </div>
-
-              <span onClick={nextSlide} className="arrow-side">
-                {RIGHTSIDEARROW_ICON}
-              </span>
+            </button>
+            <div className="slider-dots">
+              {images.map((_, index) => (
+                <span
+                  key={index}
+                  className={index === currentIndex ? "active" : ""}
+                  onClick={() => goToSlide(index)}
+                />
+              ))}
             </div>
-          </>
+            <button className="dot-arrow" onClick={nextSlide} aria-label="Next">
+              {RIGHTSIDEARROW_ICON}
+            </button>
+          </div>
         )}
 
         {/* ================= 2. TITLE + REGISTER ================= */}
         <div className="title-row">
+          {/* Left: title + tags */}
           <div>
-            <h1 className="mt-3">
-              {event?.title || "International Conference on ICRSEM II – 2025"}
-            </h1>
+            <h1>{event?.title || "International Conference on ICRSEM II – 2025"}</h1>
 
-            {/* ================= 3. TAGS + VIEWS ================= */}
+            {/* Tags + views */}
             <div className="meta-row">
-              <div>
-                <span className="tag yellow">
-                  {event?.categoryName || "==========="}
-                </span>
-
-                <span className="tag purple">Paid</span>
-                <span className="tag green">{event?.mode || "===="}</span>
-                {/* BACKEND: event.tags */}
-
-                <span className="views">
-                  {VIEW_ICON} {event?.viewCount}
-                </span>
-                {/* BACKEND: event.views */}
-              </div>
+              <span className="tag yellow">{event?.categoryName || "Conference"}</span>
+              <span className="tag purple">Paid</span>
+              <span className="tag green">{event?.mode || "Online"}</span>
+              <span className="views">
+                {VIEW_ICON}&nbsp;{event?.viewCount}
+              </span>
             </div>
           </div>
-          <div>
+
+          {/* Right: register button + like/share/save */}
+          <div className="title-right">
             <button className="btn-register" onClick={handleRegisterClick}>
               Register Now
             </button>
+
             <div className="soc-mediya">
               {/* Like */}
               <span className="like-pill" onClick={handleLike} style={{ cursor: "pointer" }}>
-                <HEART_ICON />
+                <HEART_ICON filled={isLiked} />
                 <span className="like-count">{likeCount}</span>
               </span>
 
@@ -352,16 +310,13 @@ export default function EventDetailsView({ event = {}, onBack }) {
 
               {/* Save */}
               <span className="icon-pill" onClick={handleSave} style={{ cursor: "pointer" }}>
-                <SAVEICON />
-                {/* <SAVEICON active={isSaved} /> */}
+                <SAVEICON active={isSaved} />
               </span>
             </div>
-
-
           </div>
         </div>
 
-        {/* ================= 4. DESCRIPTION ================= */}
+        {/* ================= 3. DESCRIPTION ================= */}
         <p className="description">
           {visibleText}
           {isLong && !expanded && "... "}
@@ -372,132 +327,91 @@ export default function EventDetailsView({ event = {}, onBack }) {
           )}
         </p>
 
-        {/* ================= 5. VENUE + TICKETS ================= */}
+        {/* ================= 4. VENUE + TICKETS ================= */}
         <div className="row g-4 py-3">
-          {/* ================= VENUE & DATE (LEFT 6) ================= */}
+
+          {/* VENUE & DATE */}
           <div className="col-lg-6">
             <div className="card-box h-100">
-              <h3>Venue & Date</h3>
+              <h3>Venue &amp; Date</h3>
 
-              {/* LOCATION */}
               <p>
-                {LOCATION_ICON}{" "}
-                {[
-                  location?.city,
-                  location?.state,
-                  location?.country,
-                  location?.venue,
-                ]
+                {LOCATION_ICON}&nbsp;
+                {[location?.city, location?.state, location?.country, location?.venue]
                   .filter(Boolean)
                   .join(", ") || "Location not set"}
               </p>
 
-              {/* DATE */}
               <p>
-                {DATEICON}{" "}
+                {DATEICON}&nbsp;
                 {calendar
                   ? `${calendar.startDate} (${calendar.startTime}) – ${calendar.endDate} (${calendar.endTime})`
                   : "Date not set"}
               </p>
 
-              {/* MAP */}
               {location?.mapLink && (
                 <button
                   className="map-btn"
                   onClick={() => window.open(location.mapLink, "_blank")}
                 >
-                  {MAPLOCATIONVIEWICON} View Map Location
+                  {MAPLOCATIONVIEWICON}&nbsp;View Map Location
                 </button>
               )}
 
-              {/* COUNTDOWN */}
-
-
+              {/* Countdown */}
               <div className="countdown">
                 <span className="cd-days">
                   {countdown.days}
-                  <br />
-                  Days
+                  <small>Days</small>
                 </span>
                 <span className="cd-hours">
                   {countdown.hours}
-                  <br />
-                  Hours
+                  <small>Hours</small>
                 </span>
                 <span className="cd-mins">
                   {countdown.mins}
-                  <br />
-                  Mins
+                  <small>Mins</small>
                 </span>
                 <span className="cd-secs">
                   {countdown.secs}
-                  <br />
-                  Secs
+                  <small>Secs</small>
                 </span>
               </div>
             </div>
           </div>
 
-          {/* ================= TICKET AVAILABILITY (RIGHT 6) ================= */}
+          {/* TICKET AVAILABILITY */}
+
           <div className="col-lg-6">
             <div className="card-box edit-wrapper">
               <h4 className="section-title mb-4">Ticket Availability</h4>
 
               <div className="row g-4">
-                {event?.tickets && event.tickets.length > 0 ? (
+                {event?.tickets?.length > 0 ? (
                   event.tickets.map((ticket) => {
-                    const now = new Date();
+                    const { text, cls } = getTicketStatus(ticket);
+
                     const startDate = new Date(ticket.sellingFrom);
                     const endDate = new Date(ticket.sellingTo);
-
-                    let statusText = "";
-                    let statusClass = "";
-
-                    if (now < startDate) {
-                      statusText = "Ticket is not yet started";
-                      statusClass = "not-started";
-                    } else if (now >= startDate && now <= endDate) {
-                      statusText = "Ticket is on live";
-                      statusClass = "live";
-                    } else {
-                      statusText = "Ticket closed";
-                      statusClass = "expired";
-                    }
 
                     return (
                       <div className="col-md-6" key={ticket.identity}>
                         <div className="ticket-card">
-                          {/* TOP */}
+
                           <div className="ticket-top">
                             <img
                               src="/images/ticketIcon.png"
                               alt="Ticket Icon"
                               className="ticket-icon"
                             />
-
                             <h6 className="ticket-title">{ticket.name}</h6>
                           </div>
 
-                          {/* DATE + PRICE */}
                           <div className="ticket-top">
                             <span>
-                              {now < startDate
-                                ? `Ticket starts on ${startDate.toLocaleDateString(
-                                  "en-IN",
-                                  {
-                                    day: "2-digit",
-                                    month: "short",
-                                    year: "numeric",
-                                  },
-                                )}`
-                                : `Ticket ends on ${endDate.toLocaleDateString(
-                                  "en-IN",
-                                  {
-                                    day: "2-digit",
-                                    month: "short",
-                                    year: "numeric",
-                                  },
-                                )}`}
+                              {text === "Ticket is not yet started"
+                                ? `Ticket starts on ${startDate.toLocaleDateString("en-IN")}`
+                                : `Ticket ends on ${endDate.toLocaleDateString("en-IN")}`}
                             </span>
 
                             <span className="ticket-price">
@@ -505,10 +419,10 @@ export default function EventDetailsView({ event = {}, onBack }) {
                             </span>
                           </div>
 
-                          {/* STATUS */}
-                          <span className={`ticket-status ${statusClass}`}>
-                            {statusText}
+                          <span className={`ticket-status ${cls}`}>
+                            {text}
                           </span>
+
                         </div>
                       </div>
                     );
@@ -519,93 +433,158 @@ export default function EventDetailsView({ event = {}, onBack }) {
               </div>
             </div>
           </div>
+
+
         </div>
 
-        {/* ================= 6. HOST DETAILS ================= */}
-        <div className="row g-4 py-5">
+        {/* ================= 5. HOST + SIDEBAR ================= */}
+        <div className="row g-4 py-4">
+          {/* LEFT: Host + Collaborators */}
           <div className="col-lg-8">
-            <div className="card-box mt-4 edit-wrapper">
+            <div className="card-box mt-3 edit-wrapper">
+              {/* Event Host Details */}
               <h3>Event Host Details</h3>
 
-              <div className="host-grid">
-                <div>
-                  <label>Organization Name</label>
-                  <p>{event?.org?.organizationName || "-"}</p>
+              {[event?.org].filter(Boolean).map((org, idx) => (
+                <div key={idx} className="host-grid mb-2">
+                  <div>
+                    <label>Organization Name</label>
+                    <p>{org?.organizationName || "-"}</p>
+                  </div>
+                  <div>
+                    <label>Organization Location</label>
+                    <p>
+                      {[event?.location?.city, event?.location?.state, event?.location?.country]
+                        .filter(Boolean)
+                        .join(", ") || "-"}
+                    </p>
+                  </div>
+                  <div>
+                    <label>Organizer Department</label>
+                    <p>{event?.categoryName || "-"}</p>
+                  </div>
                 </div>
+              ))}
 
-                <div>
-                  <label>Location</label>
-                  <p>
-                    {event?.location?.city}, {event?.location?.state},{" "}
-                    {event?.location?.country}
-                  </p>
-                </div>
-
-                <div>
-                  <label>Email</label>
-                  <p>{event?.org?.domainEmail || "-"}</p>
-                </div>
-
-                <div>
-                  <label>Department</label>
-                  <p>{event?.categoryName || "-"}</p>
-                </div>
-              </div>
-            </div>
-
-
-          </div>
-
-          {/* ================= 7. DISCOUNTS + TAGS ================= */}
-          <div className="col-lg-4">
-            <div className="card-box mt-4">
-              <div className="">
-                {event?.offers && (
-                  <>
-                    <h3>Discounts & Offers</h3>
-                    <div className="discount-section">
-                      <img src="/images/discount.png" alt="Discount" />
-                      <span>{event.offers}</span>
-                    </div>
-                    <hr />
-                  </>
-                )}
-
-                {/* BACKEND: offers */}
-
-                <h3 className="mt-3">Tags</h3>
-
-                <div className="tag-wrap">
-                  {event?.tags && event.tags.length > 0 ? (
-                    event.tags.map((tag, index) => (
-                      <span key={`${tag}-${index}`}>#{tag}</span>
+              {/* Contact Details */}
+              {(event?.org?.domainEmail || organizerContacts.length > 0) && (
+                <>
+                  <p className="contact-details-title">Contact Details</p>
+                  {organizerContacts.length > 0 ? (
+                    organizerContacts.map((contact, idx) => (
+                      <div key={idx} className="contact-grid mb-2">
+                        <div>
+                          <label>Organizer Name</label>
+                          <p>{contact?.name || "-"}</p>
+                        </div>
+                        <div>
+                          <label>Organizer Contact</label>
+                          <p>{contact?.phone || "-"}</p>
+                        </div>
+                        <div>
+                          <label>Organizer Email ID</label>
+                          <p>{contact?.email || event?.org?.domainEmail || "-"}</p>
+                        </div>
+                      </div>
                     ))
                   ) : (
-                    <span>No tags</span>
+                    <div className="contact-grid mb-2">
+                      <div>
+                        <label>Organizer Name</label>
+                        <p>{event?.org?.organizationName || "-"}</p>
+                      </div>
+                      <div>
+                        <label>Organizer Contact</label>
+                        <p>{event?.org?.phone || "-"}</p>
+                      </div>
+                      <div>
+                        <label>Organizer Email ID</label>
+                        <p>{event?.org?.domainEmail || "-"}</p>
+                      </div>
+                    </div>
                   )}
-                </div>
+                </>
+              )}
 
-                <h3 className="mt-3">Follow us on</h3>
-                <div className="tag-wrap">
-                  <span>{WHATSAPPICON}</span>
-                  <span>{INSTAGRAMICON}</span>
-                  <span>{YOUTUBEICON}</span>
-                  <span>{XICON}</span>
-                  {/* BACKEND: tags */}
+              {/* Collaborator Details - initially hidden */}
+              {showCollaborators && filteredCollaborators.length > 0 && (
+                <div className="card-box mt-2 edit-wrapper">
+                  <h3>Collaborator Details</h3>
+                  {filteredCollaborators.map((col) => (
+                    <div key={col.identity} className="host-grid mb-2">
+                      <div>
+                        <label>Organization Name</label>
+                        <p>{col.member.organizationName || "-"}</p>
+                      </div>
+                      <div>
+                        <label>Organization Location</label>
+                        <p>{col.member.location || "-"}</p>
+                      </div>
+                      <div>
+                        <label>Department</label>
+                        <p>{col.member.orgDept || "-"}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+              )}
+
+              {/* Toggle Button for Collaborators */}
+              {filteredCollaborators.length > 0 && (
+                <button
+                  className="btn btn-link p-0 mt-1"
+                  onClick={() => setShowCollaborators(!showCollaborators)}
+                >
+                  {showCollaborators ? "Show Less" : `View Collaborators (${filteredCollaborators.length})`}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* RIGHT: Discounts / Tags / Follow */}
+          <div className="col-lg-4">
+            <div className="card-box mt-3">
+              {event?.offers && (
+                <>
+                  <h3>Discounts &amp; Offers</h3>
+                  <div className="discount-section mb-3">
+                    <img src="/images/discount.png" alt="Discount" />
+                    <span style={{ fontSize: 13 }}>{event.offers}</span>
+                  </div>
+                  <hr />
+                </>
+              )}
+
+              <h3 className="mt-2">Tags</h3>
+              <div className="tag-wrap mb-3">
+                {event?.tags && event.tags.length > 0 ? (
+                  event.tags.map((tag, index) => (
+                    <span key={`${tag}-${index}`}>#{tag}</span>
+                  ))
+                ) : (
+                  <span>No tags</span>
+                )}
+              </div>
+
+              <h3 className="mt-3">Follow us on</h3>
+              <div className="social-icon-wrap">
+                <span>{WHATSAPPICON}</span>
+                <span>{INSTAGRAMICON}</span>
+                <span>{YOUTUBEICON}</span>
+                <span>{XICON}</span>
               </div>
             </div>
           </div>
         </div>
-        {/* ================= 8. OTHER DETAILS ================= */}
-        <div className="card-box mt-4 edit-wrapper">
+
+        {/* ================= 6. OTHER DETAILS ================= */}
+        <div className="card-box mt-2 edit-wrapper">
           <h3>Other Details</h3>
 
           <div className="row">
-            {/* ================= PERKS ================= */}
+            {/* Perks */}
             <div className="col-md-4 other-strong-titel">
               <strong>Perks</strong>
-
               {event?.eventPerks && event.eventPerks.length > 0 ? (
                 <ul className="icon-list">
                   {event.eventPerks.map((item, index) => (
@@ -615,33 +594,28 @@ export default function EventDetailsView({ event = {}, onBack }) {
                   ))}
                 </ul>
               ) : (
-                //   <p>No perks available for this event</p>
-                // )}
                 <ul className="icon-list">
                   <li>No perks available for this event</li>
                 </ul>
               )}
             </div>
 
-            {/* ================= CERTIFICATIONS ================= */}
+            {/* Certifications */}
             <div className="col-md-4">
               <strong>Certifications</strong>
-
               {event?.cert ? (
                 <ul className="icon-list">
                   <li>{event.cert.certName}</li>
                 </ul>
               ) : (
-                <p>No Certifications available for this event</p>
+                <p style={{ marginTop: 8, fontSize: 13 }}>No Certifications available for this event</p>
               )}
             </div>
 
-            {/* ================= ACCOMMODATIONS ================= */}
+            {/* Accommodations */}
             <div className="col-md-4">
               <strong>Accommodations</strong>
-
-              {event?.eventAccommodations &&
-                event.eventAccommodations.length > 0 ? (
+              {event?.eventAccommodations && event.eventAccommodations.length > 0 ? (
                 <ul className="icon-list">
                   {event.eventAccommodations.map((item, index) => (
                     <li key={item.accommodation?.eventIdentity || index}>
@@ -650,21 +624,19 @@ export default function EventDetailsView({ event = {}, onBack }) {
                   ))}
                 </ul>
               ) : (
-                <p>No accommodations available for this event</p>
+                <p style={{ marginTop: 8, fontSize: 13 }}>No accommodations available for this event</p>
               )}
             </div>
           </div>
         </div>
 
-        {/* ================= 9. ACTION BUTTONS ================= */}
-
+        {/* ================= 7. ACTION BUTTONS ================= */}
         <div className="action-wrapper">
           <div className="action-row">
             <button className="action-btn">
               <span className="icon">{VIEWEVENTICON}</span>
               View Event Video
             </button>
-
             <button className="action-btn">
               <span className="icon">{VISIT_WEBSITE}</span>
               Visit Website
@@ -672,12 +644,11 @@ export default function EventDetailsView({ event = {}, onBack }) {
           </div>
         </div>
 
+        {/* ── Modals ── */}
         <ConfirmModal
           open={openConfirm}
           title="External Redirection"
-          description={
-            "You’re being redirected to an external website that is not managed by Allcollegeevent. For security reasons, we’re unable to verify this link."
-          }
+          description="You're being redirected to an external website that is not managed by Allcollegeevent. For security reasons, we're unable to verify this link."
           image="/images/logo.png"
           onCancel={handleCancel}
           onConfirm={handleConfirm}
@@ -689,7 +660,7 @@ export default function EventDetailsView({ event = {}, onBack }) {
         />
       </div>
 
-      {/* ================= 10. FOOTER SECTION ================= */}
+      {/* ================= FOOTER ================= */}
       <div>
         <Footer />
       </div>
