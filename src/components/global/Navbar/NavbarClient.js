@@ -8,6 +8,7 @@ import "./Navbar.css";
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import { getUserProfileApi } from "../../../lib/api/user.api";
 import { getOrganizationProfileApi } from "../../../lib/api/organizer.api";
+import Tooltip from "../../ui/Tooltip/Tooltip";
 
 export default function NavbarClient() {
   const router = useRouter();
@@ -17,6 +18,7 @@ export default function NavbarClient() {
   const [initial, setInitial] = useState("U");
   const [profileImage, setProfileImage] = useState(null);
   const [notifications, setNotifications] = useState([]);
+  const [displayName, setDisplayName] = useState("");
 
   useEffect(() => {
     const handler = (event) => {
@@ -66,10 +68,10 @@ export default function NavbarClient() {
 
         if (auth.type === "org") {
           res = await getOrganizationProfileApi(identityId);
-          console.log("==========res org",res)
+          console.log("==========res org", res);
         } else {
           res = await getUserProfileApi(identityId);
-          console.log("==========res",res)
+          console.log("==========res", res);
         }
 
         if (res?.status && res.data) {
@@ -82,6 +84,14 @@ export default function NavbarClient() {
           if (image) {
             setProfileImage(image);
           }
+          
+          const name =
+            res.data.organizationName ||
+            res.data.fullName ||
+            res.data.name ||
+            "";
+
+          setDisplayName(name);
         }
       } catch {
         // silent fail
@@ -115,7 +125,7 @@ export default function NavbarClient() {
 
               <div className="search-box">
                 <input type="text" placeholder="Search anything" />
-                <span className="search-icon">🔍</span>
+                <span className="search-icon">X</span>
               </div>
 
               {/* {isLoggedIn && (
@@ -188,23 +198,26 @@ export default function NavbarClient() {
               )}
 
               {/* PROFILE IMAGE / LETTER */}
-              {isLoggedIn &&
-                (profileImage ? (
-                  <img
-                    src={profileImage}
-                    className="profile-img"
-                    alt="profile"
-                    onClick={() => router.push("/dashboard")}
-                    onError={() => setProfileImage(null)}
-                  />
-                ) : (
-                  <div
-                    className="profile-img letter-avatar"
-                    onClick={() => router.push("/dashboard")}
-                  >
-                    {initial}
-                  </div>
-                ))}
+              {isLoggedIn && (
+                <Tooltip text={displayName || "My Profile"} position="bottom">
+                  {profileImage ? (
+                    <img
+                      src={profileImage}
+                      className="profile-img"
+                      alt="profile"
+                      onClick={() => router.push("/dashboard")}
+                      onError={() => setProfileImage(null)}
+                    />
+                  ) : (
+                    <div
+                      className="profile-img letter-avatar"
+                      onClick={() => router.push("/dashboard")}
+                    >
+                      {initial}
+                    </div>
+                  )}
+                </Tooltip>
+              )}
             </div>
           </div>
         </Navbar.Collapse>

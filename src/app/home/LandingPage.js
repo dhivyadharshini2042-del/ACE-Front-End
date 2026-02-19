@@ -33,7 +33,7 @@ import {
   getVirtualEventsApi,
   getFeaturedEventsApi,
 } from "../../lib/api/event.api.js";
-
+import { getAllEventTypesApi } from "../../lib/api/event.api.js";
 import { useLoading } from "../../context/LoadingContext.js";
 
 export default function LandingPage() {
@@ -45,6 +45,7 @@ export default function LandingPage() {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [virtualEvents, setVirtualEvents] = useState([]);
   const [featuredEvents, setFeaturedEvents] = useState([]);
+  const [eventTypes, setEventTypes] = useState([]);
 
   const [offsets, setOffsets] = useState({
     trending: 0,
@@ -67,6 +68,18 @@ export default function LandingPage() {
     "/images/bannerImageSix.png",
     "/images/bannerImageSev.png",
   ];
+
+  useEffect(() => {
+    const loadEventTypes = async () => {
+      const res = await getAllEventTypesApi();
+      console.log("EVENT TYPES API:", res); // 👈 CHECK THIS
+
+      if (res?.status) {
+        setEventTypes(res.data);
+      }
+    };
+    loadEventTypes();
+  }, []);
 
   /* ================= LOAD CATEGORIES ================= */
   useEffect(() => {
@@ -187,6 +200,7 @@ export default function LandingPage() {
           whatIcon={WHATICON}
           whereIcon={HOME_PAGE_LOCATION_ICON}
           whenIcon={HOME_PAGE_DATE_ICON}
+          eventTypes={eventTypes}
         />
       </main>
 

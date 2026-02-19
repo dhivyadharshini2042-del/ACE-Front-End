@@ -279,14 +279,14 @@
   height: 42px;
   border-radius: 50%;
   border: none;
-  background: #cce8ff;
+  background: #d4b5ff;
   font-size: 18px;
   cursor: pointer;
   transition: background 0.25s ease;
 }
 
 .controls button:hover {
-  background: #b5ddff;
+  background: #c8a4fb;
 }
 
 /* =========================
