@@ -240,13 +240,14 @@
   height: 40px;
   border-radius: 50%;
   border: none;
-  background: #cce8ff;
+  background: #d4b5ff;
+  font-size: 18px;
   cursor: pointer;
   transition: 0.3s ease;
 }
 
 .controls button:hover {
-  background: #b3dcff;
+  background: #c8a4fb;
 }
 
 .dots {

@@ -96,7 +96,6 @@ export default function EventsFilterPage() {
   const [sort, setSort] = useState("");
   const focusSearch = searchParams.get("focusSearch") === "1";
 
-
   // default RECENT
 
   /* ================= EVENTS ================= */
@@ -119,6 +118,19 @@ export default function EventsFilterPage() {
 
   const [page, setPage] = useState(1);
   // landing page event type filtered
+
+  useEffect(() => {
+    const eventTypeIdentity = searchParams.get("eventTypeIdentity");
+    const mode = searchParams.get("mode");
+    const date = searchParams.get("date");
+
+    setFilters((prev) => ({
+      ...prev,
+      eventTypeIdentity: eventTypeIdentity || "",
+      modes: mode ? [mode] : [],
+      dateRange: date ? { startDate: date, endDate: date } : null,
+    }));
+  }, [searchParams]);
 
   useEffect(() => {
     if (eventTypeFromUrl) {

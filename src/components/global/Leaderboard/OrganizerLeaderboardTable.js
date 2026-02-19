@@ -5,18 +5,36 @@ import styles from "./OrganizerLeaderboardTable.module.css";
 import { followOrganizerApi } from "../../../lib/api/organizer.api";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 
 export default function OrganizerLeaderboardTable({ data = [] }) {
   const [localData, setLocalData] = useState([]);
   const [loadingId, setLoadingId] = useState(null);
+  const [auth, setAuth] = useState(null);
+
   const router = useRouter();
+
+  useEffect(() => {
+    if (isUserLoggedIn()) {
+      setAuth(getAuthFromSession());
+    }
+  }, []);
 
   useEffect(() => {
     setLocalData(data);
   }, [data]);
 
   const handleFollow = async (orgIdentity) => {
+    if (!auth?.identity) {
+      toast("Please login to follow this organizer", {
+        icon: "⚠️",
+      });
+      return;
+    }
+
     try {
+      setLoadingId(orgIdentity);
+
       const res = await followOrganizerApi(orgIdentity);
 
       if (res?.status) {
@@ -37,6 +55,8 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
       }
     } catch (error) {
       toast.error("Something went wrong");
+    } finally {
+      setLoadingId(null);
     }
   };
 

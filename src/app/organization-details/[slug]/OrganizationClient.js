@@ -35,6 +35,7 @@ import {
   getPastEventsApi,
 } from "../../../lib/api/organizer.api";
 import { followOrganizerApi } from "../../../lib/api/organizer.api";
+import RateSection from "../../../components/global/RateSection/RateSection";
 
 export default function OrganizationClient({ slug }) {
   const router = useRouter();
@@ -185,8 +186,9 @@ export default function OrganizationClient({ slug }) {
 
   const handleFollowToggle = async () => {
     if (!auth?.identity) {
-      setPendingAction("follow");
-      setShowLoginModal(true);
+      toast("Please login to follow this organizer", {
+        icon: "⚠️",
+      });
       return;
     }
 
@@ -195,7 +197,6 @@ export default function OrganizationClient({ slug }) {
 
       if (res?.status) {
         setIsFollowing(res.data?.followed);
-
         toast.success(res.message);
       } else {
         toast.error(res?.message || "Failed to update follow status");
@@ -517,6 +518,13 @@ export default function OrganizationClient({ slug }) {
                 ))}
               </div>
             )}
+          </div>
+          <div className="mt-5">
+            <RateSection
+              onSubmit={(data) => {
+                console.log("Rating:", data);
+              }}
+            />
           </div>
         </section>
       </div>
