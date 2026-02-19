@@ -1,3 +1,5 @@
+/* ================= WHY SECTION ================= */
+
 .why-ace {
   padding: 90px 15px;
 }
@@ -69,7 +71,7 @@
 
 /* RIGHT BIG CARD */
 .vertical {
-  grid-row: span 2; /* THIS IS THE KEY */
+  grid-row: span 2;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -88,8 +90,53 @@
   object-fit: contain;
 }
 
-/* RESPONSIVE */
+/* ================= ALL EVENTS SECTION ================= */
+
+.all-events-section {
+  padding: 0 3rem;
+}
+
+/* FIXED HEIGHT SCROLL */
+.events-scroll-container {
+  max-height: 650px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* SCROLLBAR */
+.events-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.events-scroll-container::-webkit-scrollbar-thumb {
+  background: #7f00ff;
+  border-radius: 8px;
+}
+
+/* ================= EVENTS GRID ================= */
+
+/* DESKTOP – 4 CARDS */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* Large Desktop → 3 cards */
+@media (max-width: 1200px) {
+  .events-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tablet → 2 cards */
 @media (max-width: 992px) {
+  .events-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .why-grid {
     grid-template-columns: 1fr;
   }
@@ -99,9 +146,22 @@
   }
 }
 
+/* Mobile → 1 card */
 @media (max-width: 576px) {
+  .events-grid {
+    grid-template-columns: 1fr;
+  }
+
   .horizontal {
     flex-direction: column;
     text-align: center;
+  }
+
+  .all-events-section {
+    padding: 0 1rem;
+  }
+
+  .events-scroll-container {
+    max-height: 500px;
   }
 }
