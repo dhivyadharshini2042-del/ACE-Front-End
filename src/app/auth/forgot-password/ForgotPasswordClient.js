@@ -14,8 +14,8 @@ import {
 /* CONSTANTS */
 import {
   BTN_OTP_SEND,
-  TOAST_SUCCESS_MSG_OTP_SEND_EMAIL,
-  TOAST_ERROR_MSG_OTP_SEND_EMAIL_ERROR,
+  MSG_OTP_SEND_EMAIL,
+  MSG_OTP_SEND_EMAIL_ERROR,
   SUB_TITLE_OTP_SEND,
   TEXT_SIGNIN,
   TITLE_ALREADY_HAVE_ACCOUNT,
@@ -77,10 +77,10 @@ export default function ForgotPasswordClient() {
       await forgotApi({ email });
 
       saveEmail(email);
-      toast.success(TOAST_SUCCESS_MSG_OTP_SEND_EMAIL);
+      toast.success(MSG_OTP_SEND_EMAIL);
       router.push(ui.redirect);
     } catch (err) {
-      toast.error(err?.message || TOAST_ERROR_MSG_OTP_SEND_EMAIL_ERROR);
+      toast.error(err?.message || MSG_OTP_SEND_EMAIL_ERROR);
     } finally {
       setLoading(false); 
     }

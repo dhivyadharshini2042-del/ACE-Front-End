@@ -62,8 +62,6 @@ export const API_ENDPOINTS = {
     SINGLE: (userId) => `/v1/users/${userId}`,
     UPDATE: (userId) => `/v1/user/${userId}`,
     DELETE: (userId) => `/v1/user/${userId}`,
-    USER_TYPE: "/v1/user/user_type",
-    SELECT_TYPE: "/v1/user/select_type",
   },
 
   /* ================= ORGANIZATIONS ================= */

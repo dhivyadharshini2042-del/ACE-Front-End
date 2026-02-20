@@ -15,19 +15,18 @@ import {
   PH_PASSWORD,
   PH_CONFIRM_PASSWORD,
   BTN_VERIFY_DOMAIN,
-  TOAST_ERROR_MSG_FILL_ALL_FIELDS,
-  TOAST_ERROR_MSG_PASSWORD_MISMATCH,
-  TOAST_ERROR_MSG_CATEGORY_MISSING,
+  MSG_ERR_FILL_ALL_FIELDS,
+  MSG_ERR_PASSWORD_MISMATCH,
+  MSG_ERR_CATEGORY_MISSING,
   ROLE_ORGANIZER,
   INPUT_TEXT,
   INPUT_PASSWORD,
-  TOAST_ERROR_MSG_SIGNUP_FAILED,
-  TOAST_SUCCESS_MSG_SIGNUP_SUCCESS,
+  MSG_ERR_SIGNUP_FAILED,
+  MSG_SIGNUP_SUCCESS,
   TITLE_ORGA_ACCOUNT_CREATION,
   TEXT_NO_ACCOUNT,
   TEXT_SIGNIN,
-  TITLE_ALREADY_HAVE_ACCOUNT,
-  TOAST_ERROR_MSG_OTP_ERROR
+  TITLE_ALREADY_HAVE_ACCOUNT
 
 } from "../../../../../const-value/config-message/page";
 
@@ -61,13 +60,13 @@ export default function SignupAccountClient() {
     e.preventDefault();
 
     if (!email || !password || !confirm)
-      return toast.error(TOAST_ERROR_MSG_FILL_ALL_FIELDS);
+      return toast.error(MSG_ERR_FILL_ALL_FIELDS);
 
     if (password !== confirm)
-      return toast.error(TOAST_ERROR_MSG_PASSWORD_MISMATCH);
+      return toast.error(MSG_ERR_PASSWORD_MISMATCH);
 
     if (!category)
-      return toast.error(TOAST_ERROR_MSG_CATEGORY_MISSING);
+      return toast.error(MSG_ERR_CATEGORY_MISSING);
 
     try {
       setLoading(true);
@@ -85,14 +84,14 @@ export default function SignupAccountClient() {
       });
 
       if (!res?.status) {
-        toast.error(res?.message || TOAST_ERROR_MSG_SIGNUP_FAILED);
+        toast.error(res?.message || MSG_ERR_SIGNUP_FAILED);
         return;
       }
 
-      toast.success(res.message || TOAST_SUCCESS_MSG_SIGNUP_SUCCESS);
+      toast.success(res.message || MSG_SIGNUP_SUCCESS);
       router.push("/auth/organization/login");
     } catch (err) {
-      toast.error(TOAST_ERROR_MSG_OTP_ERROR);
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }

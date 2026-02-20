@@ -9,7 +9,6 @@ import toast from "react-hot-toast";
 import DashboardChart from "./DashboardChart";
 import { getEventBySlugApi } from "../../../../lib/api/event.api";
 import { useLoading } from "../../../../context/LoadingContext";
-import { TOAST_ERROR_MSG_SOMETHING_WENT_WRONG,TOAST_ERROR_MSG_EVENT_NOT_FOUND } from "../../../../const-value/config-message/page";
 
 export default function DashboardChartPage() {
   const { slug } = useParams();
@@ -34,11 +33,11 @@ export default function DashboardChartPage() {
         if (res?.status && res.data) {
           setEvent(res.data);
         } else {
-          toast.error(TOAST_ERROR_MSG_EVENT_NOT_FOUND);
+          toast.error("Event not found");
         }
       } catch (err) {
         console.log("API Error:", err);
-        toast.error(TOAST_ERROR_MSG_SOMETHING_WENT_WRONG);
+        toast.error("Something went wrong");
       } finally {
         setLoading(false);
       }

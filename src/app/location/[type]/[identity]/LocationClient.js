@@ -22,7 +22,6 @@ import { NO_IMAGE_FOUND_IMAGE } from "../../../../const-value/config-message/pag
 import toast from "react-hot-toast";
 import Footer from "../../../../components/global/Footer/Footer";
 import Tooltip from "../../../../components/ui/Tooltip/Tooltip";
-import { TOAST_ERROR_MSG_EVENT_LIKE_FAILED, TOAST_ERROR_MSG_EVENT_SAVE_FAILED } from "../../../../const-value/config-message/page";
 
 export default function LocationClient({ params }) {
   const { type, identity } = params;
@@ -156,7 +155,7 @@ export default function LocationClient({ params }) {
     if (!res?.status) {
       setLikedMap((p) => ({ ...p, [eventId]: wasLiked }));
       setLikeCountMap((p) => ({ ...p, [eventId]: p[eventId] }));
-      toast.error(TOAST_ERROR_MSG_EVENT_LIKE_FAILED );
+      toast.error("Failed to like event");
     }
   };
 
@@ -180,7 +179,7 @@ export default function LocationClient({ params }) {
 
     if (!res?.status) {
       setSavedMap((p) => ({ ...p, [eventId]: wasSaved }));
-      toast.error(TOAST_ERROR_MSG_EVENT_SAVE_FAILED);
+      toast.error("Failed to save event");
     }
   };
 

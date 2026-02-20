@@ -18,8 +18,6 @@ import {
   VIEW_ICON,
 } from "../../../const-value/config-icons/page";
 
-import{ TOAST_ERROR_MSG_LIKE_UPDATE_FAILED,TOAST_ERROR_MSG_EVENT_SAVE_FAILED} from "../../../const-value/config-message/page";
-
 export default function WhyChoose() {
   const [events, setEvents] = useState([]);
   const [likedCards, setLikedCards] = useState({});
@@ -95,7 +93,7 @@ export default function WhyChoose() {
     });
 
     if (!res?.status) {
-      toast.error(TOAST_ERROR_MSG_LIKE_UPDATE_FAILED);
+      toast.error("Failed to update like");
     }
   };
 
@@ -122,7 +120,7 @@ export default function WhyChoose() {
     });
 
     if (!res?.status) {
-      toast.error(TOAST_ERROR_MSG_EVENT_SAVE_FAILED);
+      toast.error("Failed to save event");
     }
   };
 

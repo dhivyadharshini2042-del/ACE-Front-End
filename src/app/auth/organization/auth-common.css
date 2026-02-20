@@ -221,41 +221,7 @@
   border-color: #7f00ff;
   box-shadow: 0 6px 18px rgba(127, 0, 255, 0.06);
 }
-/* ----------------------------------------
-   CUSTOM SELECT WRAPPER METHOD
------------------------------------------ */
 
-.select-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.custom-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding-right: 45px; /* space for icon */
-  cursor: pointer;
-}
-
-/* Custom Arrow */
-.select-wrapper::after {
-  content: "▾";
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 18px;
-  color: #7f00ff;
-  pointer-events: none;
-  transition: 0.3s ease;
-}
-
-/* Rotate on focus */
-.select-wrapper:focus-within::after {
-  transform: translateY(-50%) rotate(180deg);
-  color: #7f00ff;
-}
 .two-col {
   display: grid;
   grid-template-columns: 1fr 1fr;

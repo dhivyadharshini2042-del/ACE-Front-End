@@ -35,10 +35,6 @@ import {
 } from "../../lib/api/event.api.js";
 import { getAllEventTypesApi } from "../../lib/api/event.api.js";
 import { useLoading } from "../../context/LoadingContext.js";
-import { useSearchParams } from "next/navigation";
-import UserTypeModal from "../../components/ui/UserTypeModal/UserTypeModal";
-import { getUserTypeApi } from "../../lib/api/auth.api";
-import { TOAST_ERROR_MSG_ORGANIZERS_LOAD_FAILED } from "../../const-value/config-message/page.js";
 
 export default function LandingPage() {
   const { setLoading } = useLoading();
@@ -50,9 +46,6 @@ export default function LandingPage() {
   const [virtualEvents, setVirtualEvents] = useState([]);
   const [featuredEvents, setFeaturedEvents] = useState([]);
   const [eventTypes, setEventTypes] = useState([]);
-  const searchParams = useSearchParams();
-  const [showTypeModal, setShowTypeModal] = useState(false);
-  const [userTypes, setUserTypes] = useState([]);
 
   const [offsets, setOffsets] = useState({
     trending: 0,
@@ -77,34 +70,10 @@ export default function LandingPage() {
   ];
 
   useEffect(() => {
-    const shouldShow = searchParams.get("showTypeModal");
-
-    if (shouldShow === "true") {
-      setShowTypeModal(true);
-
-      loadUserTypes();
-
-      window.history.replaceState({}, "", "/");
-    }
-  }, [searchParams]);
-
-  const loadUserTypes = async () => {
-    try {
-      const res = await getUserTypeApi();
-      console.log("]]]]]]]]]]]",res)
-
-      if (res?.success) {
-        setUserTypes(res.data);
-      }
-    } catch (error) {
-      console.error("User Type API failed", error);
-    }
-  };
-
-  useEffect(() => {
     const loadEventTypes = async () => {
       const res = await getAllEventTypesApi();
-      console.log("EVENT TYPES API:", res);
+      console.log("EVENT TYPES API:", res); // 👈 CHECK THIS
+
       if (res?.status) {
         setEventTypes(res.data);
       }
@@ -154,7 +123,7 @@ export default function LandingPage() {
       }
     } catch (error) {
       console.error(error);
-      toast.error(TOAST_ERROR_MSG_ORGANIZERS_LOAD_FAILED);
+      toast.error("Failed to load organizers");
     } finally {
       setLoading(false);
     }
@@ -209,67 +178,60 @@ export default function LandingPage() {
 
   /* ================= UI ================= */
   return (
-    <>
-      <UserTypeModal
-        open={showTypeModal}
-        data={userTypes}
-        onClose={() => setShowTypeModal(false)}
+    <div className="dashboard-root">
+      <main className="dash-hero" ref={exploreRef}>
+        <HeroBanner text={apiText} />
+
+        <div className="exp-btn">
+          <img src="/images/sparkles.png" alt="sparkles" />
+          <button
+            className="btn-explore"
+            onClick={() => router.push("/explore-events")}
+          >
+            Explore Events
+          </button>
+        </div>
+
+        <div className="hero-carousel-area">
+          <HeroBannerCarousel images={posters} />
+        </div>
+
+        <EventSearchBar
+          whatIcon={WHATICON}
+          whereIcon={HOME_PAGE_LOCATION_ICON}
+          whenIcon={HOME_PAGE_DATE_ICON}
+          eventTypes={eventTypes}
+        />
+      </main>
+
+      <ChooseEventCategory categories={categories} />
+
+      <EventSlider
+        title="Trending Events"
+        data={trendingEvents}
+        onReachEnd={() => loadEvents("trending", setTrendingEvents)}
       />
-      <div className="dashboard-root">
-        <main className="dash-hero" ref={exploreRef}>
-          <HeroBanner text={apiText} />
 
-          <div className="exp-btn">
-            <img src="/images/sparkles.png" alt="sparkles" />
-            <button
-              className="btn-explore"
-              onClick={() => router.push("/explore-events")}
-            >
-              Explore Events
-            </button>
-          </div>
+      <EventSlider
+        title="Virtual Events"
+        data={virtualEvents}
+        onReachEnd={() => loadEvents("virtual", setVirtualEvents)}
+      />
 
-          <div className="hero-carousel-area">
-            <HeroBannerCarousel images={posters} />
-          </div>
+      <SpotlightCarousel data={featuredEvents} />
 
-          <EventSearchBar
-            whatIcon={WHATICON}
-            whereIcon={HOME_PAGE_LOCATION_ICON}
-            whenIcon={HOME_PAGE_DATE_ICON}
-            eventTypes={eventTypes}
-          />
-        </main>
+      <OrganizersCarousel data={organization} />
 
-        <ChooseEventCategory categories={categories} />
+      <EventSlider
+        title="Upcoming Events"
+        data={upcomingEvents}
+        onReachEnd={() => loadEvents("upcoming", setUpcomingEvents)}
+      />
 
-        <EventSlider
-          title="Trending Events"
-          data={trendingEvents}
-          onReachEnd={() => loadEvents("trending", setTrendingEvents)}
-        />
-
-        <EventSlider
-          title="Virtual Events"
-          data={virtualEvents}
-          onReachEnd={() => loadEvents("virtual", setVirtualEvents)}
-        />
-
-        <SpotlightCarousel data={featuredEvents} />
-
-        <OrganizersCarousel data={organization} />
-
-        <EventSlider
-          title="Upcoming Events"
-          data={upcomingEvents}
-          onReachEnd={() => loadEvents("upcoming", setUpcomingEvents)}
-        />
-
-        <LocationHighlights />
-        <AppLandingHero />
-        <FloatingExploreButton targetRef={exploreRef} />
-        <Footer />
-      </div>
-    </>
+      <LocationHighlights />
+      <AppLandingHero />
+      <FloatingExploreButton targetRef={exploreRef} />
+      <Footer />
+    </div>
   );
 }

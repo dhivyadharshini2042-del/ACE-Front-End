@@ -19,7 +19,6 @@ import {
   XICON,
   YOUTUBEICON,
 } from "../../../../const-value/config-icons/page";
-import { TOAST_ERROR_MSG_PROFILE_LOAD_FAILED } from "../../../../const-value/config-message/page";
 
 export default function ProfileHeader({ activeTab = "profile" }) {
   const router = useRouter();
@@ -79,7 +78,7 @@ export default function ProfileHeader({ activeTab = "profile" }) {
           });
         }
       } catch {
-        toast.error(TOAST_ERROR_MSG_PROFILE_LOAD_FAILED);
+        toast.error("Failed to load profile");
       } finally {
         setLoading(false);
       }

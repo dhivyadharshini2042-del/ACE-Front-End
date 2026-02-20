@@ -15,7 +15,6 @@ import {
   getAuthFromSession,
   isUserLoggedIn,
 } from "../../../../lib/auth";
-import { TOAST_ERROR_MSG_ORGANIZATION_PROFILE_LOAD_FAILED,TOAST_ERROR_MSG_OVERVIEW_DASHBOARD_LOAD_FAILED } from "../../../../const-value/config-message";
 
 export default function OverviewDashboardPage() {
   const { setLoading } = useLoading();
@@ -58,7 +57,7 @@ export default function OverviewDashboardPage() {
         const profileRes = await getOrganizationProfileApi(orgId);
 
         if (!profileRes?.status) {
-          toast.error(TOAST_ERROR_MSG_ORGANIZATION_PROFILE_LOAD_FAILED);
+          toast.error("Unable to load organization profile");
           return;
         }
 
@@ -72,7 +71,7 @@ export default function OverviewDashboardPage() {
           setEvents(eventsRes.data || []);
         }
       } catch (err) {
-        toast.error(TOAST_ERROR_MSG_OVERVIEW_DASHBOARD_LOAD_FAILED);
+        toast.error("Unable to load overview dashboard");
         setEvents([]);
       } finally {
         setLoading(false);

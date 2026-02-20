@@ -13,8 +13,8 @@ import {
   PASSWORDVIEWICON,
 } from "../../../const-value/config-icons/page";
 import {
-  TOAST_SUCCESS_MSG_PASSWORD_UPDATED_SUCCESS,
-  TOAST_ERROR_MSG_PASSWORD_UPDATED_FAILED,
+  MSG_PASSWORD_UPDATED_SUCCESS,
+  MSG_PASSWORD_UPDATED_FAILED,
   TITLE_SET_NEW_PASSWORD,
   SUB_TITLE_SET_NEW_PASSWORD,
   LABEL_SET_NEW_PASSWORD,
@@ -76,12 +76,12 @@ export default function ResetPasswordPage() {
         password,
       });
 
-      toast.success(TOAST_SUCCESS_MSG_PASSWORD_UPDATED_SUCCESS);
+      toast.success(MSG_PASSWORD_UPDATED_SUCCESS);
       clearEmail();
       window.location.href = ui.redirect;
     } catch (err) {
       toast.error(
-        err?.response?.data?.message || TOAST_ERROR_MSG_PASSWORD_UPDATED_FAILED
+        err?.response?.data?.message || MSG_PASSWORD_UPDATED_FAILED
       );
     } finally {
       setLoading(false); 

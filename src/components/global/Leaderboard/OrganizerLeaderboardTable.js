@@ -6,9 +6,6 @@ import { followOrganizerApi } from "../../../lib/api/organizer.api";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
-import { TOAST_ERROR_MSG_SOMETHING_WENT_WRONG,
-  TOAST_ERROR_ACTION_FAILED,
-  TOAST_SUCCESS_UPDATE } from "../../../const-value/config-message/page";
 
 export default function OrganizerLeaderboardTable({ data = [] }) {
   const [localData, setLocalData] = useState([]);
@@ -52,12 +49,12 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
           ),
         );
 
-        toast.success(res?.message || TOAST_SUCCESS_UPDATE);
+        toast.success(res?.message || "Updated successfully");
       } else {
-        toast.error(res?.message ||TOAST_ERROR_ACTION_FAILED);
+        toast.error(res?.message || "Action failed");
       }
     } catch (error) {
-      toast.error(TOAST_ERROR_MSG_SOMETHING_WENT_WRONG);
+      toast.error("Something went wrong");
     } finally {
       setLoadingId(null);
     }
