@@ -2,6 +2,7 @@
 
 import toast from "react-hot-toast";
 import { processImage } from "../../../lib/utils/imageProcessor";
+import { TOAST_ERROR_MSG_ONLY_IMAGE_FILES_ALLOWED } from "../../../const-value/config-message/page";
 
 export default function ImageUpload({
   images = [],
@@ -16,7 +17,7 @@ export default function ImageUpload({
     for (let file of files) {
       // type check
       if (!file.type.startsWith("image/")) {
-        toast.error("Only image files allowed");
+        toast.error(TOAST_ERROR_MSG_ONLY_IMAGE_FILES_ALLOWED);
         return;
       }
 

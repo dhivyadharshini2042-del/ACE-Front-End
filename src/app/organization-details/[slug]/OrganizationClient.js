@@ -36,6 +36,10 @@ import {
 } from "../../../lib/api/organizer.api";
 import { followOrganizerApi } from "../../../lib/api/organizer.api";
 import RateSection from "../../../components/global/RateSection/RateSection";
+import { TOAST_ERROR_MSG_SOMETHING_WENT_WRONG, 
+  TOAST_ERROR_MSG_EVENT_LIKE_FAILED,
+  TOAST_ERROR_MSG_EVENT_SAVE_FAILED,
+  TOAST_ERROR_UPDATE_FOLLOW_STATUS } from "../../../const-value/config-message/page";
 
 export default function OrganizationClient({ slug }) {
   const router = useRouter();
@@ -180,7 +184,7 @@ export default function OrganizationClient({ slug }) {
       // rollback
       setLikedMap((p) => ({ ...p, [eventId]: wasLiked }));
       setLikeCountMap((p) => ({ ...p, [eventId]: p[eventId] }));
-      toast.error("Failed to like event");
+      toast.error(TOAST_ERROR_MSG_EVENT_LIKE_FAILED);
     }
   };
 
@@ -199,11 +203,11 @@ export default function OrganizationClient({ slug }) {
         setIsFollowing(res.data?.followed);
         toast.success(res.message);
       } else {
-        toast.error(res?.message || "Failed to update follow status");
+        toast.error(res?.message || TOAST_ERROR_UPDATE_FOLLOW_STATUS);
       }
     } catch (err) {
       console.error(err);
-      toast.error("Something went wrong");
+      toast.error(TOAST_ERROR_MSG_SOMETHING_WENT_WRONG);
     }
   };
 
@@ -226,7 +230,7 @@ export default function OrganizationClient({ slug }) {
 
     if (!res?.status) {
       setSavedMap((p) => ({ ...p, [eventId]: wasSaved }));
-      toast.error("Failed to save event");
+      toast.error(TOAST_ERROR_MSG_EVENT_SAVE_FAILED);
     }
   };
 

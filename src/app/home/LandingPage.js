@@ -35,6 +35,7 @@ import {
 } from "../../lib/api/event.api.js";
 import { getAllEventTypesApi } from "../../lib/api/event.api.js";
 import { useLoading } from "../../context/LoadingContext.js";
+import { TOAST_ERROR_MSG_ORGANIZERS_LOAD_FAILED } from "../../const-value/config-message/page.js";
 
 export default function LandingPage() {
   const { setLoading } = useLoading();
@@ -123,7 +124,7 @@ export default function LandingPage() {
       }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to load organizers");
+      toast.error(TOAST_ERROR_MSG_ORGANIZERS_LOAD_FAILED);
     } finally {
       setLoading(false);
     }

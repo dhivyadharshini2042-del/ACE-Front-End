@@ -21,7 +21,7 @@ import {
   LABEL_LOADING,
   LABEL_LOADING_STATES,
   LABEL_LOADING_CITIES,
-  MSG_ERR_FILL_ALL_FIELDS,
+  TOAST_ERROR_MSG_FILL_ALL_FIELDS,
   MSG_ORG_SELECT_COUNTRY,
   MSG_ORG_SELECT_STATE,
   PH_ORG_ORGANIZATION_NAME,
@@ -132,7 +132,7 @@ export default function Page() {
     e.preventDefault();
 
     if (!country || !stateName || !city || !orgName) {
-      return toast.error(MSG_ERR_FILL_ALL_FIELDS);
+      return toast.error(TOAST_ERROR_MSG_FILL_ALL_FIELDS);
     }
 
     try {

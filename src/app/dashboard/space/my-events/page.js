@@ -13,6 +13,7 @@ import {
 } from "../../../../lib/api/event.api";
 
 import { getAuthFromSession, isUserLoggedIn } from "../../../../lib/auth";
+import { TOAST_ERROR_MSG_EVENTS_LOAD_FAILED, TOAST_ERROR_MSG_EVENTS_LOAD_ERROR} from "../../../../const-value/config-message";
 
 export default function MyEventPage() {
   const [events, setEvents] = useState([]);
@@ -51,7 +52,7 @@ export default function MyEventPage() {
         if (eventsRes?.status) {
           setEvents(eventsRes.data || []);
         } else {
-          toast.error("Failed to load events");
+          toast.error(TOAST_ERROR_MSG_EVENTS_LOAD_FAILED);
           setEvents([]);
         }
 
@@ -59,7 +60,7 @@ export default function MyEventPage() {
           setStatuses(statusRes.data || []);
         }
       } catch {
-        toast.error("Error loading events");
+        toast.error(TOAST_ERROR_MSG_EVENTS_LOAD_ERROR);
         setEvents([]);
       } finally {
         setLoading(false);

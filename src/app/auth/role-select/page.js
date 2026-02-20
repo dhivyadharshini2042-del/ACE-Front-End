@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useLoading } from "../../../context/LoadingContext";
 import { toast } from "react-hot-toast";
 import { saveUserRoleApi } from "../../../lib/api/auth.api";
+import { TOAST_ERROR_MSG_SOMETHING_WENT_WRONG, TOAST_ERROR_MSG_ROLE_SAVE_FAILED } from "../../../const-value/config-message/page";
 
 export default function RoleSelectPage() {
   const router = useRouter();
@@ -16,13 +17,13 @@ export default function RoleSelectPage() {
 
       const res = await saveUserRoleApi({ userType: value });
       if (!res?.status) {
-        toast.error("Role save failed");
+        toast.error(TOAST_ERROR_MSG_ROLE_SAVE_FAILED);
         return;
       }
 
       router.push("/");
     } catch (e) {
-      toast.error("Something went wrong");
+      toast.error(TOAST_ERROR_MSG_SOMETHING_WENT_WRONG);
     } finally {
       setLoading(false);
     }

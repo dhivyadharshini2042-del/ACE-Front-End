@@ -28,9 +28,9 @@ import {
   TEXT_SIGNIN,
   TEXT_NO_ACCOUNT,
   ROLE_USER,
-  MSG_SIGNUP_SUCCESS,
+  TOAST_SUCCESS_MSG_SIGNUP_SUCCESS,
   PH_USER_EMAIL,
-  MSG_ERR_SIGNUP_FAILED,
+  TOAST_ERROR_MSG_SIGNUP_FAILED,
   TITLE_ALREADY_HAVE_ACCOUNT,
 } from "../../../../const-value/config-message/page";
 
@@ -86,14 +86,14 @@ export default function UserSignupPage() {
       const res = await signupApi(payload);
 
       if (!res?.status) {
-        toast.error(res?.message || MSG_ERR_SIGNUP_FAILED);
+        toast.error(res?.message || TOAST_ERROR_MSG_SIGNUP_FAILED);
         return;
       }
 
-      toast.success(res.message || MSG_SIGNUP_SUCCESS);
+      toast.success(res.message || TOAST_SUCCESS_MSG_SIGNUP_SUCCESS);
       router.push("/auth/user/login");
     } catch (err) {
-      toast.error(MSG_ERR_SIGNUP_FAILED);
+      toast.error(TOAST_ERROR_MSG_SIGNUP_FAILED);
     } finally {
       setLoading(false);
     }

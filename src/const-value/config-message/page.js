@@ -50,36 +50,23 @@ export const ACTION_MY_EVENT = "My Events";
 // SYSTEM MESSAGES
 // ---------------------------------------------------------
 export const MSG_LOGOUT_SUCCESS = "Logged out successfully!";
-export const MSG_GENERIC_ERROR = "Something went wrong. Please try again!";
 export const MSG_ORGANIZER_NOT_FOUND = "Organizer not found";
-export const MSG_EVENT_LOAD_FAILED = "Failed to load events";
 export const MSG_EVENT_LOAD_ERROR = "Something went wrong while loading events";
 export const MSG_LOGOUT_FAILED = "Failed to logout";
 export const MSG_NOIMAGE_FAILED = "No Image";
 export const MSG_NO_EVENT_FOUND_FOR_ORGANIZER =
   "No events found for this organizer";
 export const MSG_NO_EVENT_FOUND_FOR_USER = "No events available at the moment";
-export const MSG_EVENT_UPDATE_SUCCESS = "Event updated successfully!";
+
 export const MSG_EVENT_UPDATE_FAILED = "Update failed";
 export const MSG_EVENT_UPDATE_ERROR = "Error while updating";
-export const MSG_EVENT_CREATE_SUCCESS = "Event created successfully!";
 export const MSG_EVENT_CREATE_FAILED = "Creation failed";
 export const MSG_EVENT_CREATE_ERROR = "Error creating event";
-export const MSG_INVALID_CREDENTIALS = "Invalid credentials";
-export const MSG_LOGIN_SUCCESS_ORGANIZER = "Organizer Logged In Successfully!";
 export const MSG_VERIFY_EMAIL_SENT =
   "Link has been sent to your xyz.com domain mail id.\nPlease click and verify your account.";
-export const MSG_ERR_FILL_ALL_FIELDS = "Fill all fields";
-export const MSG_ERR_PASSWORD_MISMATCH = "Passwords do not match";
-export const MSG_ERR_CATEGORY_MISSING = "Choose an Organization";
-export const MSG_ERR_SIGNUP_FAILED = "Signup failed";
-export const MSG_SIGNUP_SUCCESS = "Signup successfully!";
 export const MSG_ORG_SELECT_COUNTRY = "Select country first";
 export const MSG_ORG_SELECT_STATE = "Select state first";
-export const MSG_LOGIN_SUCCESS_USER = "Login Successful!";
-export const MSG_GOOGLE_LOGIN_SUCCESS_USER = "Google Login Successful!";
-export const MSG_LOGIN_FAILED = "Login Failed";
-export const MSG_GOOGLE_LOGIN_FAILED = "Google Login Failed";
+
 
 // ---------------------------------------------------------
 // EVENT LABELS
@@ -211,21 +198,10 @@ export const MSG_EMAIL_VERIFY_LOADING = "loading";
 
 // ENTER OTP
 
-export const MSG_OTP_VERIFIED = "Code verified!";
-export const MSG_OTP_INVALID = "Invalid code";
-export const MSG_OTP_ERROR = "Something went wrong";
-export const MSG_NEW_OTP_SEND = "New code sent!";
-export const MSG_NEW_OTP_FAILED_TO_SEND = "Failed to resend";
 
-// FORGOT PASSOWRD
-
-export const MSG_OTP_SEND_EMAIL = "Code sent to your email";
-export const MSG_OTP_SEND_EMAIL_ERROR = "Email not found";
 
 // REST PASSWORD
 
-export const MSG_PASSWORD_UPDATED_SUCCESS = "Password updated successfully";
-export const MSG_PASSWORD_UPDATED_FAILED = "Failed to update password";
 
 // MANAGE PAGE
 
@@ -384,3 +360,77 @@ export const LABEL_FULL_NAME = "Full Name";
 export const LABEL_DOMAIN_MAIL_ID = "Domain Mail ID";
 
 export const NO_IMAGE_FOUND_IMAGE = "/images/no-image-found.png";
+
+//----------------------------------------------------------
+// TOAST MESSAGES
+//----------------------------------------------------------
+export const TOAST_SUCCESS_MSG_OTP_VERIFIED ="Code verified!";
+export const TOAST_SUCCESS_MSG_NEW_OTP_SEND = "New code sent!";
+export const TOAST_SUCCESS_MSG_OTP_SEND_EMAIL = "Code sent to your email";
+export const TOAST_SUCCESS_MSG_LOGIN_SUCCESS_ORGANIZER = "Organizer Logged In Successfully!";
+export const TOAST_SUCCESS_MSG_PASSWORD_UPDATED_SUCCESS = "Password updated successfully";
+export const TOAST_SUCCESS_MSG_LOGIN_SUCCESS_USER = "Login Successful!";
+export const TOAST_SUCCESS_MSG_GOOGLE_LOGIN_SUCCESS_USER  = "Google Login Successful!";
+export const TOAST_SUCCESS_MSG_SIGNUP_SUCCESS = "Signup successfully!";
+export const TOAST_SUCCESS_ACCOUNT_DELETED = "Account deleted successfully"; 
+export const TOAST_SUCCESS_PROFILE_UPDATED = "Profile updated successfully";
+export const TOAST_SUCCESS_EVENT_CREATED = "Event created successfully";
+export const TOAST_SUCCESS_OPENING_WHATSAPP = "Opening WhatsApp…";
+export const TOAST_SUCCESS_OPENING_X_TWITTER = "Opening X (Twitter)…";
+export const TOAST_SUCCESS_OPENING_LINKEDIN = "Opening LinkedIn…";
+export const TOAST_SUCCESS_OPENING_INSTAGRAM = "Opening Instagram page…";
+export const TOAST_SUCCESS_OPENING_YOUTUBE_CHANNEL = "Opening YouTube channel…";
+export const TOAST_SUCCESS_EVENT_LINK_COPIED = "Event link copied";
+export const TOAST_SUCCESS_UNFOLLOW = "Unfollowed successfully";
+export const TOAST_SUCCESS_UPDATE = "Updated successfully";
+export const TOAST_SUCCESS_FOLLOW = "Followed successfully";
+export const TOAST_SUCCESS_REMOVE = "Removed successfully";
+
+export const TOAST_ERROR_MSG_OTP_INVALID ="Invalid code";
+export const TOAST_ERROR_MSG_GENERIC_ERROR = "Something went wrong. Please try again!";
+export const TOAST_ERROR_MSG_NEW_OTP_FAILED_TO_SEND = "Failed to resend";
+export const TOAST_ERROR_MSG_OTP_SEND_EMAIL_ERROR = "Email not found";
+export const TOAST_ERROR_MSG_INVALID_CREDENTIALS = "Invalid credentials";
+export const TOAST_ERROR_MSG_LOGIN_FAILED = "Login Failed";
+export const TOAST_ERROR_MSG_FILL_ALL_FIELDS = "Fill all fields";
+export const TOAST_ERROR_MSG_PASSWORD_MISMATCH = "Passwords do not match";
+export const TOAST_ERROR_MSG_CATEGORY_MISSING = "Choose an Organization";
+export const TOAST_ERROR_MSG_SIGNUP_FAILED = "Signup failed";
+export const TOAST_ERROR_MSG_SOMETHING_WENT_WRONG = "Something went wrong";
+export const TOAST_ERROR_MSG_PASSWORD_UPDATED_FAILED = "Failed to update password";
+export const TOAST_ERROR_MSG_ROLE_SAVE_FAILED = "Role save failed";
+export const TOAST_ERROR_MSG_GOOGLE_LOGIN_FAILED = "Google Login Failed";
+
+export const TOAST_ERROR_MSG_BOOKED_EVENTS_LOAD_FAILED = "Failed to load booked events"; 
+
+export const TOAST_ERROR_MSG_SAVED_EVENTS_LOAD_FAILED ="Failed to load saved events";
+export const TOAST_ERROR_MSG_PROFILE_RELOAD_FAILED = "Failed to reload profile";
+export const TOAST_ERROR_MSG_DELETE_ACCOUNT_FAILED = "failed to delete account"; 
+export const TOAST_ERROR_MSG_UPDATE_FAILED = "Update failed";
+export const TOAST_ERROR_MSG_PROFILE_UPDATE_FAILED = "Profile update failed";
+export const TOAST_ERROR_MSG_ONLY_IMAGE_FILES_ALLOWED = "Only image files allowed";
+export const TOAST_ERROR_MSG_MAX_4_IMAGES_ALLOWED = "Maximum 4 images allowed";
+export const TOAST_ERROR_MSG_INVALID_TICKET_DATA = "Invalid ticket data";
+export const TOAST_ERROR_MSG_FILL_ORGANIZER_DETAILS = "Fill organizer details";
+export const TOAST_ERROR_MSG_FILL_EVENT_DETAILS = "Fill event details";
+export const TOAST_ERROR_MSG_ONLY_ORGANIZERS_CAN_CREATE_EVENTS = "Only organizers can create events";
+export const TOAST_ERROR_MSG_ORGANIZATION_NOT_FOUND = "Organization not found";
+export const TOAST_ERROR_MSG_EVENT_CREATION_FAILED = "Event creation failed";
+export const TOAST_ERROR_MSG_INVALID_DATA = "Invalid data"; 
+export const TOAST_ERROR_MSG_EVENT_NOT_FOUND = "Event not found";
+export const TOAST_ERROR_MSG_EVENTS_LOAD_FAILED = "Failed to load events";
+export const TOAST_ERROR_MSG_EVENTS_LOAD_ERROR = "Error loading events";
+export const TOAST_ERROR_MSG_ORGANIZERS_LOAD_FAILED = "Unable to load organizers";
+export const TOAST_ERROR_MSG_OVERVIEW_DASHBOARD_LOAD_FAILED = "Unable to load overview dashboard";
+export const TOAST_ERROR_MSG_LIKE_UPDATE_FAILED = "Failed to update like";
+export const TOAST_ERROR_MSG_SAVE_UPDATE_FAILED = "Failed to update save";
+export const TOAST_ERROR_MSG_LEADERBOARD_LOAD_FAILED = "Failed to load leaderboard";
+export const TOAST_ERROR_MSG_EVENT_LIKE_FAILED = "Failed to like event";
+export const TOAST_ERROR_MSG_EVENT_SAVE_FAILED = "Failed to save event";
+export const TOAST_ERROR_MSG_SHARE_OPTION_NOT_CONFIGURED = "Share option not configured";
+export const TOAST_ERROR_MSG_LOAD_FOLLOWERS_FAILED ="Failed to load followers";
+export const TOAST_ERROR_GENERIC = "Failed";
+export const TOAST_ERROR_AUTH_MISSING = "Auth missing";
+export const TOAST_ERROR_UPDATE_FOLLOW_STATUS = "Failed to update follow status";
+export const TOAST_ERROR_ACTION_FAILED = "Action failed";
+export const TOAST_ERROR_FOLLOW = "Failed to follow";
