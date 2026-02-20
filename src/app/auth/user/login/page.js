@@ -66,21 +66,21 @@ export default function UserLoginPage() {
 
     try {
       const res = await loginApi(form);
-
+      console.log("///////////", res);
       if (!res?.status || !res?.data) {
         toast.error(res?.message || TOAST_ERROR_MSG_LOGIN_FAILED);
         return;
       }
 
-      // ✅ CALL AUTH FUNCTION
-      setAuthCookie(
-        res.token,
-        res.data, // identity
-        ROLE_USER,
-      );
+      setAuthCookie(res.token, res.data, ROLE_USER);
 
       toast.success(TOAST_SUCCESS_MSG_LOGIN_SUCCESS_USER);
-      router.push("/");
+
+      if (res.data?.hasSelectedType === false) {
+        router.push("/?showTypeModal=true");
+      } else {
+        router.push("/");
+      }
     } catch (err) {
       toast.error(TOAST_ERROR_MSG_LOGIN_FAILED);
     } finally {
@@ -109,7 +109,12 @@ export default function UserLoginPage() {
       );
 
       toast.success(TOAST_SUCCESS_MSG_GOOGLE_LOGIN_SUCCESS_USER);
-      router.push("/");
+
+      if (res.data?.hasSelectedType === false) {
+        router.push("/?showTypeModal=true");
+      } else {
+        router.push("/");
+      }
     } catch (err) {
       toast.error(TOAST_ERROR_MSG_GOOGLE_LOGIN_FAILED);
     } finally {

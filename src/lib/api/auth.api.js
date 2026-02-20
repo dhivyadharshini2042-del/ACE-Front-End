@@ -47,6 +47,14 @@ export const saveUserRoleApi = async (data) => {
   return apiHelper.post("/auth/save-role", data);
 };
 
+export const getUserTypeApi = () =>
+  handleApi(apiPrivate.get(API_ENDPOINTS.USER.USER_TYPE));
+
+// SELECT USER TYPE (COOKIE / TOKEN REQUIRED)
+export const selectUserTypeApi = (data) =>
+  handleApi(
+    apiPrivate.post(API_ENDPOINTS.USER.SELECT_TYPE, data)
+  );
 
 // VERIFY ORGANIZER EMAIL
 export const verifyEmailApi = (token) =>

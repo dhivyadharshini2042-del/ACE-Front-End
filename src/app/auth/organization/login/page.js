@@ -15,7 +15,7 @@ import {
 /* API */
 import { loginApi } from "../../../../lib/api/auth.api";
 
-/* ✅ AUTH (SESSION) */
+/* AUTH (SESSION) */
 import { setAuthCookie } from "../../../../lib/auth";
 
 /* VALIDATION */
@@ -87,8 +87,12 @@ export default function OrganizerLoginPage() {
 
       // success
       toast.success(TOAST_SUCCESS_MSG_LOGIN_SUCCESS_ORGANIZER);
-      router.push("/dashboard");
-      // router.push("/auth/role-select");
+
+      if (res.data?.hasSelectedType === false) {
+        router.push("/?showTypeModal=true");
+      } else {
+        router.push("/");
+      }
     } catch (err) {
       toast.error(TOAST_ERROR_MSG_LOGIN_FAILED);
     } finally {

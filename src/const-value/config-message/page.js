@@ -434,3 +434,4 @@ export const TOAST_ERROR_AUTH_MISSING = "Auth missing";
 export const TOAST_ERROR_UPDATE_FOLLOW_STATUS = "Failed to update follow status";
 export const TOAST_ERROR_ACTION_FAILED = "Action failed";
 export const TOAST_ERROR_FOLLOW = "Failed to follow";
+export const TOAST_ERROR_MSG_PROFILE_LOAD_FAILED = "Failed load";
