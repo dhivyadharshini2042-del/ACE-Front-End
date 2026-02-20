@@ -20,11 +20,11 @@ import {
   SUB_TITLE_ENTER_OTP,
   BTN_CONTINUE,
   BTN_OTP_RESEND,
-  MSG_GENERIC_ERROR,
-  MSG_NEW_OTP_SEND,
-  MSG_NEW_OTP_FAILED_TO_SEND,
-  MSG_OTP_INVALID,
-  MSG_OTP_VERIFIED,
+  TOAST_ERROR_MSG_GENERIC_ERROR,
+  TOAST_SUCCESS_MSG_NEW_OTP_SEND ,
+  TOAST_ERROR_MSG_NEW_OTP_FAILED_TO_SEND,
+  TOAST_ERROR_MSG_OTP_INVALID,
+  TOAST_SUCCESS_MSG_OTP_VERIFIED,
   SUB_TITLE_OTP_NOT_RECEIVE,
   CONDITION_OTP_SEND,
   ROLE_USER,
@@ -98,13 +98,13 @@ export default function EnterOtpClient() {
       const res = await verifyOtpApi({ email, otp: code });
 
       if (res?.status) {
-        toast.success(MSG_OTP_VERIFIED);
+        toast.success(TOAST_SUCCESS_MSG_OTP_VERIFIED);
         router.push(ui.redirect);
       } else {
-        toast.error(res?.message || MSG_OTP_INVALID);
+        toast.error(res?.message || TOAST_ERROR_MSG_OTP_INVALID);
       }
     } catch {
-      toast.error(MSG_GENERIC_ERROR);
+      toast.error(TOAST_ERROR_MSG_GENERIC_ERROR);
     } finally {
       setLoading(false); 
     }
@@ -118,12 +118,12 @@ export default function EnterOtpClient() {
       const res = await resendOtpApi({ email });
 
       if (res?.status) {
-        toast.success(MSG_NEW_OTP_SEND);
+        toast.success(TOAST_SUCCESS_MSG_NEW_OTP_SEND );
       } else {
-        toast.error(res?.message || MSG_NEW_OTP_FAILED_TO_SEND);
+        toast.error(res?.message || TOAST_ERROR_MSG_NEW_OTP_FAILED_TO_SEND);
       }
     } catch {
-      toast.error(MSG_GENERIC_ERROR);
+      toast.error(TOAST_ERROR_MSG_GENERIC_ERROR);
     } finally {
       setResendLoading(false);
     }

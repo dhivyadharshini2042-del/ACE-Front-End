@@ -9,6 +9,7 @@ import { getOrganizerRankingApi } from "../../lib/api/organizer.api";
 import toast from "react-hot-toast";
 import { useLoading } from "../../context/LoadingContext";
 import TopThreeBoard from "../../components/global/Leaderboard/TopThreeBoard";
+import { TOAST_ERROR_MSG_SOMETHING_WENT_WRONG,TOAST_ERROR_MSG_LEADERBOARD_LOAD_FAILED } from "../../const-value/config-message/page";
 
 export default function LeaderboardPage() {
   const [rankingType, setRankingType] = useState("monthly");
@@ -39,10 +40,10 @@ export default function LeaderboardPage() {
         setRankingData(data || []);
         setPagination(res.data.pagination);
       } else {
-        toast.error("Failed to load leaderboard");
+        toast.error(TOAST_ERROR_MSG_LEADERBOARD_LOAD_FAILED);
       }
     } catch {
-      toast.error("Something went wrong");
+      toast.error(TOAST_ERROR_MSG_SOMETHING_WENT_WRONG);
     } finally {
       setLoading(false);
     }

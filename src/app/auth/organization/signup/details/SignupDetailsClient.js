@@ -21,20 +21,19 @@ import {
   LABEL_LOADING,
   LABEL_LOADING_STATES,
   LABEL_LOADING_CITIES,
-  MSG_ERR_FILL_ALL_FIELDS,
+  TOAST_ERROR_MSG_FILL_ALL_FIELDS,
   MSG_ORG_SELECT_COUNTRY,
   MSG_ORG_SELECT_STATE,
   PH_ORG_ORGANIZATION_NAME,
   TEXT_NO_ACCOUNT,
   TEXT_SIGNIN,
-  TITLE_ALREADY_HAVE_ACCOUNT
+  TITLE_ALREADY_HAVE_ACCOUNT,
 } from "../../../../../const-value/config-message/page";
 import {
   ORG_CATEGORY,
   CONTACT_ICON,
   TICK_ICON,
 } from "../../../../../const-value/config-icons/page";
-
 
 import {
   getCountries,
@@ -43,6 +42,7 @@ import {
 } from "../../../../../lib/location.api";
 
 import { useLoading } from "../../../../../context/LoadingContext";
+import { NAME_REGEX } from "../../../../../components/validation";
 
 export default function Page() {
   const router = useRouter();
@@ -63,6 +63,8 @@ export default function Page() {
   const [loadingCountry, setLoadingCountry] = useState(false);
   const [loadingState, setLoadingState] = useState(false);
   const [loadingCity, setLoadingCity] = useState(false);
+  const [orgNameError, setOrgNameError] = useState("");
+  const [customCity, setCustomCity] = useState("");
 
   /* LOAD COUNTRIES */
   useEffect(() => {
@@ -127,25 +129,33 @@ export default function Page() {
     load();
   }, [stateName]);
 
-  /* CONTINUE */
+  const handleOrgNameChange = (e) => {
+    const value = e.target.value;
+    setOrgName(value);
+
+    if (!value) {
+      setOrgNameError("Organization name is required");
+    } else if (!NAME_REGEX.test(value)) {
+      setOrgNameError(
+        "Organization name must contain only letters and spaces (2–50 characters)",
+      );
+    } else {
+      setOrgNameError("");
+    }
+  };
+
   function onContinue(e) {
     e.preventDefault();
 
+    const finalCity = cities.length > 0 ? city : customCity;
+
     if (!country || !stateName || !city || !orgName) {
-      return toast.error(MSG_ERR_FILL_ALL_FIELDS);
+      return toast.error(TOAST_ERROR_MSG_FILL_ALL_FIELDS);
     }
 
-    try {
-      setLoading(true);
-
-      router.push(
-        `/auth/organization/signup/account?cat=${category}&country=${country}&state=${stateName}&city=${city}&orgName=${orgName}`,
-      );
-    } catch (err) {
-      console.error("Navigation error", err);
-    } finally {
-      setLoading(false);
-    }
+    router.push(
+      `/auth/organization/signup/account?cat=${category}&country=${country}&state=${stateName}&city=${finalCity}&orgName=${orgName}`,
+    );
   }
 
   return (
@@ -194,83 +204,106 @@ export default function Page() {
             {/* COUNTRY */}
             <div className="form-group">
               <label className="form-label">{LABEL_ORG_COUNTRY}</label>
-              <select
-                className="form-control"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-              >
-                <option value="">
-                  {loadingCountry ? LABEL_LOADING : LABEL_ORG_SELECT_COUNTRY}
-                </option>
-                {countries.map((c) => (
-                  <option key={c.identity} value={c.identity}>
-                    {c.name}
+              <div className="select-wrapper">
+                <select
+                  className="form-control custom-select"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                >
+                  <option value="">
+                    {loadingCountry ? LABEL_LOADING : LABEL_ORG_SELECT_COUNTRY}
                   </option>
-                ))}
-              </select>
+                  {countries.map((c) => (
+                    <option key={c.identity} value={c.identity}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* STATE */}
             <div className="form-group">
               <label className="form-label">{LABEL_ORG_STATE}</label>
-              <select
-                className="form-control"
-                value={stateName}
-                onChange={(e) => {
-                  setStateName(e.target.value);
-                  setCity("");
-                }}
-              >
-                <option value="">
-                  {!country
-                    ? MSG_ORG_SELECT_COUNTRY
-                    : loadingState
-                      ? LABEL_LOADING_STATES
-                      : LABEL_ORG_SELECT_STATE}
-                </option>
-                {states.map((s) => (
-                  <option key={s.identity} value={s.identity}>
-                    {s.name}
+              <div className="select-wrapper">
+                <select
+                  className="form-control custom-select"
+                  value={stateName}
+                  onChange={(e) => {
+                    setStateName(e.target.value);
+                    setCity("");
+                  }}
+                >
+                  <option value="">
+                    {!country
+                      ? MSG_ORG_SELECT_COUNTRY
+                      : loadingState
+                        ? LABEL_LOADING_STATES
+                        : LABEL_ORG_SELECT_STATE}
                   </option>
-                ))}
-              </select>
+                  {states.map((s) => (
+                    <option key={s.identity} value={s.identity}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* CITY */}
             <div className="form-group">
               <label className="form-label">{LABEL_ORG_CITY}</label>
-              <select
-                className="form-control"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-              >
-                <option value="">
-                  {!stateName
-                    ? MSG_ORG_SELECT_STATE
-                    : loadingCity
-                      ? LABEL_LOADING_CITIES
-                      : LABEL_ORG_SELECT_CITY}
-                </option>
-                {cities.map((ct) => (
-                  <option key={ct.identity} value={ct.identity}>
-                    {ct.name}
-                  </option>
-                ))}
-              </select>
+
+              {/* If cities available → Show dropdown */}
+              {cities.length > 0 ? (
+                <div className="select-wrapper">
+                  <select
+                    className="form-control custom-select"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  >
+                    <option value="">
+                      {!stateName
+                        ? MSG_ORG_SELECT_STATE
+                        : loadingCity
+                          ? LABEL_LOADING_CITIES
+                          : LABEL_ORG_SELECT_CITY}
+                    </option>
+
+                    {cities.map((ct) => (
+                      <option key={ct.identity} value={ct.name}>
+                        {ct.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : (
+                /* If no cities → Show input */
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Enter your city"
+                  value={customCity}
+                  onChange={(e) => setCustomCity(e.target.value)}
+                />
+              )}
             </div>
 
             {/* ORG NAME */}
             <div className="form-group">
               <label className="form-label">{LABEL_ORG_NAME}</label>
-              <input
-                className="form-control"
-                value={orgName}
-                onChange={(e) => setOrgName(e.target.value)}
-                placeholder={PH_ORG_ORGANIZATION_NAME}
-                minLength={3}
-                required
 
+              <input
+                className={`form-control ${orgNameError ? "is-invalid" : ""}`}
+                value={orgName}
+                onChange={handleOrgNameChange}
+                placeholder={PH_ORG_ORGANIZATION_NAME}
+                required
               />
+
+              {orgNameError && (
+                <div className="invalid-feedback">{orgNameError}</div>
+              )}
             </div>
 
             <div className="org-actions">
@@ -282,7 +315,10 @@ export default function Page() {
           <div className="text-center mt-3">
             <small>
               {TITLE_ALREADY_HAVE_ACCOUNT}{" "}
-              <a href="/auth/organization/login" className="text-primary fw-bold">
+              <a
+                href="/auth/organization/login"
+                className="text-primary fw-bold"
+              >
                 {TEXT_SIGNIN}
               </a>
             </small>

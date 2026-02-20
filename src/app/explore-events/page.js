@@ -17,6 +17,7 @@ import {
 } from "../../lib/api/event.api";
 
 import { useLoading } from "../../context/LoadingContext";
+import { TOAST_ERROR_MSG_SOMETHING_WENT_WRONG, TOAST_ERROR_MSG_EVENTS_LOAD_FAILED } from "../../const-value/config-message/page";
 
 export default function ExploreEventsPage() {
   const { setLoading } = useLoading();
@@ -63,11 +64,11 @@ export default function ExploreEventsPage() {
           [type]: prev[type] + 5,
         }));
       } else {
-        toast.error(res?.message || "Failed to load events");
+        toast.error(res?.message || TOAST_ERROR_MSG_EVENTS_LOAD_FAILED);
       }
     } catch (err) {
       console.error(err);
-      toast.error("Something went wrong");
+      toast.error(TOAST_ERROR_MSG_SOMETHING_WENT_WRONG);
     } finally {
       setLoading(false);
     }

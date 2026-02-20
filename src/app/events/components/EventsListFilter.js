@@ -17,7 +17,7 @@ import { likeEventApi, saveEventApi } from "../../../lib/api/event.api";
 // 🔐 SESSION AUTH
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
-import { NO_IMAGE_FOUND_IMAGE } from "../../../const-value/config-message/page";
+import { NO_IMAGE_FOUND_IMAGE , TOAST_ERROR_MSG_LIKE_UPDATE_FAILED, TOAST_ERROR_MSG_SAVE_UPDATE_FAILED} from "../../../const-value/config-message/page";
 import "../EventsModernCard.css";
 
 const categoryColorMap = {
@@ -116,7 +116,7 @@ export default function EventsListFilter({ events = [] }) {
         [eventId]: prev[eventId],
       }));
 
-      toast.error("Failed to update like");
+      toast.error(TOAST_ERROR_MSG_LIKE_UPDATE_FAILED);
     }
   };
 
@@ -149,7 +149,7 @@ export default function EventsListFilter({ events = [] }) {
         [eventId]: wasSaved,
       }));
 
-      toast.error("Failed to update save");
+      toast.error(TOAST_ERROR_MSG_SAVE_UPDATE_FAILED);
     }
   };
 

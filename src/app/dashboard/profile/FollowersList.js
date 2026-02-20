@@ -7,6 +7,7 @@ import { useLoading } from "../../../context/LoadingContext";
 import EmptyState from "../../../components/global/EmptyState/EmptyState";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { TOAST_ERROR_MSG_LOAD_FOLLOWERS_FAILED,TOAST_SUCCESS_REMOVE } from "../../../const-value/config-message/page";
 
 export default function FollowersList() {
   const { setLoading } = useLoading();
@@ -25,7 +26,7 @@ export default function FollowersList() {
         }
       } catch (err) {
         console.error(err);
-        toast.error("Failed to load followers");
+        toast.error(TOAST_ERROR_MSG_LOAD_FOLLOWERS_FAILED);
       } finally {
         setLoading(false);
       }
@@ -44,7 +45,7 @@ export default function FollowersList() {
       )
     );
 
-    toast.success("Removed successfully");
+    toast.success(TOAST_SUCCESS_REMOVE);
   };
 
   /* ================= CARD CLICK ================= */

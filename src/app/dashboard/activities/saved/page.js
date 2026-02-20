@@ -15,6 +15,7 @@ import {
 } from "../../../../const-value/config-icons/page";
 
 import { useLoading } from "../../../../context/LoadingContext";
+import { TOAST_ERROR_MSG_SOMETHING_WENT_WRONG, TOAST_ERROR_MSG_SAVED_EVENTS_LOAD_FAILED } from "../../../../const-value/config-message/page";
 
 // 🔐 SESSION AUTH
 import { getAuthFromSession, isUserLoggedIn } from "../../../../lib/auth";
@@ -58,11 +59,11 @@ export default function SavedEventsPage() {
       if (res?.status) {
         setEvents(res.data?.events || []);
       } else {
-        toast.error(res?.message || "Failed to load saved events");
+        toast.error(res?.message || TOAST_ERROR_MSG_SAVED_EVENTS_LOAD_FAILED);
         setEvents([]);
       }
     } catch {
-      toast.error("Something went wrong");
+      toast.error(TOAST_ERROR_MSG_SOMETHING_WENT_WRONG);
       setEvents([]);
     } finally {
       setLocalLoading(false);

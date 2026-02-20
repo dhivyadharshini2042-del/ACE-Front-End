@@ -22,6 +22,9 @@ import ConfirmModal from "../../../../../components/ui/Modal/ConfirmModal";
 import { processImage } from "../../../../../lib/utils/imageProcessor";
 import { ticketSchema } from "../../../../../components/validation";
 import toast from "react-hot-toast";
+import { TOAST_ERROR_MSG_ONLY_IMAGE_FILES_ALLOWED,
+  TOAST_ERROR_MSG_MAX_4_IMAGES_ALLOWED, 
+  TOAST_ERROR_MSG_INVALID_TICKET_DATA } from "../../../../../const-value/config-message/page";
 
 export default function MediaTickets({
   data,
@@ -69,7 +72,7 @@ export default function MediaTickets({
     for (let file of files) {
       // image type check
       if (!file.type.startsWith("image/")) {
-        toast.error("Only image files allowed");
+        toast.error(TOAST_ERROR_MSG_ONLY_IMAGE_FILES_ALLOWED);
         continue;
       }
 
@@ -78,7 +81,7 @@ export default function MediaTickets({
 
       //max 4 images limit
       if (updatedImages.length >= 4) {
-        toast.error("Maximum 4 images allowed");
+        toast.error(TOAST_ERROR_MSG_MAX_4_IMAGES_ALLOWED);
         break;
       }
 
@@ -199,7 +202,7 @@ export default function MediaTickets({
       setOpenTicketModal(false);
       setEditingIndex(null);
     } catch (err) {
-      toast.error(err?.errors?.[0] || "Invalid ticket data");
+      toast.error(err?.errors?.[0] || TOAST_ERROR_MSG_INVALID_TICKET_DATA);
     }
   };
 
