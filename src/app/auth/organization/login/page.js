@@ -36,9 +36,9 @@ import {
   TEXT_SIGNIN,
   TEXT_NO_ACCOUNT,
   TEXT_SIGNUP,
-  MSG_INVALID_CREDENTIALS,
-  MSG_LOGIN_SUCCESS_ORGANIZER,
-  MSG_LOGIN_FAILED,
+  TOAST_ERROR_MSG_INVALID_CREDENTIALS,
+  TOAST_SUCCESS_MSG_LOGIN_SUCCESS_ORGANIZER,
+  TOAST_ERROR_MSG_LOGIN_FAILED,
 } from "../../../../const-value/config-message/page";
 
 import { useLoading } from "../../../../context/LoadingContext";
@@ -78,7 +78,7 @@ export default function OrganizerLoginPage() {
       console.log("res", res);
       // failure
       if (!res?.status || !res?.token) {
-        toast.error(res?.message || MSG_INVALID_CREDENTIALS);
+        toast.error(res?.message || TOAST_ERROR_MSG_INVALID_CREDENTIALS);
         return;
       }
 
@@ -86,11 +86,11 @@ export default function OrganizerLoginPage() {
       setAuthCookie(res.token, res.data, ROLE_ORGANIZER);
 
       // success
-      toast.success(MSG_LOGIN_SUCCESS_ORGANIZER);
+      toast.success(TOAST_SUCCESS_MSG_LOGIN_SUCCESS_ORGANIZER);
       router.push("/dashboard");
       // router.push("/auth/role-select");
     } catch (err) {
-      toast.error(MSG_LOGIN_FAILED);
+      toast.error(TOAST_ERROR_MSG_LOGIN_FAILED);
     } finally {
       setLoading(false);
     }

@@ -28,11 +28,11 @@ import {
   TEXT_FORGOT_PASSWORD,
   TEXT_NO_ACCOUNT,
   ROLE_USER,
-  MSG_LOGIN_SUCCESS_USER,
-  MSG_LOGIN_FAILED,
+  TOAST_SUCCESS_MSG_LOGIN_SUCCESS_USER,
+  TOAST_ERROR_MSG_LOGIN_FAILED,
   PH_USER_EMAIL,
-  MSG_GOOGLE_LOGIN_FAILED,
-  MSG_GOOGLE_LOGIN_SUCCESS_USER,
+  TOAST_ERROR_MSG_GOOGLE_LOGIN_FAILED,
+  TOAST_SUCCESS_MSG_GOOGLE_LOGIN_SUCCESS_USER,
 } from "../../../../const-value/config-message/page";
 
 import { loginApi, googleAuthLoginApi } from "../../../../lib/api/auth.api";
@@ -68,7 +68,7 @@ export default function UserLoginPage() {
       const res = await loginApi(form);
 
       if (!res?.status || !res?.data) {
-        toast.error(res?.message || MSG_LOGIN_FAILED);
+        toast.error(res?.message || TOAST_ERROR_MSG_LOGIN_FAILED);
         return;
       }
 
@@ -79,10 +79,10 @@ export default function UserLoginPage() {
         ROLE_USER,
       );
 
-      toast.success(MSG_LOGIN_SUCCESS_USER);
+      toast.success(TOAST_SUCCESS_MSG_LOGIN_SUCCESS_USER);
       router.push("/");
     } catch (err) {
-      toast.error(MSG_LOGIN_FAILED);
+      toast.error(TOAST_ERROR_MSG_LOGIN_FAILED);
     } finally {
       setLoading(false);
     }
@@ -98,7 +98,7 @@ export default function UserLoginPage() {
       const res = await googleAuthLoginApi({ googleToken });
 
       if (!res?.status) {
-        toast.error(MSG_GOOGLE_LOGIN_FAILED);
+        toast.error(TOAST_ERROR_MSG_GOOGLE_LOGIN_FAILED);
         return;
       }
 
@@ -108,10 +108,10 @@ export default function UserLoginPage() {
         ROLE_USER,
       );
 
-      toast.success(MSG_GOOGLE_LOGIN_SUCCESS_USER);
+      toast.success(TOAST_SUCCESS_MSG_GOOGLE_LOGIN_SUCCESS_USER);
       router.push("/");
     } catch (err) {
-      toast.error(MSG_GOOGLE_LOGIN_FAILED);
+      toast.error(TOAST_ERROR_MSG_GOOGLE_LOGIN_FAILED);
     } finally {
       setLoading(false);
     }
@@ -197,7 +197,7 @@ export default function UserLoginPage() {
             <div className="google-wrap">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
-                onError={() => toast.error(MSG_GOOGLE_LOGIN_FAILED)}
+                onError={() => toast.error(TOAST_ERROR_MSG_GOOGLE_LOGIN_FAILED)}
               />
             </div>
 

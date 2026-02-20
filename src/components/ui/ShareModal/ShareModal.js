@@ -11,6 +11,8 @@ import {
   YOUTUBEICON,
 } from "../../../const-value/config-icons/page";
 
+import { TOAST_SUCCESS_OPENING_WHATSAPP,TOAST_ERROR_MSG_SHARE_OPTION_NOT_CONFIGURED, TOAST_SUCCESS_EVENT_LINK_COPIED, TOAST_SUCCESS_OPENING_YOUTUBE_CHANNEL, TOAST_SUCCESS_OPENING_X_TWITTER, TOAST_SUCCESS_OPENING_LINKEDIN, TOAST_SUCCESS_OPENING_INSTAGRAM  } from "../../../const-value/config-message/page";
+
 export default function ShareModal({ open, onClose, title }) {
   if (!open) return null;
 
@@ -35,7 +37,7 @@ export default function ShareModal({ open, onClose, title }) {
           )}`,
           "_blank"
         );
-        toast.success("Opening WhatsApp…");
+        toast.success(TOAST_SUCCESS_OPENING_WHATSAPP);
         break;
 
       case "x":
@@ -45,7 +47,7 @@ export default function ShareModal({ open, onClose, title }) {
           )}&url=${encodeURIComponent(shareUrl)}`,
           "_blank"
         );
-        toast.success("Opening X (Twitter)…");
+        toast.success(TOAST_SUCCESS_OPENING_X_TWITTER);
         break;
 
       case "linkedin":
@@ -53,26 +55,26 @@ export default function ShareModal({ open, onClose, title }) {
           `${LINKEDIN_SHARE}/?url=${encodeURIComponent(shareUrl)}`,
           "_blank"
         );
-        toast.success("Opening LinkedIn…");
+        toast.success(TOAST_SUCCESS_OPENING_LINKEDIN);
         break;
 
       case "instagram":
         window.open(INSTAGRAM_URL, "_blank");
-        toast.success("Opening Instagram page…");
+        toast.success(TOAST_SUCCESS_OPENING_INSTAGRAM );
         break;
 
       case "youtube":
         window.open(YOUTUBE_URL, "_blank");
-        toast.success("Opening YouTube channel…");
+        toast.success(TOAST_SUCCESS_OPENING_YOUTUBE_CHANNEL);
         break;
 
       case "copy":
         navigator.clipboard.writeText(shareUrl);
-        toast.success("Event link copied 🔗");
+        toast.success(TOAST_SUCCESS_EVENT_LINK_COPIED);
         break;
 
       default:
-        toast.error("Share option not configured");
+        toast.error(TOAST_ERROR_MSG_SHARE_OPTION_NOT_CONFIGURED);
         break;
     }
 

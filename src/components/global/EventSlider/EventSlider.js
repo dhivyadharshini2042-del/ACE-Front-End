@@ -21,7 +21,9 @@ import { likeEventApi, saveEventApi } from "../../../lib/api/event.api";
 /* 🔐 SESSION AUTH */
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import ConfirmModal from "../../ui/Modal/ConfirmModal";
-import { NO_IMAGE_FOUND_IMAGE } from "../../../const-value/config-message/page";
+import { NO_IMAGE_FOUND_IMAGE ,
+  TOAST_ERROR_MSG_EVENT_SAVE_FAILED,
+  TOAST_ERROR_MSG_LIKE_UPDATE_FAILED} from "../../../const-value/config-message/page";
 import Tooltip from "../../ui/Tooltip/Tooltip";
 
 /* ================= HELPER ================= */
@@ -180,7 +182,7 @@ export default function EventSlider({
         [eventId]: prev[eventId],
       }));
 
-      toast.error("Failed to update like");
+      toast.error(TOAST_ERROR_MSG_LIKE_UPDATE_FAILED);
     }
   };
 
@@ -213,7 +215,7 @@ export default function EventSlider({
         [eventId]: wasSaved,
       }));
 
-      toast.error("Failed to save event");
+      toast.error(TOAST_ERROR_MSG_EVENT_SAVE_FAILED);
     }
   };
 
