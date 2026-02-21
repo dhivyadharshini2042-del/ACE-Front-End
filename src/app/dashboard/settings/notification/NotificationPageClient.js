@@ -1,71 +1,115 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Notification.module.css";
 import { MdEmail } from "react-icons/md";
 import { IoNotificationsOutline } from "react-icons/io5";
+import { toast } from "react-hot-toast";
+import {
+  updateNotificationPreferencesApi,
+  getNotificationPreferencesApi,
+} from "../../../../lib/api";
 
-/**
- * NotificationPageClient
- * ----------------------
- * Manages user notification preferences
- * for email and WhatsApp alerts related to event updates.
- */
 export default function NotificationPageClient() {
-  // Notification toggle states
+  const [emailNotify, setEmailNotify] = useState(false);
+  const [pushNotify, setPushNotify] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Email notifications
-  const [emailNotify, setEmailNotify] = useState(true);
-  // WhatsApp notifications
-  const [whatsappNotify, setWhatsappNotify] = useState(false);
+  /* ================= LOAD CURRENT PREFERENCES ================= */
+  useEffect(() => {
+    fetchPreferences();
+  }, []);
+
+  const fetchPreferences = async () => {
+    try {
+      setLoading(true);
+
+      const res = await getNotificationPreferencesApi();
+
+      if (!res?.status) return;
+
+      setEmailNotify(res.data.emailEnabled);
+      setPushNotify(res.data.pushEnabled);
+
+    } catch (err) {
+      toast.error("Failed to load preferences");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* ================= UPDATE FUNCTION ================= */
+  const handleUpdate = async (newEmail, newPush) => {
+    try {
+      setLoading(true);
+
+      const res = await updateNotificationPreferencesApi({
+        emailEnabled: newEmail,
+        pushEnabled: newPush,
+      });
+
+      if (!res?.status) {
+        toast.error("Update failed");
+        return;
+      }
+
+      toast.success("Preferences updated");
+    } catch (err) {
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={styles.wrapper}>
       <h2 className={styles.heading}>Notification</h2>
 
-      {/* ================= EMAIL NOTIFICATION ================= */}
+      {/* EMAIL */}
       <div className={styles.card}>
         <div className={styles.left}>
-          {/* Email icon */}
           <MdEmail className={styles.icon} />
           <div>
             <h4>Email Notification</h4>
-            <p>
-              Stay updated with event alerts directly in your inbox.
-            </p>
+            <p>Stay updated with event alerts directly in your inbox.</p>
           </div>
         </div>
 
-        {/* Toggle switch */}
         <label className={styles.switch}>
           <input
             type="checkbox"
             checked={emailNotify}
-            onChange={() => setEmailNotify(!emailNotify)}
+            disabled={loading}
+            onChange={async () => {
+              const newValue = !emailNotify;
+              setEmailNotify(newValue);
+              await handleUpdate(newValue, pushNotify);
+            }}
           />
           <span className={styles.slider}></span>
         </label>
       </div>
 
-      {/* ================= WHATSAPP NOTIFICATION ================= */}
+      {/* PUSH */}
       <div className={styles.card}>
         <div className={styles.left}>
-          {/* Notification icon */}
           <IoNotificationsOutline className={styles.icon} />
           <div>
-            <h4>WhatsApp Notification</h4>
-            <p>
-              Stay updated with event alerts directly in your chat.
-            </p>
+            <h4>App Notification</h4>
+            <p>Stay updated with event alerts directly on your device.</p>
           </div>
         </div>
 
-        {/* Toggle switch */}
         <label className={styles.switch}>
           <input
             type="checkbox"
-            checked={whatsappNotify}
-            onChange={() => setWhatsappNotify(!whatsappNotify)}
+            checked={pushNotify}
+            disabled={loading}
+            onChange={async () => {
+              const newValue = !pushNotify;
+              setPushNotify(newValue);
+              await handleUpdate(emailNotify, newValue);
+            }}
           />
           <span className={styles.slider}></span>
         </label>

@@ -9,7 +9,10 @@ import { SEARCH_ICON } from "../../../const-value/config-icons/page";
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import { getUserProfileApi } from "../../../lib/api/user.api";
 import { getOrganizationProfileApi } from "../../../lib/api/organizer.api";
+import { getNotificationsApi } from "../../../lib/api";
 import Tooltip from "../../ui/Tooltip/Tooltip";
+import { markAsOneReadApi } from "../../../lib/api";
+import { markAsAllReadApi } from "../../../lib/api";
 
 export default function NavbarClient() {
   const router = useRouter();
@@ -20,25 +23,28 @@ export default function NavbarClient() {
   const [profileImage, setProfileImage] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [displayName, setDisplayName] = useState("");
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     const handler = (event) => {
       const payload = event.detail;
 
       const newNotification = {
+        identity: crypto.randomUUID(),
         title: payload.notification?.title,
         body: payload.notification?.body,
-        time: new Date().toLocaleTimeString(),
+        imageUrl: payload.notification?.image,
+        actionUrl: payload.data?.actionUrl,
+        isRead: false,
+        createdAt: new Date().toISOString(),
       };
 
       setNotifications((prev) => [newNotification, ...prev]);
+      setUnreadCount((prev) => prev + 1);
     };
 
     window.addEventListener("ace-notification", handler);
-
-    return () => {
-      window.removeEventListener("ace-notification", handler);
-    };
+    return () => window.removeEventListener("ace-notification", handler);
   }, []);
 
   /* ================= SESSION INIT ================= */
@@ -58,7 +64,7 @@ export default function NavbarClient() {
     }
   }, []);
 
-  /* ================= LOAD PROFILE IMAGE ================= */
+  /* ================= LOAD PROFILE ================= */
   useEffect(() => {
     async function loadProfile() {
       if (!isLoggedIn || !auth?.identity || !auth?.type) return;
@@ -80,10 +86,8 @@ export default function NavbarClient() {
             res.data.bannerImages?.[0] ||
             null;
 
-          if (image) {
-            setProfileImage(image);
-          }
-          
+          if (image) setProfileImage(image);
+
           const name =
             res.data.organizationName ||
             res.data.fullName ||
@@ -93,134 +97,219 @@ export default function NavbarClient() {
           setDisplayName(name);
         }
       } catch {
-        // silent fail
+        // silent
       }
     }
 
     loadProfile();
   }, [isLoggedIn, auth]);
 
+  /* ================= LOAD NOTIFICATIONS ================= */
+  useEffect(() => {
+    async function loadNotifications() {
+      if (!isLoggedIn) return;
+
+      try {
+        const res = await getNotificationsApi(1, 20);
+
+        if (res?.status) {
+          setNotifications(res.data || []);
+          setUnreadCount(res.unreadCount || 0);
+        }
+      } catch {
+        console.log("Notification load failed");
+      }
+    }
+
+    loadNotifications();
+  }, [isLoggedIn]);
+
+  const handleNotificationClick = async (notification) => {
+    try {
+      // 🔹 1. Mark as read (if needed)
+      if (!notification.isRead) {
+        await markAsOneReadApi(notification.identity);
+
+        setNotifications((prev) =>
+          prev.map((n) =>
+            n.identity === notification.identity ? { ...n, isRead: true } : n,
+          ),
+        );
+
+        setUnreadCount((prev) => (prev > 0 ? prev - 1 : 0));
+      }
+
+      // 🔹 2. Safe Redirect Logic
+      if (notification.actionUrl) {
+        let path = notification.actionUrl;
+
+        // If full URL → extract only pathname
+        if (path.startsWith("http")) {
+          try {
+            const parsed = new URL(path);
+            path = parsed.pathname;
+          } catch {
+            console.log("Invalid URL format");
+          }
+        }
+
+        // Small timeout to avoid dropdown conflict
+        setTimeout(() => {
+          router.push(path);
+        }, 100);
+      }
+    } catch (err) {
+      console.log("Notification click failed", err);
+    }
+  };
+
+  const handleMarkAllRead = async () => {
+    try {
+      await markAsAllReadApi();
+
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+
+      setUnreadCount(0);
+    } catch (err) {
+      console.log("Mark all read failed");
+    }
+  };
+
+  console.log("notifications");
+
   return (
-    <Navbar expand="md" sticky="top" className="ace-navbar">
+    <Navbar expand="lg" sticky="top" className="ace-navbar">
       <Container fluid className="nav-wrapper">
-        {/* LOGO */}
-        <Navbar.Brand onClick={() => router.push("/")} className="logo-pointer">
-          <img src="/images/logo.png" height="38" alt="ACE" />
-        </Navbar.Brand>
-
-        <Navbar.Toggle />
-        <Navbar.Collapse>
-          <div className="nav-content">
-            {/* CENTER */}
-            <div className="nav-center">
-              <Nav className="gap-5">
-                <Nav.Link onClick={() => router.push("/events")}>
-                  All Events
-                </Nav.Link>
-                <Nav.Link onClick={() => router.push("/leaderboard")}>
-                  Top Organizations
-                </Nav.Link>
-              </Nav>
-
-              <div className="search-box">
-                <span className="search-icon">{SEARCH_ICON}</span>
-                <input type="text" placeholder="Search anything" />
-                <span className="search-icon">X</span>
-              </div>
-
-              {/* {isLoggedIn && (
-                <button className="icon-circle outline">📍</button>
-              )} */}
-
-              {/* ---------- CREATE EVENT LOGIC FIX ---------- */}
-              {!isLoggedIn && (
-                <button
-                  className="btn-primary non-pill"
-                  onClick={() => router.push("/auth/organization/login")}
-                >
-                  Create Event
-                </button>
-              )}
-
-              {isLoggedIn && auth?.type === "org" && (
-                <button
-                  className="btn-primary pill"
-                  onClick={() => router.push("/dashboard/space/create")}
-                >
-                  Create Event
-                </button>
-              )}
-
-              {!isLoggedIn && (
-                <button
-                  className="btn-primary pill"
-                  onClick={() => router.push("/auth/user/login")}
-                >
-                  Sign In
-                </button>
-              )}
-            </div>
-
-            {/* RIGHT */}
-            <div className="nav-right">
-              {isLoggedIn && (
-                <Dropdown align="end">
-                  <Dropdown.Toggle as="div" className="icon-circle">
-                    🔔
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu className="notification-panel">
-                    <div className="notification-header">
-                      <h6>Notifications</h6>
-                      <span
-                        className="view-all"
-                        onClick={() =>
-                          router.push("/dashboard/settings/notification")
-                        }
-                      >
-                        View All
-                      </span>
-                    </div>
-
-                    {notifications.length === 0 ? (
-                      <div className="notification-empty">No notifications</div>
-                    ) : (
-                      notifications.slice(0, 5).map((n, i) => (
-                        <div key={i} className="notification-item">
-                          <strong>{n.title}</strong>
-                          <p>{n.body}</p>
-                          <small>{n.time}</small>
-                        </div>
-                      ))
-                    )}
-                  </Dropdown.Menu>
-                </Dropdown>
-              )}
-
-              {/* PROFILE IMAGE / LETTER */}
-              {isLoggedIn && (
-                <Tooltip text={displayName || "My Profile"} position="bottom">
-                  {profileImage ? (
-                    <img
-                      src={profileImage}
-                      className="profile-img"
-                      alt="profile"
-                      onClick={() => router.push("/dashboard")}
-                      onError={() => setProfileImage(null)}
-                    />
-                  ) : (
-                    <div
-                      className="profile-img letter-avatar"
-                      onClick={() => router.push("/dashboard")}
-                    >
-                      {initial}
-                    </div>
-                  )}
-                </Tooltip>
-              )}
-            </div>
+        <div className="nav-content">
+          {/* LEFT */}
+          <div className="nav-left">
+            <Navbar.Brand
+              onClick={() => router.push("/")}
+              className="logo-pointer"
+            >
+              <img src="/images/logo.png" height="38" alt="ACE" />
+            </Navbar.Brand>
           </div>
-        </Navbar.Collapse>
+
+          {/* CENTER */}
+          <div className="nav-center">
+            <Nav className="nav-links ">
+              <Nav.Link onClick={() => router.push("/events")}>Events</Nav.Link>
+              <Nav.Link onClick={() => router.push("/leaderboard")}>
+                Organizations
+              </Nav.Link>
+            </Nav>
+
+            <div className="search-box">
+              <span className="search-icon">{SEARCH_ICON}</span>
+              <input type="text" placeholder="Search events..." />
+            </div>
+
+            {!isLoggedIn && (
+              <button
+                className="btn-primary non-pill"
+                onClick={() => router.push("/auth/organization/login")}
+              >
+                Create Event
+              </button>
+            )}
+
+            {isLoggedIn && auth?.type === "org" && (
+              <button
+                className="btn-primary pill"
+                onClick={() => router.push("/dashboard/space/create")}
+              >
+                Create Event
+              </button>
+            )}
+
+            {!isLoggedIn && (
+              <button
+                className="btn-primary pill"
+                onClick={() => router.push("/auth/user/login")}
+              >
+                Sign In
+              </button>
+            )}
+          </div>
+
+          {/* RIGHT */}
+          <div className="nav-right">
+            {isLoggedIn && (
+              <Dropdown align="end">
+                <Dropdown.Toggle as="div" className="icon-circle">
+                  🔔
+                  {unreadCount > 0 && (
+                    <span className="notif-badge">
+                      {unreadCount > 99 ? "99+" : unreadCount}
+                    </span>
+                  )}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu className="notification-panel">
+                  <div className="notification-header">
+                    <h6>Notifications</h6>
+
+                    <div style={{ display: "flex", gap: "12px" }}>
+                      {unreadCount > 0 && (
+                        <span className="view-all" onClick={handleMarkAllRead}>
+                          Mark all read
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {notifications.map((n) => (
+                    <div
+                      key={n.identity}
+                      className={`notification-item ${n.isRead ? "read" : "unread"}`}
+                      onClick={() => handleNotificationClick(n)}
+                    >
+                      {n.imageUrl && (
+                        <img
+                          src={n.imageUrl}
+                          className="notif-avatar"
+                          alt="notif"
+                        />
+                      )}
+
+                      <div className="notif-text">
+                        <strong>{n.title}</strong>
+                        <p>{n.body}</p>
+                        <span className="notif-time">
+                          {typeof n.createdAt === "string"
+                            ? n.createdAt
+                            : new Date(n.createdAt).toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            )}
+
+            {isLoggedIn && (
+              <Tooltip text={displayName || "My Profile"} position="bottom">
+                {profileImage ? (
+                  <img
+                    src={profileImage}
+                    className="profile-img"
+                    alt="profile"
+                    onClick={() => router.push("/dashboard")}
+                    onError={() => setProfileImage(null)}
+                  />
+                ) : (
+                  <div
+                    className="profile-img letter-avatar"
+                    onClick={() => router.push("/dashboard")}
+                  >
+                    {initial}
+                  </div>
+                )}
+              </Tooltip>
+            )}
+          </div>
+        </div>
       </Container>
     </Navbar>
   );

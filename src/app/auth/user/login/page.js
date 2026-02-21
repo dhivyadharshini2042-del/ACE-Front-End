@@ -13,7 +13,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
 import { GoogleLogin } from "@react-oauth/google";
 
@@ -27,6 +26,7 @@ import {
 } from "../../../../const-value/config-icons/page";
 
 import { userLoginSchema } from "../../../../components/validation";
+import { requestPermission } from "../../../../lib/firebase/requestPermission";
 
 import {
   TITLE_USER_LOGIN,
@@ -50,6 +50,8 @@ import { loginApi, googleAuthLoginApi } from "../../../../lib/api/auth.api";
 
 import { useLoading } from "../../../../context/LoadingContext";
 import { setAuthCookie } from "../../../../lib/auth";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../../../store/authSlice";
 
 export default function UserLoginPage() {
   /**
@@ -57,7 +59,7 @@ export default function UserLoginPage() {
    */
   const router = useRouter();
   const { setLoading } = useLoading();
-
+  const dispatch = useDispatch();
   /**
    * Local UI State
    */
@@ -100,12 +102,18 @@ export default function UserLoginPage() {
         return;
       }
 
-      // CALL AUTH FUNCTION
-      setAuthCookie(
-        res.token,
-        res.data, 
-        ROLE_USER,
+      setAuthCookie(res.token, res.data, ROLE_USER);
+
+      // 🔥 UPDATE REDUX
+      dispatch(
+        loginSuccess({
+          data: res.data,
+          role: "user",
+        }),
       );
+
+      // 🔥 CALL FCM
+      await requestPermission();
 
       toast.success(MSG_LOGIN_SUCCESS_USER);
       router.push("/");
@@ -134,11 +142,16 @@ export default function UserLoginPage() {
         return;
       }
 
-      setAuthCookie(
-        res.token,
-        res.data, 
-        ROLE_USER,
+      setAuthCookie(res.token, res.data, ROLE_USER);
+
+      dispatch(
+        loginSuccess({
+          data: res.data,
+          role: "user",
+        }),
       );
+
+      await requestPermission();
 
       toast.success(MSG_GOOGLE_LOGIN_SUCCESS_USER);
       router.push("/");

@@ -29,6 +29,7 @@ import { setAuthCookie } from "../../../../lib/auth";
 
 /* VALIDATION */
 import { organizerLoginSchema } from "../../../../components/validation";
+import { requestPermission } from "../../../../lib/firebase/requestPermission";
 
 /* CONSTANTS */
 import {
@@ -51,11 +52,13 @@ import {
 } from "../../../../const-value/config-message/page";
 
 import { useLoading } from "../../../../context/LoadingContext";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../../../store/authSlice";
 
 export default function OrganizerLoginPage() {
   const router = useRouter();
   const { setLoading } = useLoading();
-
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
@@ -101,10 +104,19 @@ export default function OrganizerLoginPage() {
         return;
       }
 
-      // Persist authenticated session (token + user data)
       setAuthCookie(res.token, res.data, ROLE_ORGANIZER);
 
-      // Successful login flow
+      // 🔥 UPDATE REDUX
+      dispatch(
+        loginSuccess({
+          data: res.data,
+          role: "organizer",
+        }),
+      );
+
+      // 🔥 CALL FCM AFTER LOGIN
+      await requestPermission();
+
       toast.success(MSG_LOGIN_SUCCESS_ORGANIZER);
       router.push("/dashboard");
       // router.push("/auth/role-select");

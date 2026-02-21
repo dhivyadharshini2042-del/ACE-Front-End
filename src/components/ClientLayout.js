@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "./global/Navbar/Navbar";
-import { requestNotificationPermission } from "../lib/firebase/requestPermission";
 import { listenForegroundMessage } from "../lib/firebase/foregroundMessage";
+import { requestPermission } from "../lib/firebase/requestPermission";
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
@@ -16,7 +16,7 @@ export default function ClientLayout({ children }) {
 
   useEffect(() => {
     // Permission + token
-    requestNotificationPermission();
+    requestPermission();
     listenForegroundMessage(); 
 
     // FOREGROUND notification (APP OPEN)

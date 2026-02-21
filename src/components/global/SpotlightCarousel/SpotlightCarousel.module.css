@@ -1,13 +1,10 @@
-/* =========================
-   ROOT SECTION
-========================= */
+/* ========================= ROOT SECTION ========================= */
 .root {
   width: 100%;
+  box-sizing: border-box;
 }
 
-/* =========================
-   TITLE
-========================= */
+/* ========================= TITLE ========================= */
 .title {
   font-size: 26px;
   font-weight: 700;
@@ -17,9 +14,7 @@
   font-family: "BL Melody", sans-serif;
 }
 
-/* =========================
-   SLIDER
-========================= */
+/* ========================= SLIDER ========================= */
 .wrapper {
   width: 100%;
   overflow: hidden;
@@ -28,6 +23,7 @@
 .track {
   display: flex;
   transition: transform 0.8s ease;
+  will-change: transform; 
 }
 
 .slide {
@@ -39,13 +35,14 @@
   box-sizing: border-box;
   align-items: center;
   border-radius: 18px;
+  overflow: hidden;
 }
 
-/* =========================
-   LEFT IMAGE
-========================= */
+/* ========================= LEFT IMAGE ========================= */
 .left {
-  flex: 1;
+  flex: 1 1 45%;
+  min-width: 0;
+  cursor: pointer;
 }
 
 .image {
@@ -53,20 +50,18 @@
   height: 320px;
   border-radius: 16px;
   object-fit: cover;
+  display: block;
 }
 
-/* =========================
-   RIGHT CONTENT
-========================= */
+/* ========================= RIGHT CONTENT ========================= */
 .right {
-  flex: 1;
+  flex: 1 1 55%;
+  min-width: 0;
   display: flex;
   flex-direction: column;
 }
 
-/* =========================
-   HEADER
-========================= */
+/* ========================= HEADER ========================= */
 .header {
   display: flex;
   justify-content: space-between;
@@ -82,27 +77,27 @@
   text-overflow: ellipsis;
 }
 
-/* Share button circle */
 .share {
-  width: 42px;
-  height: 42px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
-  background: #e9d8ff;
+  background: transparent;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: 0.3s ease;
+  flex-shrink: 0;
+  padding: 0;
 }
 
 .share:hover {
-  background: #d6b8ff;
+  opacity: 0.85;
+  background: transparent;
 }
 
-/* =========================
-   BADGES
-========================= */
+/* ========================= BADGES ========================= */
 .badges {
   display: flex;
   gap: 10px;
@@ -118,30 +113,25 @@
   white-space: nowrap;
 }
 
-/* Conference */
 .conference {
   background: #fff3cd;
   color: #7a5c00;
   border: 1px solid #e6c200;
 }
 
-/* Online */
 .online {
   background: #e6f9ec;
   color: #1e7e34;
   border: 1px solid #28a745;
 }
 
-/* Offline */
 .offline {
   background: #f8f9fa;
   color: #495057;
   border: 1px solid #ced4da;
 }
 
-/* =========================
-   META INFO
-========================= */
+/* ========================= META INFO ========================= */
 .meta {
   margin-top: 14px;
 }
@@ -152,7 +142,6 @@
   gap: 8px;
   margin: 6px 0;
   font-size: 14px;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -162,18 +151,15 @@
   font-weight: 600;
 }
 
-/* =========================
-   COUNTDOWN
-========================= */
+/* ========================= COUNTDOWN ========================= */
 .countdown {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 12px;
   margin-top: 18px;
   align-items: center;
 }
 
-/* Circle wrapper */
 .circle {
   width: 65px;
   height: 65px;
@@ -182,9 +168,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
-/* Inner circle */
 .circleInner {
   width: 100%;
   height: 100%;
@@ -205,28 +191,28 @@
   margin-top: 2px;
 }
 
-/* =========================
-   CTA BUTTON
-========================= */
+/* ========================= CTA BUTTON ========================= */
 .cta {
   padding: 14px 28px;
   background: linear-gradient(90deg, #7f00ff, #a855f7);
   color: #ffffff;
   border-radius: 25px;
   font-weight: 600;
+  font-size: 15px;
   text-decoration: none;
   white-space: nowrap;
   transition: 0.3s ease;
-  margin-left: 10px;
+  margin-left: auto;
+  align-self: center;
+  cursor: pointer;
+  border: none;
 }
 
 .cta:hover {
   opacity: 0.9;
 }
 
-/* =========================
-   CONTROLS
-========================= */
+/* ========================= CONTROLS ========================= */
 .controls {
   display: flex;
   justify-content: center;
@@ -272,11 +258,11 @@
   transition: all 0.3s ease;
 }
 
-/* =========================
+/* =================================================================
    RESPONSIVE BREAKPOINTS
-========================= */
+   ================================================================= */
 
-/* Large tablets */
+/* ── Large tablets (≤ 1024px) ── */
 @media (max-width: 1024px) {
   .slide {
     gap: 30px;
@@ -287,11 +273,23 @@
   }
 }
 
-/* Tablets */
+/* ── Tablets (≤ 768px) ── */
 @media (max-width: 768px) {
   .slide {
     flex-direction: column;
+    gap: 20px;
     text-align: center;
+    padding: 24px 5%;
+  }
+
+  .left {
+    width: 100%;
+    flex: none;
+  }
+
+  .right {
+    width: 100%;
+    flex: none;
   }
 
   .header {
@@ -300,9 +298,16 @@
 
   .header h3 {
     max-width: 100%;
+    white-space: normal;     /* allow title to wrap on tablets */
+    word-break: break-word;
   }
 
   .meta p {
+    justify-content: center;
+    white-space: normal;
+  }
+
+  .badges {
     justify-content: center;
   }
 
@@ -319,14 +324,31 @@
   }
 }
 
-/* Mobile */
+/* ── Small mobile (≤ 480px) ── */
 @media (max-width: 480px) {
   .title {
     font-size: 20px;
+    margin: 18px 0 20px;
+  }
+
+  .slide {
+    gap: 16px;
+    padding: 20px 4%;
+    border-radius: 12px;
   }
 
   .image {
     height: 180px;
+    border-radius: 12px;
+  }
+
+  .header h3 {
+    font-size: 17px;
+  }
+
+  .share {
+    width: 44px;
+    height: 44px;
   }
 
   .circle {
@@ -341,5 +363,103 @@
   .cta {
     width: 100%;
     text-align: center;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .startsIn {
+    margin-top: 16px;
+  }
+
+  .controls {
+    margin-top: 20px;
+    gap: 10px;
+  }
+
+  .controls button {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+  }
+}
+
+/* ── Very small mobile (≤ 375px) — THE KEY FIX ── */
+@media (max-width: 375px) {
+  .slide {
+    padding: 16px 3%;
+    gap: 14px;
+    border-radius: 10px;
+  }
+
+  .image {
+    height: 160px;
+    border-radius: 10px;
+  }
+
+  .header h3 {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .badge {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+
+  .meta p {
+    font-size: 13px;
+  }
+
+  /* Stack countdown circles in a 2×2 grid on very small screens */
+  .countdown {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    justify-items: center;
+    margin-top: 14px;
+  }
+
+  /* CTA spans both columns */
+  .cta {
+    grid-column: 1 / -1;
+    width: 100%;
+    text-align: center;
+    padding: 11px 16px;
+    font-size: 13px;
+    border-radius: 20px;
+  }
+
+  .circle {
+    width: 54px;
+    height: 54px;
+  }
+
+  .num {
+    font-size: 14px;
+  }
+
+  .text {
+    font-size: 10px;
+  }
+
+  .startsIn {
+    font-size: 14px;
+    margin-top: 14px;
+  }
+
+  .title {
+    font-size: 18px;
+    margin: 14px 0 16px;
+  }
+
+  .controls {
+    margin-top: 16px;
+    gap: 8px;
+  }
+
+  .controls button {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
   }
 }

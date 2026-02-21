@@ -10,13 +10,10 @@ export const API_ENDPOINTS = {
 
     TRENDING: (offset = 0, limit = 5) =>
       `/v1/trending_events?offset=${offset}&limit=${limit}`,
-
     UPCOMING: (offset = 0, limit = 5) =>
       `/v1/upcoming_events?offset=${offset}&limit=${limit}`,
-
     VIRTUAL: (offset = 0, limit = 5) =>
       `/v1/virtual_events?offset=${offset}&limit=${limit}`,
-
     FEATURED: (offset = 0, limit = 5) =>
       `/v1/featured_events?offset=${offset}&limit=${limit}`,
     LIKE_EVENT: "/v1/events/like",
@@ -62,6 +59,17 @@ export const API_ENDPOINTS = {
     SINGLE: (userId) => `/v1/users/${userId}`,
     UPDATE: (userId) => `/v1/user/${userId}`,
     DELETE: (userId) => `/v1/user/${userId}`,
+  },
+  /* ================= NOTIFICATIONS ================= */
+  NOTIFICATION: {
+    REGISTER_FCM: "/v1/notifications/fcm/register",
+    UNREGISTER_FCM: "/v1/notifications/fcm/unregister",
+    UPDATE_PREFERENCES: "/v1/notifications/preferences",
+    GET_PREFERENCES: "/v1/notifications/preferences",
+    GET_NOTIFICATIONS: (page = 1, limit = 20) =>
+      `/v1/notifications?page=${page}&limit=${limit}`,
+    MARK_ONE_READ: (id) => `/v1/notifications/${id}/read`,
+    MARK_ALL_READ: "/v1/notifications/read-all",
   },
 
   /* ================= ORGANIZATIONS ================= */
