@@ -205,6 +205,7 @@ export default function LandingPage({ searchParams }) {
   /* ================= UI ================= */
   return (
     <>
+    {/* user role select */}
       <UserTypeModal
         open={showTypeModal}
         data={userTypes}
