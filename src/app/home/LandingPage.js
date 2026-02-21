@@ -206,7 +206,7 @@ export default function LandingPage({ searchParams }) {
   /* ================= UI ================= */
   return (
     <>
-    {/* user role select */}
+    {/* skjjfks */}
       <UserTypeModal
         open={showTypeModal}
         data={userTypes}
@@ -245,8 +245,8 @@ export default function LandingPage({ searchParams }) {
           data={trendingEvents}
           onReachEnd={() => loadEvents("trending", setTrendingEvents)}
         />
-      </main>
-
+        </div>
+    
       <ChooseEventCategory categories={categories} />
 
       <EventSlider
@@ -275,6 +275,6 @@ export default function LandingPage({ searchParams }) {
       <AppLandingHero />
       <FloatingExploreButton targetRef={exploreRef} />
       <Footer />
-    </div>
+    </>
   );
 }
