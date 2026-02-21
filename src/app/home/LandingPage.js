@@ -205,29 +205,45 @@ export default function LandingPage({ searchParams }) {
 
   /* ================= UI ================= */
   return (
-    <div className="dashboard-root">
-      <main className="dash-hero" ref={exploreRef}>
-        <HeroBanner text={apiText} />
+    <>
+    {/* user role select */}
+      <UserTypeModal
+        open={showTypeModal}
+        data={userTypes}
+        onClose={() => setShowTypeModal(false)}
+      />
+      <div className="dashboard-root">
+        <main className="dash-hero" ref={exploreRef}>
+          <HeroBanner text={apiText} />
 
-        <div className="exp-btn">
-          <img src="/images/sparkles.png" alt="sparkles" />
-          <button
-            className="btn-explore"
-            onClick={() => router.push("/explore-events")}
-          >
-            Explore Events
-          </button>
-        </div>
+          <div className="exp-btn">
+            <img src="/images/sparkles.png" alt="sparkles" />
+            <button
+              className="btn-explore"
+              onClick={() => router.push("/explore-events")}
+            >
+              Explore Events
+            </button>
+          </div>
 
-        <div className="hero-carousel-area">
-          <HeroBannerCarousel images={posters} />
-        </div>
+          <div className="hero-carousel-area">
+            <HeroBannerCarousel images={posters} />
+          </div>
 
-        <EventSearchBar
-          whatIcon={WHATICON}
-          whereIcon={HOME_PAGE_LOCATION_ICON}
-          whenIcon={HOME_PAGE_DATE_ICON}
-          eventTypes={eventTypes}
+          <EventSearchBar
+            whatIcon={WHATICON}
+            whereIcon={HOME_PAGE_LOCATION_ICON}
+            whenIcon={HOME_PAGE_DATE_ICON}
+            eventTypes={eventTypes}
+          />
+        </main>
+
+        <ChooseEventCategory categories={categories} />
+
+        <EventSlider
+          title="Trending Events"
+          data={trendingEvents}
+          onReachEnd={() => loadEvents("trending", setTrendingEvents)}
         />
       </main>
 
