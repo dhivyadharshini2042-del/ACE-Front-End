@@ -205,6 +205,7 @@ export default function LandingPage({ searchParams }) {
   /* ================= UI ================= */
   return (
     <>
+    {/* skjjfks */}
       <UserTypeModal
         open={showTypeModal}
         data={userTypes}
