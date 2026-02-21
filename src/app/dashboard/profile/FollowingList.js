@@ -10,6 +10,7 @@ import { useLoading } from "../../../context/LoadingContext";
 import EmptyState from "../../../components/global/EmptyState/EmptyState";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { TOAST_ERROR_MSG_SOMETHING_WENT_WRONG,TOAST_SUCCESS_UNFOLLOW, TOAST_ERROR_GENERIC } from "../../../const-value/config-message/page";
 
 export default function FollowingList() {
   const { setLoading } = useLoading();
@@ -45,12 +46,12 @@ export default function FollowingList() {
           )
         );
 
-        toast.success(res?.message || "Unfollowed successfully");
+        toast.success(res?.message || TOAST_SUCCESS_UNFOLLOW);
       } else {
-        toast.error(res?.message || "Failed");
+        toast.error(res?.message || TOAST_ERROR_GENERIC);
       }
     } catch {
-      toast.error("Something went wrong");
+      toast.error(TOAST_ERROR_MSG_SOMETHING_WENT_WRONG);
     }
   };
 

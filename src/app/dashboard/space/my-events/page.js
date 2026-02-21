@@ -52,7 +52,7 @@ export default function MyEventPage() {
         if (eventsRes?.status) {
           setEvents(eventsRes.data || []);
         } else {
-          toast.error("Failed to load events");
+          toast.error(TOAST_ERROR_MSG_EVENTS_LOAD_FAILED);
           setEvents([]);
         }
 
@@ -60,7 +60,7 @@ export default function MyEventPage() {
           setStatuses(statusRes.data || []);
         }
       } catch {
-        toast.error("Error loading events");
+        toast.error(TOAST_ERROR_MSG_EVENTS_LOAD_ERROR);
         setEvents([]);
       } finally {
         setLoading(false);

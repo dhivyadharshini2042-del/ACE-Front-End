@@ -99,8 +99,7 @@ export default function LandingPage({ searchParams }) {
   useEffect(() => {
     const loadEventTypes = async () => {
       const res = await getAllEventTypesApi();
-      console.log("EVENT TYPES API:", res); // 👈 CHECK THIS
-
+      console.log("EVENT TYPES API:", res);
       if (res?.status) {
         setEventTypes(res.data);
       }
@@ -150,7 +149,7 @@ export default function LandingPage({ searchParams }) {
       }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to load organizers");
+      toast.error(TOAST_ERROR_MSG_ORGANIZERS_LOAD_FAILED);
     } finally {
       setLoading(false);
     }
@@ -206,7 +205,6 @@ export default function LandingPage({ searchParams }) {
   /* ================= UI ================= */
   return (
     <>
-    {/* skjjfks */}
       <UserTypeModal
         open={showTypeModal}
         data={userTypes}
@@ -245,36 +243,28 @@ export default function LandingPage({ searchParams }) {
           data={trendingEvents}
           onReachEnd={() => loadEvents("trending", setTrendingEvents)}
         />
-        </div>
-    
-      <ChooseEventCategory categories={categories} />
 
-      <EventSlider
-        title="Trending Events"
-        data={trendingEvents}
-        onReachEnd={() => loadEvents("trending", setTrendingEvents)}
-      />
+        <EventSlider
+          title="Virtual Events"
+          data={virtualEvents}
+          onReachEnd={() => loadEvents("virtual", setVirtualEvents)}
+        />
 
-      <EventSlider
-        title="Virtual Events"
-        data={virtualEvents}
-        onReachEnd={() => loadEvents("virtual", setVirtualEvents)}
-      />
+        <SpotlightCarousel data={featuredEvents} />
 
-      <SpotlightCarousel data={featuredEvents} />
+        <OrganizersCarousel data={organization} />
 
-      <OrganizersCarousel data={organization} />
+        <EventSlider
+          title="Upcoming Events"
+          data={upcomingEvents}
+          onReachEnd={() => loadEvents("upcoming", setUpcomingEvents)}
+        />
 
-      <EventSlider
-        title="Upcoming Events"
-        data={upcomingEvents}
-        onReachEnd={() => loadEvents("upcoming", setUpcomingEvents)}
-      />
-
-      <LocationHighlights />
-      <AppLandingHero />
-      <FloatingExploreButton targetRef={exploreRef} />
-      <Footer />
+        <LocationHighlights />
+        <AppLandingHero />
+        <FloatingExploreButton targetRef={exploreRef} />
+        <Footer />
+      </div>
     </>
   );
 }

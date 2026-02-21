@@ -7,6 +7,7 @@ import ConfirmModal from "../../ui/Modal/ConfirmModal";
 import { followOrganizerApi } from "../../../lib/api/organizer.api";
 import { isUserLoggedIn } from "../../../lib/auth";
 import { useEffect, useState } from "react";
+import { TOAST_ERROR_FOLLOW, TOAST_SUCCESS_FOLLOW } from "../../../const-value/config-message/page";
 
 export default function OrganizersCarousel({ data = [] }) {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -31,9 +32,9 @@ export default function OrganizersCarousel({ data = [] }) {
   //   const res = await followOrganizerApi(orgIdentity);
 
   //   if (res?.status) {
-  //     toast.success("Followed successfully");
+  //     toast.success(TOAST_SUCCESS_FOLLOW);
   //   } else {
-  //     toast.error(res?.message || "Failed to follow");
+  //     toast.error(res?.message || TOAST_ERROR_FOLLOW);
   //   }
   // };
 
