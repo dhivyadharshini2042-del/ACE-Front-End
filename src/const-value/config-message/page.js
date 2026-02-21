@@ -50,23 +50,36 @@ export const ACTION_MY_EVENT = "My Events";
 // SYSTEM MESSAGES
 // ---------------------------------------------------------
 export const MSG_LOGOUT_SUCCESS = "Logged out successfully!";
+export const MSG_GENERIC_ERROR = "Something went wrong. Please try again!";
 export const MSG_ORGANIZER_NOT_FOUND = "Organizer not found";
+export const MSG_EVENT_LOAD_FAILED = "Failed to load events";
 export const MSG_EVENT_LOAD_ERROR = "Something went wrong while loading events";
 export const MSG_LOGOUT_FAILED = "Failed to logout";
 export const MSG_NOIMAGE_FAILED = "No Image";
 export const MSG_NO_EVENT_FOUND_FOR_ORGANIZER =
   "No events found for this organizer";
 export const MSG_NO_EVENT_FOUND_FOR_USER = "No events available at the moment";
-
+export const MSG_EVENT_UPDATE_SUCCESS = "Event updated successfully!";
 export const MSG_EVENT_UPDATE_FAILED = "Update failed";
 export const MSG_EVENT_UPDATE_ERROR = "Error while updating";
+export const MSG_EVENT_CREATE_SUCCESS = "Event created successfully!";
 export const MSG_EVENT_CREATE_FAILED = "Creation failed";
 export const MSG_EVENT_CREATE_ERROR = "Error creating event";
+export const MSG_INVALID_CREDENTIALS = "Invalid credentials";
+export const MSG_LOGIN_SUCCESS_ORGANIZER = "Organizer Logged In Successfully!";
 export const MSG_VERIFY_EMAIL_SENT =
   "Link has been sent to your xyz.com domain mail id.\nPlease click and verify your account.";
+export const MSG_ERR_FILL_ALL_FIELDS = "Fill all fields";
+export const MSG_ERR_PASSWORD_MISMATCH = "Passwords do not match";
+export const MSG_ERR_CATEGORY_MISSING = "Choose an Organization";
+export const MSG_ERR_SIGNUP_FAILED = "Signup failed";
+export const MSG_SIGNUP_SUCCESS = "Signup successfully!";
 export const MSG_ORG_SELECT_COUNTRY = "Select country first";
 export const MSG_ORG_SELECT_STATE = "Select state first";
-
+export const MSG_LOGIN_SUCCESS_USER = "Login Successful!";
+export const MSG_GOOGLE_LOGIN_SUCCESS_USER = "Google Login Successful!";
+export const MSG_LOGIN_FAILED = "Login Failed";
+export const MSG_GOOGLE_LOGIN_FAILED = "Google Login Failed";
 
 // ---------------------------------------------------------
 // EVENT LABELS
@@ -198,10 +211,21 @@ export const MSG_EMAIL_VERIFY_LOADING = "loading";
 
 // ENTER OTP
 
+export const MSG_OTP_VERIFIED = "Code verified!";
+export const MSG_OTP_INVALID = "Invalid code";
+export const MSG_OTP_ERROR = "Something went wrong";
+export const MSG_NEW_OTP_SEND = "New code sent!";
+export const MSG_NEW_OTP_FAILED_TO_SEND = "Failed to resend";
 
+// FORGOT PASSOWRD
+
+export const MSG_OTP_SEND_EMAIL = "Code sent to your email";
+export const MSG_OTP_SEND_EMAIL_ERROR = "Email not found";
 
 // REST PASSWORD
 
+export const MSG_PASSWORD_UPDATED_SUCCESS = "Password updated successfully";
+export const MSG_PASSWORD_UPDATED_FAILED = "Failed to update password";
 
 // MANAGE PAGE
 

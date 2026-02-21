@@ -99,7 +99,8 @@ export default function LandingPage({ searchParams }) {
   useEffect(() => {
     const loadEventTypes = async () => {
       const res = await getAllEventTypesApi();
-      console.log("EVENT TYPES API:", res);
+      console.log("EVENT TYPES API:", res); // 👈 CHECK THIS
+
       if (res?.status) {
         setEventTypes(res.data);
       }
@@ -149,7 +150,7 @@ export default function LandingPage({ searchParams }) {
       }
     } catch (error) {
       console.error(error);
-      toast.error(TOAST_ERROR_MSG_ORGANIZERS_LOAD_FAILED);
+      toast.error("Failed to load organizers");
     } finally {
       setLoading(false);
     }
@@ -244,28 +245,36 @@ export default function LandingPage({ searchParams }) {
           data={trendingEvents}
           onReachEnd={() => loadEvents("trending", setTrendingEvents)}
         />
+      </main>
 
-        <EventSlider
-          title="Virtual Events"
-          data={virtualEvents}
-          onReachEnd={() => loadEvents("virtual", setVirtualEvents)}
-        />
+      <ChooseEventCategory categories={categories} />
 
-        <SpotlightCarousel data={featuredEvents} />
+      <EventSlider
+        title="Trending Events"
+        data={trendingEvents}
+        onReachEnd={() => loadEvents("trending", setTrendingEvents)}
+      />
 
-        <OrganizersCarousel data={organization} />
+      <EventSlider
+        title="Virtual Events"
+        data={virtualEvents}
+        onReachEnd={() => loadEvents("virtual", setVirtualEvents)}
+      />
 
-        <EventSlider
-          title="Upcoming Events"
-          data={upcomingEvents}
-          onReachEnd={() => loadEvents("upcoming", setUpcomingEvents)}
-        />
+      <SpotlightCarousel data={featuredEvents} />
 
-        <LocationHighlights />
-        <AppLandingHero />
-        <FloatingExploreButton targetRef={exploreRef} />
-        <Footer />
-      </div>
-    </>
+      <OrganizersCarousel data={organization} />
+
+      <EventSlider
+        title="Upcoming Events"
+        data={upcomingEvents}
+        onReachEnd={() => loadEvents("upcoming", setUpcomingEvents)}
+      />
+
+      <LocationHighlights />
+      <AppLandingHero />
+      <FloatingExploreButton targetRef={exploreRef} />
+      <Footer />
+    </div>
   );
 }

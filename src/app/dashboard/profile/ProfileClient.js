@@ -28,14 +28,6 @@ import {
 import { getCountries, getStates, getCities } from "../../../lib/location.api";
 import DeleteConfirmModal from "../../../components/ui/DeleteConfirmModal/DeleteConfirmModal";
 
-import { TOAST_SUCCESS_ACCOUNT_DELETED,
-  TOAST_ERROR_MSG_DELETE_ACCOUNT_FAILED,
-  TOAST_ERROR_MSG_PROFILE_RELOAD_FAILED,
-  TOAST_ERROR_AUTH_MISSING,
-  TOAST_ERROR_MSG_UPDATE_FAILED,
-  TOAST_ERROR_MSG_PROFILE_UPDATE_FAILED,
-  TOAST_SUCCESS_PROFILE_UPDATED } from "../../../const-value/config-message/page";
-
 export default function ProfileClient() {
   const router = useRouter();
   const fileRef = useRef(null);
@@ -105,7 +97,7 @@ export default function ProfileClient() {
         });
       }
     } catch {
-      toast.error(TOAST_ERROR_MSG_PROFILE_RELOAD_FAILED);
+      toast.error("Failed to reload profile");
     } finally {
       setLoading(false);
     }
@@ -148,7 +140,7 @@ export default function ProfileClient() {
   const saveProfile = async () => {
     try {
       if (!auth) {
-        toast.error(TOAST_ERROR_AUTH_MISSING);
+        toast.error("Auth missing");
         return;
       }
 
@@ -173,15 +165,15 @@ export default function ProfileClient() {
 
       if (res?.status) {
         await fetchProfile(auth);
-        toast.success(TOAST_SUCCESS_PROFILE_UPDATED);
+        toast.success("Profile updated successfully");
         setMode("view");
         setImagePreview(null);
       } else {
-        toast.error(res?.message || TOAST_ERROR_MSG_UPDATE_FAILED);
+        toast.error(res?.message || "Update failed");
       }
     } catch (err) {
       console.log("UPDATE ERROR:", err);
-      toast.error(err?.response?.data?.message || TOAST_ERROR_MSG_PROFILE_UPDATE_FAILED);
+      toast.error(err?.response?.data?.message || "Profile update failed");
     } finally {
       setLoading(false);
     }
@@ -192,13 +184,13 @@ export default function ProfileClient() {
       setLoading(true);
 
       console.log("Deleting account...");
-      toast.success(TOAST_SUCCESS_ACCOUNT_DELETED);
+      toast.success("Account deleted successfully");
 
       setShowDeleteModal(false);
 
       router.push("/");
     } catch (err) {
-      toast.error(TOAST_ERROR_MSG_DELETE_ACCOUNT_FAILED);
+      toast.error("Failed to delete account");
     } finally {
       setLoading(false);
     }

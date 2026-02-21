@@ -25,16 +25,20 @@ export default function AppLandingHero() {
 
         <div className={styles.stores}>
           <a
-            href="https://play.google.com"
+            href="https://play.google.com/store/apps/details?id=com.all_college_event"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.storeItem}
           >
             <img src="/images/app-play.png" alt="Play Store" />
-            <span>Play Store</span>
+
+            <div className={styles.storeText}>
+              <span className={styles.smallText}>Get It On</span>
+              <span className={styles.bigText}>Google Play</span>
+            </div>
           </a>
 
-          <a
+          {/* <a
             href="https://www.apple.com/app-store/"
             target="_blank"
             rel="noopener noreferrer"
@@ -42,7 +46,7 @@ export default function AppLandingHero() {
           >
             <img src="/images/apps-img.png" alt="App Store" />
             <span>App Store</span>
-          </a>
+          </a> */}
         </div>
       </div>
     </section>

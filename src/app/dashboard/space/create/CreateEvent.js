@@ -18,14 +18,6 @@ import {
 import { createEventApi } from "../../../../lib/api/event.api";
 import { useLoading } from "../../../../context/LoadingContext";
 
-import { TOAST_SUCCESS_EVENT_CREATED,
-  TOAST_ERROR_MSG_FILL_ORGANIZER_DETAILS, 
-  TOAST_ERROR_MSG_ONLY_ORGANIZERS_CAN_CREATE_EVENTS,
-  TOAST_ERROR_MSG_ORGANIZATION_NOT_FOUND,
-  TOAST_ERROR_MSG_EVENT_CREATION_FAILED ,
-  TOAST_ERROR_MSG_INVALID_DATA,
-  TOAST_ERROR_MSG_FILL_EVENT_DETAILS } from "../../../../const-value/config-message/page";
-
 // 🔐 SESSION AUTH
 import { getAuthFromSession, isUserLoggedIn } from "../../../../lib/auth";
 
@@ -131,7 +123,7 @@ export default function CreateEvent() {
       });
       setStep(2);
     } catch (err) {
-      toast.error(err?.errors?.[0] || TOAST_ERROR_MSG_FILL_ORGANIZER_DETAILS);
+      toast.error(err?.errors?.[0] || "Fill organizer details");
     } finally {
       setLoading(false);
     }
@@ -146,7 +138,7 @@ export default function CreateEvent() {
       });
       setStep(3);
     } catch (err) {
-      toast.error(err?.errors?.[0] || TOAST_ERROR_MSG_FILL_EVENT_DETAILS);
+      toast.error(err?.errors?.[0] || "Fill event details");
     } finally {
       setLoading(false);
     }
@@ -156,7 +148,7 @@ export default function CreateEvent() {
   const handleFinalSubmit = async () => {
     try {
       if (!loggedIn || auth?.type !== "org") {
-        toast.error(TOAST_ERROR_MSG_ONLY_ORGANIZERS_CAN_CREATE_EVENTS);
+        toast.error("Only organizers can create events");
         return;
       }
 
@@ -168,7 +160,7 @@ export default function CreateEvent() {
       const orgId = auth.identity.identity;
 
       if (!orgId) {
-        toast.error(TOAST_ERROR_MSG_ORGANIZATION_NOT_FOUND);
+        toast.error("Organization not found");
         return;
       }
 
@@ -298,16 +290,16 @@ export default function CreateEvent() {
       const res = await createEventApi(orgId, fd);
 
       if (res?.status) {
-        toast.success(TOAST_SUCCESS_EVENT_CREATED);
+        toast.success("Event created successfully");
 
         setFormData(INITIAL_FORM_DATA);
         setStep(1);
         setResetSignal((s) => s + 1);
       } else {
-        toast.error(res?.message || TOAST_ERROR_MSG_EVENT_CREATION_FAILED );
+        toast.error(res?.message || "Event creation failed");
       }
     } catch (err) {
-      toast.error(err?.errors?.[0] || err?.message || TOAST_ERROR_MSG_INVALID_DATA);
+      toast.error(err?.errors?.[0] || err?.message || "Invalid data");
     } finally {
       setLoading(false);
     }

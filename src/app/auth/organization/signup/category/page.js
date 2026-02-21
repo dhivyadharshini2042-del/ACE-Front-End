@@ -27,7 +27,7 @@ import {
   LABEL_ORG_STEP_DETAILS,
   LABEL_ORG_STEP_ACCOUNT,
   BTN_CONTINUE,
-  TOAST_ERROR_MSG_CATEGORY_MISSING,
+  MSG_ERR_CATEGORY_MISSING,
   TEXT_NO_ACCOUNT,
   TEXT_SIGNIN,
   TITLE_ALREADY_HAVE_ACCOUNT
@@ -53,7 +53,7 @@ export default function Page() {
   const [selected, setSelected] = useState("");
 
   const onContinue = () => {
-    if (!selected) return toast.error(TOAST_ERROR_MSG_CATEGORY_MISSING);
+    if (!selected) return toast.error(MSG_ERR_CATEGORY_MISSING);
 
     try {
       setLoading(true);

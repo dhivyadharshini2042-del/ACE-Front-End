@@ -16,11 +16,8 @@ import {
 
 import { getSavedEventsApi } from "../../../../lib/api/auth.api";
 
-import { TOAST_ERROR_MSG_SOMETHING_WENT_WRONG } from "../../../../const-value/config-message/page";
-
 // 🔐 SESSION AUTH
 import { getAuthFromSession, isUserLoggedIn } from "../../../../lib/auth";
-import { TOAST_ERROR_MSG_BOOKED_EVENTS_LOAD_FAILED } from "../../../../const-value/config-message/page";
 
 const PAGE_SIZE = 6;
 
@@ -63,11 +60,11 @@ export default function BookingEventsPage() {
       if (res?.status) {
         setEvents(res.data?.events || []);
       } else {
-        toast.error(res?.message || TOAST_ERROR_MSG_BOOKED_EVENTS_LOAD_FAILED);
+        toast.error(res?.message || "Failed to load booked events");
         setEvents([]);
       }
     } catch {
-      toast.error(TOAST_ERROR_MSG_SOMETHING_WENT_WRONG);
+      toast.error("Something went wrong");
       setEvents([]);
     } finally {
       setLocalLoading(false);
