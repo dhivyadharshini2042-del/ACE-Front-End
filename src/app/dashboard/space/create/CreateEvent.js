@@ -13,7 +13,7 @@ import {
   createEventStep1Schema,
   createEventStep2Schema,
   createEventStep3Schema,
-} from "../../../../components/validation";
+} from "../../../../components/validation/yupSchemas";
 
 import { createEventApi } from "../../../../lib/api/event.api";
 import { useLoading } from "../../../../context/LoadingContext";

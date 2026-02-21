@@ -20,7 +20,7 @@ import {
 import TicketModal from "../../../../../components/ui/Modal/TicketModal";
 import ConfirmModal from "../../../../../components/ui/Modal/ConfirmModal";
 import { processImage } from "../../../../../lib/utils/imageProcessor";
-import { ticketSchema } from "../../../../../components/validation";
+import { ticketSchema } from "../../../../../components/validation/yupSchemas";
 import toast from "react-hot-toast";
 
 export default function MediaTickets({

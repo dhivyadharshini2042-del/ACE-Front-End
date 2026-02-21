@@ -13,6 +13,7 @@ import {
 } from "../../../../lib/api/event.api";
 
 import { getAuthFromSession, isUserLoggedIn } from "../../../../lib/auth";
+import { TOAST_ERROR_MSG_EVENTS_LOAD_FAILED, TOAST_ERROR_MSG_EVENTS_LOAD_ERROR} from "../../../../const-value/config-message/page";
 
 export default function MyEventPage() {
   const [events, setEvents] = useState([]);
