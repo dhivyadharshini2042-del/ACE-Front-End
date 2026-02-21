@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * OrganizerLoginPage
+ * ------------------
+ * Client-side login component for organizer accounts.
+ *
+ * Handles validation, authentication, session persistence,
+ * role-based login enforcement, and post-login navigation.
+ */
+
 import "./organizer-login.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -15,7 +24,7 @@ import {
 /* API */
 import { loginApi } from "../../../../lib/api/auth.api";
 
-/* ✅ AUTH (SESSION) */
+/* AUTH (SESSION) */
 import { setAuthCookie } from "../../../../lib/auth";
 
 /* VALIDATION */
@@ -52,10 +61,20 @@ export default function OrganizerLoginPage() {
   const [showPass, setShowPass] = useState(false);
 
   /* ================= SUBMIT ================= */
+  /**
+   * Handles organizer login submission.
+   *
+   * Flow:
+   * 1. Perform schema-based validation.
+   * 2. Invoke authentication API with organizer role.
+   * 3. Validate API response (status + token).
+   * 4. Persist authentication session.
+   * 5. Redirect to dashboard on success.
+   */
   async function onSubmit(e) {
     e.preventDefault();
 
-    //  validation
+    // Perform schema validation for email and password
     try {
       await organizerLoginSchema.validate(
         { email, password },
@@ -69,23 +88,23 @@ export default function OrganizerLoginPage() {
     try {
       setLoading(true);
 
-      //  login API
+      // Invoke login API with organizer role context
       const res = await loginApi({
         email,
         password,
         type: ROLE_ORGANIZER,
       });
-      console.log("res", res);
-      // failure
+
+      // Handle authentication failure (invalid credentials or missing token)
       if (!res?.status || !res?.token) {
         toast.error(res?.message || MSG_INVALID_CREDENTIALS);
         return;
       }
 
-      //  SAVE AUTH TO SESSION (IMPORTANT)
+      // Persist authenticated session (token + user data)
       setAuthCookie(res.token, res.data, ROLE_ORGANIZER);
 
-      // success
+      // Successful login flow
       toast.success(MSG_LOGIN_SUCCESS_ORGANIZER);
       router.push("/dashboard");
       // router.push("/auth/role-select");
@@ -97,10 +116,18 @@ export default function OrganizerLoginPage() {
   }
 
   /* ================= SWITCH TO USER LOGIN ================= */
+  /**
+   * Redirects to user login page.
+   * Enables account-type switching without page reload.
+   */
   const handleUserLogin = () => {
     router.push("/auth/user/login");
   };
 
+  /**
+   * Ensures global loading state is reset
+   * when component mounts.
+   */
   useEffect(() => {
     setLoading(false);
   }, []);

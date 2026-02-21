@@ -80,7 +80,6 @@ export default function OrganizationClient({ slug }) {
 
     const fetchOrg = async () => {
       const res = await getOrganizationDetailsApi(identity);
-      console.log("organization details", res);
 
       if (res?.status) {
         setOrg(res.data);
@@ -93,10 +92,8 @@ export default function OrganizationClient({ slug }) {
 
   useEffect(() => {
     if (!slug) return;
-    console.log("slug", slug);
     const fetchUpcoming = async () => {
       const res = await getUpcomingEventsApi(slug, page);
-      console.log("upcoimg event", res);
       if (res?.status) {
         setUpcomingEvents(res.data || []);
       }
@@ -110,7 +107,6 @@ export default function OrganizationClient({ slug }) {
 
     const fetchPast = async () => {
       const res = await getPastEventsApi(slug, pastIndex, PAST_PER_PAGE);
-      console.log("past event", res);
       if (res?.status) {
         setPastEvents(res.data || []);
       }

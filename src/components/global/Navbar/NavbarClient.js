@@ -69,10 +69,8 @@ export default function NavbarClient() {
 
         if (auth.type === "org") {
           res = await getOrganizationProfileApi(identityId);
-          console.log("==========res org", res);
         } else {
           res = await getUserProfileApi(identityId);
-          console.log("==========res", res);
         }
 
         if (res?.status && res.data) {

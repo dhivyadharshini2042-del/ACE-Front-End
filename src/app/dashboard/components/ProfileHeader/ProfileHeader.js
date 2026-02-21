@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * ProfileHeader
+ *
+ * Displays user or organization profile info at the top of the dashboard.
+ * Features:
+ * - Shows profile image, name, email, and social links
+ * - Displays stats: events organized, followers/following, active status
+ * - Handles both "user" and "org" roles
+ * - Fetches profile data via API using session auth
+ * - Supports tab highlighting and routing for followers/following/events
+ * - Shows verified status for users and organizations
+ */
+
 import { useEffect, useRef, useState } from "react";
 import styles from "./ProfileHeader.module.css";
 import { useRouter } from "next/navigation";
@@ -28,9 +41,11 @@ export default function ProfileHeader({ activeTab = "profile" }) {
   const fileRef = useRef(null);
   const { setLoading } = useLoading();
 
+  // Session and profile state
   const [auth, setAuth] = useState(null);
   const [profile, setProfile] = useState(null);
 
+  // Form-like state to hold displayable info
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -42,7 +57,7 @@ export default function ProfileHeader({ activeTab = "profile" }) {
     },
   });
 
-  /* ================= INIT ================= */
+  /* ================= INIT PROFILE ================= */
   useEffect(() => {
     if (!isUserLoggedIn()) return;
 
@@ -62,6 +77,7 @@ export default function ProfileHeader({ activeTab = "profile" }) {
 
         if (res?.status) {
           setProfile(res.data);
+
           setForm({
             name:
               session.type === "org"
@@ -87,18 +103,19 @@ export default function ProfileHeader({ activeTab = "profile" }) {
     loadProfile();
   }, []);
 
-  /* ================= IMPORTANT GUARD ================= */
+  /* ================= Wait until profile is loaded ================= */
   if (!profile) {
-    console.log("Profile not loaded yet:", profile);
     return null;
   }
 
   return (
     <div className={styles.card}>
+      {/* ================= NAME ================= */}
       {form.name && <h2 className={styles.name}>{form.name}</h2>}
 
-      {/* ================= TOP ================= */}
+      {/* ================= TOP SECTION ================= */}
       <div className={styles.top}>
+        {/* Profile Avatar */}
         <div className={styles.avatar}>
           {profile.profileImage ? (
             <img src={profile.profileImage} alt="profile" />
@@ -107,9 +124,10 @@ export default function ProfileHeader({ activeTab = "profile" }) {
           )}
         </div>
 
+        {/* Stats & Email */}
         <div className={styles.topRight}>
           <div className={styles.stats}>
-            {/* ORGANIZATION CATEGORY (ORG only) */}
+            {/* Organization Category */}
             {auth?.type === "org" && profile.organizationCategory && (
               <div>
                 <span>Organization Category</span>
@@ -126,7 +144,7 @@ export default function ProfileHeader({ activeTab = "profile" }) {
               <b>{profile.eventCount || 0}</b>
             </div>
 
-            {/* FOLLOWERS → ONLY ORG */}
+            {/* Followers (Only Org) */}
             {auth?.type === "org" && (
               <div
                 className={activeTab === "followers" ? styles.active : ""}
@@ -142,8 +160,7 @@ export default function ProfileHeader({ activeTab = "profile" }) {
               </div>
             )}
 
-            {/* FOLLOWING → ORG + USER */}
-            {/* FOLLOWING → ORG + USER */}
+            {/* Following (Org + User) */}
             <div
               className={activeTab === "following" ? styles.active : ""}
               onClick={() => router.push("/dashboard/profile?tab=following")}
@@ -159,7 +176,7 @@ export default function ProfileHeader({ activeTab = "profile" }) {
               </b>
             </div>
 
-            {/* ACTIVE STATUS → ONLY USER */}
+            {/* Active Status (Only User) */}
             {auth?.type !== "org" && (
               <div className={styles.activeStatus}>
                 <span>Status</span>
@@ -168,6 +185,7 @@ export default function ProfileHeader({ activeTab = "profile" }) {
             )}
           </div>
 
+          {/* Email & Verified */}
           <div className={styles.meta}>
             {form.email && <span>{form.email}</span>}
             {auth?.type !== "org" ? (
@@ -181,7 +199,7 @@ export default function ProfileHeader({ activeTab = "profile" }) {
         </div>
       </div>
 
-      {/* ================= SOCIAL VIEW ================= */}
+      {/* ================= SOCIAL LINKS ================= */}
       <div className={styles.socialRow}>
         {form.socialLinks.instagram && (
           <a
@@ -253,6 +271,7 @@ export default function ProfileHeader({ activeTab = "profile" }) {
           </a>
         )}
       </div>
+
       <hr style={{ margin: "20px 0" }} />
     </div>
   );

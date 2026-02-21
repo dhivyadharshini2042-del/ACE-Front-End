@@ -1,3 +1,11 @@
+/**
+ * Client-side email verification page.
+ *
+ * Reads token from URL, calls verification API,
+ * manages global loading state, and renders
+ * loading/success/failed UI states.
+ */
+
 "use client";
 
 import { useSearchParams } from "next/navigation";
@@ -21,16 +29,29 @@ import {
 import { verifyEmailApi } from "../../../lib/api/auth.api";
 import { useLoading } from "../../../context/LoadingContext"; 
 
+/**
+ * EmailVerifyClient
+ *
+ * Flow:
+ * - Extract token from query.
+ * - If missing → failed.
+ * - Call verifyEmailApi(token).
+ * - On success → optionally deep link (mobile) + show success.
+ * - On error → show failed.
+ */
 export default function EmailVerifyClient() {
+  // Read token from URL
   const searchParams = useSearchParams();
   const token = searchParams.get(STORAGE_TOKEN);
 
+  // Global loading controller
   const { setLoading } = useLoading(); 
 
+  // UI state: loading | success | failed
   const [status, setStatus] = useState(MSG_EMAIL_VERIFY_LOADING);
-  // loading | success | failed
 
   useEffect(() => {
+    // Fail immediately if token not present
     if (!token) {
       setStatus(MSG_EMAIL_VERIFY_FAILED);
       return;
@@ -38,17 +59,19 @@ export default function EmailVerifyClient() {
 
     async function verify() {
       try {
+        // Start global loader
         setLoading(true); 
 
+        // API call to verify email
         const res = await verifyEmailApi(token);
 
         if (res?.status) {
+          // Mobile deep link on success
           const isMobile = /Android|iPhone|iPad|iPod/i.test(
             navigator.userAgent
           );
 
           if (isMobile) {
-            // mobile deep link
             window.location.href = "myapp://email-verify?status=success";
           }
 
@@ -57,8 +80,10 @@ export default function EmailVerifyClient() {
           setStatus(MSG_EMAIL_VERIFY_FAILED);
         }
       } catch (err) {
+        // Network or unexpected error
         setStatus(MSG_EMAIL_VERIFY_FAILED);
       } finally {
+        // Stop global loader
         setLoading(false); 
       }
     }
@@ -72,12 +97,12 @@ export default function EmailVerifyClient() {
         className="card shadow-lg p-4 text-center"
         style={{ maxWidth: "420px", width: "100%" }}
       >
-        {/* LOGO */}
+        {/* Logo */}
         <div className="mb-3">
           <img src="/images/logo.png" alt="logo" style={{ height: 60 }} />
         </div>
 
-        {/* LOADING */}
+        {/* Loading state */}
         {status === MSG_EMAIL_VERIFY_LOADING && (
           <>
             <div className="spinner-border text-primary mb-3" />
@@ -86,7 +111,7 @@ export default function EmailVerifyClient() {
           </>
         )}
 
-        {/* SUCCESS */}
+        {/* Success state */}
         {status === MSG_EMAIL_VERIFY_SUCCESS && (
           <>
             <h4 className="fw-bold text-success">
@@ -103,7 +128,7 @@ export default function EmailVerifyClient() {
           </>
         )}
 
-        {/* FAILED */}
+        {/* Failed state */}
         {status === MSG_EMAIL_VERIFY_FAILED && (
           <>
             <h4 className="fw-bold text-danger">

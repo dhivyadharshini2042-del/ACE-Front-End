@@ -1,10 +1,16 @@
 "use client";
 
+/**
+ * Organization Signup - Details Step (Step 2)
+ * Handles country, state, city selection and organization name input.
+ */
+
 import "../../auth-common.css";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
 
+/** UI text constants */
 import {
   LABEL_ORG_STEP_CATEGORY,
   LABEL_ORG_STEP_DETAILS,
@@ -29,13 +35,15 @@ import {
   TEXT_SIGNIN,
   TITLE_ALREADY_HAVE_ACCOUNT
 } from "../../../../../const-value/config-message/page";
+
+/** Stepper icons */
 import {
   ORG_CATEGORY,
   CONTACT_ICON,
   TICK_ICON,
 } from "../../../../../const-value/config-icons/page";
 
-
+/** Location APIs */
 import {
   getCountries,
   getStates,
@@ -49,22 +57,28 @@ export default function Page() {
   const params = useSearchParams();
   const { setLoading } = useLoading();
 
+  /** Retrieve selected category from query params */
   const category = params.get("cat");
 
+  /** Form state */
   const [country, setCountry] = useState("");
   const [stateName, setStateName] = useState("");
   const [city, setCity] = useState("");
   const [orgName, setOrgName] = useState("");
 
+  /** Dropdown data */
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
 
+  /** Loading indicators for dropdowns */
   const [loadingCountry, setLoadingCountry] = useState(false);
   const [loadingState, setLoadingState] = useState(false);
   const [loadingCity, setLoadingCity] = useState(false);
 
-  /* LOAD COUNTRIES */
+  /**
+   * Load countries on component mount
+   */
   useEffect(() => {
     async function load() {
       setLoadingCountry(true);
@@ -81,7 +95,10 @@ export default function Page() {
     load();
   }, []);
 
-  /* LOAD STATES */
+  /**
+   * Load states when country changes
+   * Resets state and city when no country selected
+   */
   useEffect(() => {
     if (!country) {
       setStates([]);
@@ -104,7 +121,10 @@ export default function Page() {
     load();
   }, [country]);
 
-  /* LOAD CITIES */
+  /**
+   * Load cities when state changes
+   * Resets city when no state selected
+   */
   useEffect(() => {
     if (!stateName) {
       setCities([]);
@@ -127,7 +147,10 @@ export default function Page() {
     load();
   }, [stateName]);
 
-  /* CONTINUE */
+  /**
+   * Handles Continue action
+   * Validates required fields and navigates to account step
+   */
   function onContinue(e) {
     e.preventDefault();
 
@@ -150,7 +173,7 @@ export default function Page() {
 
   return (
     <div className="org-shell">
-      {/* LEFT */}
+      {/* LEFT VISUAL PANEL */}
       <aside
         className="org-left"
         style={{ backgroundImage: "url('/images/organizer-bg-circles.png')" }}
@@ -162,10 +185,11 @@ export default function Page() {
         />
       </aside>
 
-      {/* RIGHT */}
+      {/* RIGHT CONTENT PANEL */}
       <main className="org-right">
         <div className="org-card">
-          {/* STEPPER */}
+
+          {/* STEPPER NAVIGATION */}
           <div className="org-stepper">
             <div className="org-step active">
               <div className="dot">{ORG_CATEGORY}</div>
@@ -187,11 +211,14 @@ export default function Page() {
             </div>
           </div>
 
+          {/* PAGE TITLE */}
           <h2 className="org-title">{LABEL_ORG_STEP_DETAILS}</h2>
           <p className="org-sub">{SUBTITLE_ORG_DETAILS}</p>
 
+          {/* DETAILS FORM */}
           <form className="org-form" onSubmit={onContinue}>
-            {/* COUNTRY */}
+
+            {/* COUNTRY SELECT */}
             <div className="form-group">
               <label className="form-label">{LABEL_ORG_COUNTRY}</label>
               <select
@@ -210,7 +237,7 @@ export default function Page() {
               </select>
             </div>
 
-            {/* STATE */}
+            {/* STATE SELECT */}
             <div className="form-group">
               <label className="form-label">{LABEL_ORG_STATE}</label>
               <select
@@ -236,7 +263,7 @@ export default function Page() {
               </select>
             </div>
 
-            {/* CITY */}
+            {/* CITY SELECT */}
             <div className="form-group">
               <label className="form-label">{LABEL_ORG_CITY}</label>
               <select
@@ -259,7 +286,7 @@ export default function Page() {
               </select>
             </div>
 
-            {/* ORG NAME */}
+            {/* ORGANIZATION NAME INPUT */}
             <div className="form-group">
               <label className="form-label">{LABEL_ORG_NAME}</label>
               <input
@@ -273,12 +300,15 @@ export default function Page() {
               />
             </div>
 
+            {/* CONTINUE BUTTON */}
             <div className="org-actions">
               <button className="btn-primary-ghost" type="submit">
                 {BTN_CONTINUE}
               </button>
             </div>
           </form>
+
+          {/* LOGIN REDIRECT */}
           <div className="text-center mt-3">
             <small>
               {TITLE_ALREADY_HAVE_ACCOUNT}{" "}
@@ -287,6 +317,7 @@ export default function Page() {
               </a>
             </small>
           </div>
+
         </div>
       </main>
     </div>

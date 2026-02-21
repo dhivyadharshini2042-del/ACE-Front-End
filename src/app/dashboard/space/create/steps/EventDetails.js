@@ -1,8 +1,21 @@
 "use client";
 
+/**
+ * EventDetails Component
+ * ----------------------
+ * Handles event creation step for:
+ * - Primary event information
+ * - Tags management
+ * - Calendar scheduling
+ * - Event mode (online/offline/hybrid)
+ * - Location details
+ */
+
 import { useEffect, useState } from "react";
 import styles from "./EventDetails.module.css";
 import CalendarModal from "../../../../../components/global/CalendarModal/CalendarModal";
+
+// API functions to fetch categories, event types, and location data
 import {
   getEventCategoriesApi,
   getEventTypesApi,
@@ -13,6 +26,8 @@ import {
   getStates,
   getCities,
 } from "../../../../../lib/location.api";
+
+// icons for calendar display
 import {
   DATEICON,
   TIMEICON,
@@ -25,18 +40,19 @@ export default function EventDetails({
   onNext,
   resetSignal,
 }) {
+  // state for internal UI controls and fetched lists
   // const [mode, setMode] = useState("online");
   const [showCalendar, setShowCalendar] = useState(false);
   const [tagInput, setTagInput] = useState("");
   const [categories, setCategories] = useState([]);
   const [eventTypes, setEventTypes] = useState([]);
 
-  /* ===== LOCATION STATE ===== */
+  // lists for address dropdowns: countries, states, cities
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
 
-  /* ================= LOAD CATEGORIES ================= */
+  // fetch available categories once when component mounts
   useEffect(() => {
     async function loadCategories() {
       try {
@@ -52,7 +68,7 @@ export default function EventDetails({
     loadCategories();
   }, []);
 
-  /* ================= LOAD EVENT TYPES (ON CATEGORY CHANGE) ================= */
+  // load event types whenever a category is chosen
   useEffect(() => {
     if (!data.category) return;
 
@@ -70,7 +86,7 @@ export default function EventDetails({
     loadEventTypes();
   }, [data.category]);
 
-  /* ================= LOAD COUNTRIES ================= */
+  // populate country dropdown on initial render
   useEffect(() => {
     async function loadCountries() {
       const res = await getCountries();
@@ -79,7 +95,7 @@ export default function EventDetails({
     loadCountries();
   }, []);
 
-  /* ================= LOAD STATES ================= */
+  // fetch states when user selects a country
   useEffect(() => {
     if (!data.country) {
       setStates([]);
@@ -93,7 +109,7 @@ export default function EventDetails({
     loadStates();
   }, [data.country]);
 
-  /* ================= LOAD CITIES ================= */
+  // fetch cities when a state (and country) are specified
   useEffect(() => {
     if (!data.state || !data.country) {
       setCities([]);
@@ -107,6 +123,7 @@ export default function EventDetails({
     loadCities();
   }, [data.state]);
 
+  // append a new tag if not already present
   const addTag = () => {
     if (!tagInput) return;
 
@@ -125,6 +142,7 @@ export default function EventDetails({
 
     setTagInput("");
   };
+  // remove specified tag from tags array
   const removeTag = (tag) => {
     setData({
       ...data,
@@ -132,7 +150,7 @@ export default function EventDetails({
     });
   };
 
-  /* ================= RESET ON SUCCESS ================= */
+  // reset all fields when resetSignal changes (indicating a new event creation flow)
   useEffect(() => {
     if (!resetSignal) return;
 
@@ -159,13 +177,17 @@ export default function EventDetails({
     });
   }, [resetSignal]);
 
+  // render form sections and conditional UI elements
   return (
     <>
-      {/* PRIMARY DETAILS */}
+      {/* ================= PRIMARY DETAILS SECTION ================= */}
       <div className={styles.card}>
         <h3 className={styles.cardTitle}>Primary Details</h3>
 
+        {/* -------- Title, Category & Event Type -------- */}
         <div className={styles.grid3}>
+
+          {/* Event Title Input */}
           <div className={styles.field}>
             <label>
               Event Title <span>*</span>
@@ -178,6 +200,7 @@ export default function EventDetails({
             />
           </div>
 
+          {/* Category Dropdown (Resets event type when changed) */}
           <div className={styles.field}>
             <label>
               Category <span>*</span>
@@ -189,7 +212,7 @@ export default function EventDetails({
                 setData({
                   ...data,
                   category: e.target.value,
-                  eventType: "",
+                  eventType: "", // Clear event type when category changes
                 })
               }
             >
@@ -201,8 +224,8 @@ export default function EventDetails({
               ))}
             </select>
           </div>
-
-          {/* EVENT TYPE */}
+            
+          {/* Event Type Dropdown (Filtered based on selected category) */}
           <div className={styles.field}>
             <label>
               Event Type <span>*</span>
@@ -210,7 +233,7 @@ export default function EventDetails({
             <select
               className={styles.input}
               value={data.eventType || ""}
-              disabled={!data.category}
+              disabled={!data.category} // Disabled until category is selected
               onChange={(e) => setData({ ...data, eventType: e.target.value })}
             >
               <option value="">Select Event Type</option>
@@ -222,12 +245,17 @@ export default function EventDetails({
             </select>
           </div>
         </div>
-
+            
+        {/* -------- Tags & Offers -------- */}
         <div className={styles.grid3}>
+            
+          {/* Tags Input & Display */}
           <div className={styles.field}>
             <label>
               Tags <span>*</span>
             </label>
+            
+            {/* Tag input row with Add button */}
             <div className={styles.tagRow}>
               <input
                 className={styles.input}
@@ -235,16 +263,20 @@ export default function EventDetails({
                 value={tagInput}
                 onChange={(e) => {
                   let value = e.target.value;
-
+                
+                  // Remove spaces
                   value = value.replace(/\s/g, "");
-
+                
+                  // Prevent manual '#' entry (auto-added internally)
                   value = value.replace(/#/g, "");
-
+                
+                  // Allow only alphanumeric characters and underscore
                   value = value.replace(/[^a-zA-Z0-9_]/g, "");
 
                   setTagInput(value);
                 }}
                 onKeyDown={(e) => {
+                  // Add tag on Enter key press
                   if (e.key === "Enter") {
                     e.preventDefault();
                     addTag();
@@ -260,11 +292,13 @@ export default function EventDetails({
                 Add
               </button>
             </div>
-
+              
+            {/* Render Added Tags */}
             <div className={styles.tagList}>
               {(data.tags || []).map((t, index) => (
                 <span key={`${t}-${index}`} className={styles.tag}>
                   {t}
+                  {/* Remove individual tag */}
                   <button type="button" onClick={() => removeTag(t)}>
                     ×
                   </button>
@@ -272,7 +306,8 @@ export default function EventDetails({
               ))}
             </div>
           </div>
-
+            
+          {/* Optional Offers Field */}
           <div className={styles.field}>
             <label>Offers</label>
             <input
@@ -283,7 +318,8 @@ export default function EventDetails({
             />
           </div>
         </div>
-
+            
+        {/* Event Description */}
         <div className={styles.field}>
           <label>
             About Event <span>*</span>
@@ -297,7 +333,7 @@ export default function EventDetails({
         </div>
       </div>
 
-      {/* CALENDAR */}
+      {/* CALENDAR section for scheduling dates/times */}
       <div className={styles.card}>
         <div className={styles.cardHeader}>
           <h3 className={styles.cardTitle}>Calendar *</h3>
@@ -332,10 +368,13 @@ export default function EventDetails({
         )}
       </div>
 
-      {/* EVENT MODE – SAME UI AS OLD */}
+      {/* ================= EVENT MODE SECTION ================= */}
+      {/* Allows switching between Online, Offline, and Hybrid modes.
+          Fields are conditionally rendered based on selected mode. */}
       <div className={styles.card}>
         <h3 className={styles.cardTitle}>Event Mode</h3>
-
+      
+        {/* Mode Selection Buttons */}
         <div className={styles.modeSwitch}>
           {["online", "offline", "hybrid"].map((m) => (
             <button
@@ -346,15 +385,17 @@ export default function EventDetails({
               onClick={() =>
                 setData({
                   ...data,
-                  mode: m,
+                  mode: m, // Update selected event mode
                 })
               }
             >
+              {/* Capitalize first letter for display */}
               {m.charAt(0).toUpperCase() + m.slice(1)}
             </button>
           ))}
         </div>
-
+        
+        {/* Online Link (Shown for Online & Hybrid modes) */}
         {(data.mode === "online" || data.mode === "hybrid") && (
           <div className={styles.field}>
             <label>
@@ -368,10 +409,14 @@ export default function EventDetails({
             />
           </div>
         )}
-
+      
+        {/* Location Fields (Shown for Offline & Hybrid modes) */}
         {(data.mode === "offline" || data.mode === "hybrid") && (
           <>
+            {/* Country, State, City Selection */}
             <div className={styles.grid3}>
+              
+              {/* Country Dropdown */}
               <div className={styles.field}>
                 <label>Country *</label>
                 <select
@@ -381,8 +426,8 @@ export default function EventDetails({
                     setData({
                       ...data,
                       country: e.target.value,
-                      state: "",
-                      city: "",
+                      state: "", // Reset state when country changes
+                      city: "",  // Reset city when country changes
                     })
                   }
                 >
@@ -394,7 +439,8 @@ export default function EventDetails({
                   ))}
                 </select>
               </div>
-
+                
+              {/* State Dropdown (Depends on Country) */}
               <div className={styles.field}>
                 <label>State *</label>
                 <select
@@ -412,7 +458,8 @@ export default function EventDetails({
                   ))}
                 </select>
               </div>
-
+                
+              {/* City Dropdown (Depends on State) */}
               <div className={styles.field}>
                 <label>City *</label>
                 <select
@@ -429,7 +476,11 @@ export default function EventDetails({
                 </select>
               </div>
             </div>
+                
+            {/* Map Link & Venue Details */}
             <div className={styles.grid2}>
+                
+              {/* Google Map Link */}
               <div className={styles.field}>
                 <label>
                   Google Map Link <span>*</span>
@@ -443,6 +494,8 @@ export default function EventDetails({
                   }
                 />
               </div>
+                
+              {/* Venue */}
               <div className={styles.field}>
                 <label>
                   Venue <span>*</span>
@@ -459,7 +512,7 @@ export default function EventDetails({
         )}
       </div>
 
-      {/* ACTIONS */}
+      {/* navigation buttons to move between wizard steps */}
       <div className={styles.actions}>
         <button className={styles.btnOutline} onClick={onBack}>
           Back
@@ -470,6 +523,7 @@ export default function EventDetails({
       </div>
 
       {showCalendar && (
+        // CalendarModal is rendered when user wants to add timeslots
         <CalendarModal
           onClose={() => setShowCalendar(false)}
           onSave={(rows) => {

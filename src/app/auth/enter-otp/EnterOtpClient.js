@@ -1,5 +1,21 @@
 "use client";
 
+/**
+ * EnterOtpClient
+ * --------------
+ * Client-side component responsible for handling the OTP (One-Time Password)
+ * verification step within the authentication flow.
+ *
+ * Core Responsibilities:
+ * - Resolve user role from query parameters.
+ * - Retrieve persisted email from authentication storage.
+ * - Manage OTP digit inputs with controlled state.
+ * - Perform schema-based validation prior to submission.
+ * - Integrate with verification and resend OTP APIs.
+ * - Handle conditional navigation after successful verification.
+ * - Coordinate with global loading context for async states.
+ */
+
 import { useState, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
@@ -34,16 +50,33 @@ import {
 import { useLoading } from "../../../context/LoadingContext"; 
 
 export default function EnterOtpClient() {
+  /**
+   * Router and search parameter handling.
+   * Determines the active role and corresponding UI configuration.
+   */
   const router = useRouter();
   const params = useSearchParams();
   const role = params.get("role") || ROLE_USER;
 
+  /**
+   * Global loading state controller used to display
+   * application-wide loading indicators during async operations.
+   */
   const { setLoading } = useLoading();
 
+  /**
+   * Local state management:
+   * - email: persisted user email.
+   * - otp: controlled array representing each OTP digit.
+   * - resendLoading: UI state for resend action.
+   */
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [resendLoading, setResendLoading] = useState(false);
 
+  /**
+   * References for OTP inputs to support programmatic focus control.
+   */
   const inputs = [
     useRef(null),
     useRef(null),
@@ -51,11 +84,21 @@ export default function EnterOtpClient() {
     useRef(null),
   ];
 
+  /**
+   * On component mount, retrieve stored email from
+   * authentication utilities to avoid reliance on URL parameters.
+   */
   useEffect(() => {
     const storedEmail = getEmail();
     if (storedEmail) setEmail(storedEmail);
   }, []);
 
+  /**
+   * Role-based configuration object.
+   * Controls:
+   * - Illustration displayed in the layout.
+   * - Redirect destination after successful verification.
+   */
   const config = {
     user: {
       image: "/images/auth-forgot.png",
@@ -69,6 +112,14 @@ export default function EnterOtpClient() {
 
   const ui = config[role];
 
+  /**
+   * Handles OTP input changes.
+   *
+   * Logic:
+   * - Restricts input to numeric characters.
+   * - Enforces single-digit entry.
+   * - Automatically shifts focus to the next field when applicable.
+   */
   function onChange(index, value) {
     if (!/^\d*$/.test(value)) return;
 
@@ -81,7 +132,16 @@ export default function EnterOtpClient() {
     }
   }
 
-  /* VERIFY OTP */
+  /**
+   * OTP verification submission handler.
+   *
+   * Flow:
+   * 1. Combine digit array into a single code string.
+   * 2. Validate against defined schema.
+   * 3. Trigger global loading indicator.
+   * 4. Invoke verification API.
+   * 5. Display feedback and redirect on success.
+   */
   async function onSubmit(e) {
     e.preventDefault();
     const code = otp.join("");
@@ -93,7 +153,7 @@ export default function EnterOtpClient() {
     }
 
     try {
-      setLoading(true); 
+      setLoading(true);
 
       const res = await verifyOtpApi({ email, otp: code });
 
@@ -106,11 +166,16 @@ export default function EnterOtpClient() {
     } catch {
       toast.error(MSG_GENERIC_ERROR);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   }
 
-  /* RESEND OTP */
+  /**
+   * Resend OTP handler.
+   *
+   * Invokes resend API and provides user feedback
+   * while managing a localized loading state.
+   */
   async function resendCode() {
     try {
       setResendLoading(true);

@@ -11,13 +11,13 @@ export default function EventClient({ event }) {
   const [eventData, setEventData] = useState(event);
 
   useEffect(() => {
-    // 🔐 ONLY CLIENT CAN CHECK LOGIN
+    // ONLY CLIENT CAN CHECK LOGIN
     if (!isUserLoggedIn()) return;
 
     const loadPrivateEvent = async () => {
       const res = await getEventBySlugApi(event.slug);
 
-      // 👇 now this will hit PRIVATE API
+      // now this will hit PRIVATE API
       if (res?.status) {
         setEventData(res.data);
       }

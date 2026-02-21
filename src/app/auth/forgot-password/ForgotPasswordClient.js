@@ -1,5 +1,19 @@
 "use client";
 
+/**
+ * ForgotPasswordClient
+ * --------------------
+ * Client-side component that initiates the password reset flow.
+ *
+ * Responsibilities:
+ * - Resolve user role from query parameters.
+ * - Validate email using role-specific schema.
+ * - Trigger forgot password API to send OTP.
+ * - Persist email for subsequent OTP verification step.
+ * - Redirect user to OTP entry page upon success.
+ * - Integrate with global loading state.
+ */
+
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
@@ -33,14 +47,28 @@ import { saveEmail } from "../../../lib/auth";
 import { useLoading } from "../../../context/LoadingContext"; 
 
 export default function ForgotPasswordClient() {
+  /**
+   * Router and role resolution.
+   * Role determines validation schema, UI content, and redirect path.
+   */
   const router = useRouter();
   const params = useSearchParams();
   const role = params.get("role") || ROLE_USER;
 
+  /** Global loading state controller. */
   const { setLoading } = useLoading(); 
 
+  /** Local email state for controlled input. */
   const [email, setEmail] = useState("");
 
+  /**
+   * Role-based configuration:
+   * - Illustration
+   * - Input label
+   * - Login redirect
+   * - OTP redirect
+   * - Validation schema
+   */
   const config = {
     user: {
       image: "/images/auth-forgot.png",
@@ -62,6 +90,15 @@ export default function ForgotPasswordClient() {
 
   const ui = config[role];
 
+  /**
+   * Form submission handler.
+   *
+   * Flow:
+   * 1. Validate email against role-specific schema.
+   * 2. Trigger forgot password API.
+   * 3. Persist email for OTP step.
+   * 4. Redirect to OTP page on success.
+   */
   async function onSubmit(e) {
     e.preventDefault();
 

@@ -17,7 +17,7 @@ export default function ShareModal({ open, onClose, title }) {
   const shareUrl =
     typeof window !== "undefined" ? window.location.href : "";
 
-  // 🌍 ENV CONFIG
+  // ENV CONFIG
   const WHATSAPP_BASE = process.env.NEXT_PUBLIC_WHATSAPP_BASE;
   const X_SHARE = process.env.NEXT_PUBLIC_X_SHARE;
   const LINKEDIN_SHARE = process.env.NEXT_PUBLIC_LINKEDIN_SHARE;

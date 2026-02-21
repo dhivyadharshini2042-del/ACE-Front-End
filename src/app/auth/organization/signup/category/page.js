@@ -1,10 +1,17 @@
 "use client";
 
+/**
+ * Organization Category Selection Page
+ * Step 1 of organizer account creation.
+ * Allows user to select organization type before proceeding.
+ */
+
 import "../../auth-common.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
+/** Icon constants */
 import {
   UNIVERSITYICONS,
   TRAININGICON,
@@ -21,6 +28,7 @@ import {
   TICK_ICON,
 } from "../../../../../const-value/config-icons/page";
 
+/** UI text constants */
 import {
   TITLE_ORG_ACCOUNT_CREATION,
   LABEL_ORG_STEP_CATEGORY,
@@ -35,6 +43,10 @@ import {
 
 import { useLoading } from "../../../../../context/LoadingContext";
 
+/**
+ * Available organization categories
+ * Used to dynamically render category selection grid
+ */
 const CATEGORIES = [
   { id: "college", title: "College / University", icon: UNIVERSITYICONS },
   { id: "training", title: "Training Institute", icon: TRAININGICON },
@@ -50,8 +62,15 @@ const CATEGORIES = [
 export default function Page() {
   const router = useRouter();
   const { setLoading } = useLoading();
+
+  /** Stores currently selected category */
   const [selected, setSelected] = useState("");
 
+  /**
+   * Handles Continue button click
+   * - Validates category selection
+   * - Navigates to details step with selected category
+   */
   const onContinue = () => {
     if (!selected) return toast.error(MSG_ERR_CATEGORY_MISSING);
 
@@ -65,6 +84,10 @@ export default function Page() {
     }
   };
 
+  /**
+   * Redirects to user signup page
+   * Allows switching from organizer to user registration
+   */
   const handleUserLogin = () => {
     try {
       setLoading(true);
@@ -76,6 +99,7 @@ export default function Page() {
 
   return (
     <div className="container py-5">
+      {/* Switch to User Signup Option */}
       <div className="organization-sections mt-4">
         <div className="Switch-to-Organizer" onClick={handleUserLogin}>
           Switch to User Sign Up
@@ -83,7 +107,7 @@ export default function Page() {
         <div>{PAGEMOVEICON}</div>
       </div>
 
-      {/* STEPPER */}
+      {/* Stepper Navigation */}
       <div className="org-stepper">
         <div className="org-step active">
           <div className="dot">{ORG_CATEGORY}</div>
@@ -105,12 +129,12 @@ export default function Page() {
         </div>
       </div>
 
-      {/* TITLE */}
+      {/* Page Title */}
       <h2 className="text-center fw-bold">
         {TITLE_ORG_ACCOUNT_CREATION}
       </h2>
 
-      {/* CATEGORY GRID */}
+      {/* Category Selection Grid */}
       <div className="row g-3">
         {CATEGORIES.map((c) => (
           <div key={c.id} className="col-md-4 col-sm-6 col-12">
@@ -129,14 +153,14 @@ export default function Page() {
         ))}
       </div>
 
-      {/* CONTINUE */}
+      {/* Continue Button */}
       <div className="mt-4 text-center btn-container">
         <button className="btn continue-btn" onClick={onContinue}>
           {BTN_CONTINUE}
         </button>
       </div>
 
-      {/* FOOTER */}
+      {/* Footer - Login Redirect */}
       <div className="text-center mt-3">
         <small>
           {TITLE_ALREADY_HAVE_ACCOUNT}{" "}

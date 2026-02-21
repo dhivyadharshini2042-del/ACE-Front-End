@@ -5,17 +5,19 @@ import styles from "./Profile.module.css";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-/* APIs */
+/* ================= API IMPORTS ================= */
 import { getOrganizationProfileApi } from "../../../lib/api/organizer.api";
 import { getUserProfileApi } from "../../../lib/api/user.api";
 import { updateAuthProfile } from "../../../lib/api/auth.api";
 
-/* UI */
+/* ================= UI COMPONENTS ================= */
 import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
 import { useLoading } from "../../../context/LoadingContext";
 
-/* AUTH */
+/* ================= AUTH HELPERS ================= */
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
+
+/* ================= ICONS ================= */
 import {
   FACEBOOKICON,
   INSTAGRAMICON,
@@ -25,21 +27,40 @@ import {
   XICON,
   YOUTUBEICON,
 } from "../../../const-value/config-icons/page";
+
+/* ================= LOCATION APIs ================= */
 import { getCountries, getStates, getCities } from "../../../lib/location.api";
+
+/* ================= DELETE MODAL ================= */
 import DeleteConfirmModal from "../../../components/ui/DeleteConfirmModal/DeleteConfirmModal";
 
+/**
+ * ProfileClient Component
+ * -----------------------
+ * Handles profile viewing, editing, password reset,
+ * and account deletion for both users and organizations.
+ */
 export default function ProfileClient() {
   const router = useRouter();
+  // File input reference
   const fileRef = useRef(null);
+  // Global loading state
   const { setLoading } = useLoading();
 
+  /* ================= STATE ================= */
+
   // const [auth, setAuth] = useState(null);
+  // Profile data
   const [profile, setProfile] = useState(null);
+  // Session auth info
   const [auth, setAuth] = useState(null);
+  // UI mode (view or edit)
   const [mode, setMode] = useState("view");
+
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  // Location states (for user type)
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -48,6 +69,7 @@ export default function ProfileClient() {
   const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
 
+  // Editable form state
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -60,8 +82,12 @@ export default function ProfileClient() {
     },
   });
 
+  // Image preview URL
   const [imagePreview, setImagePreview] = useState(null);
 
+  /* ================= SOCIAL CONFIG ================= */
+
+  // Social platforms mapped with icons
   const socialWithIcon = [
     { key: "linkedin", label: "LinkedIn", icon: LINKEDINICON },
     { key: "telegram", label: "Telegram", icon: TELEGRAMICON },
@@ -72,8 +98,12 @@ export default function ProfileClient() {
     { key: "website", label: "Website", icon: WEBSITEICON },
   ];
 
-  /* ================= INIT ================= */
+  /* ================= PROFILE FETCH ================= */
 
+  /**
+   * Fetches profile based on session type (org or user).
+   * Populates both profile display data and editable form.
+   */
   const fetchProfile = async (session) => {
     try {
       setLoading(true);
@@ -102,6 +132,10 @@ export default function ProfileClient() {
       setLoading(false);
     }
   };
+
+  /* ================= INITIALIZATION ================= */
+
+  // Load session + profile on mount
   useEffect(() => {
     if (!isUserLoggedIn()) return;
 
@@ -110,6 +144,7 @@ export default function ProfileClient() {
     fetchProfile(session);
   }, []);
 
+  // Load countries for location dropdown
   useEffect(() => {
     async function loadCountries() {
       const data = await getCountries();
@@ -118,6 +153,8 @@ export default function ProfileClient() {
 
     loadCountries();
   }, []);
+
+  /* ================= LOCATION HANDLERS ================= */
 
   const handleCountryChange = async (countryId) => {
     setSelectedCountry(countryId);
@@ -136,7 +173,12 @@ export default function ProfileClient() {
     setCities(data || []);
   };
 
-  /* ================= SAVE ================= */
+  /* ================= SAVE PROFILE ================= */
+
+  /**
+   * Submits updated profile information.
+   * Handles file upload and social links.
+   */
   const saveProfile = async () => {
     try {
       if (!auth) {
@@ -150,6 +192,7 @@ export default function ProfileClient() {
       payload.append("identity", auth.identity.identity);
       payload.append("type", auth.type);
 
+      // Dynamic field for user/org name
       payload.append(
         auth.type === "org" ? "organizationName" : "name",
         form.name,
@@ -172,18 +215,22 @@ export default function ProfileClient() {
         toast.error(res?.message || "Update failed");
       }
     } catch (err) {
-      console.log("UPDATE ERROR:", err);
       toast.error(err?.response?.data?.message || "Profile update failed");
     } finally {
       setLoading(false);
     }
   };
 
+  /* ================= DELETE ACCOUNT ================= */
+
+  /**
+   * Handles account deletion confirmation.
+   * (Backend integration can be added here.)
+   */
   const handleDeleteAccount = async () => {
     try {
       setLoading(true);
 
-      console.log("Deleting account...");
       toast.success("Account deleted successfully");
 
       setShowDeleteModal(false);
@@ -200,7 +247,7 @@ export default function ProfileClient() {
 
   return (
     <div className={styles.card}>
-      {/* ================= VIEW ================= */}
+      {/* ================= VIEW MODE ================= */}
       {mode === "view" && (
         <>
           <div className={styles.details}>
@@ -216,6 +263,8 @@ export default function ProfileClient() {
                 <p>{form.email}</p>
               </div>
             )}
+
+            {/* Address block (if available) */}
             {(profile?.country || profile?.state || profile?.city) && (
               <div className={styles.addressBlock}>
                 <label>Address</label>
@@ -247,9 +296,10 @@ export default function ProfileClient() {
         </>
       )}
 
-      {/* ================= EDIT ================= */}
+      {/* ================= EDIT MODE ================= */}
       {mode === "edit" && (
         <>
+          {/* Editable fields */}
           <div className={styles.details}>
             <div>
               <label>Full Name</label>
@@ -264,6 +314,7 @@ export default function ProfileClient() {
               <input value={form.email} disabled />
             </div>
 
+            {/* Profile image upload */}
             <div>
               <label>Profile Image</label>
 
@@ -311,7 +362,7 @@ export default function ProfileClient() {
             </div>
           </div>
 
-          {/* SOCIAL EDIT → ONLY FOR ORG */}
+          {/* Social links section (Org only) */}
           {auth?.type === "org" && (
             <div className={styles.socialEditSection}>
               <h4>Social Links</h4>
@@ -340,7 +391,7 @@ export default function ProfileClient() {
             </div>
           )}
 
-          {/* USER → LOCATION EDIT */}
+          {/* Location section (User only) */}
           {auth?.type !== "org" && (
             <div className={styles.locationSection}>
               <h4>Location</h4>
@@ -391,6 +442,7 @@ export default function ProfileClient() {
           )}
 
           <div className={styles.actions}>
+            {/* Cancel edit */}
             <button
               onClick={() => {
                 setMode("view");
@@ -402,6 +454,7 @@ export default function ProfileClient() {
               Cancel
             </button>
 
+            {/* Save profile */}
             <button className={styles.editBtn} onClick={saveProfile}>
               Save Changes
             </button>
@@ -409,7 +462,7 @@ export default function ProfileClient() {
         </>
       )}
 
-      {/* ================= DELETE ACCOUNT ================= */}
+      {/* ================= DANGER ZONE (DELETE ACCOUNT) ================= */}
       <div className={styles.dangerZone}>
         <h4>Danger Zone</h4>
 
@@ -431,6 +484,7 @@ export default function ProfileClient() {
         </div>
       </div>
 
+      {/* Password reset confirmation modal */}
       <ConfirmModal
         open={showConfirmModal}
         title="Reset Password"
@@ -440,6 +494,7 @@ export default function ProfileClient() {
         onConfirm={() => router.push("/auth/forgot-password")}
       />
 
+      {/* Delete confirmation modal */}
       <DeleteConfirmModal
         open={showDeleteModal}
         userEmail={form.email}

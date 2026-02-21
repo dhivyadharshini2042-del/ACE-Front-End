@@ -15,11 +15,11 @@ export default function ClientLayout({ children }) {
     pathname.startsWith("/signup");
 
   useEffect(() => {
-    // 🔔 Permission + token
+    // Permission + token
     requestNotificationPermission();
     listenForegroundMessage(); 
 
-    // 🔔 FOREGROUND notification (APP OPEN)
+    // FOREGROUND notification (APP OPEN)
     listenForegroundMessage((payload) => {
       // SIMPLE TEST (later UI improve pannalaam)
       alert(

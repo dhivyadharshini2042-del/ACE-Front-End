@@ -56,13 +56,13 @@ export default function CalendarModal({ onClose, onSave }) {
 
     const row = updated[index];
 
-    // ❌ If endDate < startDate → reset end
+    // If endDate < startDate → reset end
     if (field === "startDate" && row.endDate && row.endDate < value) {
       row.endDate = "";
       row.endTime = "";
     }
 
-    // ❌ Same date → endTime must be AFTER startTime
+    // Same date → endTime must be AFTER startTime
     if (
       row.startDate &&
       row.endDate &&

@@ -1,10 +1,16 @@
 "use client";
 
+/**
+ * Organizer Signup - Client Component
+ * Handles organization account creation with validation and API integration.
+ */
+
 import "../../auth-common.css";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
 
+/** UI text constants */
 import {
   TITLE_ORG_ACCOUNT_CREATION,
   SUBTITLE_ORG_ACCOUNT_CREATION,
@@ -30,47 +36,69 @@ import {
 
 } from "../../../../../const-value/config-message/page";
 
+/** Icon constants */
 import {
   PASSWORDHIDEICON,
   PASSWORDVIEWICON,
 } from "../../../../../const-value/config-icons/page";
 
+/** API and Context */
 import { signupApi } from "../../../../../lib/api/auth.api";
 import { useLoading } from "../../../../../context/LoadingContext";
 
+/**
+ * SignupAccountClient Component
+ * - Reads organization details from query parameters
+ * - Validates form inputs
+ * - Calls signup API
+ * - Handles success/error feedback
+ */
 export default function SignupAccountClient() {
   const router = useRouter();
   const params = useSearchParams();
   const { setLoading } = useLoading();
 
+  /** Extract organization details from query parameters */
   const category = params.get("cat");
   const country = params.get("country");
   const state = params.get("state");
   const city = params.get("city");
   const orgName = params.get("orgName");
 
+  /** Local state for form inputs */
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
 
+  /** Password visibility toggle states */
   const [showPass1, setShowPass1] = useState(false);
   const [showPass2, setShowPass2] = useState(false);
 
+  /**
+   * Handles form submission
+   * - Performs client-side validation
+   * - Calls signup API
+   * - Displays success or error notifications
+   */
   async function onSubmit(e) {
     e.preventDefault();
 
+    // Validate required fields
     if (!email || !password || !confirm)
       return toast.error(MSG_ERR_FILL_ALL_FIELDS);
 
+    // Validate password match
     if (password !== confirm)
       return toast.error(MSG_ERR_PASSWORD_MISMATCH);
 
+    // Validate required category parameter
     if (!category)
       return toast.error(MSG_ERR_CATEGORY_MISSING);
 
     try {
       setLoading(true);
 
+      // Call signup API
       const res = await signupApi({
         org_cat: category,
         country,
@@ -83,23 +111,27 @@ export default function SignupAccountClient() {
         platform: "web",
       });
 
+      // Handle API failure response
       if (!res?.status) {
         toast.error(res?.message || MSG_ERR_SIGNUP_FAILED);
         return;
       }
 
+      // Handle successful signup
       toast.success(res.message || MSG_SIGNUP_SUCCESS);
       router.push("/auth/organization/login");
     } catch (err) {
+      // Handle unexpected errors
       toast.error("Something went wrong");
     } finally {
+      // Ensure loading state is cleared
       setLoading(false);
     }
   }
 
   return (
     <div className="org-shell">
-      {/* LEFT */}
+      {/* LEFT SECTION - Visual Branding */}
       <aside
         className="org-left"
         style={{ backgroundImage: "url('/images/organizer-bg-circles.png')" }}
@@ -111,14 +143,14 @@ export default function SignupAccountClient() {
         />
       </aside>
 
-      {/* RIGHT */}
+      {/* RIGHT SECTION - Signup Form */}
       <main className="org-right">
         <div className="org-card">
           <h2 className="org-title">{TITLE_ORGA_ACCOUNT_CREATION}</h2>
           {/* <p className="org-sub">{SUBTITLE_ORG_ACCOUNT_CREATION}</p> */}
 
           <form className="org-form" onSubmit={onSubmit}>
-            {/* EMAIL */}
+            {/* EMAIL FIELD */}
             <div className="form-group">
               <label className="form-label">{LABEL_ORG_EMAIL}</label>
               <input
@@ -130,7 +162,7 @@ export default function SignupAccountClient() {
               />
             </div>
 
-            {/* PASSWORD */}
+            {/* PASSWORD FIELD */}
             <div className="form-group">
               <label className="form-label">{LABEL_PASSWORD}</label>
               <div className="pass-wrap">
@@ -150,7 +182,7 @@ export default function SignupAccountClient() {
               </div>
             </div>
 
-            {/* CONFIRM PASSWORD */}
+            {/* CONFIRM PASSWORD FIELD */}
             <div className="form-group">
               <label className="form-label">{LABEL_CONFIRM_PASSWORD}</label>
               <div className="pass-wrap">
@@ -160,8 +192,8 @@ export default function SignupAccountClient() {
                   placeholder={PH_CONFIRM_PASSWORD}
                   value={confirm}
                   onChange={(e) => setConfirm(e.target.value)}
-                  onPaste={(e) => e.preventDefault()}
-                  onDrop={(e) => e.preventDefault()}
+                  onPaste={(e) => e.preventDefault()}   // Prevent paste for security
+                  onDrop={(e) => e.preventDefault()}    // Prevent drag-drop for security
                   autoComplete="off"
                 />
                 <span
@@ -173,13 +205,15 @@ export default function SignupAccountClient() {
               </div>
             </div>
 
-            {/* ACTION */}
+            {/* SUBMIT ACTION */}
             <div className="org-actions">
               <button type="submit" className="btn-primary-ghost">
                 {BTN_VERIFY_DOMAIN}
               </button>
             </div>
           </form>
+
+          {/* Redirect to Login */}
           <div className="text-center mt-3">
             <small>
               {TITLE_ALREADY_HAVE_ACCOUNT}{" "}

@@ -9,7 +9,7 @@ import {
 import "./OtherDetailsModal.css";
 
 export default function OtherDetailsModal({
-  value,   // 👈 single event la irunthu varra identities
+  value, 
   onClose,
   onSave,
 }) {

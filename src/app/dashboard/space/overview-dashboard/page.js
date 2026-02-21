@@ -10,7 +10,7 @@ import {
   getOrganizationProfileApi,
 } from "../../../../lib/api/organizer.api";
 
-// 🔐 SESSION AUTH
+// SESSION AUTH
 import {
   getAuthFromSession,
   isUserLoggedIn,
@@ -20,7 +20,7 @@ export default function OverviewDashboardPage() {
   const { setLoading } = useLoading();
   const [events, setEvents] = useState([]);
 
-  // 🔐 SESSION STATE
+  // SESSION STATE
   const [auth, setAuth] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -40,7 +40,7 @@ export default function OverviewDashboardPage() {
       try {
         setLoading(true);
 
-        // 🔐 Organizer only
+        // Organizer only
         if (!loggedIn || auth?.type !== "org") {
           setEvents([]);
           return;
@@ -53,7 +53,7 @@ export default function OverviewDashboardPage() {
           return;
         }
 
-        // 1️⃣ Load organization profile
+        // Load organization profile
         const profileRes = await getOrganizationProfileApi(orgId);
 
         if (!profileRes?.status) {
@@ -64,7 +64,7 @@ export default function OverviewDashboardPage() {
         // slug needed for approved events API
         const orgSlug = profileRes.data.slug;
 
-        // 2️⃣ Load approved events
+        // Load approved events
         const eventsRes = await getApprovedOrganizerEventsApi(orgSlug);
 
         if (eventsRes?.status) {

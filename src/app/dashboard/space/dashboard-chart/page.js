@@ -27,16 +27,12 @@ export default function DashboardChartPage() {
 
         const res = await getEventBySlugApi(slug);
 
-        console.log("Slug:", slug);
-        console.log("Event API Response:", res);
-
         if (res?.status && res.data) {
           setEvent(res.data);
         } else {
           toast.error("Event not found");
         }
       } catch (err) {
-        console.log("API Error:", err);
         toast.error("Something went wrong");
       } finally {
         setLoading(false);
@@ -46,7 +42,6 @@ export default function DashboardChartPage() {
     loadEvent();
   }, [slug]);
 
-  // 🔐 VERY IMPORTANT – prevents build & runtime crash
   if (!event) return null;
 
   return <DashboardChart event={event} onBack={() => router.back()} />;

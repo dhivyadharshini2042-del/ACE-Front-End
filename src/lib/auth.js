@@ -24,7 +24,6 @@ export function clearAuthSession() {
   Cookies.remove("auth_type");
 }
 
-/* 👇 OLD + REQUIRED EXPORTS */
 export function getAuthFromSession() {
   return getAuthSession();
 }

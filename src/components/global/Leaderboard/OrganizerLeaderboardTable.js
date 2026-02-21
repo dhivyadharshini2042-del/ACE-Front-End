@@ -61,13 +61,11 @@ export default function OrganizerLeaderboardTable({ data = [] }) {
   };
 
   const handleRowClick = (org) => {
-    console.log("lllllllllllll", org);
     if (!org?.slug) return;
 
     router.push(`/organization-details/${org.slug}`);
   };
 
-  console.log("localData", localData);
 
   return (
     <section className={styles.container}>

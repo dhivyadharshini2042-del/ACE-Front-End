@@ -72,7 +72,6 @@ export default function LandingPage() {
   useEffect(() => {
     const loadEventTypes = async () => {
       const res = await getAllEventTypesApi();
-      console.log("EVENT TYPES API:", res); // 👈 CHECK THIS
 
       if (res?.status) {
         setEventTypes(res.data);

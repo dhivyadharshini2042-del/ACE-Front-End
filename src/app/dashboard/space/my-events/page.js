@@ -20,7 +20,7 @@ export default function MyEventPage() {
   const [view, setView] = useState("grid");
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true); // ✅ FIX
+  const [loading, setLoading] = useState(true); 
 
   const router = useRouter();
 

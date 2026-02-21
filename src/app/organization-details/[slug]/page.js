@@ -3,7 +3,7 @@ import OrganizationClient from "./OrganizationClient";
 
 /* ================= SEO ================= */
 export async function generateMetadata({ params }) {
-  const { slug } = await params;   // ✅ MUST await
+  const { slug } = await params;
 
   try {
     const res = await getOrganizationDetailsApi(slug);

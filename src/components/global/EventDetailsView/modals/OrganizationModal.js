@@ -4,7 +4,7 @@ import "./OrganizationModal.css";
 
 export default function OrganizationModal({ orgs = [], onClose, onSave }) {
 
-  // 🔑 editable local state
+  // editable local state
   const [editableOrgs, setEditableOrgs] = useState(
     orgs.map((org) => ({
       ...org,
@@ -12,7 +12,7 @@ export default function OrganizationModal({ orgs = [], onClose, onSave }) {
     }))
   );
 
-  // 🔄 update handler
+  // update handler
   const updateField = (index, key, value) => {
     const updated = [...editableOrgs];
     updated[index].member[key] = value;
@@ -28,7 +28,6 @@ export default function OrganizationModal({ orgs = [], onClose, onSave }) {
       })),
     };
 
-    console.log("FINAL PAYLOAD", payload);
     onSave(payload);
   };
 

@@ -125,7 +125,6 @@ export default function WhyChoose() {
   };
 
   const formatDate = (date) => {
-    console.log("data", date);
     if (!date) return "N/A";
     return new Date(date).toLocaleDateString("en-IN", {
       day: "2-digit",
