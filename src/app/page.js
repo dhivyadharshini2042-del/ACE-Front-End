@@ -8,8 +8,7 @@ export const metadata = {
     "Explore college events, workshops, hackathons, concerts and more.",
 };
 
-export default async function Page() {
-
+export default async function Page({ searchParams }) {
   const eventsRes = await getAllEventsApi(false);
   const orgRes = await getAllOrganizationsApi();
 
@@ -17,6 +16,7 @@ export default async function Page() {
     <LandingPage
       initialEvents={eventsRes?.data || []}
       initialOrganization={orgRes?.data || []}
+      searchParams={searchParams}   
     />
   );
 }

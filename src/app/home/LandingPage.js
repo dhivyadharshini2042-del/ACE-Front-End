@@ -35,12 +35,11 @@ import {
 } from "../../lib/api/event.api.js";
 import { getAllEventTypesApi } from "../../lib/api/event.api.js";
 import { useLoading } from "../../context/LoadingContext.js";
-import { useSearchParams } from "next/navigation";
 import UserTypeModal from "../../components/ui/UserTypeModal/UserTypeModal";
 import { getUserTypeApi } from "../../lib/api/auth.api";
 import { TOAST_ERROR_MSG_ORGANIZERS_LOAD_FAILED } from "../../const-value/config-message/page.js";
 
-export default function LandingPage() {
+export default function LandingPage({ searchParams }) {
   const { setLoading } = useLoading();
 
   const [organization, setOrganization] = useState([]);
@@ -50,7 +49,6 @@ export default function LandingPage() {
   const [virtualEvents, setVirtualEvents] = useState([]);
   const [featuredEvents, setFeaturedEvents] = useState([]);
   const [eventTypes, setEventTypes] = useState([]);
-  const searchParams = useSearchParams();
   const [showTypeModal, setShowTypeModal] = useState(false);
   const [userTypes, setUserTypes] = useState([]);
 
@@ -77,21 +75,18 @@ export default function LandingPage() {
   ];
 
   useEffect(() => {
-    const shouldShow = searchParams.get("showTypeModal");
+    if (!searchParams) return;
 
-    if (shouldShow === "true") {
+    if (searchParams.showTypeModal === "true") {
       setShowTypeModal(true);
-
       loadUserTypes();
-
-      window.history.replaceState({}, "", "/");
     }
   }, [searchParams]);
 
   const loadUserTypes = async () => {
     try {
       const res = await getUserTypeApi();
-      console.log("]]]]]]]]]]]",res)
+      console.log("]]]]]]]]]]]", res);
 
       if (res?.success) {
         setUserTypes(res.data);

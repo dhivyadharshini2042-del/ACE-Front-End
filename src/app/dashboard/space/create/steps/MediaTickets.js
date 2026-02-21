@@ -20,7 +20,7 @@ import {
 import TicketModal from "../../../../../components/ui/Modal/TicketModal";
 import ConfirmModal from "../../../../../components/ui/Modal/ConfirmModal";
 import { processImage } from "../../../../../lib/utils/imageProcessor";
-import { ticketSchema } from "../../../../../components/validation";
+import { ticketSchema } from "../../../../../components/validation/yupSchemas";
 import toast from "react-hot-toast";
 import { TOAST_ERROR_MSG_ONLY_IMAGE_FILES_ALLOWED,
   TOAST_ERROR_MSG_MAX_4_IMAGES_ALLOWED, 

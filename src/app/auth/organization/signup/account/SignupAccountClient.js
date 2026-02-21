@@ -27,7 +27,7 @@ import {
   TEXT_NO_ACCOUNT,
   TEXT_SIGNIN,
   TITLE_ALREADY_HAVE_ACCOUNT,
-  TOAST_ERROR_MSG_OTP_ERROR
+  TOAST_ERROR_MSG_SOMETHING_WENT_WRONG
 
 } from "../../../../../const-value/config-message/page";
 
@@ -92,7 +92,7 @@ export default function SignupAccountClient() {
       toast.success(res.message || TOAST_SUCCESS_MSG_SIGNUP_SUCCESS);
       router.push("/auth/organization/login");
     } catch (err) {
-      toast.error(TOAST_ERROR_MSG_OTP_ERROR);
+      toast.error(TOAST_ERROR_MSG_SOMETHING_WENT_WRONG);
     } finally {
       setLoading(false);
     }
