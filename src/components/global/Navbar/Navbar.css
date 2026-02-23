@@ -10,36 +10,15 @@
   backdrop-filter: blur(15px);
   background: #ffffff2e;
 }
-
+.navbar-brand{
+  cursor: pointer;
+}
+.navbar-expand-lg .navbar-collapse{
+  justify-content: space-around;
+}
 .nav-wrapper {
   padding: 12px 32px;
 }
-
-.nav-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  width: 100%;
-}
-
-/* ================= LEFT ================= */
-
-.nav-left {
-  display: flex;
-  align-items: center;
-}
-
-/* ================= CENTER ================= */
-
-.nav-center {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  flex: 1;
-  justify-content: center;
-}
-
 .nav-links {
   display: flex;
   gap: 28px;
@@ -86,15 +65,6 @@
 .search-icon {
   opacity: 0.5;
 }
-
-/* ================= RIGHT ================= */
-
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-
 /* ================= BUTTONS ================= */
 
 .btn-primary {
@@ -288,7 +258,7 @@
 
 /* Works in Chrome, Edge, Safari */
 .notification-panel::-webkit-scrollbar {
-  width: 2px;  
+  width: 2px;
 }
 
 .notification-panel::-webkit-scrollbar-track {
@@ -335,22 +305,19 @@
 
   line-height: 1;
 }
+.nav-links {
+  gap: 28px;
+}
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 992px) {
-  .nav-content {
-    flex-direction: column;
-    gap: 18px;
-  }
-
-  .nav-center {
-    flex-direction: column;
-    width: 100%;
-    gap: 16px;
-  }
-
   .nav-links {
-    gap: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .search-box {
+    width: 100%;
   }
 
   .search-box {
@@ -366,11 +333,6 @@
   .nav-wrapper {
     padding: 12px 18px;
   }
-
-  .nav-right {
-    justify-content: center;
-  }
-
   .btn-primary {
     font-size: 13px;
     padding: 8px 16px;

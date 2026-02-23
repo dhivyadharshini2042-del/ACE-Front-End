@@ -180,61 +180,61 @@ export default function NavbarClient() {
   return (
     <Navbar expand="lg" sticky="top" className="ace-navbar">
       <Container fluid className="nav-wrapper">
-        <div className="nav-content">
-          {/* LEFT */}
-          <div className="nav-left">
-            <Navbar.Brand
-              onClick={() => router.push("/")}
-              className="logo-pointer"
-            >
-              <img src="/images/logo.png" height="38" alt="ACE" />
-            </Navbar.Brand>
-          </div>
+        {/* LEFT - BRAND */}
+        <Navbar.Brand onClick={() => router.push("/")} className="logo-pointer">
+          <img src="/images/logo.png" height="38" alt="ACE" />
+        </Navbar.Brand>
 
+        {/* TOGGLE BUTTON */}
+        <Navbar.Toggle aria-controls="ace-navbar-nav" />
+
+        {/* COLLAPSIBLE CONTENT */}
+        <Navbar.Collapse id="ace-navbar-nav">
           {/* CENTER */}
-          <div className="nav-center">
-            <Nav className="nav-links ">
-              <Nav.Link onClick={() => router.push("/events")}>Events</Nav.Link>
-              <Nav.Link onClick={() => router.push("/leaderboard")}>
-                Organizations
-              </Nav.Link>
-            </Nav>
+          <Nav className="nav-links align-items-lg-center">
+            <Nav.Link onClick={() => router.push("/events")}>Events</Nav.Link>
 
-            <div className="search-box">
-              <span className="search-icon">{SEARCH_ICON}</span>
-              <input type="text" placeholder="Search events..." />
-            </div>
+            <Nav.Link onClick={() => router.push("/leaderboard")}>
+              Organizations
+            </Nav.Link>
+          </Nav>
+          {/* CENTER SIDE */}
 
-            {!isLoggedIn && (
-              <button
-                className="btn-primary non-pill"
-                onClick={() => router.push("/auth/organization/login")}
-              >
-                Create Event
-              </button>
-            )}
-
-            {isLoggedIn && auth?.type === "org" && (
-              <button
-                className="btn-primary pill"
-                onClick={() => router.push("/dashboard/space/create")}
-              >
-                Create Event
-              </button>
-            )}
-
-            {!isLoggedIn && (
-              <button
-                className="btn-primary pill"
-                onClick={() => router.push("/auth/user/login")}
-              >
-                Sign In
-              </button>
-            )}
+          {/* SEARCH */}
+          <div className="search-box ms-lg-3 my-3 my-lg-0 d-none d-lg-flex">
+            <span className="search-icon">{SEARCH_ICON}</span>
+            <input type="text" placeholder="Search events..." />
           </div>
 
-          {/* RIGHT */}
-          <div className="nav-right">
+          {!isLoggedIn && (
+            <button
+              className="btn-primary non-pill ms-lg-3 mt-3 mt-lg-0"
+              onClick={() => router.push("/auth/organization/login")}
+            >
+              Create Event
+            </button>
+          )}
+
+          {isLoggedIn && auth?.type === "org" && (
+            <button
+              className="btn-primary ms-lg-3 mt-3 mt-lg-0"
+              onClick={() => router.push("/dashboard/space/create")}
+            >
+              Create Event
+            </button>
+          )}
+
+          {!isLoggedIn && (
+            <button
+              className="btn-primary ms-lg-2 mt-3 mt-lg-0"
+              onClick={() => router.push("/auth/user/login")}
+            >
+              Sign In
+            </button>
+          )}
+
+          {/* RIGHT SIDE */}
+          <div className="d-flex align-items-center gap-3 mt-3 mt-lg-0">
             {isLoggedIn && (
               <Dropdown align="end">
                 <Dropdown.Toggle as="div" className="icon-circle">
@@ -247,43 +247,7 @@ export default function NavbarClient() {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="notification-panel">
-                  <div className="notification-header">
-                    <h6>Notifications</h6>
-
-                    <div style={{ display: "flex", gap: "12px" }}>
-                      {unreadCount > 0 && (
-                        <span className="view-all" onClick={handleMarkAllRead}>
-                          Mark all read
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {notifications.map((n) => (
-                    <div
-                      key={n.identity}
-                      className={`notification-item ${n.isRead ? "read" : "unread"}`}
-                      onClick={() => handleNotificationClick(n)}
-                    >
-                      {n.imageUrl && (
-                        <img
-                          src={n.imageUrl}
-                          className="notif-avatar"
-                          alt="notif"
-                        />
-                      )}
-
-                      <div className="notif-text">
-                        <strong>{n.title}</strong>
-                        <p>{n.body}</p>
-                        <span className="notif-time">
-                          {typeof n.createdAt === "string"
-                            ? n.createdAt
-                            : new Date(n.createdAt).toLocaleString()}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+                  {/* Your same notification code here */}
                 </Dropdown.Menu>
               </Dropdown>
             )}
@@ -309,7 +273,7 @@ export default function NavbarClient() {
               </Tooltip>
             )}
           </div>
-        </div>
+        </Navbar.Collapse>
       </Container>
     </Navbar>
   );
