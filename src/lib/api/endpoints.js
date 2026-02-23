@@ -28,6 +28,9 @@ export const API_ENDPOINTS = {
 
     STATUSES: "/v1/event/statuses",
   },
+  PAID: {
+    BANNER_IMAGES: "/v1/paid/banner_images",
+  },
 
   /* ================= AUTH ================= */
   AUTH: {

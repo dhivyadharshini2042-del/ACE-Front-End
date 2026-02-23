@@ -12,8 +12,6 @@ import {
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-import { getExploreEventTypes } from "../../lib/api/event.api.js";
-
 import { getAllOrganizationsApi } from "../../lib/api/organizer.api.js";
 
 import ChooseEventCategory from "../../components/global/ChooseEventCategory/ChooseEventCategory";
@@ -32,12 +30,14 @@ import {
   getUpcomingEventsApi,
   getVirtualEventsApi,
   getFeaturedEventsApi,
+  getAllEventTypesApi,
+  getExploreEventTypes,
+  getPaidBannerImagesApi,
 } from "../../lib/api/event.api.js";
-import { getAllEventTypesApi } from "../../lib/api/event.api.js";
 import { useLoading } from "../../context/LoadingContext.js";
 import UserTypeModal from "../../components/ui/UserTypeModal/UserTypeModal";
 import { getUserTypeApi } from "../../lib/api/auth.api";
-import { TOAST_ERROR_MSG_ORGANIZERS_LOAD_FAILED } from "../../const-value/config-message/page.js";
+import { NO_IMAGE_FOUND_IMAGE, TOAST_ERROR_MSG_ORGANIZERS_LOAD_FAILED } from "../../const-value/config-message/page.js";
 
 export default function LandingPage({ searchParams }) {
   const { setLoading } = useLoading();
@@ -51,6 +51,7 @@ export default function LandingPage({ searchParams }) {
   const [eventTypes, setEventTypes] = useState([]);
   const [showTypeModal, setShowTypeModal] = useState(false);
   const [userTypes, setUserTypes] = useState([]);
+  const [posters, setPosters] = useState([]);
 
   const [offsets, setOffsets] = useState({
     trending: 0,
@@ -64,15 +65,23 @@ export default function LandingPage({ searchParams }) {
 
   const apiText = "What Event would you like to go to?";
 
-  const posters = [
-    "/images/bannerImageThree.png",
-    "/images/bannerImageFour.png",
-    "/images/bannerImageTwo.png",
-    "/images/bannerImageOne.png",
-    "/images/bannerImageFive.png",
-    "/images/bannerImageSix.png",
-    "/images/bannerImageSev.png",
-  ];
+  useEffect(() => {
+    const loadBannerImages = async () => {
+      try {
+        const res = await getPaidBannerImagesApi();
+
+        if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
+          setPosters(res.data);
+        } else {
+          setPosters([NO_IMAGE_FOUND_IMAGE]);
+        }
+      } catch (error) {
+        console.error("Banner images load failed", error);
+      }
+    };
+
+    loadBannerImages();
+  }, []);
 
   useEffect(() => {
     if (!searchParams) return;

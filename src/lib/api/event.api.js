@@ -165,3 +165,10 @@ export const createEventApi = async (orgId, formData) =>
   handleApi(
     apiPrivate.post(API_ENDPOINTS.ORGANIZER.CREATEVENTS(orgId), formData),
   );
+
+/* =======================
+   PAID BANNER IMAGES (PUBLIC)
+======================= */
+
+export const getPaidBannerImagesApi = async () =>
+  handleApi(apiPublic.get(API_ENDPOINTS.PAID.BANNER_IMAGES));
