@@ -16,6 +16,7 @@ import {
   LOCATION_ICON,
   DATEICON,
   VIEW_ICON,
+  OUR_JOURNEY_BG
 } from "../../../const-value/config-icons/page";
 
 import{ TOAST_ERROR_MSG_LIKE_UPDATE_FAILED,TOAST_ERROR_MSG_EVENT_SAVE_FAILED} from "../../../const-value/config-message/page";
@@ -34,7 +35,6 @@ export default function WhyChoose() {
   useEffect(() => {
     const ok = isUserLoggedIn();
     setLoggedIn(ok);
-
     if (ok) {
       setAuth(getAuthFromSession());
     }
@@ -44,13 +44,11 @@ export default function WhyChoose() {
     const liked = {};
     const saved = {};
     const counts = {};
-
     events.forEach((event) => {
       liked[event.identity] = Boolean(event.isLiked);
       saved[event.identity] = Boolean(event.isSaved);
       counts[event.identity] = event.likeCount || 0;
     });
-
     setLikedCards(liked);
     setSavedCards(saved);
     setLikeCounts(counts);
@@ -69,61 +67,40 @@ export default function WhyChoose() {
 
   const handleLike = async (event, e) => {
     e.stopPropagation();
-
     if (!loggedIn || !auth?.identity) {
       setPendingAction("like");
       setShowLoginModal(true);
       return;
     }
-
     const eventId = event.identity;
     const wasLiked = likedCards[eventId];
-
-    setLikedCards((prev) => ({
-      ...prev,
-      [eventId]: !wasLiked,
-    }));
-
+    setLikedCards((prev) => ({ ...prev, [eventId]: !wasLiked }));
     setLikeCounts((prev) => ({
       ...prev,
       [eventId]: wasLiked ? (prev[eventId] || 1) - 1 : (prev[eventId] || 0) + 1,
     }));
-
     const res = await likeEventApi({
       eventIdentity: eventId,
       userIdentity: auth.identity.identity,
     });
-
-    if (!res?.status) {
-      toast.error(TOAST_ERROR_MSG_LIKE_UPDATE_FAILED);
-    }
+    if (!res?.status) toast.error("Failed to update like");
   };
 
   const handleSave = async (event, e) => {
     e.stopPropagation();
-
     if (!loggedIn || !auth?.identity) {
       setPendingAction("save");
       setShowLoginModal(true);
       return;
     }
-
     const eventId = event.identity;
     const wasSaved = savedCards[eventId];
-
-    setSavedCards((prev) => ({
-      ...prev,
-      [eventId]: !wasSaved,
-    }));
-
+    setSavedCards((prev) => ({ ...prev, [eventId]: !wasSaved }));
     const res = await saveEventApi({
       eventIdentity: eventId,
       userIdentity: auth.identity.identity,
     });
-
-    if (!res?.status) {
-      toast.error(TOAST_ERROR_MSG_EVENT_SAVE_FAILED);
-    }
+    if (!res?.status) toast.error("Failed to save event");
   };
 
   const formatDate = (date) => {
@@ -137,68 +114,69 @@ export default function WhyChoose() {
 
   return (
     <>
-      {/* ================= WHY CHOOSE (UNCHANGED) ================= */}
+      {/* ================= WHY CHOOSE ================= */}
       <section className="why-ace container-xl">
+
         {/* HEADER */}
         <div className="text-center mb-5">
-          <h2 className="why-title">Why Choose AllCollegeEvent ?</h2>
+          <h2 className="why-title">
+            <span className="text-purple">Why Choose</span> AllCollegeEvent ?
+          </h2>
           <p className="why-sub">
-            Enjoy a seamless and delightful ticketing experience with these
-            powerful benefits
+            Enjoy a seamless and delightful ticketing experience with these powerful benefits
           </p>
         </div>
 
         {/* GRID */}
         <div className="why-grid">
-          {/* LEFT – TOP */}
-          <div className="why-card horizontal">
-            <div className="why-img-left">
-              <img src="/images/fast-secure-payments.png" alt="" />
-            </div>
 
+          {/* LEFT TOP — Accessible Anywhere */}
+          <div className="why-card horizontal card-accessible">
+            <div className="why-img-left">
+              <img src="/images/businesswomanImage.svg" alt="Accessible Anywhere" />
+            </div>
             <div className="why-text">
-              <h5>Fast & Secure Payments</h5>
+              <h5>Accessible Anywhere</h5>
               <p>
-                Experience quick transactions with advanced security to protect
-                your data. Pay in minutes with seamless processing and instant
-                confirmation.
+                Access the platform from any device. All College Event makes
+                discovering and joining events quick and convenient whenever
+                and wherever you are.
               </p>
             </div>
           </div>
 
-          {/* RIGHT – BIG */}
+          {/* RIGHT — All-in-One Event Hub (spans 2 rows) */}
           <div className="why-card vertical">
-            <h5>Book Anytime!</h5>
+            <h5>All-in-One Event Hub</h5>
             <p>
-              Enjoy 24/7 booking flexibility reserve your tickets at your
-              convenience with no time restrictions. Access events anytime with
-              a hassle-free booking experience.
+              From technical conferences to cultural celebrations,
+              Allcollegeevent centralizes college events from multiple campuses
+              into a single, easy-to-use platform for effortless discovery.
             </p>
-
             <div className="why-img-bottom">
-              <img src="/images/book-anytime.png" alt="" />
+              <img src="/images/recruitmentSalesImage.svg" alt="All-in-One Event Hub" />
             </div>
           </div>
 
-          {/* LEFT – BOTTOM */}
-          <div className="why-card horizontal">
+          {/* LEFT BOTTOM — Built for Students & Organizers */}
+          <div className="why-card horizontal card-students">
             <div className="why-img-left">
-              <img src="/images/smart-deals.png" alt="" />
+              <img src="/images/parent-volunteersImage.svg" alt="Built for Students & Organizers" />
             </div>
-
             <div className="why-text">
-              <h5>Smart Deals</h5>
+              <h5>Built for Students &amp; Organizers</h5>
               <p>
-                Unlock exclusive offers and discounts. Save more while enjoying
-                premium event experiences.
+                Students can explore and track events, while organizers can
+                publish, manage their events to the right audience efficiently.
               </p>
             </div>
           </div>
+
         </div>
       </section>
 
       {/* ================= ALL EVENTS SECTION ================= */}
-      <section className="all-events-section">
+      {/* <section className="all-events-section">
         <h5 className="fw-bold mb-0 land-title mb-4 px-5">All Events</h5>
 
         <div className="events-scroll-container">
@@ -215,14 +193,12 @@ export default function WhyChoose() {
                   className="card event-card clickable-card"
                   onClick={() => handleClick(event.slug)}
                 >
-                  {/* IMAGE */}
                   <div className="event-img-wrapper">
                     <img
                       src={event.bannerImages?.[0] || NO_IMAGE_FOUND_IMAGE}
                       className="event-img"
                       alt={event.title}
                     />
-
                     <span
                       className="save-on-image"
                       onClick={(e) => handleSave(event, e)}
@@ -231,13 +207,11 @@ export default function WhyChoose() {
                     </span>
                   </div>
 
-                  {/* BODY */}
                   <div className="card-body p-3">
                     <div className="title-like-row">
                       <span className="fw-semibold card-titel">
                         {event.title}
                       </span>
-
                       <div
                         className="like-inline"
                         onClick={(e) => handleLike(event, e)}
@@ -254,7 +228,6 @@ export default function WhyChoose() {
                           {event.location?.city ||
                             (event.mode === "ONLINE" ? "Online Event" : "N/A")}
                         </span>
-
                         <span>
                           {lowestPrice === null
                             ? "N/A"
@@ -268,7 +241,6 @@ export default function WhyChoose() {
                         <span>
                           {DATEICON} {formatDate(calendar?.startDate)}
                         </span>
-
                         <span className="mode-text online">
                           <span className="mode-dot"></span>
                           {event.mode || "ONLINE"}
@@ -280,7 +252,6 @@ export default function WhyChoose() {
                       <span className="view-badge">
                         {VIEW_ICON} {event.viewCount || 0}
                       </span>
-
                       <span className="badge-paid">
                         {event.categoryName || "No category"}
                       </span>
@@ -291,7 +262,8 @@ export default function WhyChoose() {
             })}
           </div>
         </div>
-      </section>
+      </section> */}
+
       <ConfirmModal
         open={showLoginModal}
         image="/images/logo.png"

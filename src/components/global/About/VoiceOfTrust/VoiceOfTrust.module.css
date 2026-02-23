@@ -1,5 +1,5 @@
 .wrapper {
-  padding: 5rem 1rem;
+  /* padding: 5rem 1rem; */
   text-align: center;
   overflow: hidden;
 }
@@ -43,19 +43,28 @@
   align-items: center;
   justify-content: space-between;
 }
+
 .card {
-  width: 260px;
+  /* width: 260px; */
   background: #fff;
   padding: 2rem 1.5rem;
   border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); */
   text-align: left;
   flex-shrink: 0;
+  width: 313;
+  height: 181;
+  opacity: 1;
+
 }
 
 .emoji {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+  opacity: 1;
+  background: #f2f2f2;
+  border-radius: 30px;
+  margin-bottom: .5rem;
+  font-size: 2.2rem;
+  box-shadow: 0 3.27px 5.55px #0000001a;
 }
 
 .card h4 {
@@ -81,6 +90,7 @@
   from {
     transform: translateX(0);
   }
+
   to {
     transform: translateX(-50%);
   }
@@ -90,6 +100,7 @@
   from {
     transform: translateX(-50%);
   }
+
   to {
     transform: translateX(0);
   }

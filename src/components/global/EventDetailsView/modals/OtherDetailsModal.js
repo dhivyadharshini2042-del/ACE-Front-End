@@ -91,16 +91,16 @@ export default function OtherDetailsModal({
             </select>
           </div>
 
-          {/* ===== ACCOMMODATION (ARRAY STORE, SINGLE SELECT UI) ===== */}
+          {/* ===== ACCOMMODATION ===== */}
           <div>
             <label>Accommodation</label>
             <select
-              value={form.accommodationIdentities[0] || ""}   // scalar
+              value={form.accommodationIdentities[0] || ""} 
               onChange={(e) =>
                 setForm({
                   ...form,
                   accommodationIdentities: e.target.value
-                    ? [e.target.value]   // array-ah store
+                    ? [e.target.value] 
                     : [],
                 })
               }
@@ -118,7 +118,7 @@ export default function OtherDetailsModal({
           <div>
             <label>Perks</label>
             <select
-              value={form.perkIdentities[0] || ""}   // scalar
+              value={form.perkIdentities[0] || ""} 
               onChange={(e) =>
                 setForm({
                   ...form,

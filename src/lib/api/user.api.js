@@ -15,3 +15,6 @@ export const updateUserProfileApi = (userId, data) =>
 
 export const deleteUserApi = (userId) =>
   handleApi(apiPrivate.delete(API_ENDPOINTS.USER.DELETE(userId)));
+
+export const getJourneyStats = () =>
+  handleApi(apiPrivate.get(API_ENDPOINTS.ABOUT.STATS));

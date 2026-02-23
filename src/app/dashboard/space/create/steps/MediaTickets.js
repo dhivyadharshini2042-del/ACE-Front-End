@@ -55,13 +55,14 @@ export default function MediaTickets({
   /* ================= LOCAL UI STATE ================= */
   /* Initializes component state using parent data (supports edit/prefill mode) */
   const [tickets, setTickets] = useState(data?.tickets || []);
-  const [perks, setPerks] = useState(data?.perks?.[0] || "");
-  const [certification, setCertification] = useState(data?.certification || "");
-  const [accommodation, setAccommodation] = useState(
-    data?.accommodation?.[0] || "",
-  );
+  const [perks, setPerks] = useState(data?.perks?.[0] ?? "");
+const [certification, setCertification] = useState(data?.certification ?? "");
+const [accommodation, setAccommodation] = useState(Array.isArray(data?.accommodation) ? data.accommodation : []);
+const [paymentLink, setPaymentLink] = useState(data?.paymentLink ?? "");
 
-  const [paymentLink, setPaymentLink] = useState(data?.paymentLink || "");
+  const [accomSearch, setAccomSearch] = useState("");
+  const [accomOpen, setAccomOpen] = useState(false);
+  const accomRef = useRef(null);
 
   /* ================= DROPDOWN DATA ================= */
   /* Stores API-loaded master data for selectable options */
@@ -74,16 +75,14 @@ export default function MediaTickets({
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [ticketType, setTicketType] = useState("FREE");
   const [editingIndex, setEditingIndex] = useState(null);
-
-  /* ================= TICKET FORM STATE ================= */
-  /* Stores temporary ticket form data for create/edit operations */
+  const isFirstRender = useRef(true);
   const [ticketForm, setTicketForm] = useState({
     name: "",
     description: "",
     from: "",
     to: "",
     amount: "",
-    total: "1000",
+    total: "",
   });
 
   // state and ref used for uploading banner images
@@ -125,11 +124,15 @@ export default function MediaTickets({
 
   // reset all form fields when parent triggers resetSignal
   useEffect(() => {
+
+      if (!resetSignal) return;
+  
+  isFirstRender.current = true;
     // reset local UI states
     setTickets([]);
     setPerks("");
     setCertification("");
-    setAccommodation("");
+    setAccommodation([]);
     setPaymentLink("");
     setImages([]);
     setTicketType("FREE");
@@ -141,7 +144,7 @@ export default function MediaTickets({
       from: "",
       to: "",
       amount: "",
-      total: "1000",
+      total: "",
     });
 
     // reset parent media data
@@ -159,18 +162,44 @@ export default function MediaTickets({
     });
   }, [resetSignal]);
 
-  // propagate internal state changes back to parent data object
-  useEffect(() => {
-    setData({
-      ...data,
-      perks: perks ? [perks] : [],
-      certification: certification || "",
-      accommodation: accommodation ? [accommodation] : [],
-      paymentLink,
-      tickets,
-      bannerImages: images,
-    });
-  }, [perks, certification, accommodation, paymentLink, tickets, images]);
+  /* ================= SYNC TO PARENT ================= */
+  // useEffect(() => {
+  //   setData({
+  //     ...data,
+  //     perks: perks ? [perks] : [],
+  //     certification: certification || "",
+  //     // accommodation: accommodation ? [accommodation] : [],
+  //     accommodation: accommodation,
+  //     paymentLink,
+  //     tickets,
+  //     bannerImages: images,
+  //   });
+  // }, [perks, certification, accommodation, paymentLink, tickets, images]);
+
+useEffect(() => {
+  if (isFirstRender.current) {
+    isFirstRender.current = false;
+    return;
+  }
+  setData((prev) => ({
+    ...prev,
+    perks: perks ? [perks] : [],
+    certification: certification || "",
+    accommodation: accommodation,
+    paymentLink,
+    tickets,
+    bannerImages: images,
+  }));
+}, [perks, certification, accommodation, paymentLink, tickets, images]);
+
+
+
+// ADD THESE TEMPORARILY
+console.log("MediaTickets MOUNTED with data:", data);
+console.log("perks init:", data?.perks?.[0]);
+console.log("certification init:", data?.certification);
+console.log("accommodation init:", data?.accommodation);
+console.log("paymentLink init:", data?.paymentLink);
 
   // load dropdown options for perks, certifications, accommodations
   useEffect(() => {
@@ -179,6 +208,15 @@ export default function MediaTickets({
     getAccommodationsApi().then(
       (res) => res?.status && setAccommodationList(res.data),
     );
+  }, []);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (accomRef.current && !accomRef.current.contains(e.target))
+        setAccomOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   /* ================= TICKET ================= */
@@ -192,7 +230,7 @@ export default function MediaTickets({
       from: "",
       to: "",
       amount: "",
-      total: "1000",
+      total: "",
     });
     setTicketType("FREE");
     setOpenTicketModal(true);
@@ -407,24 +445,139 @@ export default function MediaTickets({
             </select>
           </div>
 
-          {/* accommodation choice dropdown */}
-          <div className={styles.field}>
+          {/* ================= ACCOMMODATION ================= */}
+          <div className={styles.field} ref={accomRef} style={{ position: "relative" }}>
             <label>Accommodation</label>
 
-            <select
-              className={styles.input}
-              value={accommodation}
-              onChange={(e) => {
-                setAccommodation(e.target.value);
+            {/* Input box with chips */}
+            <div
+              style={{
+                minHeight: "42px",
+                border: `1px solid ${accomOpen ? "#6366f1" : "#d1d5db"}`,
+                borderRadius: "8px",
+                padding: "6px 10px",
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "6px",
+                alignItems: "center",
+                background: "#fff",
+                cursor: "text",
+                boxShadow: accomOpen ? "0 0 0 3px rgba(99,102,241,0.1)" : "none",
+                transition: "border-color 0.2s",
               }}
+              onClick={() => setAccomOpen(true)}
             >
-              <option value="">Select Accommodation</option>
-              {accommodationList.map((a) => (
-                <option key={a.id} value={a.identity}>
-                  {a.accommodationName}
-                </option>
+              {/* Selected chips */}
+              {accommodation.map((val) => (
+                <span
+                  key={val}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    background: "#ede9fe",
+                    color: "#4f46e5",
+                    borderRadius: "999px",
+                    padding: "2px 10px",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                  }}
+                >
+                  {accommodationList.find((a) => a.identity === val)?.accommodationName || val}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setAccommodation(accommodation.filter((v) => v !== val));
+                    }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      color: "#7c3aed",
+                      fontSize: "11px",
+                      padding: 0,
+                      lineHeight: 1,
+                    }}
+                  >
+                    ✕
+                  </button>
+                </span>
               ))}
-            </select>
+
+              {/* Search input */}
+              <input
+                style={{
+                  border: "none",
+                  outline: "none",
+                  flex: 1,
+                  minWidth: "120px",
+                  fontSize: "14px",
+                  background: "transparent",
+                }}
+                placeholder={accommodation.length === 0 ? "Select Accommodation..." : ""}
+                value={accomSearch}
+                onChange={(e) => { setAccomSearch(e.target.value); setAccomOpen(true); }}
+                onClick={(e) => { e.stopPropagation(); setAccomOpen(true); }}
+              />
+            </div>
+
+            {/* Dropdown */}
+            {accomOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: 0,
+                  right: 0,
+                  background: "#fff",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "8px",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+                  zIndex: 100,
+                  maxHeight: "200px",
+                  overflowY: "auto",
+                  marginTop: "4px",
+                }}
+              >
+                {accommodationList
+                  .filter(
+                    (a) =>
+                      !accommodation.includes(a.identity) &&
+                      a.accommodationName.toLowerCase().includes(accomSearch.toLowerCase())
+                  )
+                  .map((a) => (
+                    <div
+                      key={a.id}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        setAccommodation([...accommodation, a.identity]);
+                        setAccomSearch("");
+                      }}
+                      style={{
+                        padding: "10px 14px",
+                        fontSize: "14px",
+                        cursor: "pointer",
+                        color: "#374151",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "#f5f3ff")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "#fff")}
+                    >
+                      {a.accommodationName}
+                    </div>
+                  ))}
+
+                {accommodationList.filter(
+                  (a) =>
+                    !accommodation.includes(a.identity) &&
+                    a.accommodationName.toLowerCase().includes(accomSearch.toLowerCase())
+                ).length === 0 && (
+                    <div style={{ padding: "12px 14px", fontSize: "13px", color: "#9ca3af" }}>
+                      No options found
+                    </div>
+                  )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -457,12 +610,41 @@ export default function MediaTickets({
           </button>
         </div>
 
-        {/* Empty state message when no tickets exist */}
-        {tickets.length === 0 && (
+        {/* {tickets.length === 0 && (
           <p className={styles.empty}>
             Ticket is empty! Click to create ticket
           </p>
-        )}
+        )} */}
+
+        {tickets.length === 0 && (
+  <div style={{
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "32px",
+    gap: "8px"
+  }}>
+    <div style={{
+      width: 48,
+      height: 48,
+      borderRadius: "50%",
+      background: "#f3f0ff",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: 22
+    }}>
+      🎟️
+    </div>
+    <p style={{ color: "#374151", fontWeight: 600, margin: 0, fontSize: 15 }}>
+      No tickets yet
+    </p>
+    <p style={{ color: "#9ca3af", margin: 0, fontSize: 13 }}>
+      Click <strong>+ Add</strong> to create ticket
+    </p>
+  </div>
+)}
 
         {/* Render ticket list when available */}
         {tickets.length > 0 && (

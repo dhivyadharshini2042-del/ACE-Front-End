@@ -1,13 +1,15 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { getJourneyStats } from "../../../../lib/api/user.api";
 import styles from "./JourneyNumbers.module.css";
 
+// ─── Animated counter ─────────────────────────────────────────────────────────
 function Counter({ end, label, delay = 0 }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
-  // detect when visible
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -18,28 +20,19 @@ function Counter({ end, label, delay = 0 }) {
       },
       { threshold: 0.4 }
     );
-
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
 
-  // count animation
   useEffect(() => {
-    if (!visible) return;
-
-    let start = 0;
+    if (!visible || !end) return;
     const duration = 1500;
     const startTime = performance.now() + delay;
 
     function animate(time) {
-      if (time < startTime) {
-        requestAnimationFrame(animate);
-        return;
-      }
-
+      if (time < startTime) { requestAnimationFrame(animate); return; }
       const progress = Math.min((time - startTime) / duration, 1);
       setCount(Math.floor(progress * end));
-
       if (progress < 1) requestAnimationFrame(animate);
     }
 
@@ -54,7 +47,23 @@ function Counter({ end, label, delay = 0 }) {
   );
 }
 
+// ─── Main component ───────────────────────────────────────────────────────────
 export default function JourneyNumbers() {
+  const [stats, setStats] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    getJourneyStats()
+      .then((res) => {
+        // res.data matches: { users, orgs, events }
+        setStats(res?.data ?? null);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch journey stats:", err);
+        setError("Failed to load stats");
+      });
+  }, []);
+
   return (
     <section className={styles.wrapper}>
       <h2 className={styles.heading}>
@@ -62,9 +71,35 @@ export default function JourneyNumbers() {
       </h2>
 
       <div className={styles.statsCard}>
-        <Counter end={120} label="Event Organizers" />
-        <Counter end={340} label="Events Conducted" delay={200} />
-        <Counter end={45} label="Cities" delay={400} />
+        <Image
+          src="/images/our_journey-bgframe.png"
+          alt=""
+          fill
+          className={styles.bgImage}
+          aria-hidden="true"
+        />
+
+        {error ? (
+          <p className={styles.error}>{error}</p>
+        ) : (
+          <>
+            <Counter
+              end={stats?.orgs?.total ?? 0}
+              label="Event Organizers"
+              delay={0}
+            />
+            <Counter
+              end={stats?.events?.total ?? 0}
+              label="Events Conducted"
+              delay={200}
+            />
+            <Counter
+              end={stats?.users?.total ?? 0}
+              label="Users"
+              delay={400}
+            />
+          </>
+        )}
       </div>
     </section>
   );

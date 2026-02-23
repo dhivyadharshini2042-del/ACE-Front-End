@@ -9,8 +9,6 @@ export default function ExploreHero() {
       <div className="row align-items-center gx-5 gy-5">
         {/* LEFT CONTENT */}
         <div className="col-lg-6">
-          {/* <div className="ace-date">09–29, Nov 2025</div> */}
-
           <h1 className="ace-title">
             ALL <br />
             EVENTS
@@ -20,12 +18,6 @@ export default function ExploreHero() {
             From cultural fests to tech challenges, our events are designed to
             engage, empower, and elevate every participant.
           </p>
-
-          {/* <div className="d-flex gap-3 mt-4 flex-wrap">
-            <button className="btn ace-primary">
-              {VIDEOICON} Watch Our Journey
-            </button>
-          </div> */}
           <div className="d-flex gap-3 mt-4 flex-wrap">
             <button className="ace-create-event">
               Create event

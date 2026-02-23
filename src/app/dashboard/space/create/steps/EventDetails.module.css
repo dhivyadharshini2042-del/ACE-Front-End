@@ -116,11 +116,50 @@
   cursor: pointer;
 }
 
-.modeSwitch {
+/* .modeSwitch {
   display: flex;
   gap: 10px;
   justify-content: flex-end;
   margin-bottom: 20px;
+} */
+
+.modeSwitch {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  background: #f0f0f0;
+  border-radius: 999px;
+  padding: 4px;
+}
+
+.modeBtn {
+  padding: 8px 20px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: "BL Melody", sans-serif;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.2s;
+}
+
+.active {
+  background: #fff;
+  border: 1.5px solid #e0d4ff;
+  color: #7b2cff;
+  font-weight: 600;
+}
+
+
+/* 
+
+
+
+.modeSwitch {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .modeBtn {
@@ -136,6 +175,57 @@
   border-color: #7b2cff;
   background: #f3ecff;
   color: #7b2cff;
+  font-family: "BL Melody", sans-serif;
+} */
+
+.calInput {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 0 12px;
+  height: 48px;
+  background: #fff;
+  position: relative;
+}
+
+.calIcon {
+  display: flex;
+  align-items: center;
+  color: #aaa;
+  flex-shrink: 0;
+}
+
+.calNative {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  background: transparent;
+  color: #333;
+  height: 100%;
+  min-width: 0;
+  /* hide native icon on webkit */
+  -webkit-appearance: none;
+}
+
+.calNative::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.amBadge {
+  background: #f0f0f0;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 12px;
+  color: #666;
+  flex-shrink: 0;
   font-family: "BL Melody", sans-serif;
 }
 
@@ -179,3 +269,62 @@
   font-size: 14px;
   font-family: var(--font-poppins), sans-serif;
 }
+/* ]]]]]]]]]]]]]]]]]]]]]] */
+.grid4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 12px;
+}
+
+@media (max-width: 768px) {
+  .grid4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.iconInput {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 0 12px;
+  height: 44px;
+  background: #fff;
+}
+
+.iconInput input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  background: transparent;
+  height: 100%;
+  width: 100%;
+}
+
+.iconInput span {
+  display: flex;
+  align-items: center;
+  color: #888;
+  flex-shrink: 0;
+}
+
+
+
+
+
+
+
+/* .grid4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .grid4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+} */

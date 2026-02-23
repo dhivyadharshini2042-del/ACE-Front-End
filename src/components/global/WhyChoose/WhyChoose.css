@@ -108,8 +108,10 @@
 }
 
 .events-scroll-container {
-  height: 650px;          
-  overflow-y: auto;       /* enable vertical scroll */
+  height: 650px;
+  /* fixed height */
+  overflow-y: auto;
+  /* enable vertical scroll */
   overflow-x: hidden;
   padding-right: 8px;
 }
@@ -207,4 +209,29 @@
   .all-events-section {
     padding: 0 1rem;
   }
+}
+
+/* ── HEADER ──────────────────────────────────────────────── */
+.why-title {
+  font-size: 32px;
+  font-weight: 700;
+  font-family: "BL Melody", sans-serif;
+  color: #0d0f1a;
+  line-height: 1.2;
+}
+
+/* "Why Choose" — purple */
+.why-title .text-purple {
+  color: #7f00ff;
+}
+
+.why-sub {
+  font-size: 15px;
+  color: #555770;
+  margin-top: 10px;
+  font-family: "BL Melody", sans-serif;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
 }
