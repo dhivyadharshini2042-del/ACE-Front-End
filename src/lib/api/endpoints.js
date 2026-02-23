@@ -99,4 +99,11 @@ export const API_ENDPOINTS = {
     ELIGIBLE_DEPARTMENTS: "/v1/master/eligible-departments",
     DEPARTMENTS: "/v1/master/departments",
   },
+
+  /* ================= ABOUT US ================= */
+  ABOUT: {
+    STATS: "/v1/admin/stats",
+  }
 };
+
+

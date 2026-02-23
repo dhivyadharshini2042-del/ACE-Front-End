@@ -1415,3 +1415,32 @@ export const TICK_ICON = (
     </defs>
   </svg>
 )
+
+export const OUR_JOURNEY_BG = (
+  <svg xmlns="http://www.w3.org/2000/svg" width="1140" height="374" viewBox="0 0 1140 374" fill="none">
+    <g filter="url(#filter0_n_18677_15403)">
+      <rect x="-0.421875" width="1140" height="374" rx="45" fill="#230641" />
+    </g>
+    <defs>
+      <filter id="filter0_n_18677_15403" x="-0.421875" y="0" width="1140" height="374" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+        <feTurbulence type="fractalNoise" baseFrequency="0.40000000596046448 0.40000000596046448" stitchTiles="stitch" numOctaves="3" result="noise" seed="1559" />
+        <feComponentTransfer in="noise" result="coloredNoise1">
+          <feFuncR type="linear" slope="2" intercept="-0.5" />
+          <feFuncG type="linear" slope="2" intercept="-0.5" />
+          <feFuncB type="linear" slope="2" intercept="-0.5" />
+          <feFuncA type="discrete" tableValues="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 " />
+        </feComponentTransfer>
+        <feComposite operator="in" in2="shape" in="coloredNoise1" result="noise1Clipped" />
+        <feComponentTransfer in="noise1Clipped" result="color1">
+          <feFuncA type="table" tableValues="0 0.07" />
+        </feComponentTransfer>
+        <feMerge result="effect1_noise_18677_15403">
+          <feMergeNode in="shape" />
+          <feMergeNode in="color1" />
+        </feMerge>
+      </filter>
+    </defs>
+  </svg>
+)

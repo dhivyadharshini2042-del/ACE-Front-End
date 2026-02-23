@@ -49,7 +49,7 @@ export default function Footer() {
                 <input type="email" placeholder="Enter your email" />
                 <button className={styles.subscribeBtn}>Subscribe</button>
               </div>
-              <div className={styles.whatsapp}>{WHATSAPP}</div>
+              {/* <div className={styles.whatsapp}>{WHATSAPP}</div> */}
             </div>
           </div>
         </div>

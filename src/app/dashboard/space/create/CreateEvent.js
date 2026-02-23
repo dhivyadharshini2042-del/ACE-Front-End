@@ -116,7 +116,7 @@ export default function CreateEvent() {
   /* ================= STEP 1 ================= */
   const handleStep1Next = async () => {
     try {
-      console.log("👉 STEP 1 NEXT CLICK - ORGANIZER DATA:", formData.organizer);
+      console.log("STEP 1 NEXT CLICK - ORGANIZER DATA:", formData.organizer);
       setLoading(true);
       await createEventStep1Schema.validate(formData.organizer, {
         abortEarly: false,
@@ -314,7 +314,8 @@ export default function CreateEvent() {
         <OrganizerDetails
           data={formData.organizer}
           resetSignal={resetSignal}
-          setData={(d) => setFormData({ ...formData, organizer: d })}
+          // setData={(d) => setFormData({ ...formData, organizer: d })}
+          setData={(d) => setFormData((prev) => ({ ...prev, organizer: d }))}
           onNext={handleStep1Next}
         />
       )}
@@ -323,13 +324,14 @@ export default function CreateEvent() {
         <EventDetails
           data={formData.event}
           resetSignal={resetSignal}
-          setData={(d) => setFormData({ ...formData, event: d })}
+          // setData={(d) => setFormData({ ...formData, event: d })}
+          setData={(d) => setFormData((prev) => ({ ...prev, event: d }))}
           onBack={() => setStep(1)}
           onNext={handleStep2Next}
         />
       )}
 
-      {step === 3 && (
+      {/* {step === 3 && (
         <MediaTickets
           data={formData.media}
           resetSignal={resetSignal}
@@ -339,7 +341,29 @@ export default function CreateEvent() {
           ticketMinDate={ticketMinDate}
           ticketMaxDate={ticketMaxDate}
         />
-      )}
+      )} */}
+      {step === 3 && (
+  <MediaTickets
+    data={formData.media}
+    resetSignal={resetSignal}
+    // setData={(d) =>
+    //   setFormData((prev) => ({
+    //     ...prev,
+    //     media: typeof d === "function" ? d(prev.media) : d,
+    //   }))
+    // }
+    setData={(d) =>
+  setFormData((prev) => ({
+    ...prev,
+    media: typeof d === "function" ? d(prev.media) : d,
+  }))
+}
+    onBack={() => setStep(2)}
+    onSubmit={handleFinalSubmit}
+    ticketMinDate={ticketMinDate}
+    ticketMaxDate={ticketMaxDate}
+  />
+)}
     </div>
   );
 }
