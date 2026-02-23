@@ -13,7 +13,6 @@ export const requestPermission = async () => {
 
     const authToken = getAuthToken();
     if (!authToken || !isUserLoggedIn()) {
-      console.log("⛔ No auth token yet, skipping FCM");
       return;
     }
 
@@ -26,16 +25,13 @@ export const requestPermission = async () => {
 
     if (!token) return;
 
-    console.log("🔥 FCM TOKEN:", token);
-
     await registerFcmTokenApi({
       token,
       deviceInfo: navigator.userAgent,
     });
 
-    console.log("✅ FCM registered successfully");
 
   } catch (error) {
-    console.error("🚨 FCM Error:", error);
+    console.error("FCM Error:", error);
   }
 };

@@ -175,8 +175,6 @@ export default function NavbarClient() {
     }
   };
 
-  console.log("notifications");
-
   return (
     <Navbar expand="lg" sticky="top" className="ace-navbar">
       <Container fluid className="nav-wrapper">
@@ -247,7 +245,43 @@ export default function NavbarClient() {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="notification-panel">
-                  {/* Your same notification code here */}
+                  <div className="notification-header">
+                    <h6>Notifications</h6>
+
+                    <div style={{ display: "flex", gap: "12px" }}>
+                      {unreadCount > 0 && (
+                        <span className="view-all" onClick={handleMarkAllRead}>
+                          Mark all read
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {notifications.map((n) => (
+                    <div
+                      key={n.identity}
+                      className={`notification-item ${n.isRead ? "read" : "unread"}`}
+                      onClick={() => handleNotificationClick(n)}
+                    >
+                      {n.imageUrl && (
+                        <img
+                          src={n.imageUrl}
+                          className="notif-avatar"
+                          alt="notif"
+                        />
+                      )}
+
+                      <div className="notif-text">
+                        <strong>{n.title}</strong>
+                        <p>{n.body}</p>
+                        <span className="notif-time">
+                          {typeof n.createdAt === "string"
+                            ? n.createdAt
+                            : new Date(n.createdAt).toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                 </Dropdown.Menu>
               </Dropdown>
             )}

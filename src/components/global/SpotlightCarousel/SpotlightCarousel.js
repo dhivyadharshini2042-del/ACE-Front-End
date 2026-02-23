@@ -142,8 +142,6 @@ export default function SpotlightCarousel({ data = [] }) {
 
             const banner =
               event.bannerImages?.[0] || "/images/event.png";
-            console.log("banner_image", banner);
-
 
             return (
               <article

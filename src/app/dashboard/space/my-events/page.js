@@ -77,7 +77,6 @@ export default function MyEventPage() {
     return true;
   });
 
-  console.log("[[[[[[[[[",filteredEvents)
   return (
     <div className="container-fluid p-3 mb-5 rounded">
       <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">

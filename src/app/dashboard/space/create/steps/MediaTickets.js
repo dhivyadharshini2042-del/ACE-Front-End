@@ -239,7 +239,6 @@ export default function MediaTickets({
   };
 
   useEffect(() => {
-    console.log("CONFIRM MODAL:", openSuccessModal);
   }, [openSuccessModal]);
 
   return (

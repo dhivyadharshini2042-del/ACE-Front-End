@@ -71,7 +71,6 @@ export default function EventDetailsView({ event = {}, onBack }) {
   //   : filteredCollaborators.slice(0, 1);
 
   useEffect(() => {
-    console.log("Event data:", event);
   }, [event]);
 
   /* ── Auth ── */

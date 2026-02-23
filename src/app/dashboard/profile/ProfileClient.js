@@ -217,7 +217,6 @@ export default function ProfileClient() {
         toast.error(res?.message || TOAST_ERROR_MSG_UPDATE_FAILED);
       }
     } catch (err) {
-      console.log("UPDATE ERROR:", err);
       toast.error(err?.response?.data?.message || TOAST_ERROR_MSG_PROFILE_UPDATE_FAILED);
     } finally {
       setLoading(false);
@@ -234,7 +233,6 @@ export default function ProfileClient() {
     try {
       setLoading(true);
 
-      console.log("Deleting account...");
       toast.success(TOAST_SUCCESS_ACCOUNT_DELETED);
 
       setShowDeleteModal(false);

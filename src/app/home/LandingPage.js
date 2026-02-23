@@ -86,7 +86,6 @@ export default function LandingPage({ searchParams }) {
   const loadUserTypes = async () => {
     try {
       const res = await getUserTypeApi();
-      console.log("]]]]]]]]]]]", res);
 
       if (res?.success) {
         setUserTypes(res.data);

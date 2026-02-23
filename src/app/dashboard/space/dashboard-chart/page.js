@@ -19,7 +19,6 @@ export default function DashboardChartPage() {
   const [event, setEvent] = useState(null);
 
   useEffect(() => {
-    console.log("xxxxxxxxx",slug)
     if (!slug) return;
 
     const loadEvent = async () => {
@@ -34,7 +33,6 @@ export default function DashboardChartPage() {
           toast.error(TOAST_ERROR_MSG_EVENT_NOT_FOUND);
         }
       } catch (err) {
-        console.log("API Error:", err);
         toast.error(TOAST_ERROR_MSG_SOMETHING_WENT_WRONG);
       } finally {
         setLoading(false);

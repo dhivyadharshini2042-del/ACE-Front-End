@@ -96,7 +96,6 @@ export default function UserLoginPage() {
 
     try {
       const res = await loginApi(form);
-      console.log("///////////", res);
       if (!res?.status || !res?.data) {
         toast.error(res?.message || TOAST_ERROR_MSG_LOGIN_FAILED);
         return;

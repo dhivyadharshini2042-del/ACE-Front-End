@@ -48,8 +48,6 @@ export default function MyEventsGrid({ events = [], loading }) {
     startIndex + PAGE_SIZE
   );
 
-  console.log("ooooooooo",paginatedEvents)
-
   return (
     <>
       {/* EVENTS GRID */}
