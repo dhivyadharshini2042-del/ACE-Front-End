@@ -14,7 +14,7 @@ import {
 import { useLoading } from "../../../context/LoadingContext";
 import { likeEventApi, saveEventApi } from "../../../lib/api/event.api";
 
-// 🔐 SESSION AUTH
+// SESSION AUTH
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
 import { NO_IMAGE_FOUND_IMAGE , TOAST_ERROR_MSG_LIKE_UPDATE_FAILED, TOAST_ERROR_MSG_SAVE_UPDATE_FAILED} from "../../../const-value/config-message/page";
@@ -170,7 +170,6 @@ export default function EventsListFilter({ events = [] }) {
     );
   }
 
-  console.log("[[[[[[[[[[[[", events);
 
   /* ================= UI (UNCHANGED) ================= */
   return (

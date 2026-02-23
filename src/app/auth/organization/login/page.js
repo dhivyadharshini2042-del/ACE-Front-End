@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * OrganizerLoginPage
+ * ------------------
+ * Client-side login component for organizer accounts.
+ *
+ * Handles validation, authentication, session persistence,
+ * role-based login enforcement, and post-login navigation.
+ */
+
 import "./organizer-login.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -20,6 +29,7 @@ import { setAuthCookie } from "../../../../lib/auth";
 
 /* VALIDATION */
 import { organizerLoginSchema } from "../../../../components/validation";
+import { requestPermission } from "../../../../lib/firebase/requestPermission";
 
 /* CONSTANTS */
 import {
@@ -42,20 +52,32 @@ import {
 } from "../../../../const-value/config-message/page";
 
 import { useLoading } from "../../../../context/LoadingContext";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../../../store/authSlice";
 
 export default function OrganizerLoginPage() {
   const router = useRouter();
   const { setLoading } = useLoading();
-
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
 
   /* ================= SUBMIT ================= */
+  /**
+   * Handles organizer login submission.
+   *
+   * Flow:
+   * 1. Perform schema-based validation.
+   * 2. Invoke authentication API with organizer role.
+   * 3. Validate API response (status + token).
+   * 4. Persist authentication session.
+   * 5. Redirect to dashboard on success.
+   */
   async function onSubmit(e) {
     e.preventDefault();
 
-    //  validation
+    // Perform schema validation for email and password
     try {
       await organizerLoginSchema.validate(
         { email, password },
@@ -69,21 +91,31 @@ export default function OrganizerLoginPage() {
     try {
       setLoading(true);
 
-      //  login API
+      // Invoke login API with organizer role context
       const res = await loginApi({
         email,
         password,
         type: ROLE_ORGANIZER,
       });
-      console.log("res", res);
-      // failure
+
+      // Handle authentication failure (invalid credentials or missing token)
       if (!res?.status || !res?.token) {
         toast.error(res?.message || TOAST_ERROR_MSG_INVALID_CREDENTIALS);
         return;
       }
 
-      //  SAVE AUTH TO SESSION (IMPORTANT)
       setAuthCookie(res.token, res.data, ROLE_ORGANIZER);
+
+      // 🔥 UPDATE REDUX
+      dispatch(
+        loginSuccess({
+          data: res.data,
+          role: "organizer",
+        }),
+      );
+
+      // 🔥 CALL FCM AFTER LOGIN
+      await requestPermission();
 
       // success
       toast.success(TOAST_SUCCESS_MSG_LOGIN_SUCCESS_ORGANIZER);
@@ -101,10 +133,18 @@ export default function OrganizerLoginPage() {
   }
 
   /* ================= SWITCH TO USER LOGIN ================= */
+  /**
+   * Redirects to user login page.
+   * Enables account-type switching without page reload.
+   */
   const handleUserLogin = () => {
     router.push("/auth/user/login");
   };
 
+  /**
+   * Ensures global loading state is reset
+   * when component mounts.
+   */
   useEffect(() => {
     setLoading(false);
   }, []);

@@ -77,8 +77,6 @@ export default function LocationClient({ params }) {
       page,
     });
 
-    console.log("==========res", res);
-
     if (res?.status) {
       setEvents(res.data);
       setMeta(res.meta);

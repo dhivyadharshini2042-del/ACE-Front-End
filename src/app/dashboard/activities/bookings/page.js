@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * BookingEventsPage
+ *
+ * Displays a logged-in user's booked events.
+ * Features:
+ * - Loads events from API based on session auth
+ * - Shows empty state if no bookings
+ * - Pagination for more than 6 events
+ */
+
 import { useEffect, useState } from "react";
 import styles from "./Booking.module.css";
 import toast from "react-hot-toast";
@@ -28,15 +38,16 @@ export default function BookingEventsPage() {
   const { setLoading } = useLoading();
   const router = useRouter();
 
+  // EVENTS STATE
   const [events, setEvents] = useState([]);
   const [localLoading, setLocalLoading] = useState(true);
   const [page, setPage] = useState(1);
 
-  // 🔐 SESSION AUTH STATE
+  // SESSION AUTH
   const [auth, setAuth] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  /* ================= STOP GLOBAL LOADER ON PAGE LOAD ================= */
+  /* ===== STOP GLOBAL LOADER & INIT AUTH ===== */
   useEffect(() => {
     setLoading(false);
 
@@ -78,7 +89,7 @@ export default function BookingEventsPage() {
     loadEvents();
   }, [isLoggedIn, auth?.identity]);
 
-  /* ================= PAGINATION ================= */
+  /* ===== PAGINATION CALCULATION ===== */
   const totalPages = Math.ceil(events.length / PAGE_SIZE);
   const start = (page - 1) * PAGE_SIZE;
   const visibleEvents = events.slice(start, start + PAGE_SIZE);
@@ -106,7 +117,7 @@ export default function BookingEventsPage() {
     );
   }
 
-  /* ================= UI (UNCHANGED) ================= */
+  /* ===== EVENTS GRID ===== */
   return (
     <div className={styles.wrapper}>
       <h2 className={styles.title}>Booked Events</h2>

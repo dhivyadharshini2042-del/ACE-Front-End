@@ -43,7 +43,6 @@ export default function MyEventsList({ events = [], loading }) {
   };
 
   const handleDelete = () => {
-    console.log("DELETE EVENT:", deleteId);
     setDeleteId(null);
   };
 
@@ -143,7 +142,7 @@ export default function MyEventsList({ events = [], loading }) {
         })}
       </div>
 
-      {/* ✅ PAGINATION */}
+      {/* PAGINATION */}
       {totalPages > 1 && (
         <PaginationBar page={page} total={totalPages} onChange={setPage} />
       )}

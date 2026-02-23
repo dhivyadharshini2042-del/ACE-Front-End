@@ -1,5 +1,12 @@
 "use client";
 
+/**
+ * Role Selection Page
+ *
+ * Allows users to select their role (student, faculty, professional, general).
+ * Saves the selected role via API and redirects to the home page.
+ */
+
 import "./role-select.css";
 import { useRouter } from "next/navigation";
 import { useLoading } from "../../../context/LoadingContext";
@@ -11,6 +18,11 @@ export default function RoleSelectPage() {
   const router = useRouter();
   const { setLoading } = useLoading();
 
+  /**
+   * Handles role selection
+   * - Calls API to save selected role
+   * - Redirects to home on success
+   */
   const onSelect = async (value) => {
     try {
       setLoading(true);
@@ -31,7 +43,7 @@ export default function RoleSelectPage() {
 
   return (
     <div className="vibe-shell">
-      {/* HEADER */}
+      {/* Page Header */}
       <div className="vibe-header">
         <h1 className="vibe-title">
           <span>Select your vibe!</span> Start your journey!
@@ -39,9 +51,9 @@ export default function RoleSelectPage() {
         <p className="vibe-sub">Click & enjoy your events vibe!</p>
       </div>
 
-      {/* BODY */}
+      {/* Page Content */}
       <div className="vibe-body">
-        {/* LEFT IMAGE */}
+        {/* Left Illustration */}
         <div className="vibe-left">
           <img src="/images/Firstscreen.png" alt="Select your vibe" />
         </div>

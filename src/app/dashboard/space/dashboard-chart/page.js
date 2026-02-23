@@ -28,9 +28,6 @@ export default function DashboardChartPage() {
 
         const res = await getEventBySlugApi(slug);
 
-        console.log("Slug:", slug);
-        console.log("Event API Response:", res);
-
         if (res?.status && res.data) {
           setEvent(res.data);
         } else {
@@ -47,7 +44,6 @@ export default function DashboardChartPage() {
     loadEvent();
   }, [slug]);
 
-  // 🔐 VERY IMPORTANT – prevents build & runtime crash
   if (!event) return null;
 
   return <DashboardChart event={event} onBack={() => router.back()} />;

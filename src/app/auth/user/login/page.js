@@ -1,8 +1,18 @@
 "use client";
 
+/**
+ * User Login Page (Client Component)
+ *
+ * Handles:
+ * - Normal email/password login
+ * - Google OAuth login
+ * - Auth cookie storage
+ * - Loading state handling
+ * - Redirect after successful login
+ */
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
 import { GoogleLogin } from "@react-oauth/google";
 
@@ -16,6 +26,7 @@ import {
 } from "../../../../const-value/config-icons/page";
 
 import { userLoginSchema } from "../../../../components/validation";
+import { requestPermission } from "../../../../lib/firebase/requestPermission";
 
 import {
   TITLE_USER_LOGIN,
@@ -39,13 +50,24 @@ import { loginApi, googleAuthLoginApi } from "../../../../lib/api/auth.api";
 
 import { useLoading } from "../../../../context/LoadingContext";
 import { setAuthCookie } from "../../../../lib/auth";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../../../store/authSlice";
 
 export default function UserLoginPage() {
+  /**
+   * Router + Global Loading
+   */
   const router = useRouter();
   const { setLoading } = useLoading();
-
+  const dispatch = useDispatch();
+  /**
+   * Local UI State
+   */
   const [showPass, setShowPass] = useState(false);
 
+  /**
+   * Login Form State
+   */
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -53,6 +75,14 @@ export default function UserLoginPage() {
   });
 
   /* ================= NORMAL LOGIN ================= */
+
+  /**
+   * Handles email/password login flow
+   * - Validates input
+   * - Calls login API
+   * - Sets auth cookie
+   * - Redirects to home
+   */
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -74,6 +104,17 @@ export default function UserLoginPage() {
 
       setAuthCookie(res.token, res.data, ROLE_USER);
 
+      // 🔥 UPDATE REDUX
+      dispatch(
+        loginSuccess({
+          data: res.data,
+          role: "user",
+        }),
+      );
+
+      // 🔥 CALL FCM
+      await requestPermission();
+
       toast.success(TOAST_SUCCESS_MSG_LOGIN_SUCCESS_USER);
 
       if (res.data?.hasSelectedType === false) {
@@ -89,6 +130,10 @@ export default function UserLoginPage() {
   };
 
   /* ================= GOOGLE LOGIN ================= */
+
+  /**
+   * Handles Google OAuth login flow
+   */
   const handleGoogleSuccess = async (response) => {
     setLoading(true);
 
@@ -102,11 +147,16 @@ export default function UserLoginPage() {
         return;
       }
 
-      setAuthCookie(
-        res.token,
-        res.data, // identity
-        ROLE_USER,
+      setAuthCookie(res.token, res.data, ROLE_USER);
+
+      dispatch(
+        loginSuccess({
+          data: res.data,
+          role: "user",
+        }),
       );
+
+      await requestPermission();
 
       toast.success(TOAST_SUCCESS_MSG_GOOGLE_LOGIN_SUCCESS_USER);
 
@@ -122,6 +172,9 @@ export default function UserLoginPage() {
     }
   };
 
+  /**
+   * Navigate to organizer login page
+   */
   const handleCreateEvent = () => {
     try {
       setLoading(true);
@@ -133,12 +186,12 @@ export default function UserLoginPage() {
 
   return (
     <div className="auth-shell">
-      {/* LEFT IMAGE */}
+      {/* LEFT IMAGE SECTION */}
       <div className="auth-left d-none d-lg-flex">
         <img src="/images/auth-login.png" alt="login" />
       </div>
 
-      {/* RIGHT FORM */}
+      {/* RIGHT LOGIN FORM */}
       <div className="auth-right">
         <div className="auth-card">
           <div className="organization-sections mt-4">
@@ -152,7 +205,7 @@ export default function UserLoginPage() {
           <p className="auth-sub">{SUBTITLE_USER_LOGIN}</p>
 
           <form onSubmit={onSubmit}>
-            {/* EMAIL */}
+            {/* EMAIL FIELD */}
             <label className="auth-label">{LABEL_EMAIL}</label>
             <input
               className="auth-input"
@@ -168,7 +221,7 @@ export default function UserLoginPage() {
               }}
             />
 
-            {/* PASSWORD */}
+            {/* PASSWORD FIELD */}
             <label className="auth-label">{LABEL_PASSWORD}</label>
             <div className="auth-pass-wrap">
               <input
@@ -187,12 +240,12 @@ export default function UserLoginPage() {
               </span>
             </div>
 
-            {/* FORGOT */}
+            {/* FORGOT PASSWORD */}
             <div className="login-forgot">
               <a href="/auth/forgot-password">{TEXT_FORGOT_PASSWORD}</a>
             </div>
 
-            {/* SUBMIT */}
+            {/* SUBMIT BUTTON */}
             <button className="auth-btn">{TEXT_SIGNIN}</button>
 
             {/* DIVIDER */}
@@ -206,7 +259,7 @@ export default function UserLoginPage() {
               />
             </div>
 
-            {/* FOOTER */}
+            {/* FOOTER SIGNUP LINK */}
             <div className="auth-footer">
               {TEXT_NO_ACCOUNT} <a href="/auth/user/signup">{TEXT_SIGNUP}</a>
             </div>

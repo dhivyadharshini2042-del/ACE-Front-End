@@ -85,7 +85,7 @@ export default function CreateEvent() {
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
   const [resetSignal, setResetSignal] = useState(0);
 
-  // 🔐 SESSION STATE
+  // SESSION STATE
   const [auth, setAuth] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -124,7 +124,6 @@ export default function CreateEvent() {
   /* ================= STEP 1 ================= */
   const handleStep1Next = async () => {
     try {
-      console.log("👉 STEP 1 NEXT CLICK - ORGANIZER DATA:", formData.organizer);
       setLoading(true);
       await createEventStep1Schema.validate(formData.organizer, {
         abortEarly: false,
@@ -281,19 +280,7 @@ export default function CreateEvent() {
         });
       }
 
-      //FINAL API PAYLOAD LOG
-      console.log("===== FINAL CREATE EVENT PAYLOAD =====");
-      for (let item of fd.entries()) {
-        const key = item[0];
-        const value = item[1];
-
-        if (value instanceof File) {
-          console.log(key, "=> FILE :", value.name);
-        } else {
-          console.log(key, "=>", value);
-        }
-      }
-      console.log("===== END PAYLOAD =====");
+      
 
       const res = await createEventApi(orgId, fd);
 

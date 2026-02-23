@@ -1,3 +1,8 @@
+/**
+ * Sidebar component for dashboard navigation.
+ * Shows links for profile, activities, space, settings, etc.
+ * Expands on hover and highlights the current route.
+ */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -9,7 +14,7 @@ import { getOrganizationProfileApi } from "../../../../lib/api/organizer.api";
 import { getUserProfileApi } from "../../../../lib/api/user.api";
 import ConfirmModal from "../../../../components/ui/Modal/ConfirmModal";
 
-// 🔐 SESSION AUTH
+// SESSION AUTH
 import {
   getAuthFromSession,
   isUserLoggedIn,
@@ -28,11 +33,11 @@ export default function Sidebar() {
   const [auth, setAuth] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  /* ================= ACTIVE HELPERS ================= */
+  // helpers for determining active routes
   const isActive = (path) => pathname === path;
   const isActivePrefix = (path) => pathname.startsWith(path);
 
-  /* ================= INIT AUTH ================= */
+  // initialize authentication state from session
   useEffect(() => {
     const loggedIn = isUserLoggedIn();
     setIsLoggedIn(loggedIn);
@@ -42,7 +47,7 @@ export default function Sidebar() {
     }
   }, []);
 
-  /* ================= LOAD PROFILE ================= */
+  // fetch user or organization profile once authenticated
   useEffect(() => {
     async function loadProfile() {
       if (!isLoggedIn || !auth?.identity || !auth?.type) return;
@@ -66,15 +71,17 @@ export default function Sidebar() {
     loadProfile();
   }, [isLoggedIn, auth]);
 
+  // expand/collapse specific submenu
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? null : menu);
   };
 
+  // simple arrow icon indicating open/closed state
   const Arrow = ({ open }) => (
     <span className={styles.arrow}>{open ? "▲" : "▼"}</span>
   );
 
-  /* ================= LOGOUT ================= */
+  // logout handler functions
   const handleLogoutClick = () => {
     setShowLogoutConfirm(true);
   };
@@ -89,6 +96,7 @@ export default function Sidebar() {
     setShowLogoutConfirm(false);
   };
 
+  // derive strings for profile display
   const displayName =
     profile?.organizationName || profile?.name || "User";
   const displayEmail =
@@ -104,7 +112,7 @@ export default function Sidebar() {
         setOpenMenu(null);
       }}
     >
-      {/* PROFILE */}
+      {/* profile menu trigger */}
       <div
         className={`${styles.menu} ${
           isActivePrefix("/dashboard/profile") ? styles.activeMenu : ""
@@ -130,7 +138,7 @@ export default function Sidebar() {
         </div>
       )}
 
-      {/* ACTIVITIES */}
+      {/* activities section */}
       <div
         className={`${styles.menu} ${
           isActivePrefix("/dashboard/activities")
@@ -176,7 +184,7 @@ export default function Sidebar() {
         </div>
       )}
 
-      {/* MY SPACE */}
+      {/* organization space links (org only) */}
       {auth?.type === "org" && (
         <>
           <div
@@ -234,7 +242,7 @@ export default function Sidebar() {
         </>
       )}
 
-      {/* SETTINGS */}
+      {/* settings options */}
       <div
         className={`${styles.menu} ${
           isActivePrefix("/dashboard/settings")
@@ -279,7 +287,7 @@ export default function Sidebar() {
         </div>
       )}
 
-      {/* BOTTOM PROFILE */}
+      {/* bottom profile and logout */}
       <div className={styles.bottomProfile}>
         {profile?.profileImage ? (
           <img
@@ -308,6 +316,7 @@ export default function Sidebar() {
         )}
       </div>
 
+      {/* confirmation dialog shown on logout */}
       <ConfirmModal
         open={showLogoutConfirm}
         title="Confirm Logout"

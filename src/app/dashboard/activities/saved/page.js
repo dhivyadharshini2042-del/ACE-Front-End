@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * SavedEventsPage
+ *
+ * Displays events saved by a logged-in user.
+ * Features:
+ * - Loads saved events via API using session auth
+ * - Shows empty state if no saved events
+ * - Pagination for more than 6 events
+ */
+
 import { useEffect, useState } from "react";
 import styles from "./Saved.module.css";
 import toast from "react-hot-toast";
@@ -17,7 +27,7 @@ import {
 import { useLoading } from "../../../../context/LoadingContext";
 import { TOAST_ERROR_MSG_SOMETHING_WENT_WRONG, TOAST_ERROR_MSG_SAVED_EVENTS_LOAD_FAILED } from "../../../../const-value/config-message/page";
 
-// 🔐 SESSION AUTH
+// SESSION AUTH
 import { getAuthFromSession, isUserLoggedIn } from "../../../../lib/auth";
 
 const PAGE_SIZE = 6;
@@ -33,7 +43,7 @@ export default function SavedEventsPage() {
   const [auth, setAuth] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
 
-  /* ================= INIT AUTH ================= */
+  /* ================= INIT SESSION AUTH ================= */
   useEffect(() => {
     const ok = isUserLoggedIn();
     setLoggedIn(ok);
@@ -75,7 +85,7 @@ export default function SavedEventsPage() {
     if (loggedIn) loadEvents();
   }, [loggedIn, auth?.identity]);
 
-  /* ================= LOADING STATE ================= */
+  /* ===== LOCAL LOADING ===== */
   if (localLoading) {
     return (
       <div className={styles.wrapper}>
@@ -103,7 +113,7 @@ export default function SavedEventsPage() {
   const start = (page - 1) * PAGE_SIZE;
   const visibleEvents = events.slice(start, start + PAGE_SIZE);
 
-  /* ================= UI ================= */
+  /* ===== EVENTS GRID ===== */
   return (
     <div className={styles.wrapper}>
       <h2 className={styles.title}>Saved Events</h2>
@@ -160,6 +170,7 @@ export default function SavedEventsPage() {
         ))}
       </div>
 
+      {/* ===== PAGINATION CONTROLS ===== */}
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>

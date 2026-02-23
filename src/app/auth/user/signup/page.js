@@ -1,5 +1,16 @@
 "use client";
 
+/**
+ * User Signup Page (Client Component)
+ *
+ * Handles:
+ * - User registration form
+ * - Input validation (Yup schema)
+ * - API signup request
+ * - Loading state management
+ * - Redirect after successful signup
+ */
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
@@ -35,16 +46,30 @@ import {
 } from "../../../../const-value/config-message/page";
 
 import { useLoading } from "../../../../context/LoadingContext";
+
+/**
+ * Allows letters, spaces, apostrophes and hyphens (Unicode supported)
+ * Used to validate name input.
+ */
 const NAME_REGEX = /^[\p{L}\s'-]*$/u;
 
 
 export default function UserSignupPage() {
+  /**
+   * Router + Global Loading
+   */
   const router = useRouter();
   const { setLoading } = useLoading();
 
+  /**
+   * UI State Controls
+   */
   const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  /**
+   * Signup Form State
+   */
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -53,6 +78,12 @@ export default function UserSignupPage() {
     type: ROLE_USER,
   });
 
+  /**
+   * Handles signup form submission
+   * - Validates inputs
+   * - Calls signup API
+   * - Redirects to login page on success
+   */
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -99,6 +130,9 @@ export default function UserSignupPage() {
     }
   };
 
+  /**
+   * Navigate to organizer signup flow
+   */
   const handleCreateEvent = () => {
     try {
       setLoading(true);
@@ -110,12 +144,12 @@ export default function UserSignupPage() {
 
   return (
     <div className="auth-shell">
-      {/* LEFT IMAGE */}
+      {/* LEFT ILLUSTRATION */}
       <div className="auth-left d-none d-lg-flex">
         <img src="/images/auth-signup.png" alt="signup" />
       </div>
 
-      {/* FORM */}
+      {/* SIGNUP FORM */}
       <div className="auth-right">
         <div className="auth-card signup-card">
           <div className="organization-sections mt-4">
@@ -129,7 +163,7 @@ export default function UserSignupPage() {
           <p className="auth-sub">{SUBTITLE_USER_SIGNUP}</p>
 
           <form onSubmit={onSubmit}>
-            {/* NAME */}
+            {/* NAME FIELD */}
             <label className="auth-label">{LABEL_NAME}<span className="required">*</span></label>
             <input
               className="auth-input"
@@ -142,14 +176,12 @@ export default function UserSignupPage() {
                 setForm((prev) => ({ ...prev, name: value }));
               }}
             />
-
-            {/* Reserve space for message */}
             <small className="auth-hint">
               {form.name.length === 100 && "Maximum 100 characters allowed"}
 
             </small>
 
-            {/* EMAIL */}
+            {/* EMAIL FIELD */}
             <label className="auth-label">{LABEL_EMAIL}<span className="required">*</span></label>
             <input
               className="auth-input"
@@ -164,7 +196,7 @@ export default function UserSignupPage() {
               }}
             />
 
-            {/* PASSWORD */}
+            {/* PASSWORD FIELD */}
             <label className="auth-label">{LABEL_PASSWORD}<span className="required">*</span></label>
             <div className="auth-pass-wrap">
               <input
@@ -184,7 +216,7 @@ export default function UserSignupPage() {
               </span>
             </div>
 
-            {/* CONFIRM PASSWORD */}
+            {/* CONFIRM PASSWORD FIELD */}
             <label className="auth-label">{LABEL_CONFIRM_PASSWORD}<span className="required">*</span></label>
             <div className="auth-pass-wrap signup-confirm">
               <input
@@ -207,10 +239,10 @@ export default function UserSignupPage() {
               </span>
             </div>
 
-            {/* SUBMIT */}
+            {/* SUBMIT BUTTON */}
             <button className="auth-btn">{TEXT_SIGNUP}</button>
 
-            {/* FOOTER */}
+            {/* LOGIN LINK */}
             <div className="auth-footer">
               {TITLE_ALREADY_HAVE_ACCOUNT}{" "}
               <a href="/auth/user/login">{TEXT_SIGNIN}</a>

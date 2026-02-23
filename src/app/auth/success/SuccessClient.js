@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Success Client Page
+ * Displays success confirmation UI based on user role.
+ */
+
 import { useSearchParams } from "next/navigation";
 import "./success.css";
 import {
@@ -16,7 +21,10 @@ export default function SuccessClient() {
   const params = useSearchParams();
   const role = params.get("role") || ROLE_USER;
 
-
+  /**
+   * Role-based UI configuration
+   * Controls image, title, subtitle, and login redirect.
+   */
   const config = {
     user: {
       image: "/images/auth-forgot.png",
@@ -36,21 +44,25 @@ export default function SuccessClient() {
 
   return (
     <div className="org-shell">
+      {/* Left Illustration */}
       <aside className="org-left">
         <img className="org-left-img" src={ui.image} alt={IMAGE_ALT} />
       </aside>
 
+      {/* Success Content */}
       <main className="org-right">
         <div className="org-card org-success">
           <h2 className="org-title">{ui.title}</h2>
           <div className="org-sub">{ui.subtitle}</div>
 
+          {/* Primary Action */}
           <div className="form-actions">
             <a href={ui.loginLink} className="btn-primary-ghost">
               {BTN_EMAIL_VERIFY_SUCCESS}
             </a>
           </div>
 
+          {/* Secondary Login Link */}
           <div className="org-foot">
             {TITLE_ALREADY_HAVE_ACCOUNT}{" "}
             <a href={ui.loginLink}>{TEXT_SIGNIN}</a>

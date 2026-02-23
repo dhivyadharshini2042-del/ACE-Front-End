@@ -1,4 +1,15 @@
 "use client";
+
+/**
+ * Contact Page (Client Component)
+ *
+ * Displays:
+ * - Contact form (name, email, attachment placeholder, message)
+ * - Support illustration
+ * - Social media follow section
+ * - Global footer
+ */
+
 import Footer from "../../components/global/Footer/Footer";
 import { FACEBOOKICON, INSTAGRAMICON, LINKEDINICON, WHATSAPP } from "../../const-value/config-icons/page";
 import styles from "./contact.module.css";
@@ -7,7 +18,7 @@ export default function ContactPage() {
   return (
     <>
     <section className={styles.container}>
-      {/* HEAD */}
+        {/* PAGE HEADER */}
       <div className={styles.header}>
         <h1>
           We’re Here for <span>You</span>
@@ -15,13 +26,14 @@ export default function ContactPage() {
         <p>Let’s connect – we are here to answer your queries</p>
       </div>
 
-        {/* CARD */}
+        {/* CONTACT CARD */}
         <div className={styles.card}>
-          {/* LEFT FORM */}
+          {/* LEFT: CONTACT FORM */}
           <div className={styles.form}>
             <input type="text" placeholder="Enter your name" />
             <input type="email" placeholder="Email" />
 
+            {/* Attachment Placeholder */}
             <div className={styles.attachment}>
               <input type="text" placeholder="Attachments" disabled />
               <span>📎</span>
@@ -32,7 +44,7 @@ export default function ContactPage() {
             <button>Submit</button>
           </div>
 
-          {/* RIGHT SIDE */}
+          {/* RIGHT: IMAGE + SOCIAL LINKS */}
           <div className={styles.right}>
             <img
               src="/images/contactImage.png"
@@ -51,6 +63,8 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
+
+      {/* GLOBAL FOOTER */}
       <Footer />
     </>
   );

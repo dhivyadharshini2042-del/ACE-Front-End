@@ -107,9 +107,8 @@
   font-size: 20px;
 }
 
-/* ✅ SCROLL WORKING PROPERLY */
 .events-scroll-container {
-  height: 650px;          /* fixed height */
+  height: 650px;          
   overflow-y: auto;       /* enable vertical scroll */
   overflow-x: hidden;
   padding-right: 8px;

@@ -99,7 +99,6 @@ export default function LandingPage({ searchParams }) {
   useEffect(() => {
     const loadEventTypes = async () => {
       const res = await getAllEventTypesApi();
-      console.log("EVENT TYPES API:", res);
       if (res?.status) {
         setEventTypes(res.data);
       }

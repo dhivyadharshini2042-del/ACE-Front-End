@@ -3,15 +3,27 @@
 import { useState } from "react";
 import styles from "./Email.module.css";
 
+/**
+ * EmailSettingsClient
+ * -------------------
+ * Manages user email notification preferences
+ * for event-related updates.
+ */
 export default function EmailSettingsClient() {
+  // Notification toggles
+
+  // Event created notification
   const [created, setCreated] = useState(true);
+  // Event approval/rejection notification
   const [status, setStatus] = useState(false);
+  // Event completion notification
   const [completed, setCompleted] = useState(false);
 
   return (
     <div className={styles.wrapper}>
       <h2 className={styles.heading}>Email Settings</h2>
 
+      {/* ================= EVENT CREATED ================= */}
       <div className={styles.card}>
         <div>
           <h4>Event Created Successfully</h4>
@@ -20,6 +32,7 @@ export default function EmailSettingsClient() {
           </p>
         </div>
 
+        {/* Toggle switch */}
         <label className={styles.switch}>
           <input
             type="checkbox"
@@ -30,6 +43,7 @@ export default function EmailSettingsClient() {
         </label>
       </div>
 
+      {/* ================= EVENT STATUS ================= */}
       <div className={styles.card}>
         <div>
           <h4>Event Status</h4>
@@ -38,6 +52,7 @@ export default function EmailSettingsClient() {
           </p>
         </div>
 
+        {/* Toggle switch */}
         <label className={styles.switch}>
           <input
             type="checkbox"
@@ -48,12 +63,14 @@ export default function EmailSettingsClient() {
         </label>
       </div>
 
+      {/* ================= EVENT COMPLETED ================= */}
       <div className={styles.card}>
         <div>
           <h4>Event Completed</h4>
           <p>We will notify when your event has ended.</p>
         </div>
 
+        {/* Toggle switch */}
         <label className={styles.switch}>
           <input
             type="checkbox"

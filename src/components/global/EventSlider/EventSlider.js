@@ -18,7 +18,7 @@ import { useLoading } from "../../../context/LoadingContext";
 
 import { likeEventApi, saveEventApi } from "../../../lib/api/event.api";
 
-/* 🔐 SESSION AUTH */
+/* SESSION AUTH */
 import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
 import ConfirmModal from "../../ui/Modal/ConfirmModal";
 import { NO_IMAGE_FOUND_IMAGE ,

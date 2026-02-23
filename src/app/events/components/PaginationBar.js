@@ -32,7 +32,7 @@ export default function PaginationBar({ page, total, onChange }) {
 
     onChange(p);
 
-    // 🔝 scroll to top
+    // scroll to top
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -59,7 +59,7 @@ export default function PaginationBar({ page, total, onChange }) {
             </span>
           ) : (
             <button
-              key={`page-${p}-${i}`} // ✅ UNIQUE KEY FIX
+              key={`page-${p}-${i}`} 
               className={`pg-page ${p === page ? "active" : ""}`}
               onClick={() => handleChange(p)}
             >

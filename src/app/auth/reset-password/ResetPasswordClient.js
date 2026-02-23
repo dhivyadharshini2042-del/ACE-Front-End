@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * Reset Password Client Page
+ *
+ * Handles password reset flow:
+ * - Validates new password input
+ * - Calls reset password API
+ * - Redirects user based on role (user / organizer)
+ */
+
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import "./reset-password.css";
@@ -33,12 +42,16 @@ export default function ResetPasswordPage() {
   const { setLoading } = useLoading(); 
   const email = getEmail();
 
+  /** Form state */
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
 
-  // ROLE BASED CONFIG
+  /**
+   * Role-based UI configuration
+   * Controls image, redirect URL, and login link.
+   */
   const config = {
     user: {
       image: "/images/auth-forgot.png",
@@ -54,6 +67,12 @@ export default function ResetPasswordPage() {
 
   const ui = config[role];
 
+  /**
+   * Handles form submission
+   * - Validates password schema
+   * - Calls reset API
+   * - Redirects on success
+   */
   async function onSubmit(e) {
     e.preventDefault();
 
@@ -90,7 +109,7 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="org-shell">
-      {/* LEFT IMAGE */}
+      {/* Left Illustration */}
       <aside className="org-left">
         <img src={ui.image} className="org-left-img" alt="reset" />
       </aside>
@@ -145,14 +164,14 @@ export default function ResetPasswordPage() {
               </div>
             </div>
 
-            {/* SUBMIT */}
+            {/* Submit Button */}
             <div className="form-actions">
               <button className="btn-primary-ghost" type="submit">
                 {BTN_CONTINUE}
               </button>
             </div>
 
-            {/* FOOTER */}
+            {/* Login Redirect */}
             <div className="org-foot">
               {TITLE_ALREADY_HAVE_ACCOUNT}{" "}
               <a href={ui.login}>{TEXT_SIGNIN}</a>

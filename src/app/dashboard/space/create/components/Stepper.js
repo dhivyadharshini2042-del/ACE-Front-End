@@ -1,6 +1,12 @@
 "use client";
 
 import styles from "./Stepper.module.css";
+
+/**
+ * Stepper Component 
+ * -----------------
+ * Props: step (number): Current active step (1, 2, or 3)
+ */
 export default function Stepper({ step }) {
   return (
     <div className={styles.stepperWrap}>
