@@ -4,6 +4,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import ClientLayout from "../components/ClientLayout";
 import Providers from "../components/Providers";
 import { LoadingProvider } from "../context/LoadingContext";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export default function RootLayout({ children }) {
   return (
@@ -18,6 +19,7 @@ export default function RootLayout({ children }) {
             </Providers>
           </LoadingProvider>
         </GoogleOAuthProvider>
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
       </body>
     </html>
   );
