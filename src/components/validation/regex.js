@@ -1,6 +1,6 @@
 /* ======================================================
    GLOBAL REGEX COLLECTION
-   Use this file for input validation across project
+   Use this file for input validation across project test
    ====================================================== */
 
 
