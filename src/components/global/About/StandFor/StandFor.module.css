@@ -1,140 +1,202 @@
-/* ================= SECTION ================= */
-
 .wrapper {
-  background: #ffffff;
-  padding: 5rem 1rem 6rem;
-  text-align: center;
+  display: flex;
+  width: 1440px;
+  max-width: 100%;
+  margin: 0 auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 56px;
+  padding: 80px 0 120px;
+  background: #fff;
 }
 
+/* ══════════════════════════════════════════
+   HEADING
+══════════════════════════════════════════ */
 .heading {
-  font-size: 2rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 40px;
   font-weight: 800;
-  margin-bottom: 4rem;
+  color: #111;
+  text-align: center;
 }
 
 .heading span {
   color: #7c3aed;
 }
 
-/* ================= LAYOUT ================= */
-
+/* ══════════════════════════════════════════
+   CARDS ROW
+══════════════════════════════════════════ */
 .cards {
-  max-width: 1150px;
-  margin: auto;
   display: flex;
-  justify-content: space-between;
-  gap: 3rem;
+  justify-content: center;
+  align-items: center;
+  gap: 76px;
+  padding: 50px 80px 70px;
+  overflow: visible;
+  width: 100%;
 }
 
-/* ================= CARD ================= */
-
-.card {
-  position: relative;
-  width: 340px;
-  height: 340px;
-  background: #ffffff;
-  border-radius: 18px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
-}
-
-/* rotations like screenshot */
-.left {
-  transform: rotate(-7deg);
-}
-
-.center {
-  transform: rotate(0deg);
-}
-
-.right {
-  transform: rotate(7deg);
-}
-
-/* ================= PIN IMAGE ================= */
-
+/* ══════════════════════════════════════════
+   PIN
+══════════════════════════════════════════ */
 .pin {
   position: absolute;
-  top: -24px;
+  top: -30px;
   left: 50%;
-  transform: translateX(-50%) rotate(-8deg);
-  z-index: 5;
-  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.35));
+  transform: translateX(-50%);
+  z-index: 20;
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.28));
 }
 
-/* ================= INNER CARD ================= */
+/* ══════════════════════════════════════════
+   YELLOW / MISSION
+══════════════════════════════════════════ */
+.cardYellow {
+  position: relative;
+  width: 325.769px;
+  height: 305.894px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 1px 12px 17.3px 0 rgba(0, 0, 0, 0.08);
+  transform: rotate(-4.105deg);
+  flex-shrink: 0;
+}
 
-.inner {
+.innerYellow {
   position: absolute;
-  inset: 24px;
-  border-radius: 14px;
-  padding: 1.6rem;
-  text-align: left;
+  width: 293.681px;
+  height: 249.777px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 13.703px;
+  background: #fffbee;
+  padding: 22px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 10px;
+  text-align: left;
+  overflow: visible;
 }
 
-/* background colors */
-.mission {
-  background: #fff8e6;
+/* ══════════════════════════════════════════
+   PURPLE / VISION
+══════════════════════════════════════════ */
+.cardPurple {
+  position: relative;
+  width: 293.171px;
+  height: 280.598px;
+  background: #ffffff;
+  border-radius: 11px;
+  box-shadow: 1px 12px 17.3px 0 rgba(0, 0, 0, 0.08);
+  transform: rotate(0deg);
+  flex-shrink: 0;
 }
 
-.vision {
-  background: #f3e8ff;
+.innerPurple {
+  position: absolute;
+  width: 270.089px;
+  height: 227.301px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  background: #f5ecff;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  overflow: visible;
 }
 
-.value {
-  background: #ecf7ff;
+/* ══════════════════════════════════════════
+   BLUE / VALUE
+══════════════════════════════════════════ */
+.cardBlue {
+  position: relative;
+  width: 296.433px;
+  height: 251.355px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 1px 12px 17.3px 0 rgba(0, 0, 0, 0.08);
+  transform: rotate(-6.884deg);
+  flex-shrink: 0;
 }
 
-/* ================= TEXT ================= */
-
-.inner h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.8rem;
-  font-weight: 600;
+.innerBlue {
+  position: absolute;
+  width: 272.296px;
+  height: 192.955px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 13.703px;
+  background: #edf7ff;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  overflow: visible;
 }
 
-.inner p {
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: #444;
-}
-
-/* Title base */
-.title {
+/* ══════════════════════════════════════════
+   CARD TITLE
+══════════════════════════════════════════ */
+.cardTitle {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.8rem;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 150%;
 }
 
-/* Title colors */
-.missionTitle {
-  color: #f59e0b;
+.titleYellow {
+  color: #c98a00;
 }
 
-.visionTitle {
-  color: #7c3aed; 
+.titlePurple {
+  color: #7c3aed;
 }
 
-.valueTitle {
-  color: #3b82f6; 
+.titleBlue {
+  color: #3b82f6;
 }
 
+/* ══════════════════════════════════════════
+   CARD TEXT
+══════════════════════════════════════════ */
+.cardText {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  color: #3D3D3D;
+}
 
-
-/* ================= RESPONSIVE ================= */
-
-@media (max-width: 900px) {
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width: 960px) {
   .cards {
     flex-direction: column;
     align-items: center;
+    gap: 60px;
+    padding: 40px 20px 60px;
   }
 
-  .card {
-    transform: none;
+  .cardYellow,
+  .cardPurple,
+  .cardBlue {
+    transform: none !important;
   }
 }

@@ -6,7 +6,7 @@
 }
 
 .title {
-  font-size: 72px;
+  font-size: 64px;
   font-weight: 800;
   margin-bottom: 20px;
   display: flex;
@@ -123,47 +123,59 @@
 .pos0 {
   top: 200px;
   left: 40%;
-} /* Big Center */
+}
+
+/* Big Center */
 .pos1 {
   top: 80px;
   left: 15%;
 }
+
 .pos2 {
   top: 400px;
   left: 20%;
 }
+
 .pos3 {
   top: 120px;
   right: 18%;
 }
+
 .pos4 {
   top: 450px;
   right: 15%;
 }
+
 .pos5 {
   top: 300px;
   right: 30%;
 }
+
 .pos6 {
   top: 80px;
   left: 55%;
 }
+
 .pos7 {
   top: 500px;
   left: 50%;
 }
+
 .pos8 {
   top: 350px;
   left: 10%;
 }
+
 .pos9 {
   top: 250px;
   right: 5%;
 }
+
 .pos10 {
   top: 150px;
   left: 70%;
 }
+
 .pos11 {
   top: 520px;
   right: 35%;

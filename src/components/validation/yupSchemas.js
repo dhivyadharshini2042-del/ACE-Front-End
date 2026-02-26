@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { DOMAIN_EMAIL_REGEX } from "./regex";
 
 /* ===========================
    COMMON HELPERS
@@ -9,6 +10,10 @@ export const required = (name) => Yup.string().required(`${name} is required`);
 export const email = Yup.string()
   .email("Invalid email format")
   .required("Email is required");
+
+export const domainEmail = Yup.string()
+  .matches(DOMAIN_EMAIL_REGEX, "Only domain mail ID is accepted")
+  .required("Domain Mail ID is required");
 
 export const password8 = Yup.string()
   .min(8, "Password must be at least 8 characters")
@@ -23,26 +28,44 @@ export const confirmPassword = (ref) =>
    ORGANIZER VALIDATIONS
 =========================== */
 
-export const organizerLoginSchema = Yup.object({
-  email,
-  password: password8,
-});
+// export const organizerLoginSchema = Yup.object({
+//   email,
+//   password: password8,
+// });
 
-export const organizerForgotSchema = Yup.object({
-  email,
-});
+// export const organizerForgotSchema = Yup.object({
+//   email,
+// });
 
 export const organizerResetSchema = Yup.object({
   password: password8,
   confirmPassword: confirmPassword("password"),
 });
 
+// export const organizerSignupSchema = Yup.object({
+//   email,
+//   password: password8,
+//   confirmPassword: confirmPassword("password"),
+// });
+
+
+// organizerLoginSchema
+export const organizerLoginSchema = Yup.object({
+  email: domainEmail,  // was: email
+  password: password8,
+});
+
+// organizerForgotSchema
+export const organizerForgotSchema = Yup.object({
+  email: domainEmail,  // was: email
+});
+
+// organizerSignupSchema
 export const organizerSignupSchema = Yup.object({
-  email,
+  email: domainEmail,  // was: email
   password: password8,
   confirmPassword: confirmPassword("password"),
 });
-
 /* ===========================
    ORGANIZATION PROFILE
 =========================== */

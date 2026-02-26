@@ -129,9 +129,9 @@ export default function FiltersSidebar({
               ...p,
               dateRange: e.target.value
                 ? {
-                    startDate: e.target.value,
-                    endDate: e.target.value,
-                  }
+                  startDate: e.target.value,
+                  endDate: e.target.value,
+                }
                 : null,
             }))
           }

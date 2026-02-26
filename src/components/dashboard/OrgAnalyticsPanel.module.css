@@ -1,0 +1,102 @@
+/* ===== OVERLAY ===== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* ===== PANEL ===== */
+.panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(820px, 96vw);
+  height: 100vh;
+  background: #F6F7FB;
+  overflow-y: auto;
+  z-index: 1001;
+  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.12);
+  animation: slideIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  scroll-behavior: smooth;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* ===== PANEL HEADER ===== */
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 28px;
+  background: #fff;
+  border-bottom: 1px solid #EBEBF5;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.panelTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2D3436;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.panelTitleIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: #EEE9FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6C5CE7;
+}
+
+.closeBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #E2E8F0;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #636E72;
+  font-size: 18px;
+  transition: background 0.2s;
+}
+
+.closeBtn:hover {
+  background: #F1F2F6;
+}
+
+/* ===== CONTENT ===== */
+.panelContent {
+  padding: 0;
+}

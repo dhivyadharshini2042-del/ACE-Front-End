@@ -96,6 +96,12 @@
   box-shadow: 0 4px 14px rgba(127, 0, 255, 0.2);
 }
 
+.otp-input:not(:placeholder-shown) {
+  border-color: #7f00ff;
+  background: #f3e8ff;
+  color: #7f00ff;
+}
+
 /* ===============================
    BUTTON
 ================================ */

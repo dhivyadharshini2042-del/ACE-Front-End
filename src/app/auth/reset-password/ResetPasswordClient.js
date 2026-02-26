@@ -16,7 +16,8 @@ import "./reset-password.css";
 import { toast } from "react-hot-toast";
 import { resetPasswordApi } from "../../../lib/api/auth.api";
 import { clearEmail, getEmail } from "../../../lib/auth";
-import { userResetSchema } from "../../../components/validation";
+import { userResetSchema, organizerResetSchema } from "../../../components/validation";
+
 import {
   PASSWORDHIDEICON,
   PASSWORDVIEWICON,
@@ -39,7 +40,7 @@ export default function ResetPasswordPage() {
   const params = useSearchParams();
   const role = params.get("role") || ROLE_USER;
 
-  const { setLoading } = useLoading(); 
+  const { setLoading } = useLoading();
   const email = getEmail();
 
   /** Form state */
@@ -66,6 +67,8 @@ export default function ResetPasswordPage() {
   };
 
   const ui = config[role];
+  const schema = role === "organizer" ? organizerResetSchema : userResetSchema;
+
 
   /**
    * Handles form submission
@@ -78,7 +81,7 @@ export default function ResetPasswordPage() {
 
     /* ===== VALIDATION ===== */
     try {
-      await userResetSchema.validate(
+      await schema.validate(
         { password, confirmPassword: confirm },
         { abortEarly: false }
       );
@@ -88,7 +91,7 @@ export default function ResetPasswordPage() {
 
     /* ===== API CALL ===== */
     try {
-      setLoading(true); 
+      setLoading(true);
 
       await resetPasswordApi({
         email,
@@ -103,7 +106,7 @@ export default function ResetPasswordPage() {
         err?.response?.data?.message || TOAST_ERROR_MSG_PASSWORD_UPDATED_FAILED
       );
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   }
 

@@ -13,9 +13,10 @@ import { updateAuthProfile } from "../../../lib/api/auth.api";
 /* ================= UI COMPONENTS ================= */
 import ConfirmModal from "../../../components/ui/Modal/ConfirmModal";
 import { useLoading } from "../../../context/LoadingContext";
+import OrgAnalyticsPanel from "../../../components/dashboard/OrgAnalyticsPanel";
 
 /* ================= AUTH HELPERS ================= */
-import { getAuthFromSession, isUserLoggedIn } from "../../../lib/auth";
+import { getAuthFromSession, isUserLoggedIn, saveEmail } from "../../../lib/auth";
 
 /* ================= ICONS ================= */
 import {
@@ -34,13 +35,15 @@ import { getCountries, getStates, getCities } from "../../../lib/location.api";
 /* ================= DELETE MODAL ================= */
 import DeleteConfirmModal from "../../../components/ui/DeleteConfirmModal/DeleteConfirmModal";
 
-import { TOAST_SUCCESS_ACCOUNT_DELETED,
+import {
+  TOAST_SUCCESS_ACCOUNT_DELETED,
   TOAST_ERROR_MSG_DELETE_ACCOUNT_FAILED,
   TOAST_ERROR_MSG_PROFILE_RELOAD_FAILED,
   TOAST_ERROR_AUTH_MISSING,
   TOAST_ERROR_MSG_UPDATE_FAILED,
   TOAST_ERROR_MSG_PROFILE_UPDATE_FAILED,
-  TOAST_SUCCESS_PROFILE_UPDATED } from "../../../const-value/config-message/page";
+  TOAST_SUCCESS_PROFILE_UPDATED
+} from "../../../const-value/config-message/page";
 
 export default function ProfileClient() {
   const router = useRouter();
@@ -51,7 +54,6 @@ export default function ProfileClient() {
 
   /* ================= STATE ================= */
 
-  // const [auth, setAuth] = useState(null);
   // Profile data
   const [profile, setProfile] = useState(null);
   // Session auth info
@@ -61,6 +63,7 @@ export default function ProfileClient() {
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
 
   // Location states (for user type)
   const [countries, setCountries] = useState([]);
@@ -89,7 +92,6 @@ export default function ProfileClient() {
 
   /* ================= SOCIAL CONFIG ================= */
 
-  // Social platforms mapped with icons
   const socialWithIcon = [
     { key: "linkedin", label: "LinkedIn", icon: LINKEDINICON },
     { key: "telegram", label: "Telegram", icon: TELEGRAMICON },
@@ -102,10 +104,6 @@ export default function ProfileClient() {
 
   /* ================= PROFILE FETCH ================= */
 
-  /**
-   * Fetches profile based on session type (org or user).
-   * Populates both profile display data and editable form.
-   */
   const fetchProfile = async (session) => {
     try {
       setLoading(true);
@@ -177,10 +175,6 @@ export default function ProfileClient() {
 
   /* ================= SAVE PROFILE ================= */
 
-  /**
-   * Submits updated profile information.
-   * Handles file upload and social links.
-   */
   const saveProfile = async () => {
     try {
       if (!auth) {
@@ -194,7 +188,6 @@ export default function ProfileClient() {
       payload.append("identity", auth.identity.identity);
       payload.append("type", auth.type);
 
-      // Dynamic field for user/org name
       payload.append(
         auth.type === "org" ? "organizationName" : "name",
         form.name,
@@ -225,10 +218,6 @@ export default function ProfileClient() {
 
   /* ================= DELETE ACCOUNT ================= */
 
-  /**
-   * Handles account deletion confirmation.
-   * (Backend integration can be added here.)
-   */
   const handleDeleteAccount = async () => {
     try {
       setLoading(true);
@@ -266,7 +255,7 @@ export default function ProfileClient() {
               </div>
             )}
 
-            {/* Address block (if available) */}
+            {/* Address block */}
             {(profile?.country || profile?.state || profile?.city) && (
               <div className={styles.addressBlock}>
                 <label>Address</label>
@@ -294,6 +283,20 @@ export default function ProfileClient() {
             >
               Change Password
             </span>
+            {auth?.type === "org" && (
+              <button
+                className={styles.analyticsIconBtn}
+                onClick={() => setShowAnalytics(true)}
+                title="View Analytics"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10" />
+                  <line x1="12" y1="20" x2="12" y2="4" />
+                  <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+                Analytics
+              </button>
+            )}
           </div>
         </>
       )}
@@ -364,7 +367,7 @@ export default function ProfileClient() {
             </div>
           </div>
 
-          {/* Social links section (Org only) */}
+          {/* Social links section*/}
           {auth?.type === "org" && (
             <div className={styles.socialEditSection}>
               <h4>Social Links</h4>
@@ -393,7 +396,7 @@ export default function ProfileClient() {
             </div>
           )}
 
-          {/* Location section (User only) */}
+          {/* Location section*/}
           {auth?.type !== "org" && (
             <div className={styles.locationSection}>
               <h4>Location</h4>
@@ -493,7 +496,11 @@ export default function ProfileClient() {
         description="Password reset link will be sent to your email."
         image="/images/logo.png"
         onCancel={() => setShowConfirmModal(false)}
-        onConfirm={() => router.push("/auth/forgot-password")}
+        // onConfirm={() => router.push("/auth/forgot-password")}
+        onConfirm={() => {
+          saveEmail(form.email);
+          router.push(`/auth/forgot-password?role=${auth?.type === "org" ? "organizer" : "user"}`);
+        }}
       />
 
       {/* Delete confirmation modal */}
@@ -503,6 +510,17 @@ export default function ProfileClient() {
         onClose={() => setShowDeleteModal(false)}
         onConfirm={handleDeleteAccount}
       />
+
+      {/* Organizer Analytics slide-in panel */}
+      {auth?.type === "org" && (
+        <OrgAnalyticsPanel
+          isOpen={showAnalytics}
+          onClose={() => setShowAnalytics(false)}
+          orgId={auth?.identity?.identity}
+          orgName={form.name}
+          avatarUrl={profile?.profileImage}
+        />
+      )}
     </div>
   );
 }

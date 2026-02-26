@@ -5,32 +5,31 @@ import styles from "./StandFor.module.css";
 export default function StandFor() {
   return (
     <section className={styles.wrapper}>
+
       <h2 className={styles.heading}>
         What We <span>Stand For</span>
       </h2>
 
       <div className={styles.cards}>
-        {/* Mission */}
-        <div className={`${styles.card} ${styles.left}`}>
+        <div className={styles.cardYellow}>
           <Image
             src="/images/pin-yellow.png"
             alt="pin"
-            width={40}
-            height={40}
+            width={54}
+            height={54}
             className={styles.pin}
           />
-
-          <div className={`${styles.inner} ${styles.mission}`}>
-            <h3 className={`${styles.title} ${styles.missionTitle}`}>
+          <div className={styles.innerYellow}>
+            <h3 className={`${styles.cardTitle} ${styles.titleYellow}`}>
               <Image
                 src="/images/bullseye-arrow.png"
-                alt="mission"
-                width={18}
-                height={18}
+                alt="mission icon"
+                width={20}
+                height={20}
               />
               Mission
             </h3>
-            <p>
+            <p className={styles.cardText}>
               Our mission is to connect learners and organizers through a single
               platform that simplifies event discovery, participation, and
               collaboration.
@@ -38,59 +37,56 @@ export default function StandFor() {
           </div>
         </div>
 
-        {/* Vision */}
-        <div className={`${styles.card} ${styles.center}`}>
+        <div className={styles.cardPurple}>
           <Image
             src="/images/pin-purple.png"
             alt="pin"
-            width={40}
-            height={40}
+            width={54}
+            height={54}
             className={styles.pin}
           />
-
-          <div className={`${styles.inner} ${styles.vision}`}>
-            <h3 className={`${styles.title} ${styles.visionTitle}`}>
+          <div className={styles.innerPurple}>
+            <h3 className={`${styles.cardTitle} ${styles.titlePurple}`}>
               <Image
                 src="/images/vision-targetIcon.png"
-                alt="vision"
-                width={18}
-                height={18}
+                alt="vision icon"
+                width={20}
+                height={20}
               />
               Vision
             </h3>
-            <p>
-              Our vision is to be the world’s most trusted platform for academic
-              & professional event engagement.
+            <p className={styles.cardText}>
+              Our vision is to be the world&apos;s most trusted platform for
+              academic &amp; professional event engagement.
             </p>
           </div>
         </div>
 
-        {/* Value */}
-        <div className={`${styles.card} ${styles.right}`}>
+        <div className={styles.cardBlue}>
           <Image
             src="/images/pin-blue.png"
             alt="pin"
-            width={40}
-            height={40}
+            width={54}
+            height={54}
             className={styles.pin}
           />
-
-          <div className={`${styles.inner} ${styles.value}`}>
-            <h3 className={`${styles.title} ${styles.valueTitle}`}>
+          <div className={styles.innerBlue}>
+            <h3 className={`${styles.cardTitle} ${styles.titleBlue}`}>
               <Image
                 src="/images/diamond.png"
-                alt="value"
-                width={18}
-                height={18}
+                alt="value icon"
+                width={20}
+                height={20}
               />
               Value
             </h3>
-            <p>
+            <p className={styles.cardText}>
               Built on trust, accessibility, and innovation to empower learning
               and collaboration.
             </p>
           </div>
         </div>
+
       </div>
     </section>
   );

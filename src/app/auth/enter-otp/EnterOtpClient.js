@@ -37,7 +37,7 @@ import {
   BTN_CONTINUE,
   BTN_OTP_RESEND,
   TOAST_ERROR_MSG_GENERIC_ERROR,
-  TOAST_SUCCESS_MSG_NEW_OTP_SEND ,
+  TOAST_SUCCESS_MSG_NEW_OTP_SEND,
   TOAST_ERROR_MSG_NEW_OTP_FAILED_TO_SEND,
   TOAST_ERROR_MSG_OTP_INVALID,
   TOAST_SUCCESS_MSG_OTP_VERIFIED,
@@ -47,7 +47,7 @@ import {
 } from "../../../const-value/config-message/page";
 
 /* GLOBAL LOADING */
-import { useLoading } from "../../../context/LoadingContext"; 
+import { useLoading } from "../../../context/LoadingContext";
 
 export default function EnterOtpClient() {
   /**
@@ -91,6 +91,7 @@ export default function EnterOtpClient() {
   useEffect(() => {
     const storedEmail = getEmail();
     if (storedEmail) setEmail(storedEmail);
+    inputs[0].current?.focus();
   }, []);
 
   /**
@@ -130,6 +131,23 @@ export default function EnterOtpClient() {
     if (value && index < 3) {
       inputs[index + 1].current?.focus();
     }
+  }
+
+  function onKeyDown(index, e) {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      inputs[index - 1].current?.focus();
+    }
+  }
+
+  function onPaste(e) {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 4);
+    if (!pasted) return;
+    const next = ["", "", "", ""];
+    pasted.split("").forEach((char, i) => (next[i] = char));
+    setOtp(next);
+    const focusIndex = Math.min(pasted.length, 3);
+    inputs[focusIndex].current?.focus();
   }
 
   /**
@@ -183,7 +201,7 @@ export default function EnterOtpClient() {
       const res = await resendOtpApi({ email });
 
       if (res?.status) {
-        toast.success(TOAST_SUCCESS_MSG_NEW_OTP_SEND );
+        toast.success(TOAST_SUCCESS_MSG_NEW_OTP_SEND);
       } else {
         toast.error(res?.message || TOAST_ERROR_MSG_NEW_OTP_FAILED_TO_SEND);
       }
@@ -217,7 +235,11 @@ export default function EnterOtpClient() {
                   className="otp-input"
                   maxLength={1}
                   value={val}
+                  inputMode="numeric"
+                  placeholder=" "
                   onChange={(e) => onChange(i, e.target.value)}
+                  onKeyDown={(e) => onKeyDown(i, e)}
+                  onPaste={onPaste}
                 />
               ))}
             </div>

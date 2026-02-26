@@ -11,6 +11,7 @@
     "Segoe UI",
     sans-serif;
 }
+
 /* ================= DETAILS ================= */
 .details {
   display: grid;
@@ -31,6 +32,7 @@
   font-weight: 700;
   font-family: var(--font-poppins), sans-serif;
 }
+
 .addressBlock {
   grid-column: span 2;
 }
@@ -67,6 +69,7 @@
   margin-left: 20px;
   width: 72%;
 }
+
 .previewBox {
   position: relative;
   width: 450px;
@@ -81,6 +84,7 @@
   border-radius: 12px;
   border: 2px solid #e5e7eb;
 }
+
 .socialGroup {
   margin-top: 16px;
 }
@@ -116,6 +120,7 @@
   font-weight: 700;
   color: #374151;
 }
+
 .socialIcon {
   width: 30px;
   height: 30px;
@@ -184,6 +189,7 @@
   gap: 14px 18px;
   margin-top: 12px;
 }
+
 .socialEditRow {
   display: flex;
   align-items: center;
@@ -238,6 +244,27 @@
   font-weight: 600;
   cursor: pointer;
 }
+
+.analyticsIconBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid #d8d3ff;
+  background: #EEE9FF;
+  color: #6C5CE7;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.analyticsIconBtn:hover {
+  background: #ddd6ff;
+  transform: translateY(-1px);
+}
+
 /* ================= DANGER ZONE ================= */
 .dangerZone {
   margin-top: 50px;
@@ -296,6 +323,7 @@
   transform: translateY(-1px);
   box-shadow: 0 8px 18px rgba(220, 38, 38, 0.4);
 }
+
 .locationSection {
   margin-top: 25px;
   padding: 20px;
